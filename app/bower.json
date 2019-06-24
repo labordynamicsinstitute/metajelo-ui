@@ -1,0 +1,28 @@
+{
+  "name": "purescript-metajelo-ui",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "license": "MPL2",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/labordynamicsinstitute/metajelo-ui.git"
+  },
+  "dependencies": {
+    "purescript-concur-react": "^0.3.7",
+    "purescript-console": "^4.2.0",
+    "purescript-foreign-object": "^2.0.1",
+    "purescript-metajelo": "^1.0.0",
+    "purescript-naturals": "^3.0.0",
+    "purescript-email-validate": "^4.0.0",
+    "purescript-stringutils": "^0.0.8",
+    "purescript-url-validator": "^1.1.0",
+    "purescript-profunctor": "^4.0.0"
+  },
+  "resolutions": {
+    "purescript-typelevel-prelude": "^4.0.0"
+  }
+}
