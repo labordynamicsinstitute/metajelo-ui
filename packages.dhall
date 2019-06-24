@@ -116,8 +116,18 @@ let upstream =
 
 let overrides = {=}
 
-let additions =
-      { metajelo =
+let additions = {
+        concur-formless =
+          mkPackage
+          [ "variant"
+          , "heterogeneous"
+          , "generics-rep"
+          , "profunctor-lenses"
+          , "concur-react"
+          ]
+          "https://github.com/ajnsit/purescript-concur-formless.git"
+          "master"
+      , metajelo =
           mkPackage
           [ "generics-rep"
           , "naturals"

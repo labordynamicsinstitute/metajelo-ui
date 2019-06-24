@@ -6,6 +6,7 @@ You can edit this file as you like.
     "purescript-metajelo-ui"
 , dependencies = [
     "prelude"
+  , "concur-formless"
   , "concur-react"
   , "email-validate"
   , "foreign-object"
