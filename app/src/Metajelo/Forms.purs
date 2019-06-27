@@ -1,32 +1,32 @@
 module Metajelo.Forms where
 
-import Prelude                             (class Functor, class Monoid,
-                                            class Semigroup,
-                                            identity, join, map, mempty, show,
-                                            (#), ($), (<<<), (<>))
-
+import Prelude (bind, pure, ($), (<$>), (<<<))
 
 import Concur.Core                          (Widget)
 import Concur.React                         (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
-import Data.Maybe                           (Maybe(..), isNothing)
-import Data.Array                           (init)
-import Data.Foldable                        (class Foldable, any,
-                                             foldMap, intercalate)
-import Data.String                          as S
-import Data.String.Utils                    (endsWith, fromCharArray)
-import Data.Unfoldable                      (fromMaybe)
-import Data.Unfoldable1                     (class Unfoldable1, singleton)
+import Control.Monad.State.Trans            (StateT)
+import Control.Monad.State.Class            (get)
+import Data.Maybe                           (maybe)
+-- import Data.Array                           (init)
+-- import Data.Foldable                        (class Foldable, any,
+--                                              foldMap, intercalate)
+-- import Data.String.Utils                    (endsWith, fromCharArray)
+import Data.Symbol                          (SProxy(..))
+import Data.Time.Duration                   (Milliseconds(..))
+-- import Data.Unfoldable                      (fromMaybe)
+-- import Data.Unfoldable1                     (class Unfoldable1, singleton)
 import Effect.Aff                           (Aff)
-import Foreign.Object                       as FO
+-- import Foreign.Object                       as FO
 import Formless                             as F
-import Metajelo.Types
-import Text.Email.Validate                  as EA
-import URL.Validator                        (urlToString)
+-- import Metajelo.Types
+-- import Text.Email.Validate                  as EA
+-- import URL.Validator                        (urlToString)
 
 
-formStWidget :: StateT (F.State form Aff) (Widget HTML) (form Record F.OutputField)
+type FormWidget = ∀ form. StateT (F.State form Aff) (Widget HTML) (form Record F.OutputField)
+formStWidget :: FormWidget
 formStWidget = do
   fstate <- get
   query <- D.div'
@@ -44,10 +44,10 @@ formStWidget = do
       , (F.asyncSetValidate debounceTime _email2 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     ]
-  res <- eval query
+  res <- F.eval query
   maybe formStWidget pure res
   where
-    _name = SProxy :: _ "name"
-    _email1 = SProxy :: _ "email1"
-    _email2 = SProxy :: _ "email2"
+    _name = SProxy :: SProxy "name"
+    _email1 = SProxy :: SProxy "email1"
+    _email2 = SProxy :: SProxy "email2"
     debounceTime = Milliseconds 300.0
