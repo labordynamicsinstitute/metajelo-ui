@@ -1,4 +1,4 @@
-module Metajelo.UI where
+module Main where
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -6,8 +6,6 @@ import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
 import Data.Show (show)
 import Effect (Effect)
-import Effect.Class (liftEffect)
-import Effect.Console as Console
 import Metajelo.Forms as MF
 import Prelude (Unit, bind, ($), (<>))
 
@@ -26,4 +24,5 @@ page = do
   -- Assuming some effectful computation to receive the ID
   -- id <- registerUser user
   -- let user = { name: form.name, email: form.email, id }
-  liftEffect $ Console.log $ "Got a user! " <> show (user :: MF.User)
+  -- liftEffect $ Console.log $ "Got a user! " <> show (user :: MF.User)
+  D.h2' [D.text $ "Got a user! " <> show user]
