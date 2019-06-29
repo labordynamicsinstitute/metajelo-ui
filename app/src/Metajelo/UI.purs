@@ -1,32 +1,28 @@
 module Metajelo.UI where
 
-import Prelude                              (Unit, bind, pure, unit, ($), (<>))
-
-import Concur.React.Run                     (runWidgetInDom)
-import Concur.React.DOM                     (div, span, text)
-import Concur.React.Props                   (className)
-import Data.Unfoldable1                     (singleton)
-import Effect                               (Effect)
-import Effect.Exception                     as EX
-import Effect.Exception                     (Error)
-import Formless as                          F
-import Metajelo.Forms                       as MF
-import Metajelo.XPaths                      as MXP
+import Concur.Core (Widget)
+import Concur.React (HTML)
+import Concur.React.DOM as D
+import Concur.React.Run (runWidgetInDom)
+import Data.Show (show)
+import Effect (Effect)
+import Metajelo.Forms as MF
+import Prelude (Unit, bind, ($), (<>))
 
 main :: Effect Unit
-main = runWidgetInDom "form" (formWidget initialInputs formValidators)
+main = runWidgetInDom "form" page
 
-formWidget :: InputForm -> Validators -> Widget HTML (form Record F.OutputField)
-formWidget initForm initValidators = fst <$> runStateT formStWidget (initState initForm initValidators)
+formWidget :: Widget HTML MF.User
+formWidget = MF.formWidget (MF.initState MF.initialInputs MF.validators)
 
-page :: forall a. Widget HTML a
+page :: Widget HTML Unit
 page = do
-  out <- D.div'
+  user <- D.div'
     [ D.h1' [D.text "My Form"]
-    , formWidget initialInputs validators
+    , formWidget
     ]
-  let form = F.unwrapOutputFields out
   -- Assuming some effectful computation to receive the ID
-  id <- registerUser { name: form.name, email: form.email1 }
-  let user = { name: form.name, email: form.email, id }
-  liftEffect $ Console.log $ "Got a user! " <> show (user :: User)
+  -- id <- registerUser user
+  -- let user = { name: form.name, email: form.email, id }
+  -- liftEffect $ Console.log $ "Got a user! " <> show (user :: MF.User)
+  D.h2' [D.text $ "Got a user! " <> show user]

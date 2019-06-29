@@ -8,6 +8,7 @@
     "clean": "rimraf output .cache .psci_modules .pulp-cache .spago dist prod testdist",
     "build": "spago build",
     "prod": "../scripts/prod",
+    "parcel": "parcel build --public-url ./ prod/index.html",
     "start": "spago build && parcel --no-hmr --public-url ./ static/index.html",
     "watch": "spago build && parcel watch static/index.html"
   },
