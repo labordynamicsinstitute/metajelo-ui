@@ -9,6 +9,11 @@ Web tools to display
 
 # Buidling
 
+## Spago & Parcel
+
+npx spago bundle-app --to index.js
+npx parcel index.html
+
 ## Docker
 
 * Run `./psc.sh <command>`, e.g. `./psc.sh pulp --psc-package build`. This will run
