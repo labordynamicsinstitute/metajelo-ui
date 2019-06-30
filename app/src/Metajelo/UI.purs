@@ -1,5 +1,7 @@
 module Metajelo.UI where
 
+import Prelude (Unit, bind, pure, unit, ($), (<>))
+
 import Concur.Core (Widget)
 import Concur.React (HTML)
 import Concur.React.DOM as D
@@ -7,10 +9,12 @@ import Concur.React.Run (runWidgetInDom)
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Prelude (Unit, bind, ($), (<>))
 
 main :: Effect Unit
-main = runWidgetInDom "form" page
+main = pure unit
+
+runFormSPA :: String -> Effect Unit
+runFormSPA divId = runWidgetInDom divId page
 
 formWidget :: Widget HTML MF.User
 formWidget = MF.formWidget (MF.initState MF.initialInputs MF.validators)
