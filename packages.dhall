@@ -137,9 +137,10 @@ let additions =
           , "web-dom"
           , "web-dom-parser"
           , "web-dom-xpath"
+          , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "v1.0.1"
+          "v2.0.0"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
@@ -172,6 +173,11 @@ let additions =
           [ "prelude", "effect", "partial", "web-dom" ]
           "https://github.com/purescript-web/purescript-web-dom-xpath.git"
           "v1.2.0"
+      , xpath-like =
+          mkPackage
+          [ "prelude" ]
+          "https://github.com/bbarker/purescript-xpath-like.git"
+          "v3.0.0"
       }
 
 in  upstream // overrides // additions

@@ -18,6 +18,8 @@ import Effect.Aff.Class (class MonadAff, liftAff)
 import Formless (FormFieldResult, _Error)
 import Formless as F
 import Formless.Validation (Validation(..), hoistFnE_)
+import Metajelo.Types as M
+import Metajelo.XPaths.Read as MR
 import Text.Email.Validate as EA
 import Type.Data.Symbol (SProxy(..))
 
@@ -63,6 +65,10 @@ instance toTextString :: ToText String where
 --------------------
 -- Formless Validation
 --------------------
+
+-- TODO: https://pursuit.purescript.org/packages/purescript-generics-rep
+-- | For reading data fields of nullary constructors
+--generic :: ???
 
 emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->

@@ -16,14 +16,14 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
-formWidget :: Widget HTML MF.User
-formWidget = MF.formWidget (MF.initState MF.initialInputs MF.validators)
+instContactWidg :: Widget HTML MF.User
+instContactWidg = MF.instContactWidg (MF.initState MF.initialInputs MF.validators)
 
 page :: Widget HTML Unit
 page = do
   user <- D.div'
     [ D.h2' [D.text "Institution Contact"]
-    , formWidget
+    , instContactWidg
     ]
   -- Assuming some effectful computation to receive the ID
   -- id <- registerUser user
