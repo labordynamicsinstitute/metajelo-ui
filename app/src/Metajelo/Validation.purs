@@ -2,6 +2,7 @@ module Metajelo.Validation where
 
 import Prelude
 
+import Data.Bifunctor (lmap)
 import Data.Either (Either(..))
 import Data.Foldable (length) as Foldable
 import Data.Generic.Rep (class Generic)
@@ -17,12 +18,14 @@ import Effect.Aff.Class (class MonadAff, liftAff)
 import Formless (FormFieldResult, _Error)
 import Formless as F
 import Formless.Validation (Validation(..), hoistFnE_)
+import Text.Email.Validate as EA
 import Type.Data.Symbol (SProxy(..))
+
+type Email = EA.EmailAddress
 
 data FieldError
   = EmptyField
-  | InvalidEmail
-  | EmailInUse
+  | InvalidEmail String
   | TooShort Int
   | TooLong Int
   | InvalidInt String
@@ -35,8 +38,7 @@ instance showFieldError :: Show FieldError where
 
 instance toTextFieldError :: ToText FieldError where
   toText EmptyField = "This field is required."
-  toText InvalidEmail = "That email is not valid."
-  toText EmailInUse = "That email is already being used."
+  toText (InvalidEmail str) = "Email validation error: " <> str
   toText (TooShort n) = "You must enter at least " <> show n <> " characters."
   toText (TooLong n) = "You must enter less than " <> show n <> " characters."
   toText (InvalidInt str) = "Could not parse \"" <> str <> "\" to a valid integer."
@@ -47,11 +49,6 @@ instance toTextFieldError :: ToText FieldError where
 newtype Name = Name String
 derive instance newtypeName :: Newtype Name _
 derive newtype instance showName :: Show Name
-
-newtype Email = Email String
-derive instance newtypeEmail :: Newtype Email _
-derive newtype instance eqEmail :: Eq Email
-derive newtype instance showEmail :: Show Email
 
 -- | Unpacks errors to render as a string
 showError :: ∀ e o. ToText e => FormFieldResult e o -> Maybe String
@@ -69,9 +66,7 @@ instance toTextString :: ToText String where
 
 emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->
-  if contains (Pattern "@") str
-    then pure $ Email str
-    else Left InvalidEmail
+  lmap (\msg -> InvalidEmail msg) $ EA.validate str
 
 -- Validate that the current field is equal to another field named "email1"
 equalsEmail1
@@ -120,18 +115,18 @@ nonEmptyStr = hoistFnE_ $ \str ->
 -- Formless Async Validation
 --------------------
 
-emailIsUsed :: ∀ form m. MonadAff m => Validation form m FieldError Email Email
-emailIsUsed = Validation \_ e@(Email e') -> do
-  -- Perhaps we hit the server to  if the email is in use
-  _ <- liftAff $ delay $ Milliseconds 1000.0
-  pure $ if (contains (Pattern "t") e')
-    then pure e
-    else Left EmailInUse
+-- emailIsUsed :: ∀ form m. MonadAff m => Validation form m FieldError Email Email
+-- emailIsUsed = Validation \_ e@(EA.EmailAddress e') -> do
+--   -- Perhaps we hit the server to  if the email is in use
+--   _ <- liftAff $ delay $ Milliseconds 1000.0
+--   pure $ if (contains (Pattern "t") e')
+--     then pure e
+--     else Left EmailInUse
 
-enoughMoney :: ∀ form m. MonadAff m => Validation form m FieldError Int Int
-enoughMoney = Validation \_ i -> do
-  -- Let's check if we have enough money...
-  _ <- liftAff $ delay $ Milliseconds 5000.0
-  pure $ if (i > 1000)
-    then pure i
-    else Left NotEnoughMoney
+-- enoughMoney :: ∀ form m. MonadAff m => Validation form m FieldError Int Int
+-- enoughMoney = Validation \_ i -> do
+--   -- Let's check if we have enough money...
+--   _ <- liftAff $ delay $ Milliseconds 5000.0
+--   pure $ if (i > 1000)
+--     then pure i
+--     else Left NotEnoughMoney

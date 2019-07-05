@@ -22,7 +22,7 @@ formWidget = MF.formWidget (MF.initState MF.initialInputs MF.validators)
 page :: Widget HTML Unit
 page = do
   user <- D.div'
-    [ D.h1' [D.text "My Form"]
+    [ D.h2' [D.text "Institution Contact"]
     , formWidget
     ]
   -- Assuming some effectful computation to receive the ID

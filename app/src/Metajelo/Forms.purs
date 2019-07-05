@@ -1,5 +1,7 @@
 module Metajelo.Forms where
 
+import Prelude (bind, pure, ($), (<$>), (<<<))
+
 import Concur.Core (Widget)
 import Concur.React (HTML)
 import Concur.React.DOM as D
@@ -14,33 +16,32 @@ import Data.Time.Duration (Milliseconds(..))
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Metajelo.Validation as V
-import Prelude (bind, pure, ($), (<$>), (<<<))
+import Text.Email.Validate (EmailAddress)
 
 -- import Metajelo.Types
--- import Text.Email.Validate                  as EA
 -- import URL.Validator                        (urlToString)
 
 type User =
   { name :: String
-  , email :: V.Email
+  , email :: EmailAddress
   }
 
 -- Note: Common practice to use `Void` to represent "no error possible"
-newtype MyForm r f = MyForm (r
+newtype InstContactForm r f = InstContactForm (r
   ( name   :: f V.FieldError String String
-  , email1 :: f V.FieldError String V.Email
-  , email2 :: f V.FieldError String V.Email
+  , email1 :: f V.FieldError String EmailAddress
+  , email2 :: f V.FieldError String EmailAddress
   ))
-derive instance newtypeMyForm :: Newtype (MyForm r f) _
+derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
 
-proxies :: F.SProxies MyForm
-proxies = F.mkSProxies (F.FormProxy :: F.FormProxy MyForm)
+proxies :: F.SProxies InstContactForm
+proxies = F.mkSProxies (F.FormProxy :: F.FormProxy InstContactForm)
 
 -- Some type helpers
-type InputForm = MyForm Record F.InputField
-type OutputForm = MyForm Record F.OutputField
-type Validators = MyForm Record (F.Validation MyForm (Widget HTML))
-type FState = F.State MyForm (Widget HTML)
+type InputForm = InstContactForm Record F.InputField
+type OutputForm = InstContactForm Record F.OutputField
+type Validators = InstContactForm Record (F.Validation InstContactForm (Widget HTML))
+type FState = F.State InstContactForm (Widget HTML)
 
 initialInputs :: InputForm
 initialInputs = F.wrapInputFields
@@ -50,7 +51,7 @@ initialInputs = F.wrapInputFields
   }
 
 validators :: Validators
-validators = MyForm
+validators = InstContactForm
   { name: V.minLength 3
   , email1: V.emailFormat
   , email2: V.equalsEmail1 >>> V.emailFormat
