@@ -17,6 +17,7 @@ import Formless as F
 import Formless.Internal.Transform as Internal
 import Metajelo.Types as M
 import Metajelo.Validation as V
+import Metajelo.XPaths.Read as MR
 import Text.Email.Validate (EmailAddress)
 
 -- import Metajelo.Types
@@ -51,7 +52,7 @@ validators :: Validators
 validators = InstContactForm {
   email1: V.emailFormat
 , email2: V.equalsEmail1 >>> V.emailFormat
-, contactType: V.minLength 3 -- TODO: use V.generic?
+, contactType: V.readSimpleType MR.readInstitutionContactType
 }
 
 -- This should be in Formless

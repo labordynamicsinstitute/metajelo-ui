@@ -16,7 +16,7 @@ import Data.String.Pattern (Pattern(..))
 import Effect.Aff (Milliseconds(..), delay)
 import Effect.Aff.Class (class MonadAff, liftAff)
 import Effect (Effect)
-import Effect.Exception (message, try)
+--import Effect.Exception (message, try)
 import Formless (FormFieldResult, _Error)
 import Formless as F
 import Formless.Validation (Validation(..), hoistFnE_, hoistFnME_)
@@ -68,13 +68,11 @@ instance toTextString :: ToText String where
 -- Formless Validation
 --------------------
 
--- TODO: https://pursuit.purescript.org/packages/purescript-generics-rep
 -- | For reading data fields of nullary constructors
-readSimpleType :: ∀ form t. (String -> Effect t) ->
-  Validation form Effect FieldError String t
-readSimpleType reader = hoistFnME_ $ \str -> do
-  valEi <- try $ reader str
-  pure $ lmap (\err -> InvalidInput $ message err) valEi
+readSimpleType :: ∀ form m t. Monad m =>
+  (String -> Either String t) -> Validation form m FieldError String t
+readSimpleType reader = hoistFnE_ $ \str ->
+  lmap (\err -> InvalidInput $ err) $ reader str
 
 emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->
