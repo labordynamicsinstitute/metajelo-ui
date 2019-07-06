@@ -88,7 +88,11 @@ instContactWidg fstate = do
       ]
     , errorDisplay $ F.getError proxies.email2 fstate.form
     , D.div' [D.text "Contact type"]
-    , D.menu
+    -- , D.menu
+    --   [ P.value $ F.getInput proxies.contactType fstate.form
+    --   , (F.set proxies.contactType <<< P.unsafeTargetValue) <$> P.onChange
+    --   ]
+    , D.input
       [ P.value $ F.getInput proxies.contactType fstate.form
       , (F.set proxies.contactType <<< P.unsafeTargetValue) <$> P.onChange
       ]

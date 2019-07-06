@@ -9,6 +9,8 @@ import Concur.React.Run (runWidgetInDom)
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
+import Metajelo.Types as M
+
 
 main :: Effect Unit
 main = pure unit
@@ -16,12 +18,12 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
-instContactWidg :: Widget HTML MF.User
+instContactWidg :: Widget HTML M.InstitutionContact
 instContactWidg = MF.instContactWidg (MF.initState MF.initialInputs MF.validators)
 
 page :: Widget HTML Unit
 page = do
-  user <- D.div'
+  contact <- D.div'
     [ D.h2' [D.text "Institution Contact"]
     , instContactWidg
     ]
@@ -29,4 +31,4 @@ page = do
   -- id <- registerUser user
   -- let user = { name: form.name, email: form.email, id }
   -- liftEffect $ Console.log $ "Got a user! " <> show (user :: MF.User)
-  D.h2' [D.text $ "Got a user! " <> show user]
+  D.h2' [D.text $ "Got a contact! " <> show contact]
