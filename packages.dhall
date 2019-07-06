@@ -167,12 +167,12 @@ let additions =
           mkPackage
           [ "prelude", "effect", "partial", "web-dom" ]
           "https://github.com/purescript-web/purescript-web-dom-parser.git"
-          "v5.0.0"
+          "v6.0.0"
       , web-dom-xpath =
           mkPackage
           [ "prelude", "effect", "partial", "web-dom" ]
           "https://github.com/purescript-web/purescript-web-dom-xpath.git"
-          "v1.2.0"
+          "v1.2.1"
       , xpath-like =
           mkPackage
           [ "prelude" ]
