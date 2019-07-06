@@ -15,9 +15,11 @@ import Data.String (contains, length, null)
 import Data.String.Pattern (Pattern(..))
 import Effect.Aff (Milliseconds(..), delay)
 import Effect.Aff.Class (class MonadAff, liftAff)
+import Effect (Effect)
+import Effect.Exception (message, try)
 import Formless (FormFieldResult, _Error)
 import Formless as F
-import Formless.Validation (Validation(..), hoistFnE_)
+import Formless.Validation (Validation(..), hoistFnE_, hoistFnME_)
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Text.Email.Validate as EA
@@ -28,11 +30,11 @@ type Email = EA.EmailAddress
 data FieldError
   = EmptyField
   | InvalidEmail String
+  | InvalidInput String
   | TooShort Int
   | TooLong Int
   | InvalidInt String
   | NotEqual String String
-  | NotEnoughMoney
 
 derive instance genericFieldError :: Generic FieldError _
 instance showFieldError :: Show FieldError where
@@ -40,12 +42,12 @@ instance showFieldError :: Show FieldError where
 
 instance toTextFieldError :: ToText FieldError where
   toText EmptyField = "This field is required."
+  toText (InvalidInput str) = "Invalid input: " <> str
   toText (InvalidEmail str) = "Email validation error: " <> str
   toText (TooShort n) = "You must enter at least " <> show n <> " characters."
   toText (TooLong n) = "You must enter less than " <> show n <> " characters."
   toText (InvalidInt str) = "Could not parse \"" <> str <> "\" to a valid integer."
   toText (NotEqual str0 str1) = "This field contains \"" <> str1 <> "\" but must be equal to \"" <> str0 <> "\" to validate."
-  toText (NotEnoughMoney) = "You don't have that much money."
 
 -- | Some useful types we'll parse to
 newtype Name = Name String
@@ -68,7 +70,11 @@ instance toTextString :: ToText String where
 
 -- TODO: https://pursuit.purescript.org/packages/purescript-generics-rep
 -- | For reading data fields of nullary constructors
---generic :: ???
+readSimpleType :: ∀ form t. (String -> Effect t) ->
+  Validation form Effect FieldError String t
+readSimpleType reader = hoistFnME_ $ \str -> do
+  valEi <- try $ reader str
+  pure $ lmap (\err -> InvalidInput $ message err) valEi
 
 emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->

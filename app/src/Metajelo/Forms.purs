@@ -9,7 +9,7 @@ import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
 import Data.Either (Either(..))
-import Data.Maybe (maybe)
+import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Data.Time.Duration (Milliseconds(..))
@@ -22,11 +22,12 @@ import Text.Email.Validate (EmailAddress)
 -- import Metajelo.Types
 -- import URL.Validator                        (urlToString)
 
+-- TODO: https://pursuit.purescript.org/packages/purescript-generics-rep
 -- Note: Common practice to use `Void` to represent "no error possible"
 newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
   , email2 :: f V.FieldError String EmailAddress
-  , contactType :: f V.FieldError String String
+  , contactType :: f V.FieldError String (Maybe M.InstitutionContactType)
   ))
 derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
 
@@ -98,7 +99,7 @@ instContactWidg fstate = do
     Left fstate' -> instContactWidg fstate'
     Right out -> do
       let form = F.unwrapOutputFields out
-      pure {emailAddress: form.email1, contactType: Nothing} -- FIXME: Nothing
+      pure {emailAddress: form.email1, contactType: form.contactType}
   where
     errorDisplay = maybe mempty (\err -> D.div [P.style {color: "red"}] [D.text $ V.toText err])
     debounceTime = Milliseconds 300.0
