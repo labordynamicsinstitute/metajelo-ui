@@ -1,6 +1,6 @@
 module Metajelo.Forms where
 
-import Prelude (bind, pure, ($), (<$>), (<<<))
+import Prelude (bind, pure, show, ($), (<$>), (<#>), (<<<))
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -8,11 +8,16 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
+import Data.Array ((:))
+import Data.Bounded (bottom)
 import Data.Either (Either(..))
+import Data.Enum (class BoundedEnum, class Enum, upFromIncluding)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
+import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
+-- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Metajelo.Types as M
@@ -70,6 +75,30 @@ initState form validations =
     , allTouched: false
     }
   }
+
+
+menuChooseTxt :: forall a. Widget HTML a
+menuChooseTxt = D.text "--Please choose an option--"
+
+pleaseChooseOptionMay :: forall a. Widget HTML (Maybe a)
+pleaseChooseOptionMay = D.option [P.value Nothing] [menuChooseTxt]
+
+pleaseChooseOption :: forall a. Widget HTML a
+pleaseChooseOption = D.option' [menuChooseTxt]
+
+typedDropdownMenu :: forall a s form. BoundedEnum a => IsSymbol s =>
+  SProxy s -> FState -> Widget HTML (F.Query form)
+typedDropdownMenu proxy fstate = D.select [
+  P.value $ F.getInput proxy fstate.form
+, (F.set proxy <<< P.unsafeTargetValue) <$> P.onChange
+] $ -- pleaseChooseOption :
+  allVals <#> (\v -> D.option [P.value v] [D.text $ show v])
+  where
+    allVals :: Array a
+    allVals = upFromIncluding bottom
+
+-- typedOptionalDropdownMenu :: forall a. BoundedEnum a => Widget HTML (Maybe a)
+--   where allVals = upFromIncluding bottom
 
 instContactWidg :: FState -> Widget HTML M.InstitutionContact
 instContactWidg fstate = do
