@@ -2,6 +2,7 @@ module Metajelo.Validation where
 
 import Prelude
 
+import Control.Category (identity)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..))
 import Data.Foldable (length) as Foldable
@@ -10,7 +11,7 @@ import Data.Generic.Rep.Show (genericShow)
 import Data.Int (fromString) as Int
 import Data.Lens (preview)
 import Data.Maybe (Maybe, maybe)
-import Data.Newtype (class Newtype)
+import Data.Newtype (class Newtype, unwrap)
 import Data.String (contains, length, null)
 import Data.String.Pattern (Pattern(..))
 import Effect.Aff (Milliseconds(..), delay)
@@ -19,7 +20,7 @@ import Effect (Effect)
 --import Effect.Exception (message, try)
 import Formless (FormFieldResult, _Error)
 import Formless as F
-import Formless.Validation (Validation(..), hoistFnE_, hoistFnME_)
+import Formless.Validation (Validation(..), hoistFn_, hoistFnE_)
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Text.Email.Validate as EA
@@ -67,6 +68,15 @@ instance toTextString :: ToText String where
 --------------------
 -- Formless Validation
 --------------------
+
+-- | Assumes input is valid
+dummy ::  ∀ form m a. Monad m => Validation form m Void a a
+dummy = hoistFn_ identity
+
+-- | Assumes input is valid
+dummyUnwrap ::  ∀ form m t a. Monad m => Newtype t a => Validation form m Void t a
+dummyUnwrap = hoistFn_ unwrap
+
 
 -- | For reading data fields of nullary constructors
 readSimpleType :: ∀ form m t. Monad m =>
