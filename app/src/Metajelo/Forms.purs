@@ -1,6 +1,6 @@
 module Metajelo.Forms where
 
-import Prelude (Void, bind, join, pure, show, ($), (<$>), (<#>), (<<<))
+import Prelude (class Show, Void, bind, join, pure, show, (+), (-), ($), (<$>), (<#>), (<<<))
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -11,10 +11,8 @@ import Control.Category ((>>>))
 import Data.Array ((:))
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
-import Data.Enum (class BoundedEnum, class Enum, upFromIncluding)
+import Data.Enum (class BoundedEnum, class Enum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
-import Data.Generic.Rep (class Generic)
-import Data.Generic.Rep.Enum as GEnum
 import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
@@ -39,7 +37,7 @@ newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
   , email2 :: f V.FieldError String EmailAddress
   , contactType :: f Void
-    MayInstitutionContactType (Maybe M.InstitutionContactType)
+    (MaybeWrapped M.InstitutionContactType) (Maybe M.InstitutionContactType)
   ))
 derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
 
@@ -123,6 +121,7 @@ instContactWidg fstate = do
 
 --- Utilities ---
 
+
 -- This should be in Formless
 initState :: InputForm -> Validators -> FState
 initState form validations =
@@ -144,36 +143,48 @@ class IsOption a where
   toOptionLabel :: a -> String
   fromOptionValue :: String -> a
 
+
 -- instance isOptionString :: IsOption String where
 --   toOptionValue = identity
 --   toOptionLabel = identity
 --   fromOptionValue = identity
 
-_ictToString :: Maybe M.InstitutionContactType -> String
-_ictToString (Just v) = show v
-_ictToString Nothing = ""
+-- _ictToString :: Maybe M.InstitutionContactType -> String
+-- _ictToString (Just v) = show v
+-- _ictToString Nothing = ""
+
+
+-- | A lawful class to denote Cardinality a << Cardinality Int
+class Bounded a <= SmallBounded a
+
+newtype MaybeWrapped a = MaybeWrapped (Maybe a)
+
+derive instance newtypeMaybeWrapped :: Newtype (MaybeWrapped a) _
+
+mayToString :: forall a. Show a => Maybe a -> String
+mayToString (Just v) = show v
+mayToString Nothing = ""
+
+instance boundedEnumMaybe :: (SmallBounded a, BoundedEnum a)
+  => BoundedEnum (MaybeWrapped a) where
+    cardinality = Cardinality $ unwrap (cardinality :: Cardinality a) + 1
+    toEnum 0 = wrap  Nothing
+    toEnum n = wrap $ Just <$> toEnum (n - 1)
+    fromEnum Nothing = 0
+    fromEnum (Just e) = fromEnum e + 1
+
 
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
-    toOptionValue = _ictToString
-    toOptionLabel = _ictToString
+    toOptionValue = mayToString
+    toOptionLabel = mayToString
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
 
-newtype MayInstitutionContactType =
-  MayInstitutionContactType (Maybe M.InstitutionContactType)
-derive instance newtypeMayInstitutionContactType
-  :: Newtype MayInstitutionContactType _
-derive newtype instance eqMayInstitutionContactType
-  :: Eq MayInstitutionContactType
-derive newtype instance isOptionMayInstitutionContactType
-  :: IsOption MayInstitutionContactType
-
-derive instance genericMayInstitutionContactType :: Generic MayInstitutionContactType _
-instance boundedEnumMaybeInstitutionContactType
-  :: BoundedEnum MayInstitutionContactType where
-  cardinality = GEnum.genericCardinality
-  toEnum = GEnum.genericToEnum
-  fromEnum = GEnum.genericFromEnum
+instance isOptionMaybeWrappedForward
+  :: IsOption (Maybe a) => IsOption (MaybeWrapped a) where
+    toOptionValue (MaybeWrapped may) = toOptionValue may
+    toOptionLabel (MaybeWrapped may) = toOptionLabel may
+    fromOptionValue str = wrap $ (fromOptionValue str :: Maybe a)
 
 menu :: forall opt s form e o restF restI inputs fields
    . IsSymbol s
