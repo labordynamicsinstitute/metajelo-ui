@@ -29,11 +29,15 @@ import Prim.Row (class Cons)
 import Text.Email.Validate (EmailAddress)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
+
+-- | No validation is needed for this field type, as the input and ouput
+-- | types (`io`) are the same.
+type IdentityField f io = f Void io io
+
 newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
   , email2 :: f V.FieldError String EmailAddress
-  , contactType :: f Void
-    (Maybe M.InstitutionContactType) (Maybe M.InstitutionContactType)
+  , contactType :: IdentityField f (Maybe M.InstitutionContactType)
   ))
 derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
 
@@ -42,7 +46,7 @@ proxies = F.mkSProxies (F.FormProxy :: F.FormProxy InstContactForm)
 
 -- Some type helpers
 type InputForm = InstContactForm Record F.InputField
-type OutputForm = InstContactForm Record F.OutputField
+-- type OutputForm = InstContactForm Record F.OutputField
 type Validators = InstContactForm Record (F.Validation InstContactForm (Widget HTML))
 type FState = F.State InstContactForm (Widget HTML)
 
@@ -123,20 +127,19 @@ class IsOption a where
   toOptionLabel :: a -> String
   fromOptionValue :: String -> a
 
-
-newtype MaybeWrapped a = MaybeWrapped (Maybe a)
-
-derive instance newtypeMaybeWrapped :: Newtype (MaybeWrapped a) _
-
 mayToString :: forall a. Show a => Maybe a -> String
 mayToString (Just v) = show v
 mayToString Nothing = ""
 
+emptyMeansOptional :: forall a. Show a => Maybe a -> String
+emptyMeansOptional mayV = case mayV of
+  Nothing -> "(optional)"
+  x -> mayToString x
 
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
     toOptionValue = mayToString
-    toOptionLabel = mayToString
+    toOptionLabel = emptyMeansOptional
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
 
 menu :: forall opt s form e o restF restI inputs fields
