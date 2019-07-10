@@ -127,6 +127,21 @@ let additions =
           ]
           "https://github.com/ajnsit/purescript-concur-formless.git"
           "master"
+      , enums =
+          mkPackage
+          [ "control"
+          , "either"
+          , "gen"
+          , "maybe"
+          , "newtype"
+          , "nonempty"
+          , "partial"
+          , "prelude"
+          , "tuples"
+          , "unfoldable"
+          ]
+          "https://github.com/bbarker/purescript-enums.git"
+          "ff423fe1f994d2ca38fcf5b57b0ce911cfc889cd"
       , metajelo =
           mkPackage
           [ "generics-rep"
@@ -137,9 +152,10 @@ let additions =
           , "web-dom"
           , "web-dom-parser"
           , "web-dom-xpath"
+          , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "v1.0.1"
+          "master"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
@@ -166,12 +182,17 @@ let additions =
           mkPackage
           [ "prelude", "effect", "partial", "web-dom" ]
           "https://github.com/purescript-web/purescript-web-dom-parser.git"
-          "v5.0.0"
+          "v6.0.0"
       , web-dom-xpath =
           mkPackage
           [ "prelude", "effect", "partial", "web-dom" ]
           "https://github.com/purescript-web/purescript-web-dom-xpath.git"
-          "v1.2.0"
+          "v1.2.1"
+      , xpath-like =
+          mkPackage
+          [ "prelude" ]
+          "https://github.com/bbarker/purescript-xpath-like.git"
+          "v3.0.0"
       }
 
 in  upstream // overrides // additions
