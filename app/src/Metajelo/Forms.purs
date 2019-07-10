@@ -28,16 +28,12 @@ import Metajelo.XPaths.Read as MR
 import Prim.Row (class Cons)
 import Text.Email.Validate (EmailAddress)
 
--- import Metajelo.Types
--- import URL.Validator                        (urlToString)
-
--- TODO: https://pursuit.purescript.org/packages/purescript-generics-rep
 -- Note: Common practice to use `Void` to represent "no error possible"
 newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
   , email2 :: f V.FieldError String EmailAddress
   , contactType :: f Void
-    (MaybeWrapped M.InstitutionContactType) (Maybe M.InstitutionContactType)
+    (Maybe M.InstitutionContactType) (Maybe M.InstitutionContactType)
   ))
 derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
 
@@ -54,39 +50,23 @@ initialInputs :: InputForm
 initialInputs = F.wrapInputFields {
   email1: ""
 , email2: ""
-, contactType: wrap Nothing
+, contactType: Nothing
 }
 
 validators :: Validators
 validators = InstContactForm {
   email1: V.emailFormat
 , email2: V.equalsEmail1 >>> V.emailFormat
-, contactType: V.dummyUnwrap -- V.readSimpleType MR.readInstitutionContactType
+, contactType: V.dummy
 }
 
 
 menuChooseTxt :: forall a. Widget HTML a
 menuChooseTxt = D.text "--Please choose an option--"
 
--- pleaseChooseOptionMay :: forall a. Widget HTML (Maybe a)
--- pleaseChooseOptionMay = D.option [P.value Nothing] [menuChooseTxt]
-
 pleaseChooseOption :: forall a. Widget HTML a
 pleaseChooseOption = D.option' [menuChooseTxt]
 
--- typedDropdownMenu :: forall a s form. BoundedEnum a => IsSymbol s =>
---   SProxy s -> FState -> Widget HTML (F.Query form)
--- typedDropdownMenu proxy fstate = D.select [
---   P.value $ F.getInput proxy fstate.form
--- , (F.set proxy <<< P.unsafeTargetValue) <$> P.onChange
--- ] $ -- pleaseChooseOption :
---   allVals <#> (\v -> D.option [P.value v] [D.text $ show v])
---   where
---     allVals :: Array a
---     allVals = upFromIncluding bottom
-
--- typedOptionalDropdownMenu :: forall a. BoundedEnum a => Widget HTML (Maybe a)
---   where allVals = upFromIncluding bottom
 
 instContactWidg :: FState -> Widget HTML M.InstitutionContact
 instContactWidg fstate = do
@@ -104,8 +84,8 @@ instContactWidg fstate = do
       , (F.asyncSetValidate debounceTime proxies.email2 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email2 fstate.form
-    , menu fstate.form proxies.contactType
-    , D.div' [F.submit <$ D.button [P.onClick] [D.text "Submit"]]
+    , D.div' [D.text "Contact type: ", menu fstate.form proxies.contactType]
+    , D.div' [ F.submit <$ D.button [P.onClick] [D.text "Submit"]]
     ]
   res <- F.eval query fstate
   case res of
@@ -144,19 +124,6 @@ class IsOption a where
   fromOptionValue :: String -> a
 
 
--- instance isOptionString :: IsOption String where
---   toOptionValue = identity
---   toOptionLabel = identity
---   fromOptionValue = identity
-
--- _ictToString :: Maybe M.InstitutionContactType -> String
--- _ictToString (Just v) = show v
--- _ictToString Nothing = ""
-
-
--- | A lawful class to denote Cardinality a << Cardinality Int
-class Bounded a <= SmallBounded a
-
 newtype MaybeWrapped a = MaybeWrapped (Maybe a)
 
 derive instance newtypeMaybeWrapped :: Newtype (MaybeWrapped a) _
@@ -165,26 +132,12 @@ mayToString :: forall a. Show a => Maybe a -> String
 mayToString (Just v) = show v
 mayToString Nothing = ""
 
-instance boundedEnumMaybe :: (SmallBounded a, BoundedEnum a)
-  => BoundedEnum (MaybeWrapped a) where
-    cardinality = Cardinality $ unwrap (cardinality :: Cardinality a) + 1
-    toEnum 0 = wrap  Nothing
-    toEnum n = wrap $ Just <$> toEnum (n - 1)
-    fromEnum Nothing = 0
-    fromEnum (Just e) = fromEnum e + 1
-
 
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
     toOptionValue = mayToString
     toOptionLabel = mayToString
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
-
-instance isOptionMaybeWrappedForward
-  :: IsOption (Maybe a) => IsOption (MaybeWrapped a) where
-    toOptionValue (MaybeWrapped may) = toOptionValue may
-    toOptionLabel (MaybeWrapped may) = toOptionLabel may
-    fromOptionValue str = wrap $ (fromOptionValue str :: Maybe a)
 
 menu :: forall opt s form e o restF restI inputs fields
    . IsSymbol s

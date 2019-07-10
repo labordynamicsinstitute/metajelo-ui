@@ -127,6 +127,21 @@ let additions =
           ]
           "https://github.com/ajnsit/purescript-concur-formless.git"
           "master"
+      , enums =
+          mkPackage
+          [ "control"
+          , "either"
+          , "gen"
+          , "maybe"
+          , "newtype"
+          , "nonempty"
+          , "partial"
+          , "prelude"
+          , "tuples"
+          , "unfoldable"
+          ]
+          "https://github.com/bbarker/purescript-enums.git"
+          "ff423fe1f994d2ca38fcf5b57b0ce911cfc889cd"
       , metajelo =
           mkPackage
           [ "generics-rep"
@@ -140,7 +155,7 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "v3.1.0"
+          "master"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
