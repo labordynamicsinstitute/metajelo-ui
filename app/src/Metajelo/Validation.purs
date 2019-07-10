@@ -73,16 +73,16 @@ instance toTextString :: ToText String where
 dummy ::  ∀ form m a. Monad m => Validation form m Void a a
 dummy = hoistFn_ identity
 
--- | Assumes input is valid
-dummyUnwrap ::  ∀ form m t a. Monad m => Newtype t a => Validation form m Void t a
-dummyUnwrap = hoistFn_ unwrap
+-- -- | Assumes input is valid
+-- dummyUnwrap ::  ∀ form m t a. Monad m => Newtype t a => Validation form m Void t a
+-- dummyUnwrap = hoistFn_ unwrap
 
 
--- | For reading data fields of nullary constructors
-readSimpleType :: ∀ form m t. Monad m =>
-  (String -> Either String t) -> Validation form m FieldError String t
-readSimpleType reader = hoistFnE_ $ \str ->
-  lmap (\err -> InvalidInput $ err) $ reader str
+-- -- | For reading data fields of nullary constructors
+-- readSimpleType :: ∀ form m t. Monad m =>
+--   (String -> Either String t) -> Validation form m FieldError String t
+-- readSimpleType reader = hoistFnE_ $ \str ->
+--   lmap (\err -> InvalidInput $ err) $ reader str
 
 emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->

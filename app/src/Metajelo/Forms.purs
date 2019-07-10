@@ -22,17 +22,13 @@ import Data.Variant (Variant)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
+import Metajelo.FormUtil (class IsOption, IdentityField
+  , emptyMeansOptional, mayToString, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
 import Prim.Row (class Cons)
 import Text.Email.Validate (EmailAddress)
-
--- Note: Common practice to use `Void` to represent "no error possible"
-
--- | No validation is needed for this field type, as the input and ouput
--- | types (`io`) are the same.
-type IdentityField f io = f Void io io
 
 newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
@@ -64,14 +60,6 @@ validators = InstContactForm {
 , contactType: V.dummy
 }
 
-
-menuChooseTxt :: forall a. Widget HTML a
-menuChooseTxt = D.text "--Please choose an option--"
-
-pleaseChooseOption :: forall a. Widget HTML a
-pleaseChooseOption = D.option' [menuChooseTxt]
-
-
 instContactWidg :: FState -> Widget HTML M.InstitutionContact
 instContactWidg fstate = do
   query <- D.div' [
@@ -102,9 +90,8 @@ instContactWidg fstate = do
     debounceTime = Milliseconds 300.0
 
 
-
---- Utilities ---
-
+instContactWidgDefault :: Widget HTML M.InstitutionContact
+instContactWidgDefault = instContactWidg (initState initialInputs validators)
 
 -- This should be in Formless
 initState :: InputForm -> Validators -> FState
@@ -121,42 +108,3 @@ initState form validations =
     , allTouched: false
     }
   }
-
-class IsOption a where
-  toOptionValue :: a -> String
-  toOptionLabel :: a -> String
-  fromOptionValue :: String -> a
-
-mayToString :: forall a. Show a => Maybe a -> String
-mayToString (Just v) = show v
-mayToString Nothing = ""
-
-emptyMeansOptional :: forall a. Show a => Maybe a -> String
-emptyMeansOptional mayV = case mayV of
-  Nothing -> "(optional)"
-  x -> mayToString x
-
-instance isOptionMaybeInstitutionContactType
-  :: IsOption (Maybe M.InstitutionContactType) where
-    toOptionValue = mayToString
-    toOptionLabel = emptyMeansOptional
-    fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
-
-menu :: forall opt s form e o restF restI inputs fields
-   . IsSymbol s
-   => IsOption opt
-   => BoundedEnum opt
-   => Newtype (form Record F.FormField) (Record fields)
-   => Cons s (F.FormField e opt o) restF fields
-   => Newtype (form Variant F.InputFunction) (Variant inputs)
-   => Cons s (F.InputFunction e opt o) restI inputs
-   => form Record F.FormField
-  -> SProxy s
-  -> Widget HTML (F.Query form)
-menu form field = D.select
-  [ P.defaultValue $ toOptionValue $ F.getInput field form
-    , (F.set field <<< fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
-    ]
-  (upFromIncluding (bottom :: opt) <#> \opt ->
-    D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
-
