@@ -82,16 +82,15 @@ contactForm :: FState -> Widget HTML M.InstitutionContact
 contactForm fstate = do
   query <- D.div' [
       D.div' [D.text "Email"]
-    , D.input
-      [ P.value $ F.getInput proxies.email1 fstate.form
-        -- This will help us avoid hitting the server on every single key press.
-      , (F.asyncSetValidate debounceTime proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
+    , D.input [
+        P.value $ F.getInput proxies.email1 fstate.form
+      , (F.setValidate proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form
     , D.div' [D.text "Confirm Email"]
-    , D.input
-      [ P.value $ F.getInput proxies.email2 fstate.form
-      , (F.asyncSetValidate debounceTime proxies.email2 <<< P.unsafeTargetValue) <$> P.onChange
+    , D.input [
+        P.value $ F.getInput proxies.email2 fstate.form
+      , (F.setValidate proxies.email2 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email2 fstate.form
     , D.div' [D.text "Contact type: ",  menu fstate.form proxies.contactType]
@@ -104,8 +103,9 @@ contactForm fstate = do
       let form = F.unwrapOutputFields out
       pure {emailAddress: form.email1, contactType: form.contactType}
   where
-    errorDisplay = maybe mempty (\err -> D.div [P.style {color: "red"}] [D.text $ V.toText err])
-    debounceTime = Milliseconds 300.0
+    errorDisplay = maybe mempty (\err ->
+      D.div [P.style {color: "red"}] [D.text $ V.toText err]
+    )
 
 
 
