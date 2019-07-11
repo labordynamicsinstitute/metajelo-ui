@@ -13,6 +13,7 @@ You can edit this file as you like.
     , "email-validate"
     , "foreign-object"
     , "metajelo"
+    , "metajelo-web"
     , "naturals"
     , "profunctor"
     , "stringutils"

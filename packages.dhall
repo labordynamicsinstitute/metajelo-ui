@@ -156,6 +156,19 @@ let additions =
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
           "master"
+      , metajelo-web =
+          mkPackage
+          [ "prelude"
+          , "concur-react"
+          , "email-validate"
+          , "foreign-object"
+          , "metajelo"
+          , "profunctor"
+          , "stringutils"
+          , "url-validator"
+          ]
+          "https://github.com/labordynamicsinstitute/metajelo-web.git"
+          "v1.0.1"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]

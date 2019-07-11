@@ -60,8 +60,8 @@ validators = InstContactForm {
 , contactType: V.dummy
 }
 
-instContactWidg :: FState -> Widget HTML M.InstitutionContact
-instContactWidg fstate = do
+contactForm :: FState -> Widget HTML M.InstitutionContact
+contactForm fstate = do
   query <- D.div' [
       D.div' [D.text "Email"]
     , D.input
@@ -81,7 +81,7 @@ instContactWidg fstate = do
     ]
   res <- F.eval query fstate
   case res of
-    Left fstate' -> instContactWidg fstate'
+    Left fstate' -> contactForm fstate'
     Right out -> do
       let form = F.unwrapOutputFields out
       pure {emailAddress: form.email1, contactType: form.contactType}
@@ -90,8 +90,8 @@ instContactWidg fstate = do
     debounceTime = Milliseconds 300.0
 
 
-instContactWidgDefault :: Widget HTML M.InstitutionContact
-instContactWidgDefault = instContactWidg (initState initialInputs validators)
+contactFormDefault :: Widget HTML M.InstitutionContact
+contactFormDefault = contactForm (initState initialInputs validators)
 
 -- This should be in Formless
 initState :: InputForm -> Validators -> FState
