@@ -38,15 +38,12 @@ runFormSPA divId = runWidgetInDom divId page
 
 -- TODO: so far just a test of retrieving data from signals
 accumulateRecord :: String -> Signal HTML String
-accumulateRecord str = step str do
-  ic :: Maybe M.InstitutionContact <- D.div' [
-    -- FIXME: dyn means this will never return
-    dyn $ MF.contactSignal Nothing
-  , D.text str
-  ]
+accumulateRecord str = D.div_ [] do
+  ic <- MF.contactSignal Nothing
   let icString = show $ ic
   let newStr = "Completed Data from forms:\n" <> icString
-  pure $ accumulateRecord str
+  display $ D.text newStr
+  pure newStr
 
 page :: forall a. Widget HTML a
 page = do
