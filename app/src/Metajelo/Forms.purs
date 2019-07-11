@@ -79,8 +79,8 @@ contactForm fstate = do
       , (F.asyncSetValidate debounceTime proxies.email2 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email2 fstate.form
-    , D.div' [D.text "Contact type: ", menu fstate.form proxies.contactType]
-    , D.div' [ F.submit <$ D.button [P.onClick] [D.text "Submit"]]
+    , D.div' [D.text "Contact type: ", F.submit <$ menu fstate.form proxies.contactType]
+    -- , D.div' [ F.submit <$ D.button [P.onClick] [D.text "Submit"]]
     ]
   res <- F.eval query fstate
   case res of
