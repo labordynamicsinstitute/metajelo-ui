@@ -1,8 +1,9 @@
 module Metajelo.Forms where
 
-import Prelude (class Show, Void, bind, join, pure, show, (+), (-), ($), (<$>), (<#>), (<<<))
+import Prelude (class Show, Unit, Void, bind, discard, join, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<<<))
 
 import Concur.Core (Widget)
+import Concur.Core.FRP (Signal, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -13,6 +14,7 @@ import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
+import Data.Foldable (foldMap)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
@@ -26,6 +28,7 @@ import Metajelo.FormUtil (class IsOption, IdentityField
   , emptyMeansOptional, mayToString, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
+import Metajelo.View (contactWidg)
 import Metajelo.XPaths.Read as MR
 import Prim.Row (class Cons)
 import Text.Email.Validate (EmailAddress)
@@ -90,8 +93,17 @@ contactForm fstate = do
     debounceTime = Milliseconds 300.0
 
 
-contactFormDefault :: Widget HTML M.InstitutionContact
-contactFormDefault = contactForm (initState initialInputs validators)
+
+contactSignal :: Maybe M.InstitutionContact
+  -> Signal HTML (Maybe M.InstitutionContact)
+contactSignal instContactMay = step instContactMay do
+  instContact <- D.div' [
+    D.h2' [D.text "Institution Contact"]
+  , contactForm (initState initialInputs validators)
+  , foldMap contactWidg instContactMay
+  ]
+  pure $ contactSignal $ Just instContact
+
 
 -- This should be in Formless
 initState :: InputForm -> Validators -> FState
