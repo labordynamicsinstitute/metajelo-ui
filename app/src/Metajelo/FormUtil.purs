@@ -66,6 +66,8 @@ class IsOption a where
   toOptionLabel :: a -> String
   fromOptionValue :: String -> a
 
+--TODO: can we automate the creation of these with purescript-reflection?
+
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
     toOptionValue = mayToString

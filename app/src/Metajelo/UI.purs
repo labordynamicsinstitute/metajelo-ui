@@ -12,6 +12,9 @@ import Metajelo.Forms as MF
 import Metajelo.Types as M
 
 
+import Metajelo.View (contactWidg)
+
+
 main :: Effect Unit
 main = pure unit
 
@@ -22,10 +25,13 @@ page :: Widget HTML Unit
 page = do
   contact <- D.div'
     [ D.h2' [D.text "Institution Contact"]
-    , MF.instContactWidgDefault
+    , MF.contactFormDefault
     ]
   -- Assuming some effectful computation to receive the ID
   -- id <- registerUser user
   -- let user = { name: form.name, email: form.email, id }
   -- liftEffect $ Console.log $ "Got a user! " <> show (user :: MF.User)
-  D.h2' [D.text $ "Got a contact! " <> show contact]
+
+  --D.h2' [D.text $ "Got a contact! " <> show contact]
+  contactWidg contact
+

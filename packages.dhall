@@ -155,7 +155,20 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "master"
+          "5fdaa5338064a94c57141c00ff9f9f4e8d40aa14"
+      , metajelo-web =
+          mkPackage
+          [ "prelude"
+          , "concur-react"
+          , "email-validate"
+          , "foreign-object"
+          , "metajelo"
+          , "profunctor"
+          , "stringutils"
+          , "url-validator"
+          ]
+          "https://github.com/labordynamicsinstitute/metajelo-web.git"
+          "v1.0.2"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
@@ -193,6 +206,24 @@ let additions =
           [ "prelude" ]
           "https://github.com/bbarker/purescript-xpath-like.git"
           "v3.0.0"
+      , concur-react =
+          mkPackage
+        [ "aff"
+          , "arrays"
+          , "avar"
+          , "console"
+          , "foldable-traversable"
+          , "free"
+          , "nonempty"
+          , "react"
+          , "react-dom"
+          , "tailrec"
+          , "web-dom"
+          , "web-html"
+          ]
+          "https://github.com/ajnsit/purescript-concur.git"
+          "v0.3.8"
+
       }
 
 in  upstream // overrides // additions
