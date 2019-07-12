@@ -168,7 +168,7 @@ let additions =
           , "url-validator"
           ]
           "https://github.com/labordynamicsinstitute/metajelo-web.git"
-          "v1.0.2"
+          "f5d1ff27f80c03c4686bc7fa706097aed3f3a871"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]

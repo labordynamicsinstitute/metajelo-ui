@@ -8,11 +8,13 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
 import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
 import Metajelo.Types as M
+import Metajelo.View as MV
 
 main :: Effect Unit
 main = pure unit
@@ -62,8 +64,15 @@ accumulateLocation locMay = D.div_ [] do
     Nothing
     Nothing
     Nothing
-  -- TODO: render location
+  display $ locWidg
   pure newLocMay
+  where
+    locWidg :: forall a. Widget HTML a
+    locWidg = D.div' [
+      D.h3' [D.text "Last submitted location summary for this product:"]
+    , D.br'
+    , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
+    ]
 
 -- TODO: so far just a test of retrieving data from signals
 accumulateRecord :: String -> Signal HTML String
