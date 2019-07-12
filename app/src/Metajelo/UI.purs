@@ -7,34 +7,63 @@ import Concur.Core.FRP (Signal, display, dyn, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
+import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
 import Metajelo.Types as M
 
-
--- TODO: extract this example as a library and use to accumulate values as below:
--- TODO: https://github.com/natefaubion/purescript-heterogeneous/blob/master/test/Record.purs#L150-L19
--- -- | Accumulator type for `MetajeloRecord`, with each field
--- -- | wrapped in `Maybe`.
--- type MetajeloRecordPartial = {
-  
--- --   identifier :: Maybe Identifier
--- -- , date :: Maybe XsdDate
--- --   -- ^ The date of the original creation of this metadata record
--- -- , lastModified :: Maybe XsdDate
--- --   -- ^ The date of the most recent modification of this recocrd
--- -- , relatedIdentifiers :: Maybe NonEmptyArray RelatedIdentifier
--- -- , supplementaryProducts :: Maybe NonEmptyArray SupplementaryProduct
--- --   -- ^ The link to the set of supplemenary products
--- }
-
 main :: Effect Unit
 main = pure unit
 
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
+
+injectLocationFields ::
+  Maybe M.InstitutionID ->
+  Maybe String ->
+  Maybe M.InstitutionType ->
+  Maybe (Maybe String) ->
+  Maybe M.InstitutionContact ->
+  Maybe M.InstitutionSustainability ->
+  Maybe (NonEmptyArray M.InstitutionPolicy) ->
+  Maybe Boolean ->
+  Maybe M.Location
+injectLocationFields
+  (Just institutionID)
+  (Just institutionName)
+  (Just institutionType)
+  (Just superOrganizationName)
+  (Just institutionContact)
+  (Just institutionSustainability)
+  (Just institutionPolicies)
+  (Just versioning) = pure $ {
+    institutionID: institutionID
+  , institutionName: institutionName
+  , institutionType: institutionType
+  , superOrganizationName: superOrganizationName
+  , institutionContact: institutionContact
+  , institutionSustainability: institutionSustainability
+  , institutionPolicies: institutionPolicies
+  , versioning: versioning
+  }
+injectLocationFields _ _ _ _ _ _ _ _ = Nothing
+
+accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
+accumulateLocation locMay = D.div_ [] do
+  icMay <- MF.contactSignal Nothing
+  newLocMay <- pure $ injectLocationFields
+    Nothing
+    Nothing
+    Nothing
+    Nothing
+    icMay
+    Nothing
+    Nothing
+    Nothing
+  -- TODO: render location
+  pure newLocMay
 
 -- TODO: so far just a test of retrieving data from signals
 accumulateRecord :: String -> Signal HTML String
