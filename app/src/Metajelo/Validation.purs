@@ -88,19 +88,6 @@ emailFormat :: ∀ form m. Monad m => Validation form m FieldError String Email
 emailFormat = hoistFnE_ $ \str ->
   lmap (\msg -> InvalidEmail msg) $ EA.validate str
 
--- Validate that the current field is equal to another field named "email1"
-equalsEmail1
-  :: ∀ form m e o fields
-   . Monad m
-   -- Specify that the form must have an email1 field
-   => Newtype (form Record F.FormField) { email1 :: F.FormField e String o | fields }
-   => Validation form m FieldError String String
-equalsEmail1 = F.hoistFnE $ \form str ->
-  let e1 = F.getInput (SProxy :: SProxy "email1") form
-   in if str == e1
-        then Right str
-        else Left $ NotEqual str e1
-
 minLength :: ∀ form m. Monad m => Int -> Validation form m FieldError String String
 minLength n = hoistFnE_ $ \str ->
   let n' = length str

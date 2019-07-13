@@ -24,7 +24,6 @@ import Text.Email.Validate (EmailAddress, toString)
 
 newtype InstContactForm r f = InstContactForm (r (
     email1 :: f V.FieldError String EmailAddress
-  , email2 :: f V.FieldError String EmailAddress
   , contactType :: IdentityField f (Maybe M.InstitutionContactType)
   ))
 derive instance newtypeInstContactForm :: Newtype (InstContactForm r f) _
@@ -41,14 +40,12 @@ type FState = F.State InstContactForm (Widget HTML)
 
 type InputRecord = {
   email1:: String
-, email2:: String
 , contactType :: Maybe M.InstitutionContactType
 }
 
 initialInputsRecord :: InputRecord
 initialInputsRecord = {
   email1: ""
-, email2: ""
 , contactType: Nothing
 }
 
@@ -56,14 +53,12 @@ outToInRec ::  Maybe M.InstitutionContact -> InputRecord
 outToInRec Nothing = initialInputsRecord
 outToInRec (Just outRec) = let email = toString outRec.emailAddress in {
   email1: email
-, email2: email
 , contactType: outRec.contactType
 }
 
 validators :: Validators
 validators = InstContactForm {
   email1: V.emailFormat
-, email2: V.equalsEmail1 >>> V.emailFormat
 , contactType: V.dummy
 }
 
@@ -76,12 +71,6 @@ contactForm fstate = do
       , (F.setValidate proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form
-    , D.div' [D.text "Confirm Email"]
-    , D.input [
-        P.value $ F.getInput proxies.email2 fstate.form
-      , (F.setValidate proxies.email2 <<< P.unsafeTargetValue) <$> P.onChange
-      ]
-    , errorDisplay $ F.getError proxies.email2 fstate.form
     , D.div' [D.text "Contact type: ",  menu fstate.form proxies.contactType]
     , D.div' [ F.submit <$ D.button [P.onClick] [D.text "Submit"]]
     ]
