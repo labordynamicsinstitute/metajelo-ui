@@ -7,7 +7,7 @@ Web tools to display
 
 # Usage
 
-# Buidling
+# Building
 
 ## Docker
 
