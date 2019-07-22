@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Show, Void, bind, join, pure, show, (+), (-), ($), (<$>), (<#>), (<<<))
+import Prelude (class Show, Void, bind, join, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -26,12 +26,14 @@ import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
 import Prim.Row (class Cons)
+import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
 type MKFState form = F.State form (Widget HTML)
+type MKValidators form = form Record (F.Validation form (Widget HTML))
 
 -- | No validation is needed for this field type, as the input and ouput
 -- | types (`io`) are the same.
@@ -43,7 +45,7 @@ mayToString Nothing = ""
 
 emptyMeansOptional :: forall a. Show a => Maybe a -> String
 emptyMeansOptional mayV = case mayV of
-  Nothing -> "(optional)"
+  Nothing -> "(None)"
   x -> mayToString x
 
 menu :: forall opt s form e o restF restI inputs fields
@@ -78,7 +80,41 @@ instance isOptionMaybeInstitutionContactType
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
 
 formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
-formSaveButton fstate =
-  if fstate.dirty then D.button [P.onClick] [D.text "Save"]
-  else D.button [P.disabled true] [D.text "Saved"]
+formSaveButton fstate = D.button props [D.text "Save"]
+  where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
+
+-- t1: inputs
+-- t2:   ?
+-- t3: fields
+-- t4: form
+
+
+--TODO: this is in formless-independent
+-- | Initialise the form state with default values.
+-- | Passing in the initial inputs, and the validations.
+initFormState
+  :: ∀ ixs form is fs m
+   . RowToList is ixs
+  => Internal.InputFieldsToFormFields ixs is fs
+  => Newtype (form Record F.InputField) { | is }
+  => Newtype (form Record F.FormField) { | fs }
+  => form Record F.InputField
+  -> form Record (F.Validation form m)
+  -> F.State form m
+initFormState form validations =
+  { validity: F.Incomplete
+  , dirty: false
+  , submitting: false
+  , errors: 0
+  , submitAttempts: 0
+  , form: Internal.inputFieldsToFormFields form
+  , internal: F.InternalState
+      { initialInputs: form
+      , validators: validations
+      , allTouched: false
+      -- TODO
+      -- , debounceRef: ...
+      -- , validationRef: ...
+      }
+  }

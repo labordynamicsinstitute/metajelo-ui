@@ -16,7 +16,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, formSaveButton, menu)
+import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, formSaveButton, initFormState, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -34,7 +34,7 @@ proxies = F.mkSProxies (F.FormProxy :: F.FormProxy InstContactForm)
 -- Some type helpers
 type InputForm = InstContactForm Record F.InputField
 -- type OutputForm = InstContactForm Record F.OutputField
-type Validators = InstContactForm Record (F.Validation InstContactForm (Widget HTML))
+type Validators = MKValidators InstContactForm
 type FState = MKFState InstContactForm
 
 type InputRecord = {
@@ -92,24 +92,8 @@ contactSignal instContactMay = step instContactMay do
   inputs <- pure $ F.wrapInputFields $ outToInRec instContactMay
   instContact <- D.div' [
     D.h2' [D.text "Institution Contact"]
-  , contactForm (initState inputs validators)
+  , contactForm (initFormState inputs validators)
   , foldMap contactWidg instContactMay
   ]
   pure $ contactSignal $ Just instContact
 
-
--- This should be in Formless
-initState :: InputForm -> Validators -> FState
-initState form validations =
-  { validity: F.Incomplete
-  , dirty: false
-  , submitting: false
-  , errors: 0
-  , submitAttempts: 0
-  , form: Internal.inputFieldsToFormFields form
-  , internal: F.InternalState
-    { initialInputs: form
-    , validators: validations
-    , allTouched: false
-    }
-  }
