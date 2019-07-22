@@ -78,7 +78,7 @@ instance isOptionMaybeInstitutionContactType
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
 
 formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
-formSaveButton fstate = D.button [P.onClick] [ D.text
-  if fstate.dirty then "Save"
-  else "Already Saved"
-]
+formSaveButton fstate =
+  if fstate.dirty then D.button [P.onClick] [D.text "Save"]
+  else D.button [P.disabled true] [D.text "Saved"]
+
