@@ -26,9 +26,12 @@ import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
 import Prim.Row (class Cons)
+import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
+
+type MKFState form = F.State form (Widget HTML)
 
 -- | No validation is needed for this field type, as the input and ouput
 -- | types (`io`) are the same.
@@ -73,3 +76,9 @@ instance isOptionMaybeInstitutionContactType
     toOptionValue = mayToString
     toOptionLabel = emptyMeansOptional
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
+
+formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
+formSaveButton fstate = D.button [P.onClick] [ D.text
+  if fstate.dirty then "Save"
+  else "Already Saved"
+]

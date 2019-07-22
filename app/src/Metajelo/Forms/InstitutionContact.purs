@@ -16,7 +16,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, menu)
+import Metajelo.FormUtil (IdentityField, MKFState, formSaveButton, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -35,8 +35,7 @@ proxies = F.mkSProxies (F.FormProxy :: F.FormProxy InstContactForm)
 type InputForm = InstContactForm Record F.InputField
 -- type OutputForm = InstContactForm Record F.OutputField
 type Validators = InstContactForm Record (F.Validation InstContactForm (Widget HTML))
-type FState = F.State InstContactForm (Widget HTML)
-
+type FState = MKFState InstContactForm
 
 type InputRecord = {
   email1:: String
@@ -72,7 +71,7 @@ contactForm fstate = do
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form
     , D.div' [D.text "Contact type: ",  menu fstate.form proxies.contactType]
-    , D.div' [ F.submit <$ D.button [P.onClick] [D.text "Submit"]]
+    , D.div' [ F.submit <$ formSaveButton fstate]
     ]
   res <- F.eval query fstate
   case res of
