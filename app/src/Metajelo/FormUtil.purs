@@ -71,8 +71,6 @@ class IsOption a where
   toOptionLabel :: a -> String
   fromOptionValue :: String -> a
 
---TODO: can we automate the creation of these with purescript-reflection?
-
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
     toOptionValue = mayToString
@@ -84,11 +82,36 @@ formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
 
--- t1: inputs
--- t2:   ?
--- t3: fields
--- t4: form
+--TODO: use fromArray to go from an Array to a Maybe NonEmptyArray, directly?
 
+data ItemPersist =
+    Delete
+  | Keep
+
+arrayView :: forall a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
+arrayView minWidgets mkWidget =
+  where
+    mkItemView :: Unit -> Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
+    mkItemView _ = D.li_ [] $ do
+      sigVal <-  mkWidget Nothing
+      shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
+      if shouldDel
+        then pure $ Tuple Delete sigVal
+        else pure $ Tuple Keep sigVal
+
+    arrayView' :: Tuple Int (Array a) -> Signal HTML (Tuple Int (Array a))
+
+  D.li_ [] $ do
+  shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
+  if shouldDel
+    then pure Nothing
+    else do
+      newChild <- mkChildren
+      let children = case newChild of
+            Nothing -> array.children
+            Just newt -> cons newt array.children
+      children' <- ul_ [] $ map catMaybes $ traverse arrayView children
+      pure (Just (Array {title: title', children: children'}))
 
 --TODO: this is in formless-independent
 -- | Initialise the form state with default values.
