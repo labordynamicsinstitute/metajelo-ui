@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Show, Void, bind, join, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
+import Prelude (class Eq, class Show, Void, bind, join, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -8,7 +8,7 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
-import Data.Array (catMaybes, (:), (..))
+import Data.Array (catMaybes, filter, (:), (..))
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
@@ -18,7 +18,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
-import Data.Traversable (for)
+import Data.Traversable (for, traverse)
 import Data.Variant (Variant)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
@@ -88,6 +88,7 @@ formSaveButton fstate = D.button props [D.text "Save"]
 data ItemPersist =
     Delete
   | Keep
+derive instance eqItemPersist :: Eq ItemPersist
 
 arrayView :: forall a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
@@ -104,22 +105,11 @@ arrayView minWidgets mkWidget = D.div_ [] do
         then pure $ Tuple Delete sigVal
         else pure $ Tuple Keep sigVal
 
-    arrayView' :: Array (Tuple ItemPersist (Maybe a)) -> Signal HTML (Array (Tuple ItemPersist (Maybe a)))
+    arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->  Signal HTML (Array (Tuple ItemPersist (Maybe a)))
     arrayView' tupArr = D.div_ [] do
-      -- TODO filter, etc.
-      
-
-  D.li_ [] $ do
-  shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
-  if shouldDel
-    then pure Nothing
-    else do
-      newChild <- mkChildren
-      let children = case newChild of
-            Nothing -> array.children
-            Just newt -> cons newt array.children
-      children' <- ul_ [] $ map catMaybes $ traverse arrayView children
-      pure (Just (Array {title: title', children: children'}))
+      tupArrNew <- traverse mkItemView tupArr
+      tupArrFiltered <- filter (\t -> Keep == fst t) tupArrNew
+      pure tupArrFiltered
 
 --TODO: this is in formless-independent
 -- | Initialise the form state with default values.
