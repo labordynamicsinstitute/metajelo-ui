@@ -1,8 +1,9 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Eq, class Show, Void, bind, join, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
+import Prelude (class Eq, class Show, Void, bind, join, map, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
 
 import Concur.Core (Widget)
+import Concur.Core.FRP (Signal, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -19,6 +20,7 @@ import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Traversable (for, traverse)
+import Data.Tuple (Tuple(..), fst, snd)
 import Data.Variant (Variant)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
@@ -96,11 +98,11 @@ arrayView minWidgets mkWidget = D.div_ [] do
   pure $ catMaybes $ map snd tupArr
   where
     initVals :: Array (Tuple ItemPersist (Maybe a))
-    initVals = for (1 .. (min 1 minWidgets)) (\_ -> Tuple Keep Nothing)
+    initVals = (1 .. (min 1 minWidgets)) <#> (\_ -> Tuple Keep Nothing)
     mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
     mkItemView item = D.li_ [] $ do
       sigVal <- mkWidget $ snd item
-      shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
+      shouldDel <- step false (pure true <$ D.button [P.onClick] [D.text "Delete"])
       if shouldDel
         then pure $ Tuple Delete sigVal
         else pure $ Tuple Keep sigVal
@@ -108,7 +110,7 @@ arrayView minWidgets mkWidget = D.div_ [] do
     arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->  Signal HTML (Array (Tuple ItemPersist (Maybe a)))
     arrayView' tupArr = D.div_ [] do
       tupArrNew <- traverse mkItemView tupArr
-      tupArrFiltered <- filter (\t -> Keep == fst t) tupArrNew
+      tupArrFiltered <- pure $ filter (\t -> Keep == fst t) tupArrNew
       pure tupArrFiltered
 
 --TODO: this is in formless-independent
