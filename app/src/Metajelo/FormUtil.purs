@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Show, Void, bind, join, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
+import Prelude (class Show, Void, bind, join, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
 
 import Concur.Core (Widget)
 import Concur.React (HTML)
@@ -8,7 +8,7 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
-import Data.Array ((:))
+import Data.Array (catMaybes, (:), (..))
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
@@ -18,6 +18,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
+import Data.Traversable (for)
 import Data.Variant (Variant)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
@@ -89,17 +90,24 @@ data ItemPersist =
   | Keep
 
 arrayView :: forall a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
-arrayView minWidgets mkWidget =
+arrayView minWidgets mkWidget = D.div_ [] do
+  tupArr <- arrayView' initVals
+  pure $ catMaybes $ map snd tupArr
   where
-    mkItemView :: Unit -> Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
-    mkItemView _ = D.li_ [] $ do
-      sigVal <-  mkWidget Nothing
+    initVals :: Array (Tuple ItemPersist (Maybe a))
+    initVals = for (1 .. (min 1 minWidgets)) (\_ -> Tuple Keep Nothing)
+    mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
+    mkItemView item = D.li_ [] $ do
+      sigVal <- mkWidget $ snd item
       shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
       if shouldDel
         then pure $ Tuple Delete sigVal
         else pure $ Tuple Keep sigVal
 
-    arrayView' :: Tuple Int (Array a) -> Signal HTML (Tuple Int (Array a))
+    arrayView' :: Array (Tuple ItemPersist (Maybe a)) -> Signal HTML (Array (Tuple ItemPersist (Maybe a)))
+    arrayView' tupArr = D.div_ [] do
+      -- TODO filter, etc.
+      
 
   D.li_ [] $ do
   shouldDel <- step false (pure true <$ button [onClick] [text "Delete"])
