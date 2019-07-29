@@ -109,10 +109,10 @@ let additions =
 -}
 
 let mkPackage =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.0-20190626/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.2-20190725/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
 
 let upstream =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.0-20190626/src/packages.dhall sha256:9905f07c9c3bd62fb3205e2108515811a89d55cff24f4341652f61ddacfcf148
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.2-20190725/src/packages.dhall sha256:60cc03d2c3a99a0e5eeebb16a22aac219fa76fe6a1686e8c2bd7a11872527ea3
 
 let overrides = {=}
 
@@ -141,7 +141,7 @@ let additions =
           , "unfoldable"
           ]
           "https://github.com/bbarker/purescript-enums.git"
-          "ff423fe1f994d2ca38fcf5b57b0ce911cfc889cd"
+          "1979eb74baec39b5e62567948f402b4194230e9f"
       , metajelo =
           mkPackage
           [ "generics-rep"
@@ -155,7 +155,7 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "5fdaa5338064a94c57141c00ff9f9f4e8d40aa14"
+          "e8b45cba2b5d445f3533ce24b15454dccfb28904"
       , metajelo-web =
           mkPackage
           [ "prelude"
@@ -206,24 +206,6 @@ let additions =
           [ "prelude" ]
           "https://github.com/bbarker/purescript-xpath-like.git"
           "v3.0.0"
-      , concur-react =
-          mkPackage
-        [ "aff"
-          , "arrays"
-          , "avar"
-          , "console"
-          , "foldable-traversable"
-          , "free"
-          , "nonempty"
-          , "react"
-          , "react-dom"
-          , "tailrec"
-          , "web-dom"
-          , "web-html"
-          ]
-          "https://github.com/ajnsit/purescript-concur.git"
-          "v0.3.8"
-
       }
 
 in  upstream // overrides // additions

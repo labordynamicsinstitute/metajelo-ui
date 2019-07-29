@@ -21,12 +21,12 @@ import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators,
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
-import URL.Validator (URL, parsePublicURL, urlToString)
+import URL.Validator (parsePublicURL, urlToString)
 
 
 newtype InstPolicyForm r f = InstPolicyForm (r (
     polPolType :: IdentityField f PolPolType
-  , policy ::  f V.FieldError String M.Policy
+  , policy ::  f String String M.Policy
   , policyType :: IdentityField f (Maybe M.PolicyType)
   , appliesToProd :: IdentityField f (Maybe Boolean)
   ))
@@ -43,7 +43,7 @@ type FState = MKFState InstPolicyForm
 
 type InputRecord = {
   polPolType :: PolPolType
-, policy :: M.Policy
+, policy :: String
 , policyType :: Maybe M.PolicyType
 , appliesToProd :: Maybe Boolean
 }
@@ -51,7 +51,7 @@ type InputRecord = {
 initialInputsRecord :: InputRecord
 initialInputsRecord = {
   polPolType: FreeTextPolicy
-, policy: FreeTextPolicy ""
+, policy: ""
 , policyType: Nothing
 , appliesToProd: Nothing
 }
@@ -60,11 +60,15 @@ pol2ZeroArg :: M.Policy -> PolPolType
 pol2ZeroArg (M.FreeTextPolicy _) = FreeTextPolicy
 pol2ZeroArg (M.RefPolicy _) = RefPolicy
 
+polStrContent :: M.Policy -> String
+polStrContent (M.FreeTextPolicy txt) = txt
+polStrContent (M.RefPolicy url) = urlToString url
+
 outToInRec ::  Maybe M.InstitutionPolicy -> InputRecord
 outToInRec Nothing = initialInputsRecord
 outToInRec (Just outRec) = {
   polPolType: pol2ZeroArg outRec.policy
-, policy: Just outRec.policy
+, policy: polStrContent outRec.policy
 , policyType: outRec.policyType
 , appliesToProd: outRec.appliesToProduct
 }
@@ -119,9 +123,9 @@ policySignal instPolicyMay = step instPolicyMay do
   pure $ policySignal $ Just instPolicy
 
 
-checkPolicy :: ∀ v. Monad m => Validation InstPolicyForm m String String M.Policy
-checkPolicy = hoistFnE_ $ \form str ->
+checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy
+checkPolicy = hoistFnE $ \form str ->
   let pType = F.getInput proxies.polPolType form
   in case pType of
-    FreeTextPolicy -> Right str
+    FreeTextPolicy -> pure $ M.FreeTextPolicy str
     RefPolicy -> parsePublicURL str <#> M.RefPolicy

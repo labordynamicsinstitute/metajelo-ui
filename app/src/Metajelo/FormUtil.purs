@@ -120,7 +120,6 @@ instance boundedEnumPolPolType :: BoundedEnum PolPolType where
   toEnum = GEnum.genericToEnum
   fromEnum = GEnum.genericFromEnum
 instance smallBoundedPolPolType :: SmallBounded PolPolType
-instance smallBoundedEnumPolPolType :: SmallBoundedEnum PolPolType
 
 readPolPolType :: String -> Either String PolPolType
 readPolPolType "FreeTextPolicy" = pure FreeTextPolicy
