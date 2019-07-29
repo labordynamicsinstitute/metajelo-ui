@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Eq, class Show, Void, bind, join, map, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||))
+import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, join, map, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, step)
@@ -12,9 +12,15 @@ import Control.Category ((>>>))
 import Data.Array (catMaybes, filter, (:), (..))
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
-import Data.Enum (class BoundedEnum, class Enum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
+import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
-import Data.Maybe (Maybe(..), maybe)
+import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Bounded as GBounded
+import Data.Generic.Rep.Eq (genericEq)
+import Data.Generic.Rep.Enum as GEnum
+import Data.Generic.Rep.Ord as GOrd
+import Data.Generic.Rep.Show (genericShow)
+import Data.Maybe (Maybe(..), fromMaybe, maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Symbol (class IsSymbol, SProxy)
@@ -74,11 +80,57 @@ class IsOption a where
   toOptionLabel :: a -> String
   fromOptionValue :: String -> a
 
+instance isOptionMaybeBoolean
+  :: IsOption (Maybe Boolean) where
+    toOptionValue = mayToString
+    toOptionLabel = emptyMeansOptional
+    fromOptionValue = hush <<< MR.readBoolean
+
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
     toOptionValue = mayToString
     toOptionLabel = emptyMeansOptional
     fromOptionValue = join <<< hush <<< MR.readInstitutionContactType
+
+instance isOptionMaybePolicyType
+  :: IsOption (Maybe M.PolicyType) where
+    toOptionValue = mayToString
+    toOptionLabel = emptyMeansOptional
+    fromOptionValue = join <<< hush <<< MR.readPolicyType
+
+-- | 0-arg constructors for M.Policy and can be used for dropdown or radio box.
+data PolPolType
+  = FreeTextPolicy
+  | RefPolicy
+derive instance genericPolPolType :: Generic PolPolType _
+instance showPolPolType :: Show PolPolType where
+  show = genericShow
+instance eqPolPolType :: Eq PolPolType where
+  eq = genericEq
+instance ordPolPolType :: Ord PolPolType where
+  compare x y = GOrd.genericCompare x y
+instance boundedPolPolType :: Bounded PolPolType where
+  bottom = GBounded.genericBottom
+  top = GBounded.genericTop
+instance enumPolPolType :: Enum PolPolType where
+  pred = GEnum.genericPred
+  succ = GEnum.genericSucc
+instance boundedEnumPolPolType :: BoundedEnum PolPolType where
+  cardinality = GEnum.genericCardinality
+  toEnum = GEnum.genericToEnum
+  fromEnum = GEnum.genericFromEnum
+instance smallBoundedPolPolType :: SmallBounded PolPolType
+instance smallBoundedEnumPolPolType :: SmallBoundedEnum PolPolType
+
+readPolPolType :: String -> Either String PolPolType
+readPolPolType "FreeTextPolicy" = pure FreeTextPolicy
+readPolPolType "RefPolicy" = pure RefPolicy
+readPolPolType unknown =  Left $ "Unknown Policy: '" <> unknown <> "'"
+
+instance isOptionPolPolType :: IsOption PolPolType where
+  toOptionValue = show
+  toOptionLabel = show
+  fromOptionValue = fromMaybe FreeTextPolicy <<<  hush <<< readPolPolType
 
 formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
 formSaveButton fstate = D.button props [D.text "Save"]

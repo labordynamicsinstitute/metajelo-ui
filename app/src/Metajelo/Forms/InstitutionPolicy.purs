@@ -1,6 +1,6 @@
 module Metajelo.Forms.InstitutionPolicy where
 
-import Prelude (bind, pure, ($), (<$>), (<<<))
+import Prelude (class Monad, bind, join, pure, show, ($), (<$>), (<#>), (<<<), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, step)
@@ -16,30 +16,21 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, formSaveButton, initFormState, menu)
+import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
+import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), formSaveButton, initFormState, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
-import URL.Validator (URL, urlToString)
+import URL.Validator (URL, parsePublicURL, urlToString)
 
--- FIXME: consider the form: might need to use a local type like:
-data PolPolType
-  = FreeTextPolicy
-  | RefPolicy
--- FIXME: this uses 0-arg constructors and could be used for dropdown or radio box.
 
 newtype InstPolicyForm r f = InstPolicyForm (r (
-    polPolType :: IdentityField f (Maybe String)
-  , policyTxt ::  f V.FieldError (Maybe String) (Maybe URL)
+    polPolType :: IdentityField f PolPolType
+  , policy ::  f V.FieldError String M.Policy
   , policyType :: IdentityField f (Maybe M.PolicyType)
   , appliesToProd :: IdentityField f (Maybe Boolean)
   ))
--- newtype InstPolicyForm r f = InstPolicyForm (r (
---     policyUrl :: f V.FieldError (Maybe String) (Maybe URL)
---   , policyTxt :: IdentityField f (Maybe String)
---   , policyType :: IdentityField f (Maybe M.PolicyType)
---   , appliesToProd :: IdentityField f (Maybe Boolean)
---   ))
+
 derive instance newtypeInstPolicyForm :: Newtype (InstPolicyForm r f) _
 
 proxies :: F.SProxies InstPolicyForm
@@ -47,55 +38,57 @@ proxies = F.mkSProxies (F.FormProxy :: F.FormProxy InstPolicyForm)
 
 -- Some type helpers
 type InputForm = InstPolicyForm Record F.InputField
--- type OutputForm = InstPolicyForm Record F.OutputField
 type Validators = MKValidators InstPolicyForm
 type FState = MKFState InstPolicyForm
 
 type InputRecord = {
-  policyUrl :: Maybe String
-, policyTxt :: Maybe String
+  polPolType :: PolPolType
+, policy :: M.Policy
 , policyType :: Maybe M.PolicyType
 , appliesToProd :: Maybe Boolean
 }
 
 initialInputsRecord :: InputRecord
 initialInputsRecord = {
-  policyUrl: Nothing
-, policyTxt: Nothing
+  polPolType: FreeTextPolicy
+, policy: FreeTextPolicy ""
 , policyType: Nothing
 , appliesToProd: Nothing
 }
 
+pol2ZeroArg :: M.Policy -> PolPolType
+pol2ZeroArg (M.FreeTextPolicy _) = FreeTextPolicy
+pol2ZeroArg (M.RefPolicy _) = RefPolicy
+
 outToInRec ::  Maybe M.InstitutionPolicy -> InputRecord
 outToInRec Nothing = initialInputsRecord
 outToInRec (Just outRec) = {
-  policyUrl: case outRec.policy of
-    FreeTextPolicy _ => Nothing
-    RefPolicy url => Just $ urlToString url
-, policyTxt: case outRec.policy of
-    FreeTextPolicy txt => Just txt
-    RefPolicy _ => Nothing
+  polPolType: pol2ZeroArg outRec.policy
+, policy: Just outRec.policy
 , policyType: outRec.policyType
 , appliesToProd: outRec.appliesToProduct
 }
 
 validators :: Validators
 validators = InstPolicyForm {
-  policyUrl: V.emailFormat
+  polPolType: V.dummy
+, policy: checkPolicy
 , policyType: V.dummy
+, appliesToProd: V.dummy
 }
---TODO: need a validator that checks if either policyUrl or policyTxt is completed.
 
+-- TODO: add help tooltip (hover?) for reference policy, etc.
 policyForm :: FState -> Widget HTML M.InstitutionPolicy
 policyForm fstate = do
   query <- D.div' [
-      D.div' [D.text "Email"]
+      D.div' [D.text "Policy: ",  menu fstate.form proxies.polPolType]
     , D.input [
-        P.value $ F.getInput proxies.policyUrl fstate.form
-      , (F.setValidate proxies.policyUrl <<< P.unsafeTargetValue) <$> P.onChange
+        P.value $ F.getInput proxies.policy fstate.form
+      , (F.setValidate proxies.policy <<< P.unsafeTargetValue) <$> P.onChange
       ]
-    , errorDisplay $ F.getError proxies.policyUrl fstate.form
+    , errorDisplay $ F.getError proxies.policy fstate.form
     , D.div' [D.text "Policy type: ",  menu fstate.form proxies.policyType]
+    , D.div' [D.text "Applies to product? ",  menu fstate.form proxies.appliesToProd]
     , D.div' [ F.submit <$ formSaveButton fstate]
     ]
   res <- F.eval query fstate
@@ -103,8 +96,13 @@ policyForm fstate = do
     Left fstate' -> policyForm fstate'
     Right out -> do
       let form = F.unwrapOutputFields out
-      pure {emailAddress: form.policyUrl, policyType: form.policyType}
+      pure {
+        policy: form.policy
+      , policyType: form.policyType
+      , appliesToProduct: form.appliesToProd
+      }
   where
+    -- TODO: refactor to FormUtil:
     errorDisplay = maybe mempty (\err ->
       D.div [P.style {color: "red"}] [D.text $ V.toText err]
     )
@@ -120,3 +118,10 @@ policySignal instPolicyMay = step instPolicyMay do
   ]
   pure $ policySignal $ Just instPolicy
 
+
+checkPolicy :: ∀ v. Monad m => Validation InstPolicyForm m String String M.Policy
+checkPolicy = hoistFnE_ $ \form str ->
+  let pType = F.getInput proxies.polPolType form
+  in case pType of
+    FreeTextPolicy -> Right str
+    RefPolicy -> parsePublicURL str <#> M.RefPolicy
