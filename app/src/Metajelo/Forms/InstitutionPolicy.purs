@@ -131,6 +131,7 @@ checkPolicy = hoistFnE $ \form str ->
     FreeTextPolicy -> pure $ M.FreeTextPolicy str
     RefPolicy -> parsePublicURL str <#> M.RefPolicy
 
+--TODO: change 2 to 1
 policySigArray :: Maybe (NonEmptyArray M.InstitutionPolicy) ->
   Signal HTML (Maybe (NonEmptyArray M.InstitutionPolicy))
-policySigArray instPoliciesMay = nonEmptyArrayView 1 policySignal
+policySigArray instPoliciesMay = nonEmptyArrayView 2 policySignal

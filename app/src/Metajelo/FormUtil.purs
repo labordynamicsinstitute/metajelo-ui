@@ -1,9 +1,9 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, join, map, min, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||), (<>))
+import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, step)
+import Concur.Core.FRP (Signal, display, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -29,6 +29,7 @@ import Data.Time.Duration (Milliseconds(..))
 import Data.Traversable (for, traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Variant (Variant)
+-- import Effect.Class.Console (log, logShow)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
@@ -139,15 +140,21 @@ formSaveButton fstate = D.button props [D.text "Save"]
 data ItemPersist =
     Delete
   | Keep
-derive instance eqItemPersist :: Eq ItemPersist
+derive instance genItemPersist :: Generic ItemPersist _
+instance showItemPersist :: Show ItemPersist where
+  show = genericShow
+instance eqItemPersist :: Eq ItemPersist where
+  eq = genericEq
 
 arrayView :: forall a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
   tupArr <- arrayView' initVals
+  arrayStr :: String <- pure $ show $ map fst tupArr  -- FIXME: DEBUG
+  _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
   pure $ catMaybes $ map snd tupArr
   where
     initVals :: Array (Tuple ItemPersist (Maybe a))
-    initVals = (1 .. (min 1 minWidgets)) <#> (\_ -> Tuple Keep Nothing)
+    initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> Tuple Keep Nothing)
     mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
     mkItemView item = D.li_ [] $ do
       sigVal <- mkWidget $ snd item
