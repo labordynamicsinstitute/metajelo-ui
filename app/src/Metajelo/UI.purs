@@ -55,6 +55,7 @@ injectLocationFields _ _ _ _ _ _ _ _ = Nothing
 accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
 accumulateLocation locMay = D.div_ [] do
   icMay <- MF.contactSignal Nothing
+  polsMay <- MF.policySigArray Nothing
   newLocMay <- pure $ injectLocationFields
     Nothing
     Nothing
@@ -62,7 +63,7 @@ accumulateLocation locMay = D.div_ [] do
     Nothing
     icMay
     Nothing
-    Nothing
+    polsMay
     Nothing
   display $ locWidg
   pure newLocMay
@@ -74,17 +75,8 @@ accumulateLocation locMay = D.div_ [] do
     , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
     ]
 
--- TODO: so far just a test of retrieving data from signals
-accumulateRecord :: String -> Signal HTML String
-accumulateRecord str = D.div_ [] do
-  ic <- MF.contactSignal Nothing
-  let icString = show $ ic
-  let newStr = "Completed Data from forms:\n" <> icString
-  display $ D.text newStr
-  pure newStr
-
 page :: forall a. Widget HTML a
 page = do
-  dyn $ accumulateRecord ""
+  dyn $ accumulateLocation Nothing
 
 

@@ -10,6 +10,7 @@ import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
 import Data.Array (catMaybes, filter, (:), (..))
+import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
@@ -135,9 +136,6 @@ formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
 formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
-
---TODO: use fromArray to go from an Array to a Maybe NonEmptyArray, directly?
-
 data ItemPersist =
     Delete
   | Keep
@@ -163,6 +161,12 @@ arrayView minWidgets mkWidget = D.div_ [] do
       tupArrNew <- traverse mkItemView tupArr
       tupArrFiltered <- pure $ filter (\t -> Keep == fst t) tupArrNew
       pure tupArrFiltered
+
+nonEmptyArrayView :: forall a.
+  Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Maybe (NonEmptyArray a))
+nonEmptyArrayView minWidgets mkWidget = do
+  arrayA <- arrayView minWidgets mkWidget
+  pure $ fromArray arrayA
 
 --TODO: this is in formless-independent
 -- | Initialise the form state with default values.

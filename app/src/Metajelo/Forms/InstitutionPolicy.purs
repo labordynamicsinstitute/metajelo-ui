@@ -9,6 +9,7 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
+import Data.Array.NonEmpty (NonEmptyArray(..))
 import Data.Either (Either(..))
 import Data.Foldable (foldMap)
 import Data.Maybe (Maybe(..), maybe)
@@ -17,7 +18,7 @@ import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
-import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), formSaveButton, initFormState, menu)
+import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), formSaveButton, initFormState, menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
@@ -129,3 +130,7 @@ checkPolicy = hoistFnE $ \form str ->
   in case pType of
     FreeTextPolicy -> pure $ M.FreeTextPolicy str
     RefPolicy -> parsePublicURL str <#> M.RefPolicy
+
+policySigArray :: Maybe (NonEmptyArray M.InstitutionPolicy) ->
+  Signal HTML (Maybe (NonEmptyArray M.InstitutionPolicy))
+policySigArray instPoliciesMay = nonEmptyArrayView 1 policySignal
