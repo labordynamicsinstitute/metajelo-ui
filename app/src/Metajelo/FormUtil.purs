@@ -3,7 +3,7 @@ module Metajelo.FormUtil where
 import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, step)
+import Concur.Core.FRP (Signal, display, dyn, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -156,12 +156,15 @@ arrayView minWidgets mkWidget = D.div_ [] do
     initVals :: Array (Tuple ItemPersist (Maybe a))
     initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> Tuple Keep Nothing)
     mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
-    mkItemView item = D.li_ [] $ do
-      sigVal <- mkWidget $ snd item
-      shouldDel <- step false (pure true <$ D.button [P.onClick] [D.text "Delete"])
-      if shouldDel
-        then pure $ Tuple Delete sigVal
-        else pure $ Tuple Keep sigVal
+    mkItemView item = step item
+      case fst item of
+        Delete -> mempty
+        Keep -> do
+          newItem <- D.div' [
+            D.li' [dyn $ mkWidget $ snd item]
+          , (Tuple Delete $ snd item) <$ D.button [P.onClick] [D.text "Delete"]
+          ]
+          pure $ mkItemView newItem
 
     arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->  Signal HTML (Array (Tuple ItemPersist (Maybe a)))
     arrayView' tupArr = D.div_ [] do
