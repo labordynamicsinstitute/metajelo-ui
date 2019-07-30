@@ -16,7 +16,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, formSaveButton, initFormState, menu)
+import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -79,12 +79,6 @@ contactForm fstate = do
     Right out -> do
       let form = F.unwrapOutputFields out
       pure {emailAddress: form.email1, contactType: form.contactType}
-  where
-    errorDisplay = maybe mempty (\err ->
-      D.div [P.style {color: "red"}] [D.text $ V.toText err]
-    )
-
-
 
 contactSignal :: Maybe M.InstitutionContact
   -> Signal HTML (Maybe M.InstitutionContact)

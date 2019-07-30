@@ -9,7 +9,7 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
-import Data.Array (catMaybes, filter, (:), (..))
+import Data.Array (catMaybes, filter, snoc, (..))
 import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
@@ -153,8 +153,9 @@ arrayView minWidgets mkWidget = D.div_ [] do
   _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
   pure $ catMaybes $ map snd tupArr
   where
+    emptyElem = Tuple Keep Nothing
     initVals :: Array (Tuple ItemPersist (Maybe a))
-    initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> Tuple Keep Nothing)
+    initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
     mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
     mkItemView item = step item
       case fst item of
@@ -166,17 +167,25 @@ arrayView minWidgets mkWidget = D.div_ [] do
           ]
           pure $ mkItemView newItem
 
-    arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->  Signal HTML (Array (Tuple ItemPersist (Maybe a)))
+    arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->
+      Signal HTML (Array (Tuple ItemPersist (Maybe a)))
     arrayView' tupArr = D.div_ [] do
-      tupArrNew <- traverse mkItemView tupArr
+      tupArrP1 <- step tupArr $
+        (pure $ snoc tupArr emptyElem) <$ D.button [P.onClick] [D.text "Add item"]
+      tupArrNew <- traverse mkItemView tupArrP1
       tupArrFiltered <- pure $ filter (\t -> Keep == fst t) tupArrNew
       pure tupArrFiltered
 
-nonEmptyArrayView :: forall a.
+nonEmptyArrayView :: ∀ a.
   Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Maybe (NonEmptyArray a))
 nonEmptyArrayView minWidgets mkWidget = do
   arrayA <- arrayView minWidgets mkWidget
   pure $ fromArray arrayA
+
+errorDisplay :: ∀ a e. V.ToText e => Maybe e -> Widget HTML a
+errorDisplay = maybe mempty (\err ->
+  D.div [P.style {color: "red"}] [D.text $ V.toText err]
+)
 
 --TODO: this is in formless-independent
 -- | Initialise the form state with default values.

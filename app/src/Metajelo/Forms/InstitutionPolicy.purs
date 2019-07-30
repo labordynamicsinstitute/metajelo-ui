@@ -18,7 +18,7 @@ import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
-import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), formSaveButton, initFormState, menu, nonEmptyArrayView)
+import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
@@ -106,11 +106,6 @@ policyForm fstate = do
       , policyType: form.policyType
       , appliesToProduct: form.appliesToProd
       }
-  where
-    -- TODO: refactor to FormUtil:
-    errorDisplay = maybe mempty (\err ->
-      D.div [P.style {color: "red"}] [D.text $ V.toText err]
-    )
 
 policySignal :: Maybe M.InstitutionPolicy
   -> Signal HTML (Maybe M.InstitutionPolicy)
