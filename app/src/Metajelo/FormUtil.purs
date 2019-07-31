@@ -41,6 +41,7 @@ import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
+import URL.Validator (URL, parsePublicURL)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
@@ -95,6 +96,30 @@ labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
 labelSig' tag label sigIn = do
   display $ tag [D.text label]
   sigIn
+
+textInput :: D.El' -> String -> Signal HTML (Maybe String)
+textInput tag label = labelSig' tag label $ sig Nothing
+  where
+    sig :: Maybe String -> Signal HTML (Maybe String)
+    sig txtMay = step txtMay do
+      newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
+      pure $ sig $ if newTxt == "" then Nothing else Just newTxt
+
+urlInput :: D.El' -> String -> Signal HTML (Maybe URL)
+urlInput tag label = labelSig' tag label sig
+  where
+    sig :: Signal HTML (Maybe URL)
+    sig = do
+      txtMay <- textInput tag label
+      urlEi <- pure $ case txtMay of
+        Nothing -> Left ""
+        Just "" -> Left ""
+        Just txt -> parsePublicURL txt
+      display $ case urlEi of
+        Right _ -> mempty
+        Left err -> errorDisplay $ Just err
+      pure $ hush urlEi
+
 
 class IsOption a where
   toOptionValue :: a -> String

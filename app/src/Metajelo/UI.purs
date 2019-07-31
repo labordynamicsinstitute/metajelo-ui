@@ -14,9 +14,10 @@ import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (labelSig', menuSignal)
+import Metajelo.FormUtil (labelSig', menuSignal, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
+import URL.Validator (URL)
 
 main :: Effect Unit
 main = pure unit
@@ -24,25 +25,11 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
-locNameSig :: Maybe String -> Signal HTML (Maybe String)
-locNameSig nameMay = step nameMay do
-  newName <- D.div' [
-    D.h3' [D.text "Institution Name"]
-  , D.input [P.unsafeTargetValue <$> P.onChange]
-  ]
-  pure $ locNameSig $ if newName == "" then Nothing else Just newName
-
--- locNameSig :: Maybe String -> Signal HTML (Maybe String)
--- locNameSig nameMay = D.div_ [] do
---   display $ D.h3' [D.text "Institution Name"]
---   newName <- step "" $ D.input [pure <<< P.unsafeTargetValue <$> P.onChange]
---   pure $ if newName == "" then Nothing else Just newName
-
 injectLocationFields ::
   Maybe M.InstitutionID ->
   Maybe String ->
   Maybe M.InstitutionType ->
-  Maybe (Maybe String) ->
+  Maybe String ->
   Maybe M.InstitutionContact ->
   Maybe M.InstitutionSustainability ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
@@ -52,7 +39,7 @@ injectLocationFields
   (Just institutionID)
   (Just institutionName)
   (Just institutionType)
-  (Just superOrganizationName)
+  superOrganizationName
   (Just institutionContact)
   (Just institutionSustainability)
   (Just institutionPolicies)
@@ -68,21 +55,38 @@ injectLocationFields
   }
 injectLocationFields _ _ _ _ _ _ _ _ = Nothing
 
+injectSustainFields ::
+  Maybe URL ->
+  Maybe URL ->
+  Maybe M.InstitutionSustainability
+injectSustainFields
+ (Just mission)
+ (Just funding) = pure $ {
+   missionStatementURL: mission
+ , fundingStatementURL: funding
+ }
+injectSustainFields _ _ = Nothing
+
 accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
 accumulateLocation locMay = D.div_ [] do
   display $ D.h1' [D.text "Location"]
-  instNameMay <- locNameSig Nothing
+  instNameMay <- textInput D.span' "Institution Name: "
   display $ D.div' [D.text $ "Testing: " <> (show instNameMay)] -- FIXME: DEBUG
   instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal Nothing
+  display D.br'
+  sOrgMay <- textInput D.span' "Super Organization (optional): "
   icMay <- MF.contactSignal Nothing
+  missionUrlMay <- urlInput D.span' "Mission Statement URL: "
+  fundingUrlMay <- urlInput D.span' "Funding Statement URL: "
+  sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
   polsMay <- MF.policySigArray Nothing
   newLocMay <- pure $ injectLocationFields
     Nothing
     instNameMay
     instTypeMay
-    Nothing
+    sOrgMay
     icMay
-    Nothing
+    sustainMay
     polsMay
     Nothing
   display $ locWidg
