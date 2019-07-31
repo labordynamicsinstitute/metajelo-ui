@@ -18,7 +18,7 @@ import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
-import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, menu, nonEmptyArrayView)
+import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
@@ -109,14 +109,14 @@ policyForm fstate = do
 
 policySignal :: Maybe M.InstitutionPolicy
   -> Signal HTML (Maybe M.InstitutionPolicy)
-policySignal instPolicyMay = step instPolicyMay do
-  inputs <- pure $ F.wrapInputFields $ outToInRec instPolicyMay
-  instPolicy <- D.div' [
-    D.h2' [D.text "Institution Policy"]
-  , policyForm (initFormState inputs validators)
-  , foldMap ipolicyWidg instPolicyMay
-  ]
-  pure $ policySignal $ Just instPolicy
+policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
+  step instPolicyMay do
+    inputs <- pure $ F.wrapInputFields $ outToInRec instPolicyMay
+    instPolicy <- D.div' [
+      policyForm (initFormState inputs validators)
+    , foldMap ipolicyWidg instPolicyMay
+    ]
+    pure $ policySignal $ Just instPolicy
 
 
 checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy
@@ -128,4 +128,5 @@ checkPolicy = hoistFnE $ \form str ->
 
 policySigArray :: Maybe (NonEmptyArray M.InstitutionPolicy) ->
   Signal HTML (Maybe (NonEmptyArray M.InstitutionPolicy))
-policySigArray instPoliciesMay = nonEmptyArrayView 1 policySignal
+policySigArray instPoliciesMay = labelSig' D.h2' "Institution Policies" $
+  nonEmptyArrayView 1 policySignal

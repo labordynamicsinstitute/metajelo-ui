@@ -16,7 +16,7 @@ import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Formless as F
 import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, menu)
+import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -82,12 +82,12 @@ contactForm fstate = do
 
 contactSignal :: Maybe M.InstitutionContact
   -> Signal HTML (Maybe M.InstitutionContact)
-contactSignal instContactMay = step instContactMay do
-  inputs <- pure $ F.wrapInputFields $ outToInRec instContactMay
-  instContact <- D.div' [
-    D.h2' [D.text "Institution Contact"]
-  , contactForm (initFormState inputs validators)
-  , foldMap contactWidg instContactMay
-  ]
-  pure $ contactSignal $ Just instContact
+contactSignal instContactMay = labelSig' D.h2' "Institution Contact" $
+  step instContactMay do
+    inputs <- pure $ F.wrapInputFields $ outToInRec instContactMay
+    instContact <- D.div' [
+      contactForm (initFormState inputs validators)
+    , foldMap contactWidg instContactMay
+    ]
+    pure $ contactSignal $ Just instContact
 
