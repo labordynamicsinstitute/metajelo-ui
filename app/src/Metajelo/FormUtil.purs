@@ -21,7 +21,7 @@ import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
-import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.Symbol (class IsSymbol, SProxy)
@@ -36,6 +36,7 @@ import Formless.Internal.Transform as Internal
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
+import Partial.Unsafe (unsafePartial)
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
@@ -50,16 +51,16 @@ type MKValidators form = form Record (F.Validation form (Widget HTML))
 -- | types (`io`) are the same.
 type IdentityField f io = f Void io io
 
-mayToString :: forall a. Show a => Maybe a -> String
+mayToString :: ∀ a. Show a => Maybe a -> String
 mayToString (Just v) = show v
 mayToString Nothing = ""
 
-emptyMeansOptional :: forall a. Show a => Maybe a -> String
+emptyMeansOptional :: ∀ a. Show a => Maybe a -> String
 emptyMeansOptional mayV = case mayV of
   Nothing -> "(None)"
   x -> mayToString x
 
-menu :: forall opt s form e o restF restI inputs fields
+menu :: ∀ opt s form e o restF restI inputs fields
    . IsSymbol s
    => IsOption opt
    => BoundedEnum opt
@@ -72,10 +73,28 @@ menu :: forall opt s form e o restF restI inputs fields
   -> Widget HTML (F.Query form)
 menu form field = D.select
   [ P.defaultValue $ toOptionValue $ F.getInput field form
-    , (F.set field <<< fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
-    ]
+  , (F.set field <<< fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
+  ]
   (upFromIncluding (bottom :: opt) <#> \opt ->
     D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
+
+-- | A non-formless incantation of menu
+menuSignal :: ∀ opt. BoundedEnum opt => IsOption opt =>
+  Maybe opt -> Signal HTML (Maybe opt)
+menuSignal currentOptMay = step currentOptMay do
+  newOpt <- D.select [
+    P.defaultValue $ maybe "" toOptionValue currentOptMay
+  , (fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
+  ] (
+    upFromIncluding (bottom :: opt) <#> \opt ->
+      D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
+  pure $ menuSignal $ Just newOpt
+
+-- | Prepend a label heading to a siginal
+labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
+labelSig' tag label sigIn = do
+  display $ tag [D.text label]
+  sigIn
 
 class IsOption a where
   toOptionValue :: a -> String
@@ -87,6 +106,12 @@ instance isOptionMaybeBoolean
     toOptionValue = mayToString
     toOptionLabel = emptyMeansOptional
     fromOptionValue = hush <<< MR.readBoolean
+
+instance isOptionInstitutionType
+  :: IsOption M.InstitutionType where
+    toOptionValue = show
+    toOptionLabel = show
+    fromOptionValue x = unsafePartial $ fromJust $ hush $ MR.readInstitutionType x
 
 instance isOptionMaybeInstitutionContactType
   :: IsOption (Maybe M.InstitutionContactType) where
@@ -133,7 +158,7 @@ instance isOptionPolPolType :: IsOption PolPolType where
   toOptionLabel = show
   fromOptionValue = fromMaybe FreeTextPolicy <<<  hush <<< readPolPolType
 
-formSaveButton :: forall form. MKFState form -> Widget HTML SyntheticMouseEvent
+formSaveButton :: ∀ form. MKFState form -> Widget HTML SyntheticMouseEvent
 formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
@@ -146,7 +171,7 @@ instance showItemPersist :: Show ItemPersist where
 instance eqItemPersist :: Eq ItemPersist where
   eq = genericEq
 
-arrayView :: forall a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
+arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
   tupArr <- arrayView' initVals
   arrayStr :: String <- pure $ show $ map fst tupArr  -- FIXME: DEBUG

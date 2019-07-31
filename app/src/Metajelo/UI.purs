@@ -1,11 +1,12 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, pure, unit, ($), (<>))
+import Prelude (Unit, bind, discard, pure, show, unit, ($), (<>), (<$>), (==), (<<<))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
+import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Foldable (fold, foldMap)
@@ -13,6 +14,7 @@ import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
+import Metajelo.FormUtil (labelSig', menuSignal)
 import Metajelo.Types as M
 import Metajelo.View as MV
 
@@ -21,6 +23,20 @@ main = pure unit
 
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
+
+locNameSig :: Maybe String -> Signal HTML (Maybe String)
+locNameSig nameMay = step nameMay do
+  newName <- D.div' [
+    D.h3' [D.text "Institution Name"]
+  , D.input [P.unsafeTargetValue <$> P.onChange]
+  ]
+  pure $ locNameSig $ if newName == "" then Nothing else Just newName
+
+-- locNameSig :: Maybe String -> Signal HTML (Maybe String)
+-- locNameSig nameMay = D.div_ [] do
+--   display $ D.h3' [D.text "Institution Name"]
+--   newName <- step "" $ D.input [pure <<< P.unsafeTargetValue <$> P.onChange]
+--   pure $ if newName == "" then Nothing else Just newName
 
 injectLocationFields ::
   Maybe M.InstitutionID ->
@@ -54,12 +70,16 @@ injectLocationFields _ _ _ _ _ _ _ _ = Nothing
 
 accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
 accumulateLocation locMay = D.div_ [] do
+  display $ D.h1' [D.text "Location"]
+  instNameMay <- locNameSig Nothing
+  display $ D.div' [D.text $ "Testing: " <> (show instNameMay)] -- FIXME: DEBUG
+  instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal Nothing
   icMay <- MF.contactSignal Nothing
   polsMay <- MF.policySigArray Nothing
   newLocMay <- pure $ injectLocationFields
     Nothing
-    Nothing
-    Nothing
+    instNameMay
+    instTypeMay
     Nothing
     icMay
     Nothing
