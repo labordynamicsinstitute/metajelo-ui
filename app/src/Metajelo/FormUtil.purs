@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, pure, show, (+), (-), ($), (<$>), (<#>), (<<<), (==), (||), (<>))
+import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<$), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, step)
@@ -120,6 +120,13 @@ urlInput tag label = labelSig' tag label sig
         Left err -> errorDisplay $ Just err
       pure $ hush urlEi
 
+checkBoxS :: Boolean -> Signal HTML Boolean
+checkBoxS b = step b do
+  newB <- checkBoxW b
+  pure $ checkBoxS newB
+
+checkBoxW :: Boolean -> Widget HTML Boolean
+checkBoxW b = not b <$ D.input [P._type "checkbox", P.checked b, P.onChange]
 
 class IsOption a where
   toOptionValue :: a -> String

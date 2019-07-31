@@ -14,7 +14,7 @@ import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (labelSig', menuSignal, textInput, urlInput)
+import Metajelo.FormUtil (checkBoxS, labelSig', menuSignal, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import URL.Validator (URL)
@@ -33,7 +33,7 @@ injectLocationFields ::
   Maybe M.InstitutionContact ->
   Maybe M.InstitutionSustainability ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
-  Maybe Boolean ->
+  Boolean ->
   Maybe M.Location
 injectLocationFields
   (Just institutionID)
@@ -43,7 +43,7 @@ injectLocationFields
   (Just institutionContact)
   (Just institutionSustainability)
   (Just institutionPolicies)
-  (Just versioning) = pure $ {
+  versioning = pure $ {
     institutionID: institutionID
   , institutionName: institutionName
   , institutionType: institutionType
@@ -80,6 +80,7 @@ accumulateLocation locMay = D.div_ [] do
   fundingUrlMay <- urlInput D.span' "Funding Statement URL: "
   sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
   polsMay <- MF.policySigArray Nothing
+  versioning <- labelSig' D.span' "versioning? " $ checkBoxS false
   newLocMay <- pure $ injectLocationFields
     Nothing
     instNameMay
@@ -88,7 +89,7 @@ accumulateLocation locMay = D.div_ [] do
     icMay
     sustainMay
     polsMay
-    Nothing
+    versioning
   display $ locWidg
   pure newLocMay
   where
