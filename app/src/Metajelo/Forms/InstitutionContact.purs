@@ -83,11 +83,13 @@ contactForm fstate = do
 contactSignal :: Maybe M.InstitutionContact
   -> Signal HTML (Maybe M.InstitutionContact)
 contactSignal instContactMay = labelSig' D.h2' "Institution Contact" $
-  step instContactMay do
-    inputs <- pure $ F.wrapInputFields $ outToInRec instContactMay
-    instContact <- D.div' [
-      contactForm (initFormState inputs validators)
-    , foldMap contactWidg instContactMay
-    ]
-    pure $ contactSignal $ Just instContact
+  sig instContactMay
+  where
+    sig icMay = step icMay do
+      inputs <- pure $ F.wrapInputFields $ outToInRec icMay
+      instContact <- D.div' [
+        contactForm (initFormState inputs validators)
+      , foldMap contactWidg icMay
+      ]
+      pure $ sig $ Just instContact
 

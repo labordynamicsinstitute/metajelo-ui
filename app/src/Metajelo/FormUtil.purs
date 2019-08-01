@@ -118,19 +118,16 @@ textFilter txtSig = do
 -- textInputDef (TODO) (composition of textInput with textFilter)
 
 urlInput :: D.El' -> String -> Signal HTML (Maybe URL)
-urlInput tag label = labelSig' tag label sig
-  where
-    sig :: Signal HTML (Maybe URL)
-    sig = do
-      txtMay <- textInput tag label
-      urlEi <- pure $ case txtMay of
-        Nothing -> Left ""
-        Just "" -> Left ""
-        Just txt -> parsePublicURL txt
-      display $ case urlEi of
-        Right _ -> mempty
-        Left err -> errorDisplay $ Just err
-      pure $ hush urlEi
+urlInput tag label = do
+  txtMay <- textInput tag label
+  urlEi <- pure $ case txtMay of
+    Nothing -> Left ""
+    Just "" -> Left ""
+    Just txt -> parsePublicURL txt
+  display $ case urlEi of
+    Right _ -> mempty
+    Left err -> errorDisplay $ Just err
+  pure $ hush urlEi
 
 checkBoxS :: Boolean -> Signal HTML Boolean
 checkBoxS b = step b do

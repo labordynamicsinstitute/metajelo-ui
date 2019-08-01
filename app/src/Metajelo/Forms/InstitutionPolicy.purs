@@ -110,14 +110,15 @@ policyForm fstate = do
 policySignal :: Maybe M.InstitutionPolicy
   -> Signal HTML (Maybe M.InstitutionPolicy)
 policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
-  step instPolicyMay do
-    inputs <- pure $ F.wrapInputFields $ outToInRec instPolicyMay
-    instPolicy <- D.div' [
-      policyForm (initFormState inputs validators)
-    , foldMap ipolicyWidg instPolicyMay
-    ]
-    pure $ policySignal $ Just instPolicy
-
+  sig instPolicyMay
+  where
+    sig ipMay = step ipMay do
+      inputs <- pure $ F.wrapInputFields $ outToInRec ipMay
+      instPolicy <- D.div' [
+        policyForm (initFormState inputs validators)
+      , foldMap ipolicyWidg ipMay
+      ]
+      pure $ sig $ Just instPolicy
 
 checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy
 checkPolicy = hoistFnE $ \form str ->
