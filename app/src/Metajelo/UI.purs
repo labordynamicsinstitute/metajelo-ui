@@ -57,40 +57,12 @@ injectLocationFields
   }
 injectLocationFields _ _ _ _ _ _ _ _ = Nothing
 
-injectSustainFields ::
-  Maybe URL ->
-  Maybe URL ->
-  Maybe M.InstitutionSustainability
-injectSustainFields
- (Just mission)
- (Just funding) = pure $ {
-   missionStatementURL: mission
- , fundingStatementURL: funding
- }
-injectSustainFields _ _ = Nothing
-
-
--- TODO: revise Metajelo.Types, etc to use NonEmptyString as well
--- TODO: also add strip to textInput output filter (not textInput itself
---       which would prevent user from typing spaces)
-injectIdentFields ::
-  Maybe NonEmptyString ->
-  Maybe M.IdentifierType ->
-  Maybe M.Identifier
-injectIdentFields
-  (Just id)
-  (Just idType) = pure $ {
-    id: toString id
-  , idType: idType
-  }
-injectIdentFields _ _ = Nothing
-
-accumulateIdent :: String -> Signal HTML (Maybe M.Identifier)
-accumulateIdent idLabel = labelSig' D.h3' idLabel do
-  idMay0 <- textInput D.span' "Record Identifier: "
-  idMay <- pure $ join $ fromString <$> idMay0 -- TODO: consolidate
-  idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal Nothing
-  pure $ injectIdentFields idMay idTypeMay
+-- FIXME: FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+-- FIXME: FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+-- FIXME: accumulation does not work; stale values are dropped upon re-render
+-- FIXME: this is because Maybe Location does not contain partial info
+-- FIXME: FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+-- FIXME: FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
 
 accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
 accumulateLocation locMay = labelSig' D.h1' "Location" do
@@ -128,5 +100,40 @@ accumulateLocation locMay = labelSig' D.h1' "Location" do
 page :: forall a. Widget HTML a
 page = do
   dyn $ accumulateLocation Nothing
+
+injectSustainFields ::
+  Maybe URL ->
+  Maybe URL ->
+  Maybe M.InstitutionSustainability
+injectSustainFields
+ (Just mission)
+ (Just funding) = pure $ {
+   missionStatementURL: mission
+ , fundingStatementURL: funding
+ }
+injectSustainFields _ _ = Nothing
+
+
+-- TODO: revise Metajelo.Types, etc to use NonEmptyString as well
+-- TODO: also add strip to textInput output filter (not textInput itself
+--       which would prevent user from typing spaces)
+injectIdentFields ::
+  Maybe NonEmptyString ->
+  Maybe M.IdentifierType ->
+  Maybe M.Identifier
+injectIdentFields
+  (Just id)
+  (Just idType) = pure $ {
+    id: toString id
+  , idType: idType
+  }
+injectIdentFields _ _ = Nothing
+
+accumulateIdent :: String -> Signal HTML (Maybe M.Identifier)
+accumulateIdent idLabel = labelSig' D.h3' idLabel do
+  idMay0 <- textInput D.span' "Record Identifier: "
+  idMay <- pure $ join $ fromString <$> idMay0 -- TODO: consolidate
+  idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal Nothing
+  pure $ injectIdentFields idMay idTypeMay
 
 
