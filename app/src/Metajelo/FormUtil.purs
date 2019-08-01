@@ -24,6 +24,8 @@ import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
+import Data.String (trim)
+import Data.String.NonEmpty (NonEmptyString, fromString)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Traversable (for, traverse)
@@ -91,6 +93,7 @@ menuSignal currentOptMay = step currentOptMay do
       D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
   pure $ menuSignal $ Just newOpt
 
+-- FIXME: titles accumulate
 -- | Prepend a label heading to a siginal
 labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
 labelSig' tag label sigIn = do
@@ -103,7 +106,16 @@ textInput tag label = labelSig' tag label $ sig Nothing
     sig :: Maybe String -> Signal HTML (Maybe String)
     sig txtMay = step txtMay do
       newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
+      -- TODO: next line largey redundant after using textFilter
       pure $ sig $ if newTxt == "" then Nothing else Just newTxt
+
+-- | Reasonable defaults for filtering input text
+textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
+textFilter txtSig = do
+  txt <- txtSig
+  pure $ fromString $ trim txt
+
+-- textInputDef (TODO) (composition of textInput with textFilter)
 
 urlInput :: D.El' -> String -> Signal HTML (Maybe URL)
 urlInput tag label = labelSig' tag label sig
@@ -138,6 +150,12 @@ instance isOptionMaybeBoolean
     toOptionValue = mayToString
     toOptionLabel = emptyMeansOptional
     fromOptionValue = hush <<< MR.readBoolean
+
+instance isOptionIdentifierType
+  :: IsOption M.IdentifierType where
+    toOptionValue = show
+    toOptionLabel = show
+    fromOptionValue x = unsafePartial $ fromJust $ hush $ MR.readIdentifierType x
 
 instance isOptionInstitutionType
   :: IsOption M.InstitutionType where

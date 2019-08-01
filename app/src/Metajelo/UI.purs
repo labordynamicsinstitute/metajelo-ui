@@ -1,6 +1,6 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, pure, show, unit, ($), (<>), (<$>), (==), (<<<))
+import Prelude (Unit, bind, discard, join, pure, show, unit, void, ($), (<>), (<$>), (==), (<<<))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, step)
@@ -12,6 +12,7 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..))
 import Data.Show (show)
+import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Effect (Effect)
 import Metajelo.Forms as MF
 import Metajelo.FormUtil (checkBoxS, labelSig', menuSignal, textInput, urlInput)
@@ -24,6 +25,7 @@ main = pure unit
 
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
+
 
 injectLocationFields ::
   Maybe M.InstitutionID ->
@@ -67,9 +69,32 @@ injectSustainFields
  }
 injectSustainFields _ _ = Nothing
 
+
+-- TODO: revise Metajelo.Types, etc to use NonEmptyString as well
+-- TODO: also add strip to textInput output filter (not textInput itself
+--       which would prevent user from typing spaces)
+injectIdentFields ::
+  Maybe NonEmptyString ->
+  Maybe M.IdentifierType ->
+  Maybe M.Identifier
+injectIdentFields
+  (Just id)
+  (Just idType) = pure $ {
+    id: toString id
+  , idType: idType
+  }
+injectIdentFields _ _ = Nothing
+
+accumulateIdent :: String -> Signal HTML (Maybe M.Identifier)
+accumulateIdent idLabel = labelSig' D.h3' idLabel do
+  idMay0 <- textInput D.span' "Record Identifier: "
+  idMay <- pure $ join $ fromString <$> idMay0 -- TODO: consolidate
+  idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal Nothing
+  pure $ injectIdentFields idMay idTypeMay
+
 accumulateLocation :: Maybe M.Location -> Signal HTML (Maybe M.Location)
-accumulateLocation locMay = D.div_ [] do
-  display $ D.h1' [D.text "Location"]
+accumulateLocation locMay = labelSig' D.h1' "Location" do
+  identMay <- accumulateIdent "Identifier"
   instNameMay <- textInput D.span' "Institution Name: "
   display $ D.div' [D.text $ "Testing: " <> (show instNameMay)] -- FIXME: DEBUG
   instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal Nothing
@@ -82,7 +107,7 @@ accumulateLocation locMay = D.div_ [] do
   polsMay <- MF.policySigArray Nothing
   versioning <- labelSig' D.span' "versioning? " $ checkBoxS false
   newLocMay <- pure $ injectLocationFields
-    Nothing
+    identMay
     instNameMay
     instTypeMay
     sOrgMay
