@@ -72,7 +72,8 @@ accumulateLocation locMay = labelSig' D.h1' "Location" do
   instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal Nothing
   display D.br'
   sOrgMay <- textInput D.span' "Super Organization (optional): "
-  icMay <- MF.contactSignal Nothing
+  icMay <- contactSignalInit
+  display $ D.div' [D.text $ "Contact" <> (show icMay)]  -- FIXME: DEBUG
   missionUrlMay <- urlInput D.span' "Mission Statement URL: "
   fundingUrlMay <- urlInput D.span' "Funding Statement URL: "
   sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
@@ -90,6 +91,7 @@ accumulateLocation locMay = labelSig' D.h1' "Location" do
   display $ locWidg
   pure newLocMay
   where
+    contactSignalInit = MF.contactSignal Nothing
     locWidg :: forall a. Widget HTML a
     locWidg = D.div' [
       D.h3' [D.text "Last submitted location summary for this product:"]
