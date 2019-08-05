@@ -155,7 +155,7 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "e8b45cba2b5d445f3533ce24b15454dccfb28904"
+          "2ad778ba4b11e9a85245ff01b001c01173decea8"
       , metajelo-web =
           mkPackage
           [ "prelude"
@@ -168,7 +168,7 @@ let additions =
           , "url-validator"
           ]
           "https://github.com/labordynamicsinstitute/metajelo-web.git"
-          "f5d1ff27f80c03c4686bc7fa706097aed3f3a871"
+          "224e127cc481fa4c12dd8ca87e387cefb914f147"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
@@ -190,7 +190,7 @@ let additions =
           mkPackage
           [ "nullable" ]
           "https://github.com/bbarker/purescript-url-validator.git"
-          "v1.1.0"
+          "v2.1.0"
       , web-dom-parser =
           mkPackage
           [ "prelude", "effect", "partial", "web-dom" ]

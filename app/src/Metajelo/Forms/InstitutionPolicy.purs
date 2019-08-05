@@ -15,6 +15,7 @@ import Data.Foldable (foldMap)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
+import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
@@ -22,7 +23,7 @@ import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators,
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
-import URL.Validator (parsePublicURL, urlToString)
+import Text.URL.Validate (parsePublicURL, urlToString)
 
 
 newtype InstPolicyForm r f = InstPolicyForm (r (
@@ -62,7 +63,7 @@ pol2ZeroArg (M.FreeTextPolicy _) = FreeTextPolicy
 pol2ZeroArg (M.RefPolicy _) = RefPolicy
 
 polStrContent :: M.Policy -> String
-polStrContent (M.FreeTextPolicy txt) = txt
+polStrContent (M.FreeTextPolicy txt) = toString txt
 polStrContent (M.RefPolicy url) = urlToString url
 
 outToInRec ::  Maybe M.InstitutionPolicy -> InputRecord
@@ -124,8 +125,8 @@ checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Pol
 checkPolicy = hoistFnE $ \form str ->
   let pType = F.getInput proxies.polPolType form
   in case pType of
-    FreeTextPolicy -> pure $ M.FreeTextPolicy str
-    RefPolicy -> parsePublicURL str <#> M.RefPolicy
+    FreeTextPolicy -> (V.readNEStringEi str) <#> M.FreeTextPolicy
+    RefPolicy -> (parsePublicURL str) <#> M.RefPolicy
 
 policySigArray :: Maybe (NonEmptyArray M.InstitutionPolicy) ->
   Signal HTML (Maybe (NonEmptyArray M.InstitutionPolicy))

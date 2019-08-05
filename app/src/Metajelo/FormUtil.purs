@@ -25,7 +25,7 @@ import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
 import Data.String (trim)
-import Data.String.NonEmpty (NonEmptyString, fromString)
+import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Traversable (for, traverse)
@@ -43,7 +43,7 @@ import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
-import URL.Validator (URL, parsePublicURL)
+import Text.URL.Validate (URL, parsePublicURL)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
@@ -93,21 +93,19 @@ menuSignal currentOptMay = step currentOptMay do
       D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
   pure $ menuSignal $ Just newOpt
 
--- FIXME: titles accumulate
 -- | Prepend a label heading to a siginal
 labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
 labelSig' tag label sigIn = do
   display $ tag [D.text label]
   sigIn
 
-textInput :: D.El' -> String -> Signal HTML (Maybe String)
-textInput tag label = labelSig' tag label $ sig Nothing
+textInput' :: D.El' -> String -> Signal HTML String
+textInput' tag label = labelSig' tag label $ sig ""
   where
-    sig :: Maybe String -> Signal HTML (Maybe String)
-    sig txtMay = step txtMay do
+    sig :: String -> Signal HTML String
+    sig txt = step txt do
       newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
-      -- TODO: next line largey redundant after using textFilter
-      pure $ sig $ if newTxt == "" then Nothing else Just newTxt
+      pure $ sig newTxt
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -115,15 +113,15 @@ textFilter txtSig = do
   txt <- txtSig
   pure $ fromString $ trim txt
 
--- textInputDef (TODO) (composition of textInput with textFilter)
+textInput :: D.El' -> String -> Signal HTML (Maybe NonEmptyString)
+textInput tag label = textFilter $ textInput' tag label
 
 urlInput :: D.El' -> String -> Signal HTML (Maybe URL)
 urlInput tag label = do
   txtMay <- textInput tag label
   urlEi <- pure $ case txtMay of
     Nothing -> Left ""
-    Just "" -> Left ""
-    Just txt -> parsePublicURL txt
+    Just txt -> parsePublicURL $ toString txt
   display $ case urlEi of
     Right _ -> mempty
     Left err -> errorDisplay $ Just err

@@ -18,7 +18,7 @@ import Metajelo.Forms as MF
 import Metajelo.FormUtil (checkBoxS, labelSig', menuSignal, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
-import URL.Validator (URL)
+import Text.URL.Validate (URL)
 
 main :: Effect Unit
 main = pure unit
@@ -29,9 +29,9 @@ runFormSPA divId = runWidgetInDom divId page
 
 injectLocationFields ::
   Maybe M.InstitutionID ->
-  Maybe String ->
+  Maybe NonEmptyString ->
   Maybe M.InstitutionType ->
-  Maybe String ->
+  Maybe NonEmptyString ->
   Maybe M.InstitutionContact ->
   Maybe M.InstitutionSustainability ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
@@ -126,15 +126,14 @@ injectIdentFields ::
 injectIdentFields
   (Just id)
   (Just idType) = pure $ {
-    id: toString id
+    id: id
   , idType: idType
   }
 injectIdentFields _ _ = Nothing
 
 accumulateIdent :: String -> Signal HTML (Maybe M.Identifier)
 accumulateIdent idLabel = labelSig' D.h3' idLabel do
-  idMay0 <- textInput D.span' "Record Identifier: "
-  idMay <- pure $ join $ fromString <$> idMay0 -- TODO: consolidate
+  idMay <- textInput D.span' "Record Identifier: "
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal Nothing
   pure $ injectIdentFields idMay idTypeMay
 
