@@ -21,3 +21,8 @@ the command in the container with the CWD mounted and then exit. Alternatively
 if you want to issue multiple commands in the container quickly, you can
 run `./psc.sh bash`.
 
+## Debugging
+
+For an unminified build that is easier to debug from the browser, use
+`npm run debug` instead of `npm run prod`.
+
