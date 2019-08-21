@@ -7,11 +7,11 @@ before_script:
 - chmod a+w -R .
 
 script:
-- IMG_VER=0.13.0_r1 ./scripts/dist_build.sh
+- IMG_VER=0.13.3_r1 ./scripts/dist_build.sh
 
 deploy:
   provider: pages
-  local_dir: app/dist
+  local_dir: dist
   target_branch: gh-pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN

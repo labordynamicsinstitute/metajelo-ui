@@ -7,7 +7,8 @@
     "testbrowser": "../scripts/testbrowser",
     "clean": "rimraf output .cache .psci_modules .pulp-cache .spago dist prod testdist",
     "build": "spago build",
-    "prod": "../scripts/prod",
+    "debug": "./scripts/debug",
+    "prod": "./scripts/prod",
     "parcel": "parcel build --public-url ./ prod/index.html",
     "start": "spago build && parcel --no-hmr --public-url ./ static/index.html",
     "watch": "spago build && parcel watch static/index.html"
@@ -24,13 +25,13 @@
     "postcss-font-base64": "^1.0.5",
     "postcss-modules": "^1.4.1",
     "pulp": "^13.0.0",
-    "purescript": "^0.13.2",
+    "purescript": "^0.13.3",
     "purescript-psa": "^0.7.3",
     "rimraf": "^2.6.3"
   },
   "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
   },
   "browserslist": [
     "defaults"
