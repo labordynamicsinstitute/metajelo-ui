@@ -208,44 +208,37 @@ formSaveButton :: ∀ form. MKFState form -> Widget HTML SyntheticMouseEvent
 formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
-data ItemPersist =
-    Delete
-  | Keep
-derive instance genItemPersist :: Generic ItemPersist _
-instance showItemPersist :: Show ItemPersist where
-  show = genericShow
-instance eqItemPersist :: Eq ItemPersist where
-  eq = genericEq
-
 arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
-  tupArr <- arrayView' initVals
-  arrayStr :: String <- pure $ show $ map fst tupArr  -- FIXME: DEBUG
-  _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
-  pure $ catMaybes $ map snd tupArr
+  mayArr <- arrayView' initVals
+  -- arrayStr :: String <- pure $ show mayArr  -- FIXME: DEBUG
+  -- _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
+  pure $ catMaybes mayArr
   where
-    emptyElem = Tuple Keep Nothing
-    initVals :: Array (Tuple ItemPersist (Maybe a))
+    emptyElem = Nothing
+    initVals :: Array (Maybe a)
     initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
-    mkItemView :: Tuple ItemPersist (Maybe a) -> Signal HTML (Tuple ItemPersist (Maybe a))
-    mkItemView item = step item
-      case fst item of
-        Delete -> mempty
-        Keep -> do
-          newItem <- D.div' [
-            D.li' [dyn $ mkWidget $ snd item]
-          , (Tuple Delete $ snd item) <$ D.button [P.onClick] [D.text "Delete"]
-          ]
-          pure $ mkItemView newItem
-
-    arrayView' :: Array (Tuple ItemPersist (Maybe a)) ->
-      Signal HTML (Array (Tuple ItemPersist (Maybe a)))
-    arrayView' tupArr = D.div_ [] do
-      tupArrP1 <- step tupArr $
-        (pure $ snoc tupArr emptyElem) <$ D.button [P.onClick] [D.text "Add item"]
-      tupArrNew <- traverse mkItemView tupArrP1
-      tupArrFiltered <- pure $ filter (\t -> Keep == fst t) tupArrNew
-      pure tupArrFiltered
+    mkEmptyItemView :: Signal HTML (Maybe a)
+    mkEmptyItemView = step Nothing do
+      newIView <- reallyMkItemView Nothing
+      pure $ mkItemView newIView
+    mkItemView :: Maybe a -> Signal HTML (Maybe a)
+    mkItemView item = step item case item of
+      Nothing -> mempty
+      Just _ -> do
+        newIView <- reallyMkItemView item
+        pure $ mkItemView newIView
+    reallyMkItemView :: Maybe a -> Widget HTML (Maybe a)
+    reallyMkItemView item = D.div' [
+      D.li' [dyn $ mkWidget item]
+    , Nothing <$ D.button [P.onClick] [D.text "Delete"]
+    ]
+    arrayView' :: Array (Maybe a) -> Signal HTML (Array (Maybe a))
+    arrayView' mayArr = D.div_ [] do
+      mayArrP1 <- step mayArr $
+        (pure $ snoc mayArr emptyElem) <$ D.button [P.onClick] [D.text "Add item"]
+      mayArrNew <- traverse mkItemView mayArrP1
+      pure mayArrNew
 
 nonEmptyArrayView :: ∀ a.
   Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Maybe (NonEmptyArray a))
