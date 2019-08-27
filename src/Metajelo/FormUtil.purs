@@ -129,8 +129,9 @@ urlInput tag label = do
 
 checkBoxS :: Boolean -> Signal HTML Boolean
 checkBoxS b = step b do
-  newB <- checkBoxW b
+  newB <- checkW
   pure $ checkBoxS newB
+  where checkW = checkBoxW b
 
 checkBoxW :: Boolean -> Widget HTML Boolean
 checkBoxW b = not b <$ D.input [P._type "checkbox", P.checked b, P.onChange]
