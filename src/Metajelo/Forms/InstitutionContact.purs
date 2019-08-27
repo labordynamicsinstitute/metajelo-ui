@@ -66,7 +66,7 @@ contactForm fstate = do
   query <- D.div' [
       D.div' [D.text "Email"]
     , D.input [
-        P.value $ F.getInput proxies.email1 fstate.form
+        P.defaultValue $ F.getInput proxies.email1 fstate.form
       , (F.setValidate proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form

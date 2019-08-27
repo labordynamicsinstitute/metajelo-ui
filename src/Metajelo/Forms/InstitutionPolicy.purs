@@ -89,7 +89,7 @@ policyForm fstate = do
   query <- D.div' [
       D.div' [D.text "Policy: ",  menu fstate.form proxies.polPolType]
     , D.input [
-        P.value $ F.getInput proxies.policy fstate.form
+        P.defaultValue $ F.getInput proxies.policy fstate.form
       , (F.setValidate proxies.policy <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.policy fstate.form
