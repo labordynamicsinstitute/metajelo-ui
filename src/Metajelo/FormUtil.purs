@@ -3,13 +3,13 @@ module Metajelo.FormUtil where
 import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<$), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, step)
+import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
 import Control.Category ((>>>))
-import Data.Array (catMaybes, filter, snoc, (..))
+import Data.Array (catMaybes, filter, length, replicate, snoc, (..))
 import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
@@ -30,8 +30,10 @@ import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time.Duration (Milliseconds(..))
 import Data.Traversable (for, traverse)
 import Data.Tuple (Tuple(..), fst, snd)
+import Data.Unit (Unit, unit)
 import Data.Variant (Variant)
--- import Effect.Class.Console (log, logShow)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (log, logShow)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
@@ -44,6 +46,8 @@ import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
 import Text.URL.Validate (URL, parsePublicURL)
+
+import Prim.TypeError (QuoteLabel, class Warn)
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
@@ -210,7 +214,8 @@ formSaveButton fstate = D.button props [D.text "Save"]
 
 arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
-  mayArr <- arrayView' initVals
+  mayArr <- arrayView' minWidgets initVals
+  _ <- consoleShow $ length mayArr
   -- arrayStr :: String <- pure $ show mayArr  -- FIXME: DEBUG
   -- _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
   pure $ catMaybes mayArr
@@ -218,27 +223,38 @@ arrayView minWidgets mkWidget = D.div_ [] do
     emptyElem = Nothing
     initVals :: Array (Maybe a)
     initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
-    mkEmptyItemView :: Signal HTML (Maybe a)
-    mkEmptyItemView = step Nothing do
-      newIView <- reallyMkItemView Nothing
-      pure $ mkItemView newIView
+    mkEmptyItemView :: Maybe a -> Signal HTML (Maybe a)
+    mkEmptyItemView item = step item do
+      newIView <- mkItemViewWidg item
+      pure $ mkEmptyItemView newIView
     mkItemView :: Maybe a -> Signal HTML (Maybe a)
-    mkItemView item = step item case item of
-      Nothing -> mempty
-      Just _ -> do
-        newIView <- reallyMkItemView item
-        pure $ mkItemView newIView
-    reallyMkItemView :: Maybe a -> Widget HTML (Maybe a)
-    reallyMkItemView item = D.div' [
+    mkItemView item = case item of
+      Nothing -> step Nothing mempty
+      Just _ -> mkEmptyItemView item
+    mkItemViewWidg :: Maybe a -> Widget HTML (Maybe a)
+    mkItemViewWidg item = D.div' [
       D.li' [dyn $ mkWidget item]
     , Nothing <$ D.button [P.onClick] [D.text "Delete"]
     ]
-    arrayView' :: Array (Maybe a) -> Signal HTML (Array (Maybe a))
-    arrayView' mayArr = D.div_ [] do
-      mayArrP1 <- step mayArr $
-        (pure $ snoc mayArr emptyElem) <$ D.button [P.onClick] [D.text "Add item"]
-      mayArrNew <- traverse mkItemView mayArrP1
-      pure mayArrNew
+    arrayViewLoop :: Int -> Array (Maybe a) ->
+      Signal HTML (Tuple Int (Array (Maybe a)))
+    arrayViewLoop widgCountIn mayArr = loopS (Tuple widgCountIn mayArr) \tupIn ->
+      D.div_ [] do
+        let widgCountIn' = fst tupIn
+        let mayArr' = snd tupIn
+        widgCount <- step widgCountIn' $
+          (pure $ widgCountIn' + 1) <$ D.button [P.onClick] [D.text "Add item"]
+        -- FIXME: replace mkItemView with mkEmptyItemView but then can't delete.
+        mayArrNew <- traverse mkItemView mayArr'
+        let emptyArrLen = max 0 (widgCount - (length mayArrNew))
+        -- _ <- consoleShow emptyArrLen
+        emptyArr <- traverse mkEmptyItemView (replicate emptyArrLen emptyElem)
+        -- _ <- consoleShow $ length emptyArr
+        pure $ Tuple widgCount $ mayArrNew <> emptyArr
+    arrayView' :: Int -> Array (Maybe a) -> Signal HTML (Array (Maybe a))
+    arrayView' widgCountIn mayArr = do
+      tupOut <- arrayViewLoop widgCountIn mayArr
+      pure $ snd tupOut
 
 nonEmptyArrayView :: ∀ a.
   Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Maybe (NonEmptyArray a))
@@ -279,3 +295,11 @@ initFormState form validations =
       -- , validationRef: ...
       }
   }
+
+
+-- NOTE: comment out for production builds
+consoleShow :: ∀ a. Show a => Warn (QuoteLabel "consoleShow in use") =>
+  a -> Signal HTML Unit
+consoleShow val = display $ do
+  liftEffect $ logShow val -- FIXME: DEBUG
+  mempty
