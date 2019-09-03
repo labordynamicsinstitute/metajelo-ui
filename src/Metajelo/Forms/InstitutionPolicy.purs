@@ -1,6 +1,6 @@
 module Metajelo.Forms.InstitutionPolicy where
 
-import Prelude (class Monad, bind, join, pure, show, ($), (<$>), (<#>), (<<<), (<>))
+import Prelude (class Monad, bind, discard, join, pure, show, ($), (<$>), (<#>), (<<<), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, step)
@@ -16,6 +16,8 @@ import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (log, logShow)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
@@ -119,6 +121,7 @@ policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
         policyForm (initFormState inputs validators)
       , foldMap ipolicyWidg ipMay
       ]
+      liftEffect $ logShow instPolicy
       pure $ sig $ Just instPolicy
 
 checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy

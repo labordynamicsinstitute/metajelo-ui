@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<$), (<<<), (==), (||), (<>))
+import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<$), ($>), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, step)
@@ -219,6 +219,9 @@ formSaveButton fstate = D.button props [D.text "Save"]
 data Item a
   =  Keep (Maybe a)
   |  Delete (Maybe a)
+instance showItem :: Show a => Show (Item a) where
+  show (Keep x) = "(Keep " <> show x <> ")"
+  show (Delete x) = "(Delete " <> show x <> ")"
 instance functorItem :: Functor Item where
   map fun (Keep mVal) = Keep $ map fun mVal
   map fun (Delete mVal) = Delete $ map fun mVal
@@ -232,9 +235,9 @@ instance applicativeItem :: Applicative Item where
 instance extendItem :: Extend Item where
   extend iMayAtoB iMay = Keep $ Just $ iMayAtoB iMay
 
-halfUnlift :: ∀ a. Item a -> Maybe a
-halfUnlift (Keep mVal) = mVal
-halfUnlift (Delete mVal) = mVal
+toMaybe :: ∀ a. Item a -> Maybe a
+toMaybe (Keep mVal) = mVal
+toMaybe (Delete mVal) = mVal
 
 isKeep :: ∀ a. Item a -> Boolean
 isKeep (Keep _) = true
@@ -243,27 +246,24 @@ isKeep _ = false
 arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
   mayArr <- arrayView' minWidgets initVals
-  -- _ <- consoleShow $ length mayArr
-  -- arrayStr :: String <- pure $ show mayArr  -- FIXME: DEBUG
-  -- _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
-  pure $ catMaybes $ map halfUnlift mayArr
+  pure $ catMaybes $ map toMaybe mayArr
   where
     emptyElem = Keep Nothing
     initVals :: Array (Item a)
     initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
-    mkEmptyItemView :: Item a -> Signal HTML (Item a)
-    mkEmptyItemView item = step item do
-      newItem <- mkItemViewWidg item
-      pure $ mkEmptyItemView newItem
     mkItemView :: Item a -> Signal HTML (Item a)
     mkItemView item = case item of
       Delete _ ->  step (Delete Nothing) mempty
-      Keep _ -> mkEmptyItemView item
-    mkItemViewWidg :: Item a -> Widget HTML (Item a)
-    mkItemViewWidg item = D.div' [
-      D.li' [dyn $ mkWidget $ halfUnlift item]
-    , (Delete $ halfUnlift item) <$ D.button [P.onClick] [D.text "Delete"]
-    ]
+      Keep _ -> mkItemViewDel item
+    mkItemViewDel :: Item a -> Signal HTML (Item a)
+    mkItemViewDel item = D.li_ [] do
+      curVal <- mkWidget $ toMaybe item
+      newItem <- delButton $ Keep curVal
+      pure newItem
+    delButton :: Item a -> Signal HTML (Item a)
+    delButton item = step item $ do
+      delMay <- (Delete $ toMaybe item) <$ D.button [P.onClick] [D.text "Delete"]
+      pure $ delButton delMay
     arrayViewLoop :: Int -> Array (Item a) ->
       Signal HTML (Tuple Int (Array (Item a)))
     arrayViewLoop widgCountIn mayArr = loopS (Tuple widgCountIn mayArr) \tupIn ->
@@ -276,11 +276,13 @@ arrayView minWidgets mkWidget = D.div_ [] do
         let mayArrNew = filter isKeep mayArrNewUnfiltered
         let widgCountNew = length mayArrNew + oneOrZero
         let emptyArrLen = max 0 (widgCountNew - (length mayArrNew))
-        emptyArr <- traverse mkEmptyItemView (replicate emptyArrLen emptyElem)
+        emptyArr <- traverse mkItemViewDel (replicate emptyArrLen emptyElem)
+        _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple  widgCountNew $ mayArrNew <> emptyArr
     arrayView' :: Int -> Array (Item a) -> Signal HTML (Array (Item a))
     arrayView' widgCountIn mayArr = do
       tupOut <- arrayViewLoop widgCountIn mayArr
+      _ <- consoleShow $ length $ snd tupOut -- FIXME DEBUG
       pure $ snd tupOut
 
 nonEmptyArrayView :: ∀ a.

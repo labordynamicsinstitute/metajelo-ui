@@ -15,7 +15,7 @@ import Data.Show (show)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (checkBoxS, labelSig', menuSignal, textInput, urlInput)
+import Metajelo.FormUtil (checkBoxS, labelSig', menuSignal, textInput, urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Text.URL.Validate (URL)
@@ -88,6 +88,15 @@ accumulateLocation locMay = labelSig' D.h1' "Location" do
     sustainMay
     polsMay
     versioning
+  _ <- consoleShow $ "identMay: " <> show identMay -- FIXME
+  _ <- consoleShow $ "instNameMay: " <> show instNameMay -- FIXME
+  _ <- consoleShow $ "instTypeMay: " <> show instTypeMay -- FIXME
+  _ <- consoleShow $ "sOrgMay: " <> show sOrgMay -- FIXME
+  _ <- consoleShow $ "icMay: " <> show icMay -- FIXME
+  _ <- consoleShow $ "sustainMay: " <> show sustainMay -- FIXME
+  _ <- consoleShow $ "polsMay: " <> show polsMay -- FIXME
+  _ <- consoleShow $ "versioning: " <> show versioning -- FIXME
+
   display $ locWidg
   pure newLocMay
   where
@@ -115,10 +124,6 @@ injectSustainFields
  }
 injectSustainFields _ _ = Nothing
 
-
--- TODO: revise Metajelo.Types, etc to use NonEmptyString as well
--- TODO: also add strip to textInput output filter (not textInput itself
---       which would prevent user from typing spaces)
 injectIdentFields ::
   Maybe NonEmptyString ->
   Maybe M.IdentifierType ->
