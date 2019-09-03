@@ -17,6 +17,7 @@ import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
+import Data.Foldable (sum)
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
@@ -235,46 +236,49 @@ halfUnlift :: ∀ a. Item a -> Maybe a
 halfUnlift (Keep mVal) = mVal
 halfUnlift (Delete mVal) = mVal
 
+isKeep :: ∀ a. Item a -> Boolean
+isKeep (Keep _) = true
+isKeep _ = false
+
 arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
   mayArr <- arrayView' minWidgets initVals
-  _ <- consoleShow $ length mayArr
+  -- _ <- consoleShow $ length mayArr
   -- arrayStr :: String <- pure $ show mayArr  -- FIXME: DEBUG
   -- _ <- display $ D.div' [D.text arrayStr] -- FIXME: DEBUG
-  pure $ catMaybes mayArr
+  pure $ catMaybes $ map halfUnlift mayArr
   where
-    emptyElem = Nothing
-    initVals :: Array (Maybe a)
+    emptyElem = Keep Nothing
+    initVals :: Array (Item a)
     initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
-    mkEmptyItemView :: Maybe a -> Signal HTML (Maybe a)
+    mkEmptyItemView :: Item a -> Signal HTML (Item a)
     mkEmptyItemView item = step item do
-      newIView <- mkItemViewWidg item
-      pure $ mkEmptyItemView newIView
-    mkItemView :: Maybe a -> Signal HTML (Maybe a)
+      newItem <- mkItemViewWidg item
+      pure $ mkEmptyItemView newItem
+    mkItemView :: Item a -> Signal HTML (Item a)
     mkItemView item = case item of
-      Nothing -> step Nothing mempty
-      Just _ -> mkEmptyItemView item
-    mkItemViewWidg :: Maybe a -> Widget HTML (Maybe a)
+      Delete _ ->  step (Delete Nothing) mempty
+      Keep _ -> mkEmptyItemView item
+    mkItemViewWidg :: Item a -> Widget HTML (Item a)
     mkItemViewWidg item = D.div' [
-      D.li' [dyn $ mkWidget item]
-    , Nothing <$ D.button [P.onClick] [D.text "Delete"]
+      D.li' [dyn $ mkWidget $ halfUnlift item]
+    , (Delete $ halfUnlift item) <$ D.button [P.onClick] [D.text "Delete"]
     ]
-    arrayViewLoop :: Int -> Array (Maybe a) ->
-      Signal HTML (Tuple Int (Array (Maybe a)))
+    arrayViewLoop :: Int -> Array (Item a) ->
+      Signal HTML (Tuple Int (Array (Item a)))
     arrayViewLoop widgCountIn mayArr = loopS (Tuple widgCountIn mayArr) \tupIn ->
       D.div_ [] do
         let widgCountIn' = fst tupIn
         let mayArr' = snd tupIn
-        widgCount <- step widgCountIn' $
-          (pure $ widgCountIn' + 1) <$ D.button [P.onClick] [D.text "Add item"]
-        -- FIXME: replace mkItemView with mkEmptyItemView but then can't delete.
-        mayArrNew <- traverse mkItemView mayArr'
-        let emptyArrLen = max 0 (widgCount - (length mayArrNew))
-        -- _ <- consoleShow emptyArrLen
+        oneOrZero <- step 0 $
+          (pure 1) <$ D.button [P.onClick] [D.text "Add item"]
+        mayArrNewUnfiltered <- traverse mkItemView mayArr'
+        let mayArrNew = filter isKeep mayArrNewUnfiltered
+        let widgCountNew = length mayArrNew + oneOrZero
+        let emptyArrLen = max 0 (widgCountNew - (length mayArrNew))
         emptyArr <- traverse mkEmptyItemView (replicate emptyArrLen emptyElem)
-        -- _ <- consoleShow $ length emptyArr
-        pure $ Tuple widgCount $ mayArrNew <> emptyArr
-    arrayView' :: Int -> Array (Maybe a) -> Signal HTML (Array (Maybe a))
+        pure $ Tuple  widgCountNew $ mayArrNew <> emptyArr
+    arrayView' :: Int -> Array (Item a) -> Signal HTML (Array (Item a))
     arrayView' widgCountIn mayArr = do
       tupOut <- arrayViewLoop widgCountIn mayArr
       pure $ snd tupOut
