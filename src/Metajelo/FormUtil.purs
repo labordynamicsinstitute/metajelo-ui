@@ -7,14 +7,17 @@ import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
-import Control.Applicative ((<$))
+import Control.Applicative (class Applicative, (<$))
+import Control.Apply (class Apply, apply)
 import Control.Category ((>>>))
+import Control.Extend (class Extend, extend)
 import Data.Array (catMaybes, filter, length, replicate, snoc, (..))
 import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
+import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
 import Data.Generic.Rep.Eq (genericEq)
@@ -211,6 +214,26 @@ instance isOptionPolPolType :: IsOption PolPolType where
 formSaveButton :: ∀ form. MKFState form -> Widget HTML SyntheticMouseEvent
 formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
+
+data Item a
+  =  Keep (Maybe a)
+  |  Delete (Maybe a)
+instance functorItem :: Functor Item where
+  map fun (Keep mVal) = Keep $ map fun mVal
+  map fun (Delete mVal) = Delete $ map fun mVal
+instance applyItem :: Apply Item where
+  apply (Keep mFun) (Keep mVal) = Keep $ apply mFun mVal
+  apply (Keep mFun) (Delete mVal) = Keep $ apply mFun mVal
+  apply (Delete mFun) (Keep mVal) = Keep $ apply mFun mVal
+  apply (Delete mFun) (Delete mVal) = Delete $ apply mFun mVal
+instance applicativeItem :: Applicative Item where
+  pure x = Keep $ Just x
+instance extendItem :: Extend Item where
+  extend iMayAtoB iMay = Keep $ Just $ iMayAtoB iMay
+
+halfUnlift :: ∀ a. Item a -> Maybe a
+halfUnlift (Keep mVal) = mVal
+halfUnlift (Delete mVal) = mVal
 
 arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
 arrayView minWidgets mkWidget = D.div_ [] do
