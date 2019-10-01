@@ -15,6 +15,7 @@ You can edit this file as you like.
     , "metajelo"
     , "metajelo-web"
     , "naturals"
+    , "option"
     , "profunctor"
     , "stringutils"
     , "url-validator"

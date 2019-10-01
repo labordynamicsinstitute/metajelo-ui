@@ -112,12 +112,28 @@ let mkPackage =
       https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.2-20190725/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
 
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.13.3-20190818/packages.dhall sha256:c95c4a8b8033a48a350106b759179f68a695c7ea2208228c522866fd43814dc8
+      https://github.com/purescript/package-sets/releases/download/psc-0.13.3-20190831/packages.dhall sha256:852cd4b9e463258baf4e253e8524bcfe019124769472ca50b316fe93217c3a47
 
 let overrides = { metajelo-ui = ./spago.dhall as Location }
 
 let additions =
-      { concur-formless =
+      { codec =
+          mkPackage
+          [ "profunctor", "transformers" ]
+          "https://github.com/garyb/purescript-codec.git"
+          "v3.0.0"
+      , codec-argonaut =
+          mkPackage
+          [ "argonaut-core"
+          , "codec"
+          , "generics-rep"
+          , "variant"
+          , "ordered-collections"
+          , "type-equality"
+          ]
+          "https://github.com/garyb/purescript-codec-argonaut.git"
+          "v7.1.0"
+      , concur-formless =
           mkPackage
           [ "variant"
           , "heterogeneous"
@@ -127,6 +143,23 @@ let additions =
           ]
           "https://github.com/ajnsit/purescript-concur-formless.git"
           "master"
+      , concur-react =
+          mkPackage
+          [ "aff"
+          , "arrays"
+          , "avar"
+          , "console"
+          , "foldable-traversable"
+          , "free"
+          , "nonempty"
+          , "react"
+          , "react-dom"
+          , "tailrec"
+          , "web-dom"
+          , "web-html"
+          ]
+          "https://github.com/ajnsit/purescript-concur.git"
+          "9887ce7c25699152ec138aefc2a3ba247fcef86c"
       , enums =
           mkPackage
           [ "control"
@@ -155,7 +188,7 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "2ad778ba4b11e9a85245ff01b001c01173decea8"
+          "aad3888cd87bae7b58058ddca8b7ed71f0d246f2"
       , metajelo-web =
           mkPackage
           [ "prelude"
@@ -168,12 +201,34 @@ let additions =
           , "url-validator"
           ]
           "https://github.com/labordynamicsinstitute/metajelo-web.git"
-          "224e127cc481fa4c12dd8ca87e387cefb914f147"
+          "a6b9d27138ee4b36b13a67af779be1dd832d6ae8"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
           "https://github.com/LiamGoodacre/purescript-naturals.git"
           "v3.0.0"
+      , option =
+          mkPackage
+          [ "argonaut-codecs"
+          , "argonaut-core"
+          , "codec"
+          , "codec-argonaut"
+          , "either"
+          , "foreign"
+          , "foreign-object"
+          , "lists"
+          , "maybe"
+          , "profunctor"
+          , "prelude"
+          , "record"
+          , "simple-json"
+          , "transformers"
+          , "tuples"
+          , "type-equality"
+          , "unsafe-coerce"
+          ]
+          "https://github.com/joneshf/purescript-option.git"
+          "v1.0.0"
       , stringutils =
           mkPackage
           [ "strings"
