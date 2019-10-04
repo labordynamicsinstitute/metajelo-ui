@@ -11,7 +11,7 @@ import Control.Applicative (class Applicative, (<$))
 import Control.Apply (class Apply, apply)
 import Control.Category ((>>>))
 import Control.Extend (class Extend, extend)
-import Data.Array (catMaybes, filter, length, replicate, snoc, (..))
+import Data.Array (catMaybes, filter, length, replicate, snoc, (..), (:))
 import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
@@ -49,7 +49,7 @@ import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
 import Text.Email.Validate (EmailAddress)
-import Text.URL.Validate (URL, parsePublicURL)
+import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 
 import Prim.TypeError (QuoteLabel, class Warn)
 
@@ -65,6 +65,11 @@ type IdentityField f io = f Void io io
 mayToString :: ∀ a. Show a => Maybe a -> String
 mayToString (Just v) = show v
 mayToString Nothing = ""
+
+mayToStr :: ∀ a. (a -> String) -> Maybe a -> String
+mayToStr toStr mayVal = case mayVal of
+  Nothing -> ""
+  Just val -> toStr val
 
 emptyMeansOptional :: ∀ a. Show a => Maybe a -> String
 emptyMeansOptional mayV = case mayV of
@@ -101,14 +106,17 @@ menuSignal currentOptMay = step currentOptMay do
       D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
   pure $ menuSignal $ Just newOpt
 
+
+type CtrlSignal v a = a -> Signal v a
+
 -- | Prepend a label heading to a siginal
 labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
 labelSig' tag label sigIn = do
   display $ tag [D.text label]
   sigIn
 
-textInput' :: D.El' -> String -> Signal HTML String
-textInput' tag label = labelSig' tag label $ sig ""
+textInput' :: D.El' -> String -> CtrlSignal HTML String
+textInput' tag label initVal = labelSig' tag label $ sig initVal
   where
     sig :: String -> Signal HTML String
     sig txt = step txt do
@@ -121,12 +129,13 @@ textFilter txtSig = do
   txt <- txtSig
   pure $ fromString $ trim txt
 
-textInput :: D.El' -> String -> Signal HTML (Maybe NonEmptyString)
-textInput tag label = textFilter $ textInput' tag label
+textInput :: D.El' -> String -> CtrlSignal HTML (Maybe NonEmptyString)
+textInput tag label iVal = textFilter $ textInput' tag label
+  (mayToStr toString iVal)
 
-urlInput :: D.El' -> String -> Signal HTML (Maybe URL)
-urlInput tag label = do
-  txtMay <- textInput tag label
+urlInput :: D.El' -> String -> CtrlSignal HTML (Maybe URL)
+urlInput tag label iVal = do
+  txtMay <- textInput tag label (urlToNEString <$> iVal)
   urlEi <- pure $ case txtMay of
     Nothing -> Left ""
     Just txt -> parsePublicURL $ toString txt
