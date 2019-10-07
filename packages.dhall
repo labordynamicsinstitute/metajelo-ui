@@ -227,8 +227,8 @@ let additions =
           , "type-equality"
           , "unsafe-coerce"
           ]
-          "https://github.com/joneshf/purescript-option.git"
-          "v1.0.0"
+          "https://github.com/bbarker/purescript-option.git"
+          "b588335a4d9716237b584a8af91189e157ca349f"
       , stringutils =
           mkPackage
           [ "strings"
