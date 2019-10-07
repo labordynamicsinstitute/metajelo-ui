@@ -34,6 +34,11 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
+type LocationRowOpts = (
+  institutionID_opt :: Opt.Option (M.BaseIdRows ())
+  | M.LocationRows
+)
+
 injectLocationFields ::
   Maybe M.InstitutionID ->
   Maybe NonEmptyString ->
@@ -65,7 +70,8 @@ injectLocationFields
 injectLocationFields _ _ _ _ _ _ _ _ = Nothing
 
 injectLocationFieldsOpt ::
-  Opt.Option M.LocationRows ->
+  Opt.Option LocationRowOpts ->
+  Opt.Option (M.BaseIdRows ()) ->
   Maybe M.InstitutionID ->
   Maybe NonEmptyString ->
   Maybe M.InstitutionType ->
@@ -74,9 +80,10 @@ injectLocationFieldsOpt ::
   Maybe M.InstitutionSustainability ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
   Boolean ->
-  Opt.Option M.LocationRows
+  Opt.Option LocationRowOpts
 injectLocationFieldsOpt
   oldOpt
+  institutionIDOpt
   institutionIDMay
   institutionNameMay
   institutionTypeMay
@@ -85,6 +92,8 @@ injectLocationFieldsOpt
   institutionSustainabilityMay
   institutionPoliciesMay
   versioning = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
+      (injectIdentFields institutionIDOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
@@ -135,11 +144,12 @@ testWidget = dyn $ loopS Nothing \oldNameMay -> D.div_ [] do
     newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
     pure $ textInput (Just newTxt)
 
-accumulateLocation ::  Signal HTML (Opt.Option M.LocationRows)
+accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
   loopS Opt.empty \locOpt -> D.div_ [] do
-    identMay <- accumulateIdent "Identifier" $
-      Opt.get (SProxy :: _ "institutionID") locOpt
+    identOpt <- accumulateIdent "Identifier" $
+      Opt.get (SProxy :: _ "institutionID_opt") locOpt
+    let identMay = injectIdentFields identOpt
     instNameMay <- textInput D.span' "Institution Name: " $
       Opt.get (SProxy :: _ "institutionName") locOpt
     instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal $
@@ -158,17 +168,8 @@ accumulateLocation = labelSig' D.h1' "Location" $
     polsMay <- MF.policySigArray $
       Opt.get (SProxy :: _ "institutionPolicies") locOpt
     versioning <- labelSig' D.span' "versioning? " $ checkBoxS false
-    testLoc <- pure $ injectLocationFieldsOpt locOpt
-      Nothing
-      (fromString "fubar")
-      Nothing
-      Nothing
-      Nothing
-      Nothing
-      Nothing
-      true
     newLoc <- pure $ injectLocationFieldsOpt locOpt
-      identMay
+      identOpt
       instNameMay
       instTypeMay
       sOrgMay
@@ -224,21 +225,35 @@ injectSustainFields
  }
 injectSustainFields _ _ = Nothing
 
-injectIdentFields ::
+injectIdentFields :: -- TODO: use "sequence"
+  Opt.Option (M.BaseIdRows ()) -> Maybe M.Identifier
+injectIdentFields idOpt = go
+  (Opt.get (SProxy :: _ "id") idOpt)
+  (Opt.get (SProxy :: _ "idType") idOpt)
+  where
+    go (Just id) (Just idType) = pure $ {
+      id: id
+    , idType: idType
+    }
+    go _ _ = Nothing
+
+injectIdentFieldsOpt ::
+  Opt.Option (M.BaseIdRows ()) ->
   Maybe NonEmptyString ->
   Maybe M.IdentifierType ->
-  Maybe M.Identifier
-injectIdentFields
-  (Just id)
-  (Just idType) = pure $ {
-    id: id
-  , idType: idType
-  }
-injectIdentFields _ _ = Nothing
+  Opt.Option (M.BaseIdRows ())
+injectIdentFieldsOpt
+  oldOpt
+  idMay
+  idTypeMay = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+  ) oldOpt
 
-accumulateIdent :: String -> CtrlSignal HTML (Maybe M.Identifier)
-accumulateIdent idLabel oldIdMay = labelSig' D.h3' idLabel do
-  idMay <- textInput D.span' "Record Identifier: "
-    ((\i -> i.id) <$> oldIdMay)
-  idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal Nothing
-  pure $ injectIdentFields idMay idTypeMay
+accumulateIdent :: String -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
+accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
+  idMay <- textInput D.span' "Record Identifier: " $
+    Opt.get (SProxy :: _ "id") oldId
+  idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
+    Opt.get (SProxy :: _ "idType") oldId
+  pure $ injectIdentFieldsOpt oldId idMay idTypeMay

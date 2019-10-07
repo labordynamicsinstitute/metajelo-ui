@@ -96,7 +96,7 @@ menu form field = D.select
 
 -- | A non-formless incantation of menu
 menuSignal :: ∀ opt. BoundedEnum opt => IsOption opt =>
-  Maybe opt -> Signal HTML (Maybe opt)
+  CtrlSignal HTML (Maybe opt)
 menuSignal currentOptMay = step currentOptMay do
   newOpt <- D.select [
     P.defaultValue $ maybe "" toOptionValue currentOptMay
