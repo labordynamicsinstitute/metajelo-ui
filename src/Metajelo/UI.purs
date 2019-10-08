@@ -93,7 +93,7 @@ injectLocationFieldsOpt
   institutionPoliciesMay
   versioning = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
-      (injectIdentFields institutionIDOpt)
+      (Just institutionIDOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
@@ -148,7 +148,7 @@ accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
   loopS Opt.empty \locOpt -> D.div_ [] do
     identOpt <- accumulateIdent "Identifier" $
-      Opt.get (SProxy :: _ "institutionID_opt") locOpt
+      getOpt (SProxy :: _ "institutionID_opt") locOpt
     let identMay = injectIdentFields identOpt
     instNameMay <- textInput D.span' "Institution Name: " $
       Opt.get (SProxy :: _ "institutionName") locOpt
@@ -170,6 +170,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
     versioning <- labelSig' D.span' "versioning? " $ checkBoxS false
     newLoc <- pure $ injectLocationFieldsOpt locOpt
       identOpt
+      identMay
       instNameMay
       instTypeMay
       sOrgMay
@@ -257,3 +258,13 @@ accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
   pure $ injectIdentFieldsOpt oldId idMay idTypeMay
+
+-- TODO: PR to purescript-option
+getOpt ::
+  forall label option option' proxy suboption.
+  IsSymbol label =>
+  Prim.Row.Cons label (Opt.Option suboption) option' option =>
+  proxy label ->
+  Opt.Option option ->
+  Opt.Option suboption
+getOpt = Opt.getWithDefault Opt.empty
