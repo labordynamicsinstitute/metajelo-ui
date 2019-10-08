@@ -39,7 +39,8 @@ runFormSPA divId = runWidgetInDom divId page
 type LocationRowOpts = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
 , _numPolicies :: Int
-  | M.LocationRows
+, iSustain_opt :: Opt.Option M.InstitutionSustainabilityRows
+| M.LocationRows
 )
 
 injectLocationFields ::
@@ -80,6 +81,7 @@ injectLocationFieldsOpt ::
   Maybe M.InstitutionType ->
   Maybe NonEmptyString ->
   Maybe M.InstitutionContact ->
+  Opt.Option M.InstitutionSustainabilityRows ->
   Maybe M.InstitutionSustainability ->
   Int ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
@@ -87,18 +89,19 @@ injectLocationFieldsOpt ::
   Opt.Option LocationRowOpts
 injectLocationFieldsOpt
   oldOpt
-  institutionIDOpt
+  institutionID_opt
   institutionIDMay
   institutionNameMay
   institutionTypeMay
   superOrganizationName
   institutionContactMay
+  iSustain_opt
   institutionSustainabilityMay
   _numPolicies
   institutionPoliciesMay
   versioning = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
-      (Just institutionIDOpt)
+      (Just institutionID_opt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
@@ -106,6 +109,8 @@ injectLocationFieldsOpt
       (Just superOrganizationName)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionContact")
       institutionContactMay
+    get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
+      (Just iSustain_opt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
       institutionSustainabilityMay
     get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
@@ -143,12 +148,9 @@ accumulateLocation = labelSig' D.h1' "Location" $
       join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
     icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
     display $ D.div' [D.text $ "Contact" <> (show icMay)]  -- FIXME: DEBUG
-    let sustainPrevMay = Opt.get (SProxy :: _ "institutionSustainability") locOpt
-    missionUrlMay <- urlInput D.span' "Mission Statement URL: " $
-      (\s -> s.missionStatementURL) <$> sustainPrevMay
-    fundingUrlMay <- urlInput D.span' "Funding Statement URL: " $
-      (\s -> s.fundingStatementURL) <$> sustainPrevMay
-    sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
+    sustainOpt <- accumulateSustain "Institution Sustainability:" $
+      getOpt (SProxy :: _ "iSustain_opt") locOpt
+    let sustainMay = injectSustainFields sustainOpt
     polsMayTup <- MF.policySigArray $ Tuple
       (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
       (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
@@ -163,6 +165,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
       instTypeMay
       sOrgMay
       icMay
+      sustainOpt
       sustainMay
       _numPolicies
       polsMay
@@ -204,16 +207,41 @@ page = do
  -- dyn $ accumulateLocationLoopDebug2
 
 injectSustainFields ::
-  Maybe URL ->
-  Maybe URL ->
+  Opt.Option M.InstitutionSustainabilityRows ->
   Maybe M.InstitutionSustainability
-injectSustainFields
- (Just mission)
- (Just funding) = pure $ {
-   missionStatementURL: mission
- , fundingStatementURL: funding
- }
-injectSustainFields _ _ = Nothing
+injectSustainFields sustOpt = go
+  (Opt.get (SProxy :: _ "missionStatementURL") sustOpt)
+  (Opt.get (SProxy :: _ "fundingStatementURL") sustOpt)
+  where
+    go (Just mission) (Just funding) = pure $ {
+      missionStatementURL: mission
+    , fundingStatementURL: funding
+    }
+    go _ _ = Nothing
+
+injectSustainFieldsOpt ::
+  Opt.Option M.InstitutionSustainabilityRows ->
+  Maybe URL ->
+  Maybe URL ->
+  Opt.Option M.InstitutionSustainabilityRows
+injectSustainFieldsOpt
+  oldOpt
+  missionUrlMay
+  fundingUrlMay = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
+      missionUrlMay
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
+      fundingUrlMay
+  ) oldOpt
+
+accumulateSustain :: String ->
+  CtrlSignal HTML (Opt.Option M.InstitutionSustainabilityRows)
+accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
+  missionUrlMay <- urlInput D.span' "Mission Statement URL: " $
+    Opt.get (SProxy :: _ "missionStatementURL") oldSust
+  fundingUrlMay <- urlInput D.span' "Funding Statement URL: " $
+    Opt.get (SProxy :: _ "fundingStatementURL") oldSust
+  pure $ injectSustainFieldsOpt oldSust missionUrlMay fundingUrlMay
 
 injectIdentFields :: -- TODO: use "sequence"
   Opt.Option (M.BaseIdRows ()) -> Maybe M.Identifier
