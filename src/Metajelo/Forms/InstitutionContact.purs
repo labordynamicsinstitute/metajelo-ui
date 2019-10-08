@@ -3,20 +3,17 @@ module Metajelo.Forms.InstitutionContact where
 import Prelude (bind, pure, ($), (<$>), (<<<))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, step)
+import Concur.Core.FRP (step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
-import Control.Category ((>>>))
 import Data.Either (Either(..))
 import Data.Foldable (foldMap)
-import Data.Maybe (Maybe(..), maybe)
-import Data.Monoid (mempty)
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
 import Formless as F
-import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
+import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -80,8 +77,7 @@ contactForm fstate = do
       let form = F.unwrapOutputFields out
       pure {emailAddress: form.email1, contactType: form.contactType}
 
-contactSignal :: Maybe M.InstitutionContact
-  -> Signal HTML (Maybe M.InstitutionContact)
+contactSignal :: CtrlSignal HTML (Maybe M.InstitutionContact)
 contactSignal instContactMay = labelSig' D.h2' "Institution Contact" $
   sig instContactMay
   where

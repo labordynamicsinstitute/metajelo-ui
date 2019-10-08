@@ -1,28 +1,25 @@
 module Metajelo.Forms.InstitutionPolicy where
 
-import Prelude (class Monad, bind, discard, join, pure, show, ($), (<$>), (<#>), (<<<), (<>))
+import Prelude (class Monad, bind, discard, pure, ($), (<#>), (<$>), (<<<))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, step)
+import Concur.Core.FRP (step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
-import Control.Category ((>>>))
-import Data.Array.NonEmpty (NonEmptyArray(..))
+import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..))
 import Data.Foldable (foldMap)
-import Data.Maybe (Maybe(..), maybe)
-import Data.Monoid (mempty)
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
-import Data.String.NonEmpty (NonEmptyString, fromString, toString)
-import Data.Tuple (Tuple(..), fst, snd)
+import Data.String.NonEmpty (toString)
+import Data.Tuple (Tuple)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (log, logShow)
+import Effect.Class.Console (logShow)
 import Formless as F
-import Formless.Internal.Transform as Internal
-import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
-import Metajelo.FormUtil (class IsOption, CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
+import Formless.Validation (Validation, hoistFnE)
+import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)

@@ -1,23 +1,21 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), (<), ($), (<$>), (<#>), (<$), ($>), (<<<), (==), (||), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS, step)
+import Concur.Core.FRP (Signal, display, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
-import Control.Applicative (class Applicative, (<$))
+import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
-import Control.Category ((>>>))
-import Control.Extend (class Extend, extend)
-import Data.Array (catMaybes, filter, length, replicate, snoc, (..), (:))
-import Data.Array.NonEmpty (NonEmptyArray(..), fromArray, toArray)
-import Data.Bounded (class Bounded, bottom)
+import Control.Extend (class Extend)
+import Data.Array (catMaybes, filter, length, replicate, (..))
+import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
+import Data.Bounded (bottom)
 import Data.Either (Either(..), hush)
-import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
-import Data.Eq (class Eq)
-import Data.Foldable (class Foldable, fold, sum)
+import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding)
+import Data.Foldable (class Foldable, fold)
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
@@ -27,18 +25,18 @@ import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
 import Data.Monoid (class Monoid, mempty)
-import Data.Newtype (class Newtype, unwrap, wrap)
+import Data.Newtype (class Newtype)
 import Data.Profunctor.Strong (second)
 import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
-import Data.Time.Duration (Milliseconds(..))
-import Data.Traversable (for, traverse)
+-- import Data.Time.Duration (Milliseconds(..)) -- What was I doing with this?
+import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
-import Data.Unit (Unit, unit)
+import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (log, logShow)
+import Effect.Class.Console (logShow)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
@@ -49,7 +47,6 @@ import Partial.Unsafe (unsafePartial)
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import React.SyntheticEvent (SyntheticMouseEvent)
-import Text.Email.Validate (EmailAddress)
 import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -292,13 +289,8 @@ arrayView mkWidget oldArrTup = D.div_ [] do
         let widgCountNew = length mayArrNew + oneOrZero
         let emptyArrLen = max 0 oneOrZero
         emptyArr <- traverse mkItemViewDel (replicate emptyArrLen emptyElem)
-        _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
+        -- _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
-{-     arrayView' :: Int -> Array (Item a) -> Signal HTML (Array (Item a))
-    arrayView' widgCountIn mayArr = do
-      tupOut <- arrayViewLoop widgCountIn mayArr
-      _ <- consoleShow $ length $ snd tupOut -- FIXME DEBUG
-      pure $ snd tupOut -}
 
 nonEmptyArrayView :: ∀ a. CtrlSignal HTML (Maybe a) ->
   CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray a)))

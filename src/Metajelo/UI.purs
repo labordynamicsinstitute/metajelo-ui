@@ -1,33 +1,31 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, identity, join, pure, show, unit, void, ($), (<>), (<$>), (==), (>>=))
+import Prelude (Unit, bind, discard, join, pure, unit, ($), (>>=))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS, step)
+import Concur.Core.FRP (Signal, display, dyn, loopS)
 import Concur.React (HTML)
 import Concur.React.DOM as D
-import Concur.React.Props as P
+-- import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..))
-import Data.Show (show)
-import Data.String.NonEmpty (NonEmptyString, fromString, toString)
+import Data.String.NonEmpty (NonEmptyString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, checkBoxS, foldf, labelSig', menuSignal, textInput, textInput', urlInput, consoleShow)
+import Metajelo.FormUtil (CtrlSignal, checkBoxS, labelSig', menuSignal, textInput, urlInput {- , consoleShow -})
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
-import Type.Equality (class TypeEquals)
 
-import Data.Newtype (class Newtype, unwrap, wrap)
-import Data.Semigroup.First (First(..))
+-- import Data.Newtype (unwrap)
+-- import Data.Semigroup.First (First(..))
 
 main :: Effect Unit
 main = pure unit
@@ -119,7 +117,7 @@ injectLocationFieldsOpt
     get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
   ) oldOpt
 
-testWidget :: forall a. Widget HTML a
+{- testWidget :: forall a. Widget HTML a
 testWidget = dyn $ loopS Nothing \oldNameMay -> D.div_ [] do
   instNameMay <- textInput Nothing
   -- If I remove the line below, then New Name is always Nothing
@@ -132,7 +130,7 @@ testWidget = dyn $ loopS Nothing \oldNameMay -> D.div_ [] do
   textInput ms = step ms do
     newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
     pure $ textInput (Just newTxt)
-
+ -}
 accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
   loopS Opt.empty \locOpt -> D.div_ [] do
@@ -147,7 +145,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
     sOrgMay <- textInput D.span' "Super Organization (optional): " $
       join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
     icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
-    display $ D.div' [D.text $ "Contact" <> (show icMay)]  -- FIXME: DEBUG
+    -- display $ D.div' [D.text $ "Contact" <> (show icMay)]  -- FIXME: DEBUG
     sustainOpt <- accumulateSustain "Institution Sustainability:" $
       getOpt (SProxy :: _ "iSustain_opt") locOpt
     let sustainMay = injectSustainFields sustainOpt
@@ -170,8 +168,6 @@ accumulateLocation = labelSig' D.h1' "Location" $
       _numPolicies
       polsMay
       versioning
-    display $ D.div' [D.text $ "Testing ID: " <> ( show (Opt.get (SProxy :: _ "institutionID") newLoc))] -- FIXME: DEBUG
-    display $ D.div' [D.text $ "Testing: Name" <> ( show (Opt.get (SProxy :: _ "institutionName") newLoc))] -- FIXME: DEBUG
     newLocMay <- pure $ injectLocationFields -- TODO: use sequencing to get newLocMay from newLoc
       identMay
       instNameMay
@@ -181,14 +177,14 @@ accumulateLocation = labelSig' D.h1' "Location" $
       sustainMay
       polsMay
       versioning
-    _ <- consoleShow $ "identMay: " <> show (Opt.get (SProxy :: _ "institutionID") newLoc) -- FIXME
+{-     _ <- consoleShow $ "identMay: " <> show (Opt.get (SProxy :: _ "institutionID") newLoc) -- FIXME
     _ <- consoleShow $ "instNameMay: " <> show (Opt.get (SProxy :: _ "institutionName") newLoc) -- FIXME
     _ <- consoleShow $ "instTypeMay: " <> show (Opt.get (SProxy :: _ "institutionType") newLoc) -- FIXME
     _ <- consoleShow $ "sOrgMay: " <> show (Opt.get (SProxy :: _ "superOrganizationName") newLoc) -- FIXME
     _ <- consoleShow $ "icMay: " <> show (Opt.get (SProxy :: _ "institutionContact") newLoc) -- FIXME
     _ <- consoleShow $ "sustainMay: " <> show (Opt.get (SProxy :: _ "institutionSustainability") newLoc) -- FIXME
     _ <- consoleShow $ "polsMay: " <> show (Opt.get (SProxy :: _ "institutionPolicies") newLoc) -- FIXME
-    _ <- consoleShow $ "versioning: " <> show (versioning) -- FIXME
+    _ <- consoleShow $ "versioning: " <> show (versioning) -- FIXME -}
 
     display $ locWidg newLocMay
     pure newLoc
@@ -204,7 +200,6 @@ page :: ∀ a. Widget HTML a
 page = do
  -- testWidget
    dyn $ accumulateLocation
- -- dyn $ accumulateLocationLoopDebug2
 
 injectSustainFields ::
   Opt.Option M.InstitutionSustainabilityRows ->
