@@ -129,16 +129,21 @@ textInput :: D.El' -> String -> CtrlSignal HTML (Maybe NonEmptyString)
 textInput tag label iVal = textFilter $ textInput' tag label
   (foldf toString iVal)
 
-urlInput :: D.El' -> String -> CtrlSignal HTML (Maybe URL)
+urlInput :: D.El' -> String -> CtrlSignal HTML (Either String URL)
 urlInput tag label iVal = do
-  txtMay <- textInput tag label (urlToNEString <$> iVal)
+  txtMay :: Maybe NonEmptyString <- textInput tag label (fromString prevTxt)
   urlEi <- pure $ case txtMay of
-    Nothing -> Left ""
+    Nothing -> Left "BAZ"
     Just txt -> parsePublicURL $ toString txt
   display $ case urlEi of
     Right _ -> mempty
-    Left err -> errorDisplay $ Just err
+    Left err -> errorDisplay $ Just $ "FOO" <> err
   pure $ hush urlEi
+  where
+    prevTxt :: String
+    prevTxt = case iVal of
+      Left err -> err
+      Right url -> toString $ urlToNEString url
 
 checkBoxS :: Boolean -> Signal HTML Boolean
 checkBoxS b = step b do
