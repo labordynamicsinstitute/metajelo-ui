@@ -16,12 +16,13 @@ import Data.Maybe (Maybe(..), maybe)
 import Data.Monoid (mempty)
 import Data.Newtype (class Newtype)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
+import Data.Tuple (Tuple(..), fst, snd)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log, logShow)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Formless.Validation (Validation(..), hoistFn_, hoistFnE, hoistFnE_)
-import Metajelo.FormUtil (class IsOption, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
+import Metajelo.FormUtil (class IsOption, CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
@@ -110,8 +111,7 @@ policyForm fstate = do
       , appliesToProduct: form.appliesToProd
       }
 
-policySignal :: Maybe M.InstitutionPolicy
-  -> Signal HTML (Maybe M.InstitutionPolicy)
+policySignal ::CtrlSignal HTML (Maybe M.InstitutionPolicy)
 policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
   sig instPolicyMay
   where
@@ -131,7 +131,7 @@ checkPolicy = hoistFnE $ \form str ->
     FreeTextPolicy -> (V.readNEStringEi str) <#> M.FreeTextPolicy
     RefPolicy -> (parsePublicURL str) <#> M.RefPolicy
 
-policySigArray :: Maybe (NonEmptyArray M.InstitutionPolicy) ->
-  Signal HTML (Maybe (NonEmptyArray M.InstitutionPolicy))
+ -- | The first element of the tuple is the (desired) number of policies
+policySigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray M.InstitutionPolicy)))
 policySigArray instPoliciesMay = labelSig' D.h2' "Institution Policies" $
-  nonEmptyArrayView 1 policySignal
+  nonEmptyArrayView policySignal instPoliciesMay

@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), ($), (<$>), (<#>), (<$), ($>), (<<<), (==), (||), (<>))
+import Prelude (class Bounded, class Eq, class Monad, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (+), (-), (<), ($), (<$>), (<#>), (<$), ($>), (<<<), (==), (||), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, step)
@@ -12,12 +12,12 @@ import Control.Apply (class Apply, apply)
 import Control.Category ((>>>))
 import Control.Extend (class Extend, extend)
 import Data.Array (catMaybes, filter, length, replicate, snoc, (..), (:))
-import Data.Array.NonEmpty (NonEmptyArray(..), fromArray)
+import Data.Array.NonEmpty (NonEmptyArray(..), fromArray, toArray)
 import Data.Bounded (class Bounded, bottom)
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, class SmallBoundedEnum, upFromIncluding, Cardinality(..), cardinality, fromEnum, toEnum)
 import Data.Eq (class Eq)
-import Data.Foldable (sum)
+import Data.Foldable (class Foldable, fold, sum)
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
@@ -26,8 +26,9 @@ import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
-import Data.Monoid (mempty)
+import Data.Monoid (class Monoid, mempty)
 import Data.Newtype (class Newtype, unwrap, wrap)
+import Data.Profunctor.Strong (second)
 import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
@@ -63,13 +64,11 @@ type MKValidators form = form Record (F.Validation form (Widget HTML))
 type IdentityField f io = f Void io io
 
 mayToString :: ∀ a. Show a => Maybe a -> String
-mayToString (Just v) = show v
-mayToString Nothing = ""
+mayToString mayA = fold $ show <$> mayA
 
-mayToStr :: ∀ a. (a -> String) -> Maybe a -> String
-mayToStr toStr mayVal = case mayVal of
-  Nothing -> ""
-  Just val -> toStr val
+foldf :: ∀ a f m. Foldable f => Functor f => Monoid m =>
+  (a -> m) -> f a -> m
+foldf f vals = fold $ f <$> vals
 
 emptyMeansOptional :: ∀ a. Show a => Maybe a -> String
 emptyMeansOptional mayV = case mayV of
@@ -131,7 +130,7 @@ textFilter txtSig = do
 
 textInput :: D.El' -> String -> CtrlSignal HTML (Maybe NonEmptyString)
 textInput tag label iVal = textFilter $ textInput' tag label
-  (mayToStr toString iVal)
+  (foldf toString iVal)
 
 urlInput :: D.El' -> String -> CtrlSignal HTML (Maybe URL)
 urlInput tag label iVal = do
@@ -252,14 +251,21 @@ isKeep :: ∀ a. Item a -> Boolean
 isKeep (Keep _) = true
 isKeep _ = false
 
-arrayView :: ∀ a. Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Array a)
-arrayView minWidgets mkWidget = D.div_ [] do
-  mayArr <- arrayView' minWidgets initVals
-  pure $ catMaybes $ map toMaybe mayArr
+
+arrayView :: ∀ a. CtrlSignal HTML (Maybe a) -> CtrlSignal HTML (Tuple Int (Array a))
+arrayView mkWidget oldArrTup = D.div_ [] do
+  mayArrTup <- arrayViewLoop minWidgets initVals
+  pure $ second (catMaybes <<< (map toMaybe)) mayArrTup
   where
+    minWidgets = fst oldArrTup
+    oldArr = snd oldArrTup
     emptyElem = Keep Nothing
     initVals :: Array (Item a)
-    initVals = (1 .. (max 1 minWidgets)) <#> (\_ -> emptyElem)
+    initVals = (Keep <<< Just <$> oldArr) <>
+      (dummyArr <#> (\_ -> emptyElem))
+      where
+        numEmpty = max 0 (minWidgets - (length oldArr))
+        dummyArr = if numEmpty < 1 then [] else (1 .. numEmpty)
     mkItemView :: Item a -> Signal HTML (Item a)
     mkItemView item = case item of
       Delete _ ->  step (Delete Nothing) mempty
@@ -284,21 +290,21 @@ arrayView minWidgets mkWidget = D.div_ [] do
         mayArrNewUnfiltered <- traverse mkItemView mayArr'
         let mayArrNew = filter isKeep mayArrNewUnfiltered
         let widgCountNew = length mayArrNew + oneOrZero
-        let emptyArrLen = max 0 (widgCountNew - (length mayArrNew))
+        let emptyArrLen = max 0 oneOrZero
         emptyArr <- traverse mkItemViewDel (replicate emptyArrLen emptyElem)
         _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
-        pure $ Tuple  widgCountNew $ mayArrNew <> emptyArr
-    arrayView' :: Int -> Array (Item a) -> Signal HTML (Array (Item a))
+        pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
+{-     arrayView' :: Int -> Array (Item a) -> Signal HTML (Array (Item a))
     arrayView' widgCountIn mayArr = do
       tupOut <- arrayViewLoop widgCountIn mayArr
       _ <- consoleShow $ length $ snd tupOut -- FIXME DEBUG
-      pure $ snd tupOut
+      pure $ snd tupOut -}
 
-nonEmptyArrayView :: ∀ a.
-  Int -> (Maybe a -> Signal HTML (Maybe a)) -> Signal HTML (Maybe (NonEmptyArray a))
-nonEmptyArrayView minWidgets mkWidget = do
-  arrayA <- arrayView minWidgets mkWidget
-  pure $ fromArray arrayA
+nonEmptyArrayView :: ∀ a. CtrlSignal HTML (Maybe a) ->
+  CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray a)))
+nonEmptyArrayView mkWidget oldNeArrMay = do
+  arrayA <- arrayView mkWidget (second (foldf toArray) oldNeArrMay)
+  pure $ second fromArray arrayA
 
 errorDisplay :: ∀ a e. V.ToText e => Maybe e -> Widget HTML a
 errorDisplay = maybe mempty (\err ->

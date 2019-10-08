@@ -15,9 +15,10 @@ import Data.Maybe (Maybe(..))
 import Data.Show (show)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
+import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, checkBoxS, labelSig', menuSignal, mayToStr, textInput, textInput', urlInput, consoleShow)
+import Metajelo.FormUtil (CtrlSignal, checkBoxS, foldf, labelSig', menuSignal, textInput, textInput', urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Option as Opt
@@ -34,8 +35,10 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
+-- | Decorated state (Model + ViewModel) for Location
 type LocationRowOpts = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
+, _numPolicies :: Int
   | M.LocationRows
 )
 
@@ -78,6 +81,7 @@ injectLocationFieldsOpt ::
   Maybe NonEmptyString ->
   Maybe M.InstitutionContact ->
   Maybe M.InstitutionSustainability ->
+  Int ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
   Boolean ->
   Opt.Option LocationRowOpts
@@ -90,6 +94,7 @@ injectLocationFieldsOpt
   superOrganizationName
   institutionContactMay
   institutionSustainabilityMay
+  _numPolicies
   institutionPoliciesMay
   versioning = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
@@ -103,6 +108,7 @@ injectLocationFieldsOpt
       institutionContactMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
       institutionSustainabilityMay
+    get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies")
       institutionPoliciesMay
     get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
@@ -143,8 +149,11 @@ accumulateLocation = labelSig' D.h1' "Location" $
     fundingUrlMay <- urlInput D.span' "Funding Statement URL: " $
       (\s -> s.fundingStatementURL) <$> sustainPrevMay
     sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
-    polsMay <- MF.policySigArray $
-      Opt.get (SProxy :: _ "institutionPolicies") locOpt
+    polsMayTup <- MF.policySigArray $ Tuple
+      (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
+      (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
+    let _numPolicies = fst polsMayTup
+    let polsMay = snd polsMayTup
     versioning <- labelSig' D.span' "versioning? " $ checkBoxS $
       Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
     newLoc <- pure $ injectLocationFieldsOpt locOpt
@@ -155,6 +164,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
       sOrgMay
       icMay
       sustainMay
+      _numPolicies
       polsMay
       versioning
     display $ D.div' [D.text $ "Testing ID: " <> ( show (Opt.get (SProxy :: _ "institutionID") newLoc))] -- FIXME: DEBUG
