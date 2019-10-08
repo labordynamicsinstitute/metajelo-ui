@@ -108,28 +108,6 @@ injectLocationFieldsOpt
     get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
   ) oldOpt
 
---  -- FIXME: DEBUG
--- accumulateLocationLoopDebug1 :: Signal HTML (Opt.Option M.LocationRows)
--- accumulateLocationLoopDebug1 = labelSig' D.h1' "Location" $ loopS Opt.empty \locOpt -> D.div_ [] do
---   instNameMay <- textInput D.span' "Institution Name: "
---   display $ D.div' [D.text $ "Testing: " <> (show instNameMay)]
---   pure locOpt
-
- -- FIXME: DEBUG
-accumulateLocationLoopDebug2 :: Signal HTML (Maybe NonEmptyString)
-accumulateLocationLoopDebug2 = loopS Nothing \oldNameMay -> D.div_ [] do
-  instNameMay <- textInput D.span' "Institution Name: " oldNameMay
-  display $ D.div' [D.text $ "Old Name: " <> (show oldNameMay)]
-  display $ D.div' [D.text $ "New Name: " <> (show instNameMay)]
-  pure instNameMay
-
--- accumulateLocationLoopDebug3 :: Signal HTML String
--- accumulateLocationLoopDebug3 = loopS "" \oldNameMay -> D.div_ [] do
---   instNameMay <- textInput'' D.span' "Institution Name: " oldNameMay
---   display $ D.div' [D.text $ "Old Name: " <> (show oldNameMay)]
---   display $ D.div' [D.text $ "New Name: " <> (show instNameMay)]
---   pure instNameMay
-
 testWidget :: forall a. Widget HTML a
 testWidget = dyn $ loopS Nothing \oldNameMay -> D.div_ [] do
   instNameMay <- textInput Nothing
@@ -167,7 +145,8 @@ accumulateLocation = labelSig' D.h1' "Location" $
     sustainMay <- pure $ injectSustainFields missionUrlMay fundingUrlMay
     polsMay <- MF.policySigArray $
       Opt.get (SProxy :: _ "institutionPolicies") locOpt
-    versioning <- labelSig' D.span' "versioning? " $ checkBoxS false
+    versioning <- labelSig' D.span' "versioning? " $ checkBoxS $
+      Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
     newLoc <- pure $ injectLocationFieldsOpt locOpt
       identOpt
       identMay
