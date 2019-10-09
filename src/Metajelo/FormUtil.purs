@@ -133,16 +133,20 @@ urlInput :: D.El' -> String -> CtrlSignal HTML (Either String URL)
 urlInput tag label iVal = do
   txtMay :: Maybe NonEmptyString <- textInput tag label (fromString prevTxt)
   urlEi <- pure $ case txtMay of
-    Nothing -> Left "BAZ"
+    Nothing -> Left prevErr
     Just txt -> parsePublicURL $ toString txt
   display $ case urlEi of
     Right _ -> mempty
-    Left err -> errorDisplay $ Just $ "FOO" <> err
-  pure $ hush urlEi
+    Left err -> errorDisplay $ Just err
+  pure urlEi
   where
+    prevErr :: String
+    prevErr = case iVal of
+      Left err -> err
+      Right _ -> ""
     prevTxt :: String
     prevTxt = case iVal of
-      Left err -> err
+      Left _ -> ""
       Right url -> toString $ urlToNEString url
 
 checkBoxS :: Boolean -> Signal HTML Boolean
@@ -252,7 +256,6 @@ toMaybe (Delete mVal) = mVal
 isKeep :: ∀ a. Item a -> Boolean
 isKeep (Keep _) = true
 isKeep _ = false
-
 
 arrayView :: ∀ a. CtrlSignal HTML (Maybe a) -> CtrlSignal HTML (Tuple Int (Array a))
 arrayView mkWidget oldArrTup = D.div_ [] do

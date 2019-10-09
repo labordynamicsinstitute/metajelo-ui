@@ -10,6 +10,7 @@ import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
 import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..))
 import Data.String.NonEmpty (NonEmptyString)
@@ -37,7 +38,7 @@ runFormSPA divId = runWidgetInDom divId page
 type LocationRowOpts = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
 , _numPolicies :: Int
-, iSustain_opt :: Opt.Option M.InstitutionSustainabilityRows
+, iSustain_opt :: Opt.Option InstitutionSustainabilityRowOpts
 | M.LocationRows
 )
 
@@ -85,7 +86,7 @@ injectLocationFieldsOpt ::
   Maybe M.InstitutionType ->
   Maybe NonEmptyString ->
   Maybe M.InstitutionContact ->
-  Opt.Option M.InstitutionSustainabilityRows ->
+  Opt.Option InstitutionSustainabilityRowOpts ->
   Maybe M.InstitutionSustainability ->
   Int ->
   Maybe (NonEmptyArray M.InstitutionPolicy) ->
@@ -194,7 +195,7 @@ page = do
    dyn $ accumulateLocation
 
 injectSustainFields ::
-  Opt.Option M.InstitutionSustainabilityRows ->
+  Opt.Option InstitutionSustainabilityRowOpts ->
   Maybe M.InstitutionSustainability
 injectSustainFields sustOpt = go
   (Opt.get (SProxy :: _ "missionStatementURL") sustOpt)
@@ -207,12 +208,12 @@ injectSustainFields sustOpt = go
     go _ _ = Nothing
 
 injectSustainFieldsOpt ::
-  Opt.Option M.InstitutionSustainabilityRowOpts ->
+  Opt.Option InstitutionSustainabilityRowOpts ->
   Either String URL ->
   Maybe URL ->
   Either String URL ->
   Maybe URL ->
-  Opt.Option M.InstitutionSustainabilityRowOpts
+  Opt.Option InstitutionSustainabilityRowOpts
 injectSustainFieldsOpt
   oldOpt
   missionUrl_Ei
@@ -224,19 +225,19 @@ injectSustainFieldsOpt
     get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
       missionUrlMay
     get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
-      (Just missionUrl_Ei)
+      (Just fundingUrl_Ei)
     get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
-      fundingUrl_Ei
+      fundingUrlMay
   ) oldOpt
 
 accumulateSustain :: String ->
-  CtrlSignal HTML (Opt.Option M.InstitutionSustainabilityRowOpts)
+  CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
 accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
   missionUrl_Ei <- urlInput D.span' "Mission Statement URL: " $
-    Opt.get (SProxy :: _ "missionStatementURL") oldSust
+    Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
   let missionUrlMay = hush missionUrl_Ei
   fundingUrl_Ei <- urlInput D.span' "Funding Statement URL: " $
-    Opt.get (SProxy :: _ "fundingStatementURL") oldSust
+    Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
   let fundingUrlMay = hush fundingUrl_Ei
   pure $ injectSustainFieldsOpt oldSust
     missionUrl_Ei
