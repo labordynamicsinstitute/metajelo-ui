@@ -3,20 +3,17 @@ module Metajelo.Forms.InstitutionContact where
 import Prelude (bind, pure, ($), (<$>), (<<<))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, step)
+import Concur.Core.FRP (step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative ((<$))
-import Control.Category ((>>>))
 import Data.Either (Either(..))
 import Data.Foldable (foldMap)
-import Data.Maybe (Maybe(..), maybe)
-import Data.Monoid (mempty)
+import Data.Maybe (Maybe(..))
 import Data.Newtype (class Newtype)
 import Formless as F
-import Formless.Internal.Transform as Internal
-import Metajelo.FormUtil (IdentityField, MKFState, MKValidators, formSaveButton, initFormState, menu)
+import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
@@ -66,7 +63,7 @@ contactForm fstate = do
   query <- D.div' [
       D.div' [D.text "Email"]
     , D.input [
-        P.value $ F.getInput proxies.email1 fstate.form
+        P.defaultValue $ F.getInput proxies.email1 fstate.form
       , (F.setValidate proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form
@@ -79,21 +76,16 @@ contactForm fstate = do
     Right out -> do
       let form = F.unwrapOutputFields out
       pure {emailAddress: form.email1, contactType: form.contactType}
+
+contactSignal :: CtrlSignal HTML (Maybe M.InstitutionContact)
+contactSignal instContactMay = labelSig' D.h2' "Institution Contact" $
+  sig instContactMay
   where
-    errorDisplay = maybe mempty (\err ->
-      D.div [P.style {color: "red"}] [D.text $ V.toText err]
-    )
-
-
-
-contactSignal :: Maybe M.InstitutionContact
-  -> Signal HTML (Maybe M.InstitutionContact)
-contactSignal instContactMay = step instContactMay do
-  inputs <- pure $ F.wrapInputFields $ outToInRec instContactMay
-  instContact <- D.div' [
-    D.h2' [D.text "Institution Contact"]
-  , contactForm (initFormState inputs validators)
-  , foldMap contactWidg instContactMay
-  ]
-  pure $ contactSignal $ Just instContact
+    sig icMay = step icMay do
+      inputs <- pure $ F.wrapInputFields $ outToInRec icMay
+      instContact <- D.div' [
+        contactForm (initFormState inputs validators)
+      , foldMap contactWidg icMay
+      ]
+      pure $ sig $ Just instContact
 

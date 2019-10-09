@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 npm install && \
-(cd app && npm run build && npm run prod) && \
-(cd test && npm run testbrowser)
+(npm run build && npm run prod) && \
+(cd tests && npm run testbrowser)
 

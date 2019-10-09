@@ -45,6 +45,7 @@ docker run --rm -ti \
        --workdir /wd \
        -e "XDG_CONFIG_HOME=/wd/.xdg_config_home" \
        -e "XDG_DATA_HOME=/wd/.xdg_data_home" \
+       -e "XDG_CACHE_HOME=/wd/.xdg_cache_home" \
        "${DHUB_PREFIX}${IMG_NAME}:${IMG_VER}" "$@"
 
 # Add this before the last line (image name) for debugging:

@@ -10,9 +10,10 @@ import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Show (genericShow)
 import Data.Int (fromString) as Int
 import Data.Lens (preview)
-import Data.Maybe (Maybe, maybe)
+import Data.Maybe (Maybe(..), maybe)
 import Data.Newtype (class Newtype, unwrap)
-import Data.String (contains, length, null)
+import Data.String (contains, length, null, trim)
+import Data.String.NonEmpty (NonEmptyString, fromString)
 import Data.String.Pattern (Pattern(..))
 import Effect.Aff (Milliseconds(..), delay)
 import Effect.Aff.Class (class MonadAff, liftAff)
@@ -112,11 +113,13 @@ nonEmptyArray = hoistFnE_ \arr ->
     else Left EmptyField
 
 -- | Validate that an input string is not empty
-nonEmptyStr :: ∀ form m. Monad m => Validation form m FieldError String String
-nonEmptyStr = hoistFnE_ $ \str ->
-  if null str
-    then Left EmptyField
-    else Right str
+nonEmptyStr :: ∀ form m. Monad m => Validation form m String String NonEmptyString
+nonEmptyStr = hoistFnE_ readNEStringEi
+
+readNEStringEi :: String -> Either String NonEmptyString
+readNEStringEi str = case fromString $ trim str of
+  Just nes -> Right nes
+  Nothing -> Left "Empty string when NonEmptyString expected."
 
 --------------------
 -- Formless Async Validation
