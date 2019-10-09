@@ -20,6 +20,14 @@ html {
   box-sizing: border-box;
 }
 
+body {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+input {
+  margin-right: 5px;
+}
 /* -----------------------------------------------------------------------------
 
   ROOT ELEMENTS
