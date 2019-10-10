@@ -2,7 +2,6 @@ module Metajelo.Validation where
 
 import Prelude
 
-import Control.Category (identity)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..))
 import Data.Foldable (length) as Foldable
@@ -11,21 +10,12 @@ import Data.Generic.Rep.Show (genericShow)
 import Data.Int (fromString) as Int
 import Data.Lens (preview)
 import Data.Maybe (Maybe(..), maybe)
-import Data.Newtype (class Newtype, unwrap)
-import Data.String (contains, length, null, trim)
+import Data.Newtype (class Newtype)
+import Data.String (length, trim)
 import Data.String.NonEmpty (NonEmptyString, fromString)
-import Data.String.Pattern (Pattern(..))
-import Effect.Aff (Milliseconds(..), delay)
-import Effect.Aff.Class (class MonadAff, liftAff)
-import Effect (Effect)
---import Effect.Exception (message, try)
 import Formless (FormFieldResult, _Error)
-import Formless as F
-import Formless.Validation (Validation(..), hoistFn_, hoistFnE_)
-import Metajelo.Types as M
-import Metajelo.XPaths.Read as MR
+import Formless.Validation (Validation, hoistFn_, hoistFnE_)
 import Text.Email.Validate as EA
-import Type.Data.Symbol (SProxy(..))
 
 type Email = EA.EmailAddress
 
