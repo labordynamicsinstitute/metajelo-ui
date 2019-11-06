@@ -201,7 +201,7 @@ let additions =
           , "url-validator"
           ]
           "https://github.com/labordynamicsinstitute/metajelo-web.git"
-          "a6b9d27138ee4b36b13a67af779be1dd832d6ae8"
+          "bcfddbcf3184d530eb163451f8006b90e2b02631"
       , naturals =
           mkPackage
           [ "enums", "maybe", "prelude" ]
@@ -221,6 +221,7 @@ let additions =
           , "profunctor"
           , "prelude"
           , "record"
+          , "record-extra"
           , "simple-json"
           , "transformers"
           , "tuples"
@@ -228,7 +229,7 @@ let additions =
           , "unsafe-coerce"
           ]
           "https://github.com/bbarker/purescript-option.git"
-          "b588335a4d9716237b584a8af91189e157ca349f"
+          "b884d27d48ebb6b4ec3a3369a69311c95b0783bf"
       , stringutils =
           mkPackage
           [ "strings"

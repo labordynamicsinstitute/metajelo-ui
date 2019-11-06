@@ -18,7 +18,7 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, checkBoxS, labelSig', menuSignal, textInput, urlInput {- , consoleShow -})
+import Metajelo.FormUtil (CtrlSignal, checkBoxS, labelSig', menuSignal, textInput, urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Option as Opt
@@ -34,49 +34,25 @@ main = pure unit
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
--- | Decorated state (Model + ViewModel) for Location
-type LocationRowOpts = (
+-- | ViewModel for Location
+type LocationRowExtra r = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
 , _numPolicies :: Int
 , iSustain_opt :: Opt.Option InstitutionSustainabilityRowOpts
-| M.LocationRows
+| r
 )
+-- | Decorated state (Model + ViewModel) for Location
+type LocationRowOpts = LocationRowExtra M.LocationRows
 
-type InstitutionSustainabilityRowOpts = (
+-- | ViewModel for InstitutionSustainability
+type InstitutionSustainabilityExtraRows r = (
   missionUrl_Ei :: Either String URL
 , fundingUrl_Ei :: Either String URL
-| M.InstitutionSustainabilityRows
+| r
 )
-
-injectLocationFields ::
-  Maybe M.InstitutionID ->
-  Maybe NonEmptyString ->
-  Maybe M.InstitutionType ->
-  Maybe NonEmptyString ->
-  Maybe M.InstitutionContact ->
-  Maybe M.InstitutionSustainability ->
-  Maybe (NonEmptyArray M.InstitutionPolicy) ->
-  Boolean ->
-  Maybe M.Location
-injectLocationFields
-  (Just institutionID)
-  (Just institutionName)
-  (Just institutionType)
-  superOrganizationName
-  (Just institutionContact)
-  (Just institutionSustainability)
-  (Just institutionPolicies)
-  versioning = pure $ {
-    institutionID: institutionID
-  , institutionName: institutionName
-  , institutionType: institutionType
-  , superOrganizationName: superOrganizationName
-  , institutionContact: institutionContact
-  , institutionSustainability: institutionSustainability
-  , institutionPolicies: institutionPolicies
-  , versioning: versioning
-  }
-injectLocationFields _ _ _ _ _ _ _ _ = Nothing
+-- | Decorated state (Model + ViewModel) for InstitutionSustainability
+type InstitutionSustainabilityRowOpts = InstitutionSustainabilityExtraRows
+  (M.InstitutionSustainabilityRows)
 
 injectLocationFieldsOpt ::
   Opt.Option LocationRowOpts ->
@@ -129,7 +105,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
   loopS Opt.empty \locOpt -> D.div_ [] do
     identOpt <- accumulateIdent "Identifier" $
       getOpt (SProxy :: _ "institutionID_opt") locOpt
-    let identMay = injectIdentFields identOpt
+    let identMay = Opt.getAll identOpt
     instNameMay <- textInput D.span' "Institution Name: " $
       Opt.get (SProxy :: _ "institutionName") locOpt
     instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal $
@@ -138,10 +114,9 @@ accumulateLocation = labelSig' D.h1' "Location" $
     sOrgMay <- textInput D.span' "Super Organization (optional): " $
       join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
     icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
-    -- display $ D.div' [D.text $ "Contact" <> (show icMay)]  -- FIXME: DEBUG
     sustainOpt <- accumulateSustain "Institution Sustainability:" $
       getOpt (SProxy :: _ "iSustain_opt") locOpt
-    let sustainMay = injectSustainFields sustainOpt
+    let sustainMay = Opt.getSubset sustainOpt
     polsMayTup <- MF.policySigArray $ Tuple
       (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
       (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
@@ -161,24 +136,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
       _numPolicies
       polsMay
       versioning
-    newLocMay <- pure $ injectLocationFields -- TODO: use sequencing to get newLocMay from newLoc
-      identMay
-      instNameMay
-      instTypeMay
-      sOrgMay
-      icMay
-      sustainMay
-      polsMay
-      versioning
-{-     _ <- consoleShow $ "identMay: " <> show (Opt.get (SProxy :: _ "institutionID") newLoc) -- FIXME
-    _ <- consoleShow $ "instNameMay: " <> show (Opt.get (SProxy :: _ "institutionName") newLoc) -- FIXME
-    _ <- consoleShow $ "instTypeMay: " <> show (Opt.get (SProxy :: _ "institutionType") newLoc) -- FIXME
-    _ <- consoleShow $ "sOrgMay: " <> show (Opt.get (SProxy :: _ "superOrganizationName") newLoc) -- FIXME
-    _ <- consoleShow $ "icMay: " <> show (Opt.get (SProxy :: _ "institutionContact") newLoc) -- FIXME
-    _ <- consoleShow $ "sustainMay: " <> show (Opt.get (SProxy :: _ "institutionSustainability") newLoc) -- FIXME
-    _ <- consoleShow $ "polsMay: " <> show (Opt.get (SProxy :: _ "institutionPolicies") newLoc) -- FIXME
-    _ <- consoleShow $ "versioning: " <> show (versioning) -- FIXME -}
-
+    let newLocMay = Opt.getSubset newLoc
     display $ locWidg newLocMay
     pure newLoc
   where
@@ -191,21 +149,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
 
 page :: ∀ a. Widget HTML a
 page = do
- -- testWidget
    dyn $ accumulateLocation
-
-injectSustainFields ::
-  Opt.Option InstitutionSustainabilityRowOpts ->
-  Maybe M.InstitutionSustainability
-injectSustainFields sustOpt = go
-  (Opt.get (SProxy :: _ "missionStatementURL") sustOpt)
-  (Opt.get (SProxy :: _ "fundingStatementURL") sustOpt)
-  where
-    go (Just mission) (Just funding) = pure $ {
-      missionStatementURL: mission
-    , fundingStatementURL: funding
-    }
-    go _ _ = Nothing
 
 injectSustainFieldsOpt ::
   Opt.Option InstitutionSustainabilityRowOpts ->
@@ -244,18 +188,6 @@ accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
     missionUrlMay
     fundingUrl_Ei
     fundingUrlMay
-
-injectIdentFields :: -- TODO: use "sequence"
-  Opt.Option (M.BaseIdRows ()) -> Maybe M.Identifier
-injectIdentFields idOpt = go
-  (Opt.get (SProxy :: _ "id") idOpt)
-  (Opt.get (SProxy :: _ "idType") idOpt)
-  where
-    go (Just id) (Just idType) = pure $ {
-      id: id
-    , idType: idType
-    }
-    go _ _ = Nothing
 
 injectIdentFieldsOpt ::
   Opt.Option (M.BaseIdRows ()) ->
