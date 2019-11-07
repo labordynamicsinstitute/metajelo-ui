@@ -29,14 +29,27 @@ import Text.URL.Validate (URL)
 -- import Data.Newtype (unwrap)
 -- import Data.Semigroup.First (First(..))
 
+runFormSPA :: String -> Effect Unit
+runFormSPA divId = runWidgetInDom divId page
+
 page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    dyn $ accumulateLocation
 
-
-runFormSPA :: String -> Effect Unit
-runFormSPA divId = runWidgetInDom divId page
+-- | ViewModel for SupplementaryProduct
+type SupplementaryProductExtra r = (
+  basicMetadata_opt :: Opt.Option M.BasicMetadataRows
+, resourceID_opt :: Opt.Option (M.BaseIdRows ())
+, resourceType_opt :: Opt.Option M.ResourceTypeRows
+, _numFormats :: Int
+, resMdsOpts_opt :: Opt.Option ResourceMetadataSourceRowOpts
+, locationOpts_opt :: Opt.Option LocationRowOpts
+| r
+)
+-- | Decorated state (Model + ViewModel) for SupplementaryProduct
+type SupplementaryProductRowOpts =
+  SupplementaryProductExtra M.SupplementaryProductRows
 
 -- | ViewModel for Location
 type LocationRowExtra r = (
@@ -55,8 +68,8 @@ type InstitutionSustainabilityExtraRows r = (
 | r
 )
 -- | Decorated state (Model + ViewModel) for InstitutionSustainability
-type InstitutionSustainabilityRowOpts = InstitutionSustainabilityExtraRows
-  M.InstitutionSustainabilityRows
+type InstitutionSustainabilityRowOpts =
+  InstitutionSustainabilityExtraRows M.InstitutionSustainabilityRows
 
 -- | ViewModel for ResourceMetadataSource
 type ResourceMetadataSourceExtraRows r = (
@@ -64,8 +77,8 @@ type ResourceMetadataSourceExtraRows r = (
 | r
 )
 -- | Decorated state (Model + ViewModel) for ResourceMetadataSource
-type ResourceMetadataSourceRowOpts = ResourceMetadataSourceExtraRows
-  M.ResourceMetadataSourceRows
+type ResourceMetadataSourceRowOpts =
+  ResourceMetadataSourceExtraRows M.ResourceMetadataSourceRows
 
 accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
