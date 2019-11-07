@@ -29,8 +29,11 @@ import Text.URL.Validate (URL)
 -- import Data.Newtype (unwrap)
 -- import Data.Semigroup.First (First(..))
 
-main :: Effect Unit
-main = pure unit
+page :: ∀ a. Widget HTML a
+page = do
+   -- _ <- dyn $ formatSigArray (Tuple 0 [])
+   dyn $ accumulateLocation
+
 
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
@@ -63,53 +66,6 @@ type ResourceMetadataSourceExtraRows r = (
 -- | Decorated state (Model + ViewModel) for ResourceMetadataSource
 type ResourceMetadataSourceRowOpts = ResourceMetadataSourceExtraRows
   M.ResourceMetadataSourceRows
-
--- | Updates the Model + ViewModel for a Location record
-injectLocationFieldsOpt ::
-  Opt.Option LocationRowOpts ->
-  Opt.Option (M.BaseIdRows ()) ->
-  Maybe M.InstitutionID ->
-  Maybe NonEmptyString ->
-  Maybe M.InstitutionType ->
-  Maybe NonEmptyString ->
-  Maybe M.InstitutionContact ->
-  Opt.Option InstitutionSustainabilityRowOpts ->
-  Maybe M.InstitutionSustainability ->
-  Int ->
-  Maybe (NonEmptyArray M.InstitutionPolicy) ->
-  Boolean ->
-  Opt.Option LocationRowOpts
-injectLocationFieldsOpt
-  oldOpt
-  institutionID_opt
-  institutionIDMay
-  institutionNameMay
-  institutionTypeMay
-  superOrganizationName
-  institutionContactMay
-  iSustain_opt
-  institutionSustainabilityMay
-  _numPolicies
-  institutionPoliciesMay
-  versioning = execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
-      (Just institutionID_opt)
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
-    get >>= Opt.maySetOptState (SProxy :: _ "superOrganizationName")
-      (Just superOrganizationName)
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionContact")
-      institutionContactMay
-    get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
-      (Just iSustain_opt)
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
-      institutionSustainabilityMay
-    get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
-    get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies")
-      institutionPoliciesMay
-    get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
-  ) oldOpt
 
 accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
@@ -157,11 +113,52 @@ accumulateLocation = labelSig' D.h1' "Location" $
     , D.br'
     , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
     ]
-
-page :: ∀ a. Widget HTML a
-page = do
-   -- _ <- dyn $ formatSigArray (Tuple 0 [])
-   dyn $ accumulateLocation
+    -- | Updates the Model + ViewModel for a Location record
+    injectLocationFieldsOpt ::
+      Opt.Option LocationRowOpts ->
+      Opt.Option (M.BaseIdRows ()) ->
+      Maybe M.InstitutionID ->
+      Maybe NonEmptyString ->
+      Maybe M.InstitutionType ->
+      Maybe NonEmptyString ->
+      Maybe M.InstitutionContact ->
+      Opt.Option InstitutionSustainabilityRowOpts ->
+      Maybe M.InstitutionSustainability ->
+      Int ->
+      Maybe (NonEmptyArray M.InstitutionPolicy) ->
+      Boolean ->
+      Opt.Option LocationRowOpts
+    injectLocationFieldsOpt
+      oldOpt
+      institutionID_opt
+      institutionIDMay
+      institutionNameMay
+      institutionTypeMay
+      superOrganizationName
+      institutionContactMay
+      iSustain_opt
+      institutionSustainabilityMay
+      _numPolicies
+      institutionPoliciesMay
+      versioning = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
+          (Just institutionID_opt)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
+        get >>= Opt.maySetOptState (SProxy :: _ "superOrganizationName")
+          (Just superOrganizationName)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionContact")
+          institutionContactMay
+        get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
+          (Just iSustain_opt)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
+          institutionSustainabilityMay
+        get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies")
+          institutionPoliciesMay
+        get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
+      ) oldOpt
 
 accumulateSustain :: String ->
   CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
