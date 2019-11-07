@@ -196,6 +196,19 @@ instance isOptionMaybePolicyType
     toOptionLabel = emptyMeansOptional
     fromOptionValue = join <<< hush <<< MR.readPolicyType
 
+instance isOptionRelationType
+  :: IsOption M.RelationType where
+    toOptionValue = show
+    toOptionLabel = show
+    fromOptionValue x = unsafePartial $ fromJust $ hush $ MR.readRelationType x
+
+instance isOptionResourceTypeGeneral
+  :: IsOption M.ResourceTypeGeneral where
+    toOptionValue = show
+    toOptionLabel = show
+    fromOptionValue x = unsafePartial $ fromJust $ hush $
+      MR.readResourceTypeGeneral x
+
 -- | 0-arg constructors for M.Policy and can be used for dropdown or radio box.
 data PolPolType
   = FreeTextPolicy

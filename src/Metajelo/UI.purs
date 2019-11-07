@@ -1,6 +1,6 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, join, pure, unit, ($), (>>=), (<>))
+import Prelude (Unit, bind, discard, join, pure, unit, ($), (<$>), (>>=), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, step)
@@ -13,7 +13,7 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..))
-import Data.String.NonEmpty (NonEmptyString)
+import Data.String.NonEmpty (NonEmptyString, fromString,toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
@@ -53,7 +53,16 @@ type InstitutionSustainabilityExtraRows r = (
 )
 -- | Decorated state (Model + ViewModel) for InstitutionSustainability
 type InstitutionSustainabilityRowOpts = InstitutionSustainabilityExtraRows
-  (M.InstitutionSustainabilityRows)
+  M.InstitutionSustainabilityRows
+
+-- | ViewModel for ResourceMetadataSource
+type ResourceMetadataSourceExtraRows r = (
+  url_Ei :: Either String URL
+| r
+)
+-- | Decorated state (Model + ViewModel) for ResourceMetadataSource
+type ResourceMetadataSourceRowOpts = ResourceMetadataSourceExtraRows
+  M.ResourceMetadataSourceRows
 
 -- | Updates the Model + ViewModel for a Location record
 injectLocationFieldsOpt ::
@@ -154,29 +163,6 @@ page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    dyn $ accumulateLocation
 
-injectSustainFieldsOpt ::
-  Opt.Option InstitutionSustainabilityRowOpts ->
-  Either String URL ->
-  Maybe URL ->
-  Either String URL ->
-  Maybe URL ->
-  Opt.Option InstitutionSustainabilityRowOpts
-injectSustainFieldsOpt
-  oldOpt
-  missionUrl_Ei
-  missionUrlMay
-  fundingUrl_Ei
-  fundingUrlMay = execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
-      (Just missionUrl_Ei)
-    get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
-      missionUrlMay
-    get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
-      (Just fundingUrl_Ei)
-    get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
-      fundingUrlMay
-  ) oldOpt
-
 accumulateSustain :: String ->
   CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
 accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
@@ -191,7 +177,29 @@ accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
     missionUrlMay
     fundingUrl_Ei
     fundingUrlMay
-
+  where
+    injectSustainFieldsOpt ::
+      Opt.Option InstitutionSustainabilityRowOpts ->
+      Either String URL ->
+      Maybe URL ->
+      Either String URL ->
+      Maybe URL ->
+      Opt.Option InstitutionSustainabilityRowOpts
+    injectSustainFieldsOpt
+      oldOpt
+      missionUrl_Ei
+      missionUrlMay
+      fundingUrl_Ei
+      fundingUrlMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
+          (Just missionUrl_Ei)
+        get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
+          missionUrlMay
+        get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
+          (Just fundingUrl_Ei)
+        get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
+          fundingUrlMay
+      ) oldOpt
 
 accumulateIdent :: String -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
@@ -207,14 +215,12 @@ accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
       Maybe M.IdentifierType ->
       Opt.Option (M.BaseIdRows ())
     injectIdentFields
-      oldOpt
-      idMay
-      idTypeMay = execState (do
+      oldOpt idMay idTypeMay = execState (do
         get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
         get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
       ) oldOpt
 
-accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option (M.BasicMetadataRows))
+accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
 accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" do
   titleMay <- textInput D.span' "Title: " $
     Opt.get (SProxy :: _ "title") oldBMD
@@ -230,11 +236,30 @@ accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" do
       Maybe NonEmptyString ->
       Maybe M.XsdDate ->
       Opt.Option (M.BasicMetadataRows)
-    injectBMDFields bmd titleMay creatorMay pubYearMay = execState (do
+    injectBMDFields oldOpt titleMay creatorMay pubYearMay = execState (do
         get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
         get >>= Opt.maySetOptState (SProxy :: _ "creator") creatorMay
         get >>= Opt.maySetOptState (SProxy :: _ "publicationYear") pubYearMay
-      ) bmd
+      ) oldOpt
+
+accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
+accumulateResType oldRT = labelSig' D.h3' "Resource Type" do
+  descMay <- textInput D.span' "Description: " $
+    join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
+  genTypMay <- labelSig' D.span' "General Type: " $ menuSignal $
+    Opt.get (SProxy :: _ "generalType") oldRT
+  pure $ injectResTypeFields oldRT (toString <$> descMay) genTypMay
+  where
+    injectResTypeFields ::
+      Opt.Option M.ResourceTypeRows ->
+      Maybe String ->
+      Maybe M.ResourceTypeGeneral ->
+      Opt.Option M.ResourceTypeRows
+    injectResTypeFields
+      oldOpt descMay genTypMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "description") descMay
+        get >>= Opt.maySetOptState (SProxy :: _ "generalType") genTypMay
+      ) oldOpt
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
 formatSignal formatMay = textInput D.h3' "Format: " formatMay
@@ -246,6 +271,29 @@ formatSigArray formats = labelSig (D.div' [
   where
     tipText = "Technical format of the resource." <>
       "Use file extension or MIME type where possible."
+
+accumulateResMdSource :: CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
+accumulateResMdSource oldRMDS = labelSig' D.h3' "Resource Metadata Source" do
+  url_Ei <- urlInput D.span' "URL: " $
+    Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
+  let urlMay = hush url_Ei
+  relTypMay <- labelSig' D.span' "Relation Type: " $ menuSignal $
+    Opt.get (SProxy :: _ "relationType") oldRMDS
+  pure $ injectResMdSourceFieldsOpt oldRMDS url_Ei urlMay relTypMay
+  where
+    injectResMdSourceFieldsOpt ::
+      Opt.Option ResourceMetadataSourceRowOpts ->
+      Either String URL ->
+      Maybe URL ->
+      Maybe M.RelationType ->
+      Opt.Option ResourceMetadataSourceRowOpts
+    injectResMdSourceFieldsOpt oldOpt url_Ei urlMay relTypMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
+          (Just url_Ei)
+        get >>= Opt.maySetOptState (SProxy :: _ "url")
+          urlMay
+        get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
+      ) oldOpt
 
 -- TODO: PR to purescript-option
 getOpt ::
