@@ -1,9 +1,9 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, join, pure, unit, ($), (>>=))
+import Prelude (Unit, bind, discard, join, pure, unit, ($), (>>=), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS)
+import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 -- import Concur.React.Props as P
@@ -18,7 +18,8 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, checkBoxS, labelSig', menuSignal, textInput, urlInput, consoleShow)
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS,
+  labelSig, labelSig', menuSignal, textInput, urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Option as Opt
@@ -54,6 +55,7 @@ type InstitutionSustainabilityExtraRows r = (
 type InstitutionSustainabilityRowOpts = InstitutionSustainabilityExtraRows
   (M.InstitutionSustainabilityRows)
 
+-- | Updates the Model + ViewModel for a Location record
 injectLocationFieldsOpt ::
   Opt.Option LocationRowOpts ->
   Opt.Option (M.BaseIdRows ()) ->
@@ -149,6 +151,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
 
 page :: ∀ a. Widget HTML a
 page = do
+   -- _ <- dyn $ formatSigArray (Tuple 0 [])
    dyn $ accumulateLocation
 
 injectSustainFieldsOpt ::
@@ -189,18 +192,6 @@ accumulateSustain idLabel oldSust = labelSig' D.h3' idLabel do
     fundingUrl_Ei
     fundingUrlMay
 
-injectIdentFieldsOpt ::
-  Opt.Option (M.BaseIdRows ()) ->
-  Maybe NonEmptyString ->
-  Maybe M.IdentifierType ->
-  Opt.Option (M.BaseIdRows ())
-injectIdentFieldsOpt
-  oldOpt
-  idMay
-  idTypeMay = execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
-  ) oldOpt
 
 accumulateIdent :: String -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
@@ -208,7 +199,53 @@ accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
     Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
-  pure $ injectIdentFieldsOpt oldId idMay idTypeMay
+  pure $ injectIdentFields oldId idMay idTypeMay
+  where
+    injectIdentFields ::
+      Opt.Option (M.BaseIdRows ()) ->
+      Maybe NonEmptyString ->
+      Maybe M.IdentifierType ->
+      Opt.Option (M.BaseIdRows ())
+    injectIdentFields
+      oldOpt
+      idMay
+      idTypeMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
+        get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+      ) oldOpt
+
+accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option (M.BasicMetadataRows))
+accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" do
+  titleMay <- textInput D.span' "Title: " $
+    Opt.get (SProxy :: _ "title") oldBMD
+  creatorMay <- textInput D.span' "Creator: " $
+    Opt.get (SProxy :: _ "creator") oldBMD
+  pubYearMay <- textInput D.span' "Publication Year: " $
+    Opt.get (SProxy :: _ "publicationYear") oldBMD
+  pure $ injectBMDFields oldBMD titleMay creatorMay pubYearMay
+  where
+    injectBMDFields ::
+      Opt.Option (M.BasicMetadataRows) ->
+      Maybe NonEmptyString ->
+      Maybe NonEmptyString ->
+      Maybe M.XsdDate ->
+      Opt.Option (M.BasicMetadataRows)
+    injectBMDFields bmd titleMay creatorMay pubYearMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
+        get >>= Opt.maySetOptState (SProxy :: _ "creator") creatorMay
+        get >>= Opt.maySetOptState (SProxy :: _ "publicationYear") pubYearMay
+      ) bmd
+
+formatSignal :: CtrlSignal HTML (Maybe M.Format)
+formatSignal formatMay = textInput D.h3' "Format: " formatMay
+
+formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
+formatSigArray formats = labelSig (D.div' [
+  D.h2' [D.text "Formats"], D.text tipText
+]) $ arrayView formatSignal formats
+  where
+    tipText = "Technical format of the resource." <>
+      "Use file extension or MIME type where possible."
 
 -- TODO: PR to purescript-option
 getOpt ::

@@ -107,8 +107,11 @@ type CtrlSignal v a = a -> Signal v a
 
 -- | Prepend a label heading to a siginal
 labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
-labelSig' tag label sigIn = do
-  display $ tag [D.text label]
+labelSig' tag label sigIn = labelSig (tag [D.text label]) sigIn
+
+labelSig :: forall a. (forall b. Widget HTML b) -> Signal HTML a -> Signal HTML a
+labelSig widg sigIn = do
+  display widg
   sigIn
 
 textInput' :: D.El' -> String -> CtrlSignal HTML String
