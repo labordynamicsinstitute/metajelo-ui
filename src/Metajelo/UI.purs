@@ -80,6 +80,101 @@ type ResourceMetadataSourceExtraRows r = (
 type ResourceMetadataSourceRowOpts =
   ResourceMetadataSourceExtraRows M.ResourceMetadataSourceRows
 
+accumulateSuppProd ::  Signal HTML (Opt.Option SupplementaryProductRowOpts)
+accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
+  loopS Opt.empty \prodOpt -> D.div_ [] do
+    basicMdOpt <- accumulateBasicMetaData getOpt $
+      (SProxy :: _ "basicMetadata_opt") prodOpt
+    basicMdMay <- Opt.getAll basicMdOpt
+    redIdOpt <- accumulateIdent "Resource ID" $
+      getOpt (SProxy :: _ "resourceID_opt") prodOpt
+    let resIdMay = Opt.getAll redIdOpt
+    resTypeOpt <- accumulateResType "Resource Type" $
+      getOpt (SProxy :: _ "resourceType_opt") prodOpt
+    let resTypeMay = Opt.getSubset resTypeOpt
+    formatsTup <- formatSigArray $ Tuple
+      (Opt.getWithDefault 0 (SProxy :: _ "_numFormats") prodOpt)
+      (Opt.get (SProxy :: _ "format") prodOpt)
+    let _numFormats = fst formatsTup
+    let formatsMay = snd formatsTup
+    resMdOpt <- accumulateResMdSource $
+      getOpt (SProxy :: _ "resMdsOpts_opt") prodOpt
+    let resMdMay = Opt.getSubset resMdOpt
+    locOpt <- accumulateSustain $
+      getOpt (SProxy :: _ "locationOpts_opt") prodOpt
+    let locMay = Opt.getSubset locOpt
+    newProd <- pure $ injectProdOpt prodOpt
+      basicMdOpt
+      basicMdMay
+      redIdOpt
+      resIdMay
+      resTypeOpt
+      resTypeMay
+      _numFormats
+      formatsMay
+      resMdOpt
+      resMdMay
+      locOpt
+      locMay
+    let newProdMay = Opt.getSubset newProd
+    display $ prodWidg newProdMay
+    pure newProd
+  where
+    prodWidg :: forall a. Maybe M.SupplementaryProduct ->  Widget HTML a
+    prodWidg prodMay = D.div' [
+      D.h3' [D.text "Product preview:"]
+    , D.br'
+    , fold $ mkSupplementaryProductWidget <$> prodMay
+    ]
+    -- | Updates the Model + ViewModel for a Product record
+    injectProdOpt ::
+      Opt.Option SupplementaryProductRowOpts ->
+      Opt.Option M.BasicMetadataRows ->
+      Maybe M.BasicMetadataRows ->
+      Opt.Option (M.BaseIdRows ()) ->
+      Maybe M.ResourceID ->
+      Opt.Option M.ResourceTypeRows ->
+      Maybe M.ResourceType ->
+      Int ->
+      Maybe (Array Format) ->
+      Opt.Option ResourceMetadataSourceRowOpts ->
+      Maybe M.ResourceMetadataSource ->
+      Opt.Option LocationRowOpts ->
+      Maybe M.Location ->
+      Opt.Option SupplementaryProductRowOpts
+    injectProdOpt
+      basicMdOpt
+      basicMdMay
+      redIdOpt
+      resIdMay
+      resTypeOpt
+      resTypeMay
+      _numFormats
+      formatsMay
+      resMdOpt
+      resMdMay
+      locOpt
+      locMay = execState (do -- TODO: resume here
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
+          (Just institutionID_opt)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
+        get >>= Opt.maySetOptState (SProxy :: _ "superOrganizationName")
+          (Just superOrganizationName)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionContact")
+          institutionContactMay
+        get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
+          (Just iSustain_opt)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
+          institutionSustainabilityMay
+        get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
+        get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies")
+          institutionPoliciesMay
+        get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
+      ) oldOpt
+
+
 accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
 accumulateLocation = labelSig' D.h1' "Location" $
   loopS Opt.empty \locOpt -> D.div_ [] do
@@ -122,7 +217,7 @@ accumulateLocation = labelSig' D.h1' "Location" $
   where
     locWidg :: forall a. Maybe M.Location ->  Widget HTML a
     locWidg locMay = D.div' [
-      D.h3' [D.text "Last submitted location summary for this product:"]
+      D.h3' [D.text "Location preview:"]
     , D.br'
     , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
     ]
