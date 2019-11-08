@@ -15158,7 +15158,7 @@ var PS = {};
       return function (c) {
         return b["span'"](a)(c);
       };
-    })("Record Identifier: ")(w.get(new p.IsSymbol(function () {
+    })("Id: ")(w.get(new p.IsSymbol(function () {
       return "id";
     }))()(p.SProxy.value)(d)))(function (a) {
       return g.bind(l.bindCofree(h.widgetAlternative(u.monoidArray)))(D["labelSig'"](function (a) {
@@ -15207,7 +15207,7 @@ var PS = {};
         return function (c) {
           return b["span'"](a)(c);
         };
-      })("Record Identifier: ")(w.get(new p.IsSymbol(function () {
+      })("Id: ")(w.get(new p.IsSymbol(function () {
         return "id";
       }))()(p.SProxy.value)(d)))(function (a) {
         return g.bind(l.bindCofree(h.widgetAlternative(u.monoidArray)))(D["labelSig'"](function (a) {
@@ -15794,4 +15794,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.48a32f1f.js.map
+//# sourceMappingURL=prod.24c3390f.js.map
