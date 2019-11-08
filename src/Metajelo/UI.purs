@@ -12,7 +12,7 @@ import Control.Monad.State
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String.NonEmpty (NonEmptyString, fromString,toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Tuple (Tuple(..), fst, snd)
@@ -40,7 +40,7 @@ page = do
 
 {- type MetajeloRecordExtra r = (
   identifier_opt :: Opt.Option (M.BaseIdRows ())
-, 
+,
 
 ) -}
 
@@ -142,7 +142,7 @@ accumulateMetajeloRecord = labelSig' D.h1' "Supplementary Product" $
 accumulateSuppProd ::  Signal HTML (Opt.Option SupplementaryProductRowOpts)
 accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
   loopS Opt.empty \prodOpt -> D.div_ [] do
-    basicMdOpt <- accumulateBasicMetaData $ 
+    basicMdOpt <- accumulateBasicMetaData $
       getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
     let basicMdMay = Opt.getAll basicMdOpt
     redIdOpt <- accumulateIdent "Resource ID" $
@@ -269,24 +269,25 @@ accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
     get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
   ) oldId
 
-accumulateRelatedIdent :: CtrlSignal HTML (Opt.Option M.RelatedIdentifierRows)
-accumulateRelatedIdent oldId = labelSig' D.h3' "Related Identifier: " do
+accumulateRelatedIdent :: CtrlSignal HTML (Maybe (Opt.Option M.RelatedIdentifierRows))
+accumulateRelatedIdent oldIdMay = labelSig' D.h3' "Related Identifier: " do
   idMay <- textInput D.span' "Record Identifier: " $
     Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
   relTypeMay <- labelSig' D.span' "Relation Type" $ menuSignal $
     Opt.get (SProxy :: _ "relType") oldId
-  pure $ execState (do
+  pure $ Just $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
     get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
     get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
   ) oldId
+  where oldId = (fromMaybe Opt.empty oldIdMay)
 
-relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray M.RelatedIdentifier)))
+relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray (Opt.Option M.RelatedIdentifierRows))))
 relIdSigArray relIdsMay = labelSig' D.h2' "Related Identifiers" $
   nonEmptyArrayView accumulateRelatedIdent relIdsMay
-  
+
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
 accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" do
   titleMay <- textInput D.span' "Title: " $
