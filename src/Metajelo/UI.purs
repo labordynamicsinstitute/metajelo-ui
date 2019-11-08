@@ -276,7 +276,7 @@ accumulateSustain oldSust = labelSig' D.h3' "Institution Sustainability:" do
 
 accumulateIdent :: String -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
-  idMay <- textInput D.span' "Record Identifier: " $
+  idMay <- textInput D.span' "Id: " $
     Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
@@ -287,7 +287,7 @@ accumulateIdent idLabel oldId = labelSig' D.h3' idLabel do
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
 accumulateRelatedIdent oldIdMay = labelSig' D.h3' "Related Identifier: " do
-  idMay <- textInput D.span' "Record Identifier: " $
+  idMay <- textInput D.span' "Id: " $
     Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- labelSig' D.span' "Identifier Type" $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
