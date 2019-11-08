@@ -108,7 +108,7 @@ policyForm fstate = do
       , appliesToProduct: form.appliesToProd
       }
 
-policySignal ::CtrlSignal HTML (Maybe M.InstitutionPolicy)
+policySignal :: CtrlSignal HTML (Maybe M.InstitutionPolicy)
 policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
   sig instPolicyMay
   where
