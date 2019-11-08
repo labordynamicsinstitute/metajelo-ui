@@ -35,7 +35,7 @@ runFormSPA divId = runWidgetInDom divId page
 page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
-   dyn $ accumulateLocation
+   dyn $ accumulateSuppProd
 
 -- | ViewModel for SupplementaryProduct
 type SupplementaryProductExtra r = (
@@ -83,24 +83,24 @@ type ResourceMetadataSourceRowOpts =
 accumulateSuppProd ::  Signal HTML (Opt.Option SupplementaryProductRowOpts)
 accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
   loopS Opt.empty \prodOpt -> D.div_ [] do
-    basicMdOpt <- accumulateBasicMetaData getOpt $
-      (SProxy :: _ "basicMetadata_opt") prodOpt
-    basicMdMay <- Opt.getAll basicMdOpt
+    basicMdOpt <- accumulateBasicMetaData $ 
+      getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
+    let basicMdMay = Opt.getAll basicMdOpt
     redIdOpt <- accumulateIdent "Resource ID" $
       getOpt (SProxy :: _ "resourceID_opt") prodOpt
     let resIdMay = Opt.getAll redIdOpt
-    resTypeOpt <- accumulateResType "Resource Type" $
+    resTypeOpt <- accumulateResType $
       getOpt (SProxy :: _ "resourceType_opt") prodOpt
     let resTypeMay = Opt.getSubset resTypeOpt
     formatsTup <- formatSigArray $ Tuple
       (Opt.getWithDefault 0 (SProxy :: _ "_numFormats") prodOpt)
-      (Opt.get (SProxy :: _ "format") prodOpt)
+      (Opt.getWithDefault [] (SProxy :: _ "format") prodOpt)
     let _numFormats = fst formatsTup
-    let formatsMay = snd formatsTup
+    let formats = snd formatsTup
     resMdOpt <- accumulateResMdSource $
       getOpt (SProxy :: _ "resMdsOpts_opt") prodOpt
     let resMdMay = Opt.getSubset resMdOpt
-    locOpt <- accumulateSustain $
+    locOpt <- accumulateLocation $
       getOpt (SProxy :: _ "locationOpts_opt") prodOpt
     let locMay = Opt.getSubset locOpt
     newProd <- pure $ injectProdOpt prodOpt
@@ -111,7 +111,7 @@ accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
       resTypeOpt
       resTypeMay
       _numFormats
-      formatsMay
+      formats
       resMdOpt
       resMdMay
       locOpt
@@ -124,25 +124,28 @@ accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
     prodWidg prodMay = D.div' [
       D.h3' [D.text "Product preview:"]
     , D.br'
-    , fold $ mkSupplementaryProductWidget <$> prodMay
+    , fold $ MV.mkSupplementaryProductWidget <$> prodMay
     ]
     -- | Updates the Model + ViewModel for a Product record
+    -- TODO: refactor type to be e.g. :
+    -- TODO (Opt.Option OptsType); old -> (Opt.Option OptsType); updates -> (Opt.Option OptsType); new
+    -- TODO which could then ben simplified to: OptInjector (OptsType)
     injectProdOpt ::
       Opt.Option SupplementaryProductRowOpts ->
       Opt.Option M.BasicMetadataRows ->
-      Maybe M.BasicMetadataRows ->
+      Maybe M.BasicMetadata ->
       Opt.Option (M.BaseIdRows ()) ->
       Maybe M.ResourceID ->
       Opt.Option M.ResourceTypeRows ->
       Maybe M.ResourceType ->
       Int ->
-      Maybe (Array Format) ->
+      Array M.Format ->
       Opt.Option ResourceMetadataSourceRowOpts ->
       Maybe M.ResourceMetadataSource ->
       Opt.Option LocationRowOpts ->
       Maybe M.Location ->
       Opt.Option SupplementaryProductRowOpts
-    injectProdOpt
+    injectProdOpt oldOpt
       basicMdOpt
       basicMdMay
       redIdOpt
@@ -150,70 +153,66 @@ accumulateSuppProd = labelSig' D.h1' "Supplementary Product" $
       resTypeOpt
       resTypeMay
       _numFormats
-      formatsMay
+      formats
       resMdOpt
       resMdMay
       locOpt
-      locMay = execState (do -- TODO: resume here
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
-          (Just institutionID_opt)
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionID") institutionIDMay
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionName") institutionNameMay
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionType") institutionTypeMay
-        get >>= Opt.maySetOptState (SProxy :: _ "superOrganizationName")
-          (Just superOrganizationName)
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionContact")
-          institutionContactMay
-        get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
-          (Just iSustain_opt)
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability")
-          institutionSustainabilityMay
-        get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
-        get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies")
-          institutionPoliciesMay
-        get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
+      locMay = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
+          (Just basicMdOpt)
+        get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata") basicMdMay
+        get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") (Just redIdOpt)
+        get >>= Opt.maySetOptState (SProxy :: _ "resourceID") (Just resIdMay)
+        get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt")
+          (Just resTypeOpt)
+        get >>= Opt.maySetOptState (SProxy :: _ "resourceType") resTypeMay
+        get >>= Opt.maySetOptState (SProxy :: _ "_numFormats") (Just _numFormats)
+        get >>= Opt.maySetOptState (SProxy :: _ "format") (Just formats)
+        get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") (Just resMdOpt)
+        get >>= Opt.maySetOptState (SProxy :: _ "resourceMetadataSource")
+          (Just resMdMay)
+        get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") (Just locOpt)
+        get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
       ) oldOpt
 
-
-accumulateLocation ::  Signal HTML (Opt.Option LocationRowOpts)
-accumulateLocation = labelSig' D.h1' "Location" $
-  loopS Opt.empty \locOpt -> D.div_ [] do
-    identOpt <- accumulateIdent "Identifier" $
-      getOpt (SProxy :: _ "institutionID_opt") locOpt
-    let identMay = Opt.getAll identOpt
-    instNameMay <- textInput D.span' "Institution Name: " $
-      Opt.get (SProxy :: _ "institutionName") locOpt
-    instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal $
-      Opt.get (SProxy :: _ "institutionType") locOpt
-    display D.br'
-    sOrgMay <- textInput D.span' "Super Organization (optional): " $
-      join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
-    icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
-    sustainOpt <- accumulateSustain "Institution Sustainability:" $
-      getOpt (SProxy :: _ "iSustain_opt") locOpt
-    let sustainMay = Opt.getSubset sustainOpt
-    polsMayTup <- MF.policySigArray $ Tuple
-      (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
-      (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
-    let _numPolicies = fst polsMayTup
-    let polsMay = snd polsMayTup
-    versioning <- labelSig' D.span' "versioning? " $ checkBoxS $
-      Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
-    newLoc <- pure $ injectLocationFieldsOpt locOpt
-      identOpt
-      identMay
-      instNameMay
-      instTypeMay
-      sOrgMay
-      icMay
-      sustainOpt
-      sustainMay
-      _numPolicies
-      polsMay
-      versioning
-    let newLocMay = Opt.getSubset newLoc
-    display $ locWidg newLocMay
-    pure newLoc
+accumulateLocation ::  CtrlSignal HTML (Opt.Option LocationRowOpts)
+accumulateLocation locOpt = labelSig' D.h1' "Location" do
+  identOpt <- accumulateIdent "Identifier" $
+    getOpt (SProxy :: _ "institutionID_opt") locOpt
+  let identMay = Opt.getAll identOpt
+  instNameMay <- textInput D.span' "Institution Name: " $
+    Opt.get (SProxy :: _ "institutionName") locOpt
+  instTypeMay <- labelSig' D.h3' "Institution Type" $ menuSignal $
+    Opt.get (SProxy :: _ "institutionType") locOpt
+  display D.br'
+  sOrgMay <- textInput D.span' "Super Organization (optional): " $
+    join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
+  icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
+  sustainOpt <- accumulateSustain "Institution Sustainability:" $
+    getOpt (SProxy :: _ "iSustain_opt") locOpt
+  let sustainMay = Opt.getSubset sustainOpt
+  polsMayTup <- MF.policySigArray $ Tuple
+    (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
+    (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
+  let _numPolicies = fst polsMayTup
+  let polsMay = snd polsMayTup
+  versioning <- labelSig' D.span' "versioning? " $ checkBoxS $
+    Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
+  newLoc <- pure $ injectLocationFieldsOpt locOpt
+    identOpt
+    identMay
+    instNameMay
+    instTypeMay
+    sOrgMay
+    icMay
+    sustainOpt
+    sustainMay
+    _numPolicies
+    polsMay
+    versioning
+  let newLocMay = Opt.getSubset newLoc
+  display $ locWidg newLocMay
+  pure newLoc
   where
     locWidg :: forall a. Maybe M.Location ->  Widget HTML a
     locWidg locMay = D.div' [
