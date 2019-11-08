@@ -188,7 +188,7 @@ let additions =
           , "xpath-like"
           ]
           "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "aad3888cd87bae7b58058ddca8b7ed71f0d246f2"
+          "49a28c5c511bdd260b627151c7b898720313cc66"
       , metajelo-web =
           mkPackage
           [ "prelude"

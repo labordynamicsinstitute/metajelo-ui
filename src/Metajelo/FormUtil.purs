@@ -13,8 +13,11 @@ import Control.Extend (class Extend)
 import Data.Array (catMaybes, filter, length, replicate, (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bounded (bottom)
+import Data.Date (canonicalDate)
+import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
-import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding)
+import Data.Formatter.DateTime as FDT
+import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
 import Data.Foldable (class Foldable, fold)
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
@@ -31,12 +34,14 @@ import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
 -- import Data.Time.Duration (Milliseconds(..)) -- What was I doing with this?
+import Data.Time (Time(..))
 import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
+import Effect.Now (nowDateTime)
 -- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
@@ -363,3 +368,41 @@ consoleShow :: ∀ a. Show a => Warn (QuoteLabel "consoleShow in use") =>
 consoleShow val = display $ do
   liftEffect $ logShow val -- FIXME: DEBUG
   mempty
+
+dateTimeWidg :: Widget HTML DateTime
+dateTimeWidg = liftEffect nowDateTime
+
+dateTimeSig :: Signal HTML DateTime
+dateTimeSig = sig initDate
+  where
+    sig dt = step dt do
+      newDt <- dateTimeWidg
+      pure $ sig newDt
+
+-- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
+formatXsdDate :: DateTime -> Either String M.XsdDate
+formatXsdDate dt = xsdDate
+  where
+    xsdDateInit = FDT.formatDateTime "YYYY-MM-DD" dt
+    xsdDate = case xsdDateInit of
+      Left err -> Left err
+      Right xsdDateStr -> case fromString xsdDateStr of
+        Nothing -> Left "Empty Date output from formatXsdDate"
+        Just nes -> Right nes
+
+initDate :: DateTime
+initDate = makeDateTime 0 0 0 0 0 0 0
+
+-- TODO: what to do with this?
+makeDateTime ∷ Int → Int → Int → Int → Int → Int → Int → DateTime
+makeDateTime year month day hour minute second millisecond =
+  DateTime
+    (canonicalDate
+      (fromMaybe bottom $ toEnum year)
+      (fromMaybe bottom $ toEnum month)
+      (fromMaybe bottom $ toEnum day))
+    (Time
+        (fromMaybe bottom $ toEnum hour )
+        (fromMaybe bottom $ toEnum minute )
+        (fromMaybe bottom $ toEnum second )
+        (fromMaybe bottom $ toEnum millisecond))
