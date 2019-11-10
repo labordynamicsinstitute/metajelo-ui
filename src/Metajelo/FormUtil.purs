@@ -10,7 +10,7 @@ import Concur.React.Props as P
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
-import Data.Array (catMaybes, filter, length, replicate, (..))
+import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bounded (bottom)
 import Data.Date (canonicalDate)
@@ -26,7 +26,7 @@ import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
-import Data.Maybe (Maybe(..), fromJust, fromMaybe, maybe)
+import Data.Maybe (Maybe(..), fromJust, fromMaybe, isJust, maybe)
 import Data.Monoid (class Monoid, mempty)
 import Data.Newtype (class Newtype)
 import Data.Profunctor.Strong (second)
@@ -99,12 +99,15 @@ menu form field = D.select
 menuSignal :: ∀ opt. BoundedEnum opt => IsOption opt =>
   CtrlSignal HTML (Maybe opt)
 menuSignal currentOptMay = step currentOptMay do
+  let ranOnce = if (isJust currentOptMay) then true else false
   newOpt <- D.select [
-    P.defaultValue $ maybe "" toOptionValue currentOptMay
+    P.value $ maybe "" toOptionValue currentOptMay
   , (fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
   ] (
-    upFromIncluding (bottom :: opt) <#> \opt ->
-      D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
+      (D.option [P.disabled ranOnce] [D.text "Select ..."]) :
+      (upFromIncluding (bottom :: opt) <#> \opt ->
+        D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
+    )
   pure $ menuSignal $ Just newOpt
 
 
