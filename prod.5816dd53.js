@@ -3804,6 +3804,7 @@ var PS = {};
   d.range = f.range;
   d.replicate = f.replicate;
   d.length = f.length;
+  d.cons = f.cons;
   d.filter = f.filter;
 })(PS);
 
@@ -4925,15 +4926,15 @@ var PS = {};
       h = function h(a) {
     return function (b) {
       return function (c) {
-        var d = f.sequential(a),
-            e = k.traverse_(a.Applicative1())(b)(function () {
+        var e = f.sequential(a),
+            d = k.traverse_(a.Applicative1())(b)(function () {
           var b = f.parallel(a);
           return function (a) {
             return b(c(a));
           };
         }());
         return function (a) {
-          return d(e(a));
+          return e(d(a));
         };
       };
     };
@@ -13630,7 +13631,7 @@ var PS = {};
   },
       aa = function aa(a) {
     if (a instanceof da || a instanceof ja) return a.value0;
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 273, column 1 - line 273, column 34): " + [a.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 276, column 1 - line 276, column 34): " + [a.constructor.name]);
   },
       sa = function sa(a) {
     return l.bind(m.bindCofree(b.widgetAlternative(C.monoidArray)))(a)(function (a) {
@@ -13711,11 +13712,11 @@ var PS = {};
       ea = new F.Generic(function (a) {
     if (a instanceof ha) return new F.Inl(F.NoArguments.value);
     if (a instanceof ia) return new F.Inr(F.NoArguments.value);
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 221, column 1 - line 221, column 58): " + [a.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 224, column 1 - line 224, column 58): " + [a.constructor.name]);
   }, function (a) {
     if (a instanceof F.Inl) return ha.value;
     if (a instanceof F.Inr) return ia.value;
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 221, column 1 - line 221, column 58): " + [a.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 224, column 1 - line 224, column 58): " + [a.constructor.name]);
   });
 
   H = new K.Show(H.genericShow(ea)(H.genericShowSum(H.genericShowConstructor(H.genericShowArgsNoArguments)(new M.IsSymbol(function () {
@@ -13733,16 +13734,19 @@ var PS = {};
   var Da = function Da(a) {
     return function (d) {
       return function (m) {
-        return f.step(m)(l.bind(b.widgetBind)(e.select(b.widgetMultiAlternative(C.monoidArray))(b.widgetShiftMap)([c.defaultValue(w.maybe("")(d.toOptionValue)(m)), A.map(h.functorProps)(function () {
-          var a = d.fromOptionValue;
-          return function (b) {
-            return a(c.unsafeTargetValue(b));
-          };
-        }())(c.onChange)])(A.mapFlipped(A.functorArray)(x.upFromIncluding(a.Enum1())(V.unfoldable1Array)(y.bottom(a.Bounded0())))(function (a) {
-          return e.option(b.widgetMultiAlternative(C.monoidArray))(b.widgetShiftMap)([c.value((0, d.toOptionValue)(a))])([e.text(k.widgetLiftWidget)((0, d.toOptionLabel)(a))]);
-        })))(function (c) {
-          return g.pure(b.widgetApplicative)(Da(a)(d)(new w.Just(c)));
-        }));
+        return f.step(m)(function () {
+          var f = w.isJust(m) ? !0 : !1;
+          return l.bind(b.widgetBind)(e.select(b.widgetMultiAlternative(C.monoidArray))(b.widgetShiftMap)([c.value(w.maybe("")(d.toOptionValue)(m)), A.map(h.functorProps)(function () {
+            var a = d.fromOptionValue;
+            return function (b) {
+              return a(c.unsafeTargetValue(b));
+            };
+          }())(c.onChange)])(v.cons(e.option(b.widgetMultiAlternative(C.monoidArray))(b.widgetShiftMap)([c.disabled(f)])([e.text(k.widgetLiftWidget)("Select ...")]))(A.mapFlipped(A.functorArray)(x.upFromIncluding(a.Enum1())(V.unfoldable1Array)(y.bottom(a.Bounded0())))(function (a) {
+            return e.option(b.widgetMultiAlternative(C.monoidArray))(b.widgetShiftMap)([c.value((0, d.toOptionValue)(a))])([e.text(k.widgetLiftWidget)((0, d.toOptionLabel)(a))]);
+          }))))(function (c) {
+            return g.pure(b.widgetApplicative)(Da(a)(d)(new w.Just(c)));
+          });
+        }());
       };
     };
   },
@@ -13859,7 +13863,7 @@ var PS = {};
           t = function t(a) {
         if (a instanceof ja) return f.step(new ja(w.Nothing.value))(C.mempty(b.widgetMonoid(C.monoidArray)));
         if (a instanceof da) return r(a);
-        throw Error("Failed pattern match at Metajelo.FormUtil (line 296, column 23 - line 298, column 35): " + [a.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.FormUtil (line 299, column 23 - line 301, column 35): " + [a.constructor.name]);
       };
 
       return e.div_(m.shiftMapCofree(C.monoidArray))([])(l.bind(m.bindCofree(b.widgetAlternative(C.monoidArray)))(function (a) {
@@ -13928,8 +13932,8 @@ var PS = {};
   d.urlInput = function (a) {
     return function (c) {
       return function (d) {
-        if (d instanceof t.Left) var e = "";else if (d instanceof t.Right) e = N.toString(pa.urlToNEString(d.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 156, column 15 - line 158, column 48): " + [d.constructor.name]);
-        if (d instanceof t.Left) var h = d.value0;else if (d instanceof t.Right) h = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 152, column 15 - line 154, column 20): " + [d.constructor.name]);
+        if (d instanceof t.Left) var e = "";else if (d instanceof t.Right) e = N.toString(pa.urlToNEString(d.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 159, column 15 - line 161, column 48): " + [d.constructor.name]);
+        if (d instanceof t.Left) var h = d.value0;else if (d instanceof t.Right) h = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 155, column 15 - line 157, column 20): " + [d.constructor.name]);
         return l.bind(m.bindCofree(b.widgetAlternative(C.monoidArray)))(za(function (b) {
           return function (c) {
             return a(b)(c);
@@ -13937,12 +13941,12 @@ var PS = {};
         })(c)(N.fromString(e)))(function (a) {
           var c = l.bind(m.bindCofree(b.widgetAlternative(C.monoidArray))),
               d = g.pure(m.applicativeCofree(b.widgetAlternative(C.monoidArray)));
-          if (a instanceof w.Nothing) a = new t.Left(h);else if (a instanceof w.Just) a = pa.parsePublicURL(N.toString(a.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 143, column 19 - line 145, column 46): " + [a.constructor.name]);
+          if (a instanceof w.Nothing) a = new t.Left(h);else if (a instanceof w.Just) a = pa.parsePublicURL(N.toString(a.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 146, column 19 - line 148, column 46): " + [a.constructor.name]);
           return c(d(a))(function (a) {
             return l.discard(l.discardUnit)(m.bindCofree(b.widgetAlternative(C.monoidArray)))(f.display(function () {
               if (a instanceof t.Right) return C.mempty(b.widgetMonoid(C.monoidArray));
               if (a instanceof t.Left) return Ea(fa.toTextString)(new w.Just(a.value0));
-              throw Error("Failed pattern match at Metajelo.FormUtil (line 146, column 13 - line 148, column 40): " + [a.constructor.name]);
+              throw Error("Failed pattern match at Metajelo.FormUtil (line 149, column 13 - line 151, column 40): " + [a.constructor.name]);
             }()))(function () {
               return g.pure(m.applicativeCofree(b.widgetAlternative(C.monoidArray)))(a);
             });
@@ -14008,10 +14012,10 @@ var PS = {};
         var a = N.fromString(b.value0);
         if (a instanceof w.Nothing) return new t.Left("Empty Date output from formatXsdDate");
         if (a instanceof w.Just) return new t.Right(a.value0);
-        throw Error("Failed pattern match at Metajelo.FormUtil (line 389, column 27 - line 391, column 30): " + [a.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.FormUtil (line 392, column 27 - line 394, column 30): " + [a.constructor.name]);
       }
 
-      throw Error("Failed pattern match at Metajelo.FormUtil (line 387, column 15 - line 391, column 30): " + [b.constructor.name]);
+      throw Error("Failed pattern match at Metajelo.FormUtil (line 390, column 15 - line 394, column 30): " + [b.constructor.name]);
     }();
   };
 
@@ -15794,4 +15798,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.24c3390f.js.map
+//# sourceMappingURL=prod.5816dd53.js.map
