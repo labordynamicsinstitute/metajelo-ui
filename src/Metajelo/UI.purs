@@ -21,9 +21,9 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Effect.Class (liftEffect)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatXsdDate,
-  initDate, labelSig, labelSig', menuSignal, nonEmptyArrayView, textInput,
-  urlInput, consoleShow)
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, formatXsdDate,
+  initDate, justWait, labelSig, labelSig', menuSignal, nonEmptyArrayView, nowTimeSig,
+  textInput, urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Option as Opt
@@ -110,8 +110,7 @@ accumulateMetajeloRecord = labelSig' D.h1' "Metajelo Record Form" $
     dateMay <- textInput D.span'
       "Original creation date of this metadata record: " $
       Opt.get (SProxy :: _ "date") recOpt
-    -- modDateTime <- dateTimeSig
-    let modDateTime = initDate
+    modDateTime <- justWait initDate nowTimeSig pure
     let xsdDateStr_ei = formatXsdDate modDateTime
     let xsdDateMay = hush xsdDateStr_ei -- TODO: also retain either for errors
 

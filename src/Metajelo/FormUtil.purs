@@ -9,6 +9,7 @@ import Concur.React.DOM as D
 import Concur.React.Props as P
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
+import Control.Plus (empty)
 import Control.Extend (class Extend)
 import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
@@ -39,7 +40,8 @@ import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
-import Effect.Class (liftEffect)
+import Effect (Effect)
+import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Class.Console (logShow)
 import Effect.Now (nowDateTime)
 -- import Data.Unfoldable1 (singleton)
@@ -372,15 +374,12 @@ consoleShow val = display $ do
   liftEffect $ logShow val -- FIXME: DEBUG
   mempty
 
-dateTimeWidg :: Widget HTML DateTime
-dateTimeWidg = liftEffect nowDateTime
+nowTimeWidg :: Widget HTML DateTime
+nowTimeWidg = do
+  liftEffect nowDateTime
 
-dateTimeSig :: Signal HTML DateTime
-dateTimeSig = sig initDate
-  where
-    sig dt = step dt do
-      newDt <- dateTimeWidg
-      pure $ sig newDt
+nowTimeSig :: Signal HTML (Maybe DateTime)
+nowTimeSig = fireOnce nowTimeWidg
 
 -- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
 formatXsdDate :: DateTime -> Either String M.XsdDate
@@ -409,3 +408,21 @@ makeDateTime year month day hour minute second millisecond =
         (fromMaybe bottom $ toEnum minute )
         (fromMaybe bottom $ toEnum second )
         (fromMaybe bottom $ toEnum millisecond))
+
+-- TODO: Remove, when it is released on Concur.Core.FRP
+-- | Fires a widget once then stop. This will reflow when a parent signal reflows
+-- | Starts as Nothing. Then switches to `Just returnVal` after the Widget is done
+fireOnce :: forall v a. Monoid v => Widget v a -> Signal v (Maybe a)
+fireOnce w = step Nothing do
+  a <- w
+  pure (step (Just a) empty)
+
+-- TODO: Remove, when it is released on Concur.Core.FRP
+-- | Wait until we get a `Just` value from a signal
+justWait :: forall v a b. Monoid v => b -> Signal v (Maybe a) -> (a -> Signal v b) -> Signal v b
+justWait b s f = do
+  m <- s
+  case m of
+    Nothing -> pure b
+    Just a -> f a
+
