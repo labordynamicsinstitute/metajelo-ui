@@ -345,8 +345,7 @@ arrayView mkWidget oldArrTup = D.div_ [] do
         mayArrNewUnfiltered <- traverse mkItemView mayArr'
         let mayArrNew = filter isKeep mayArrNewUnfiltered
         let widgCountNew = length mayArrNew + emptyArrLen
-        emptyArr <- traverse mkItemViewDel $
-          (mkItemsEmpty (length mayArrNew) emptyArrLen)
+        let emptyArr = mkItemsEmpty (length mayArrNew) emptyArrLen
         _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
 
