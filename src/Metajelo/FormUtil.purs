@@ -1,6 +1,6 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, negate, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
 
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, loopS, step)
@@ -10,7 +10,7 @@ import Concur.React.Props as P
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
-import Data.Array (catMaybes, filter, length, replicate, (:), (..))
+import Data.Array (catMaybes, filter, length, replicate, zip, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bounded (bottom)
 import Data.Date (canonicalDate)
@@ -36,7 +36,7 @@ import Data.Symbol (class IsSymbol, SProxy)
 -- import Data.Time.Duration (Milliseconds(..)) -- What was I doing with this?
 import Data.Time (Time(..))
 import Data.Traversable (traverse)
-import Data.Tuple (Tuple(..), fst, snd)
+import Data.Tuple (Tuple(..), fst, snd, uncurry)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect.Class (liftEffect)
@@ -255,27 +255,57 @@ formSaveButton fstate = D.button props [D.text "Save"]
   where props = if fstate.dirty then [P.onClick] else [P.disabled true]
 
 data Item a
-  =  Keep (Maybe a)
-  |  Delete (Maybe a)
+  =  Keep (Tuple (Maybe a) Int)
+  |  Delete (Tuple (Maybe a) Int)
 instance showItem :: Show a => Show (Item a) where
-  show (Keep x) = "(Keep " <> show x <> ")"
-  show (Delete x) = "(Delete " <> show x <> ")"
+  show (Keep (Tuple x ix)) = "(Keep " <> show x <> ", " <> show ix <> ")"
+  show (Delete (Tuple x ix)) = "(Delete " <> show x <> ", " <> show ix <> ")"
 instance functorItem :: Functor Item where
-  map fun (Keep mVal) = Keep $ map fun mVal
-  map fun (Delete mVal) = Delete $ map fun mVal
+  map fun (Keep (Tuple x ix)) = Keep $ Tuple (map fun x) ix
+  map fun (Delete (Tuple x ix)) = Delete $ Tuple (map fun x) ix
 instance applyItem :: Apply Item where
-  apply (Keep mFun) (Keep mVal) = Keep $ apply mFun mVal
-  apply (Keep mFun) (Delete mVal) = Keep $ apply mFun mVal
-  apply (Delete mFun) (Keep mVal) = Keep $ apply mFun mVal
-  apply (Delete mFun) (Delete mVal) = Delete $ apply mFun mVal
+  apply (Keep (Tuple mFun _)) (Keep (Tuple mVal ix)) =
+    Keep $ Tuple (apply mFun mVal) ix
+  apply (Keep (Tuple mFun _)) (Delete (Tuple mVal ix)) =
+    Keep $ Tuple (apply mFun mVal) ix
+  apply (Delete (Tuple mFun _)) (Keep (Tuple mVal ix)) =
+    Keep $ Tuple (apply mFun mVal) ix
+  apply (Delete (Tuple mFun _)) (Delete (Tuple mVal ix)) =
+    Delete $ Tuple (apply mFun mVal) ix
 instance applicativeItem :: Applicative Item where
-  pure x = Keep $ Just x
+  pure x = mkItem x (-1)
 instance extendItem :: Extend Item where
-  extend iMayAtoB iMay = Keep $ Just $ iMayAtoB iMay
+  extend f item = Keep $ Tuple (Just (f item)) (itemIx item)
 
 toMaybe :: ∀ a. Item a -> Maybe a
-toMaybe (Keep mVal) = mVal
-toMaybe (Delete mVal) = mVal
+toMaybe (Keep (Tuple mVal _)) = mVal
+toMaybe (Delete (Tuple mVal _)) = mVal
+
+delItem :: ∀ a. Item a -> Item a
+delItem (Keep t) = Delete t
+delItem d = d
+
+itemIx :: ∀ a. Item a -> Int
+itemIx (Keep (Tuple _ ix)) = ix
+itemIx (Delete (Tuple _ ix)) = ix
+
+updateIx :: ∀ a. Int -> Item a -> Item a
+updateIx ix (Keep (Tuple mVal _)) = Keep (Tuple mVal ix)
+updateIx ix (Delete (Tuple mVal _)) = Delete (Tuple mVal ix)
+
+-- | Like `pure` but provides a meaningful index.
+mkItem :: ∀ a. a -> Int -> Item a
+mkItem val ix = Keep $ Tuple (Just val) ix
+
+mkItems :: ∀ a. Int -> Array a -> Array (Item a)
+mkItems sIx vs = (uncurry mkItem) <$>
+  (zip vs $ safeRange sIx (sIx + (length vs)))
+
+mkItemEmpty :: ∀ a. Int -> Item a
+mkItemEmpty ix = Keep $ Tuple Nothing ix
+
+mkItemsEmpty :: ∀ a. Int -> Int -> Array (Item a)
+mkItemsEmpty sIx n = mkItemEmpty <$> (safeRange sIx (sIx + n))
 
 isKeep :: ∀ a. Item a -> Boolean
 isKeep (Keep _) = true
@@ -288,25 +318,21 @@ arrayView mkWidget oldArrTup = D.div_ [] do
   where
     minWidgets = fst oldArrTup
     oldArr = snd oldArrTup
-    emptyElem = Keep Nothing
     initVals :: Array (Item a)
-    initVals = (Keep <<< Just <$> oldArr) <>
-      (dummyArr <#> (\_ -> emptyElem))
-      where
-        numEmpty = max 0 (minWidgets - (length oldArr))
-        dummyArr = if numEmpty < 1 then [] else (1 .. numEmpty)
+    initVals = (mkItems 0 oldArr) <> (mkItemsEmpty (length oldArr) numEmpty)
+      where numEmpty = max 0 (minWidgets - (length oldArr))
     mkItemView :: Item a -> Signal HTML (Item a)
     mkItemView item = case item of
-      Delete _ ->  step (Delete Nothing) mempty
+      Delete _ ->  step (delItem item) mempty
       Keep _ -> mkItemViewDel item
     mkItemViewDel :: Item a -> Signal HTML (Item a)
     mkItemViewDel item = D.li_ [] do
       curVal <- mkWidget $ toMaybe item
-      newItem <- delButton $ Keep curVal
+      newItem <- delButton $ Keep $ Tuple curVal (itemIx item)
       pure newItem
     delButton :: Item a -> Signal HTML (Item a)
     delButton item = step item $ do
-      delMay <- (Delete $ toMaybe item) <$ D.button [P.onClick] [D.text "Delete"]
+      delMay <- (delItem item) <$ D.button [P.onClick] [D.text "Delete"]
       pure $ delButton delMay
     arrayViewLoop :: Int -> Array (Item a) ->
       Signal HTML (Tuple Int (Array (Item a)))
@@ -314,14 +340,14 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       D.div_ [] do
         let widgCountIn' = fst tupIn
         let mayArr' = snd tupIn
-        oneOrZero <- step 0 $
+        emptyArrLen <- step 0 $
           (pure 1) <$ D.button [P.onClick] [D.text "Add item"]
         mayArrNewUnfiltered <- traverse mkItemView mayArr'
         let mayArrNew = filter isKeep mayArrNewUnfiltered
-        let widgCountNew = length mayArrNew + oneOrZero
-        let emptyArrLen = max 0 oneOrZero
-        emptyArr <- traverse mkItemViewDel (replicate emptyArrLen emptyElem)
-        -- _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
+        let widgCountNew = length mayArrNew + emptyArrLen
+        emptyArr <- traverse mkItemViewDel $
+          (mkItemsEmpty (length mayArrNew) emptyArrLen)
+        _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
 
 nonEmptyArrayView :: ∀ a. CtrlSignal HTML (Maybe a) ->
@@ -409,3 +435,6 @@ makeDateTime year month day hour minute second millisecond =
         (fromMaybe bottom $ toEnum minute )
         (fromMaybe bottom $ toEnum second )
         (fromMaybe bottom $ toEnum millisecond))
+
+safeRange :: Int -> Int -> Array Int
+safeRange i f = if f < i then [] else (i .. f)
