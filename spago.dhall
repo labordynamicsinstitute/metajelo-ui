@@ -21,6 +21,7 @@ You can edit this file as you like.
     , "option"
     , "profunctor"
     , "stringutils"
+    , "unordered-collections"
     , "url-validator"
     , "variant"
     ]

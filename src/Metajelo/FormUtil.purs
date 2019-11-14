@@ -26,6 +26,7 @@ import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
+import Data.Hashable (hash)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, isJust, maybe)
 import Data.Monoid (class Monoid, mempty)
 import Data.Newtype (class Newtype)
@@ -311,7 +312,7 @@ isKeep :: ∀ a. Item a -> Boolean
 isKeep (Keep _) = true
 isKeep _ = false
 
-arrayView :: ∀ a. CtrlSignal HTML (Maybe a) -> CtrlSignal HTML (Tuple Int (Array a))
+arrayView :: ∀ a. Show a => CtrlSignal HTML (Maybe a) -> CtrlSignal HTML (Tuple Int (Array a))
 arrayView mkWidget oldArrTup = D.div_ [] do
   mayArrTup <- arrayViewLoop minWidgets initVals
   pure $ second (catMaybes <<< (map toMaybe)) mayArrTup
@@ -326,7 +327,7 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       Delete _ ->  step (delItem item) mempty
       Keep _ -> mkItemViewDel item
     mkItemViewDel :: Item a -> Signal HTML (Item a)
-    mkItemViewDel item = D.li_ [P.key itemKey] do
+    mkItemViewDel item = D.li_ [P.key $ show $ hash $ show $ toMaybe item] do
       curVal <- mkWidget $ toMaybe item
       newItem <- delButton $ Keep $ Tuple curVal (itemIx item)
       pure newItem
@@ -350,7 +351,7 @@ arrayView mkWidget oldArrTup = D.div_ [] do
         _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
 
-nonEmptyArrayView :: ∀ a. CtrlSignal HTML (Maybe a) ->
+nonEmptyArrayView :: ∀ a. Show a => CtrlSignal HTML (Maybe a) ->
   CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray a)))
 nonEmptyArrayView mkWidget oldNeArrMay = do
   arrayA <- arrayView mkWidget (second (foldf toArray) oldNeArrMay)
