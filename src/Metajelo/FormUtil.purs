@@ -14,7 +14,7 @@ import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bounded (bottom)
 import Data.Date (canonicalDate)
-import Data.DateTime (DateTime(..))
+import Data.DateTime (DateTime(..), time)
 import Data.Either (Either(..), hush)
 import Data.Formatter.DateTime as FDT
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
@@ -33,7 +33,7 @@ import Data.Profunctor.Strong (second)
 import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
--- import Data.Time.Duration (Milliseconds(..)) -- What was I doing with this?
+import Data.Time.Duration (Milliseconds(..))
 import Data.Time (Time(..))
 import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
@@ -409,3 +409,19 @@ makeDateTime year month day hour minute second millisecond =
         (fromMaybe bottom $ toEnum minute )
         (fromMaybe bottom $ toEnum second )
         (fromMaybe bottom $ toEnum millisecond))
+
+-- Can base off of: https://github.com/component/debounce/blob/master/index.js
+debounce :: forall a. Milliseconds -> Boolean -> Signal a -> Signal a
+debounce t i s = do
+  timestamp <- justEffect (time initDate) nowDateTime pure
+
+{-   let leading = whenChangeTo false $ since t s
+  in sampleOn leading s
+  where
+    whenEqual value input = filter ((==) value) value input
+    whenChangeTo value input = whenEqual value $ dropRepeats input -}
+
+-- TODO: Remove once published in Concur.Core.FRP
+-- | Run an effectful computation, and do something with the result
+justEffect :: forall v a b. Monoid v => b -> Effect a -> (a -> Signal v b) -> Signal v b
+justEffect b e f = justWait b (fireOnce do liftEffect e) f
