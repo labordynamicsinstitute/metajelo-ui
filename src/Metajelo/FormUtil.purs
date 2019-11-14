@@ -290,11 +290,9 @@ arrayView mkWidget oldArrTup = D.div_ [] do
     oldArr = snd oldArrTup
     emptyElem = Keep Nothing
     initVals :: Array (Item a)
-    initVals = (Keep <<< Just <$> oldArr) <>
-      (dummyArr <#> (\_ -> emptyElem))
-      where
-        numEmpty = max 0 (minWidgets - (length oldArr))
-        dummyArr = if numEmpty < 1 then [] else (1 .. numEmpty)
+    initVals = (pure <$> oldArr) <>
+      ((safeRange 1 numEmpty) <#> (\_ -> emptyElem))
+      where numEmpty = max 0 (minWidgets - (length oldArr))
     mkItemView :: Item a -> Signal HTML (Item a)
     mkItemView item = case item of
       Delete _ ->  step (Delete Nothing) mempty
@@ -314,13 +312,12 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       D.div_ [] do
         let widgCountIn' = fst tupIn
         let mayArr' = snd tupIn
-        oneOrZero <- step 0 $
+        emptyArrLen <- step 0 $
           (pure 1) <$ D.button [P.onClick] [D.text "Add item"]
         mayArrNewUnfiltered <- traverse mkItemView mayArr'
         let mayArrNew = filter isKeep mayArrNewUnfiltered
-        let widgCountNew = length mayArrNew + oneOrZero
-        let emptyArrLen = max 0 oneOrZero
-        emptyArr <- traverse mkItemViewDel (replicate emptyArrLen emptyElem)
+        let widgCountNew = length mayArrNew + emptyArrLen
+        let emptyArr = (safeRange 1 emptyArrLen) <#> (\_ -> emptyElem)
         -- _ <- consoleShow $ length $ mayArr -- FIXME DEBUG
         pure $ Tuple widgCountNew $ mayArrNew <> emptyArr
 
@@ -409,3 +406,6 @@ makeDateTime year month day hour minute second millisecond =
         (fromMaybe bottom $ toEnum minute )
         (fromMaybe bottom $ toEnum second )
         (fromMaybe bottom $ toEnum millisecond))
+
+safeRange :: Int -> Int -> Array Int
+safeRange i f = if f < i then [] else (i .. f)
