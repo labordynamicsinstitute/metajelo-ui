@@ -127,7 +127,7 @@ textInput' tag label initVal = labelSig' tag label $ sig initVal
   where
     sig :: String -> Signal HTML String
     sig txt = step txt do
-      newTxt <- D.input [P.unsafeTargetValue <$> P.onChange]
+      newTxt <- D.input [P.unsafeTargetValue <$> P.onChange, P.value txt]
       pure $ sig newTxt
 
 -- | Reasonable defaults for filtering input text
@@ -326,10 +326,11 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       Delete _ ->  step (delItem item) mempty
       Keep _ -> mkItemViewDel item
     mkItemViewDel :: Item a -> Signal HTML (Item a)
-    mkItemViewDel item = D.li_ [] do
+    mkItemViewDel item = D.li_ [P.key itemKey] do
       curVal <- mkWidget $ toMaybe item
       newItem <- delButton $ Keep $ Tuple curVal (itemIx item)
       pure newItem
+      where itemKey = show $ itemIx item
     delButton :: Item a -> Signal HTML (Item a)
     delButton item = step item $ do
       delMay <- (delItem item) <$ D.button [P.onClick] [D.text "Delete"]
