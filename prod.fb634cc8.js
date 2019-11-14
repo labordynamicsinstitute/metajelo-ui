@@ -13637,7 +13637,7 @@ var PS = {};
     return function (d) {
       return function (l) {
         var n = function n(a) {
-          return f.step(a)(m.bind(b.widgetBind)(e.input(k.widgetLiftWidget)([C.map(h.functorProps)(c.unsafeTargetValue)(c.onChange)]))(function (a) {
+          return f.step(a)(m.bind(b.widgetBind)(e.input(k.widgetLiftWidget)([c.value(a), C.map(h.functorProps)(c.unsafeTargetValue)(c.onChange)]))(function (a) {
             return g.pure(b.widgetApplicative)(n(a));
           }));
         };
@@ -15789,4 +15789,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.9a113161.js.map
+//# sourceMappingURL=prod.fb634cc8.js.map
