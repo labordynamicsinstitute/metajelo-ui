@@ -3,7 +3,7 @@ module Metajelo.FormUtil where
 import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, loopS, step)
+import Concur.Core.FRP (Signal, debounce, display, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -129,13 +129,18 @@ labelSig widg props sigIn = D.div_ props do
   display widg
   sigIn
 
+textInputWidget :: String -> Widget HTML String
+textInputWidget txt =
+  D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
+
 textInput' :: D.El' -> String -> CtrlSignal HTML String
 textInput' tag label initVal = labelSig' tag label [] $ sig initVal
   where
     sig :: String -> Signal HTML String
-    sig txt = step txt do
+    sig txt = debounce 500.0 txt textInputWidget
+{-     sig txt = step txt do
       newTxt <- D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
-      pure $ sig newTxt
+      pure $ sig newTxt -}
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
