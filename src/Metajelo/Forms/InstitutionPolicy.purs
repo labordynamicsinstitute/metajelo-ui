@@ -21,6 +21,7 @@ import Formless as F
 import Formless.Validation (Validation, hoistFnE)
 import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
+import Metajelo.UI.CSS.ClassProps as MC
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
 import Text.URL.Validate (parsePublicURL, urlToString)
@@ -109,17 +110,18 @@ policyForm fstate = do
       }
 
 policySignal :: CtrlSignal HTML (Maybe M.InstitutionPolicy)
-policySignal instPolicyMay = labelSig' D.h3' "Institution Policy" $
-  sig instPolicyMay
-  where
-    sig ipMay = step ipMay do
-      inputs <- pure $ F.wrapInputFields $ outToInRec ipMay
-      instPolicy <- D.div' [
-        policyForm (initFormState inputs validators)
-      , foldMap ipolicyWidg ipMay
-      ]
-      liftEffect $ logShow instPolicy
-      pure $ sig $ Just instPolicy
+policySignal instPolicyMay =
+  labelSig' D.h3' "Institution Policy" [MC.institutionPolicy] $
+    sig instPolicyMay
+    where
+      sig ipMay = step ipMay do
+        inputs <- pure $ F.wrapInputFields $ outToInRec ipMay
+        instPolicy <- D.div' [
+          policyForm (initFormState inputs validators)
+        , foldMap ipolicyWidg ipMay
+        ]
+        liftEffect $ logShow instPolicy
+        pure $ sig $ Just instPolicy
 
 checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy
 checkPolicy = hoistFnE $ \form str ->
@@ -130,5 +132,6 @@ checkPolicy = hoistFnE $ \form str ->
 
  -- | The first element of the tuple is the (desired) number of policies
 policySigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray M.InstitutionPolicy)))
-policySigArray instPoliciesMay = labelSig' D.h2' "Institution Policies" $
-  nonEmptyArrayView policySignal instPoliciesMay
+policySigArray instPoliciesMay =
+  labelSig' D.h2' "Institution Policies" [MC.institutionPolicies] $
+    nonEmptyArrayView policySignal instPoliciesMay

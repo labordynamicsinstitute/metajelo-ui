@@ -16,6 +16,7 @@ You can edit this file as you like.
     , "formatters"
     , "metajelo"
     , "metajelo-web"
+    , "metajelo-ui-css-classes"
     , "naturals"
     , "now"
     , "option"

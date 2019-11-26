@@ -112,156 +112,175 @@ let mkPackage =
       https://raw.githubusercontent.com/purescript/package-sets/psc-0.13.2-20190725/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
 
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.13.3-20190831/packages.dhall sha256:852cd4b9e463258baf4e253e8524bcfe019124769472ca50b316fe93217c3a47
+      https://github.com/purescript/package-sets/releases/download/psc-0.13.4-20191110/packages.dhall sha256:563a7f694e18e6399f7f6d01f5b7e3c3345781655d99945768f48e458feb93a4
 
 let overrides = { metajelo-ui = ./spago.dhall as Location }
 
 let additions =
       { codec =
           mkPackage
-          [ "profunctor", "transformers" ]
-          "https://github.com/garyb/purescript-codec.git"
-          "v3.0.0"
+            [ "profunctor", "transformers" ]
+            "https://github.com/garyb/purescript-codec.git"
+            "v3.0.0"
       , codec-argonaut =
           mkPackage
-          [ "argonaut-core"
-          , "codec"
-          , "generics-rep"
-          , "variant"
-          , "ordered-collections"
-          , "type-equality"
-          ]
-          "https://github.com/garyb/purescript-codec-argonaut.git"
-          "v7.1.0"
+            [ "argonaut-core"
+            , "codec"
+            , "generics-rep"
+            , "variant"
+            , "ordered-collections"
+            , "type-equality"
+            ]
+            "https://github.com/garyb/purescript-codec-argonaut.git"
+            "v7.1.0"
       , concur-formless =
           mkPackage
-          [ "variant"
-          , "heterogeneous"
-          , "generics-rep"
-          , "profunctor-lenses"
-          , "concur-react"
-          ]
-          "https://github.com/ajnsit/purescript-concur-formless.git"
-          "master"
+            [ "variant"
+            , "heterogeneous"
+            , "generics-rep"
+            , "profunctor-lenses"
+            , "concur-react"
+            ]
+            "https://github.com/ajnsit/purescript-concur-formless.git"
+            "master"
+      , concur-core =
+          mkPackage
+            [ "aff"
+            , "arrays"
+            , "avar"
+            , "console"
+            , "foldable-traversable"
+            , "free"
+            , "nonempty"
+            , "profunctor-lenses"
+            , "tailrec"
+            ]
+            "https://github.com/purescript-concur/purescript-concur-core.git"
+            "v0.4.1"
       , concur-react =
           mkPackage
-          [ "aff"
-          , "arrays"
-          , "avar"
-          , "console"
-          , "foldable-traversable"
-          , "free"
-          , "nonempty"
-          , "react"
-          , "react-dom"
-          , "tailrec"
-          , "web-dom"
-          , "web-html"
-          ]
-          "https://github.com/ajnsit/purescript-concur.git"
-          "9887ce7c25699152ec138aefc2a3ba247fcef86c"
+            [ "aff"
+            , "arrays"
+            , "avar"
+            , "console"
+            , "foldable-traversable"
+            , "free"
+            , "nonempty"
+            , "react"
+            , "react-dom"
+            , "tailrec"
+            , "web-dom"
+            , "web-html"
+            ]
+            "https://github.com/purescript-concur/purescript-concur-react.git"
+            "v0.4.1"
       , enums =
           mkPackage
-          [ "control"
-          , "either"
-          , "gen"
-          , "maybe"
-          , "newtype"
-          , "nonempty"
-          , "partial"
-          , "prelude"
-          , "tuples"
-          , "unfoldable"
-          ]
-          "https://github.com/bbarker/purescript-enums.git"
-          "1979eb74baec39b5e62567948f402b4194230e9f"
+            [ "control"
+            , "either"
+            , "gen"
+            , "maybe"
+            , "newtype"
+            , "nonempty"
+            , "partial"
+            , "prelude"
+            , "tuples"
+            , "unfoldable"
+            ]
+            "https://github.com/bbarker/purescript-enums.git"
+            "1979eb74baec39b5e62567948f402b4194230e9f"
       , metajelo =
           mkPackage
-          [ "generics-rep"
-          , "naturals"
-          , "email-validate"
-          , "stringutils"
-          , "url-validator"
-          , "web-dom"
-          , "web-dom-parser"
-          , "web-dom-xpath"
-          , "xpath-like"
-          ]
-          "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-          "49a28c5c511bdd260b627151c7b898720313cc66"
+            [ "generics-rep"
+            , "naturals"
+            , "email-validate"
+            , "stringutils"
+            , "url-validator"
+            , "web-dom"
+            , "web-dom-parser"
+            , "web-dom-xpath"
+            , "xpath-like"
+            ]
+            "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
+            "49a28c5c511bdd260b627151c7b898720313cc66"
       , metajelo-web =
           mkPackage
-          [ "prelude"
-          , "concur-react"
-          , "email-validate"
-          , "foreign-object"
-          , "metajelo"
-          , "profunctor"
-          , "stringutils"
-          , "url-validator"
-          ]
-          "https://github.com/labordynamicsinstitute/metajelo-web.git"
-          "bcfddbcf3184d530eb163451f8006b90e2b02631"
+            [ "prelude"
+            , "concur-react"
+            , "email-validate"
+            , "foreign-object"
+            , "metajelo"
+            , "profunctor"
+            , "stringutils"
+            , "url-validator"
+            ]
+            "https://github.com/labordynamicsinstitute/metajelo-web.git"
+            "bcfddbcf3184d530eb163451f8006b90e2b02631"
+      , metajelo-ui-css-classes =
+          mkPackage
+            [ "prelude", "concur-core", "concur-react" ]
+            "https://github.com/labordynamicsinstitute/metajelo-ui-css-classes.git"
+            "v0.0.2"
       , naturals =
           mkPackage
-          [ "enums", "maybe", "prelude" ]
-          "https://github.com/LiamGoodacre/purescript-naturals.git"
-          "v3.0.0"
+            [ "enums", "maybe", "prelude" ]
+            "https://github.com/LiamGoodacre/purescript-naturals.git"
+            "v3.0.0"
       , option =
           mkPackage
-          [ "argonaut-codecs"
-          , "argonaut-core"
-          , "codec"
-          , "codec-argonaut"
-          , "either"
-          , "foreign"
-          , "foreign-object"
-          , "lists"
-          , "maybe"
-          , "profunctor"
-          , "prelude"
-          , "record"
-          , "record-extra"
-          , "simple-json"
-          , "transformers"
-          , "tuples"
-          , "type-equality"
-          , "unsafe-coerce"
-          ]
-          "https://github.com/bbarker/purescript-option.git"
-          "b884d27d48ebb6b4ec3a3369a69311c95b0783bf"
+            [ "argonaut-codecs"
+            , "argonaut-core"
+            , "codec"
+            , "codec-argonaut"
+            , "either"
+            , "foreign"
+            , "foreign-object"
+            , "lists"
+            , "maybe"
+            , "profunctor"
+            , "prelude"
+            , "record"
+            , "record-extra"
+            , "simple-json"
+            , "transformers"
+            , "tuples"
+            , "type-equality"
+            , "unsafe-coerce"
+            ]
+            "https://github.com/bbarker/purescript-option.git"
+            "b884d27d48ebb6b4ec3a3369a69311c95b0783bf"
       , stringutils =
           mkPackage
-          [ "strings"
-          , "partial"
-          , "arrays"
-          , "either"
-          , "maybe"
-          , "prelude"
-          , "integers"
-          ]
-          "https://github.com/menelaos/purescript-stringutils.git"
-          "v0.0.8"
+            [ "strings"
+            , "partial"
+            , "arrays"
+            , "either"
+            , "maybe"
+            , "prelude"
+            , "integers"
+            ]
+            "https://github.com/menelaos/purescript-stringutils.git"
+            "v0.0.8"
       , url-validator =
           mkPackage
-          [ "nullable" ]
-          "https://github.com/bbarker/purescript-url-validator.git"
-          "v2.1.0"
+            [ "nullable" ]
+            "https://github.com/bbarker/purescript-url-validator.git"
+            "v2.1.0"
       , web-dom-parser =
           mkPackage
-          [ "prelude", "effect", "partial", "web-dom" ]
-          "https://github.com/purescript-web/purescript-web-dom-parser.git"
-          "v6.0.0"
+            [ "prelude", "effect", "partial", "web-dom" ]
+            "https://github.com/purescript-web/purescript-web-dom-parser.git"
+            "v6.0.0"
       , web-dom-xpath =
           mkPackage
-          [ "prelude", "effect", "partial", "web-dom" ]
-          "https://github.com/purescript-web/purescript-web-dom-xpath.git"
-          "v1.2.1"
+            [ "prelude", "effect", "partial", "web-dom" ]
+            "https://github.com/purescript-web/purescript-web-dom-xpath.git"
+            "v1.2.1"
       , xpath-like =
           mkPackage
-          [ "prelude" ]
-          "https://github.com/bbarker/purescript-xpath-like.git"
-          "v3.0.0"
+            [ "prelude" ]
+            "https://github.com/bbarker/purescript-xpath-like.git"
+            "v3.0.0"
       }
 
 in  upstream // overrides // additions

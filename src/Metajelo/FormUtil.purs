@@ -114,16 +114,23 @@ menuSignal currentOptMay = step currentOptMay do
 type CtrlSignal v a = a -> Signal v a
 
 -- | Prepend a label heading to a siginal
-labelSig' :: forall a. D.El' -> String -> Signal HTML a -> Signal HTML a
-labelSig' tag label sigIn = labelSig (tag [D.text label]) sigIn
+labelSig' :: ∀ a. D.El'
+  -> String
+  -> Array (P.ReactProps a)
+  -> Signal HTML a
+  -> Signal HTML a
+labelSig' tag label props sigIn = labelSig (tag [D.text label]) props sigIn
 
-labelSig :: forall a. (forall b. Widget HTML b) -> Signal HTML a -> Signal HTML a
-labelSig widg sigIn = do
+labelSig :: ∀ a. (∀ b. Widget HTML b)
+  -> Array (P.ReactProps a)
+  -> Signal HTML a
+  -> Signal HTML a
+labelSig widg props sigIn = D.div_ props do
   display widg
   sigIn
 
 textInput' :: D.El' -> String -> CtrlSignal HTML String
-textInput' tag label initVal = labelSig' tag label $ sig initVal
+textInput' tag label initVal = labelSig' tag label [] $ sig initVal
   where
     sig :: String -> Signal HTML String
     sig txt = step txt do

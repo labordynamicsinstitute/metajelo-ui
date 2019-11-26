@@ -15,6 +15,7 @@ import Data.Newtype (class Newtype)
 import Formless as F
 import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
 import Metajelo.Types as M
+import Metajelo.UI.CSS.ClassProps as MC
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
 import Text.Email.Validate (EmailAddress, toString)
@@ -78,14 +79,15 @@ contactForm fstate = do
       pure {emailAddress: form.email1, contactType: form.contactType}
 
 contactSignal :: CtrlSignal HTML (Maybe M.InstitutionContact)
-contactSignal instContactMay = labelSig' D.h2' "Institution Contact" $
-  sig instContactMay
-  where
-    sig icMay = step icMay do
-      inputs <- pure $ F.wrapInputFields $ outToInRec icMay
-      instContact <- D.div' [
-        contactForm (initFormState inputs validators)
-      , foldMap contactWidg icMay
-      ]
-      pure $ sig $ Just instContact
+contactSignal instContactMay =
+  labelSig' D.h2' "Institution Contact" [MC.institutionContact] $
+    sig instContactMay
+    where
+      sig icMay = step icMay do
+        inputs <- pure $ F.wrapInputFields $ outToInRec icMay
+        instContact <- D.div' [
+          contactForm (initFormState inputs validators)
+        , foldMap contactWidg icMay
+        ]
+        pure $ sig $ Just instContact
 
