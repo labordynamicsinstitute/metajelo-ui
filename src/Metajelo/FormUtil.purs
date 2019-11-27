@@ -138,9 +138,6 @@ textInput' tag label initVal = labelSig' tag label [] $ sig initVal
   where
     sig :: String -> Signal HTML String
     sig txt = debounce 500.0 txt textInputWidget
-{-     sig txt = step txt do
-      newTxt <- D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
-      pure $ sig newTxt -}
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)

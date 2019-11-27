@@ -23,7 +23,7 @@ import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatX
   urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
-import Metajelo.UI.CSS.ClassProps as MC
+import Metajelo.CSS.UI.ClassProps as MC
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
@@ -36,7 +36,6 @@ runFormSPA divId = runWidgetInDom divId page
 
 page :: ∀ a. Widget HTML a
 page = do
-
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
    --D.text "Hi"
@@ -205,8 +204,9 @@ accumulateSuppProd prodOptMay = labelSig' D.h1' "Product" [MC.product] do
     ]
 
 supProdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialProds))
-supProdSigArray prodsMay = labelSig' D.h1' "Supplementary Products" [MC.products] $
-  nonEmptyArrayView accumulateSuppProd prodsMay
+supProdSigArray prodsMay =
+  labelSig (D.span [MC.productsHeader] []) [MC.productList] $
+    nonEmptyArrayView accumulateSuppProd prodsMay
 
 accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
 accumulateLocation locOptMay = labelSig' D.h1' "Location" [MC.location] do
@@ -289,7 +289,7 @@ accumulateIdent idLabel oldId =
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
 accumulateRelatedIdent oldIdMay =
-  labelSig' D.h3' "Related Identifier: " [MC.relatedIdentifier] do
+  labelSig' D.h3' "Related Identifier: " [MC.relatedId] do
     idMay <- textInput D.span' "Id: " $
       Opt.get (SProxy :: _ "id") oldId
     idTypeMay <- labelSig' D.span' "Identifier Type" [] $ menuSignal $
@@ -305,7 +305,7 @@ accumulateRelatedIdent oldIdMay =
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
 relIdSigArray relIdsMay =
-  labelSig' D.h2' "Related Identifiers" [MC.relatedIdentifiers] $
+  labelSig (D.span [MC.relatedIdsHeader] []) [MC.relatedIds] $
     nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
