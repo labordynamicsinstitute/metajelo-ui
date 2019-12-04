@@ -21,7 +21,7 @@ import Formless as F
 import Formless.Validation (Validation, hoistFnE)
 import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
-import Metajelo.UI.CSS.ClassProps as MC
+import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
 import Text.URL.Validate (parsePublicURL, urlToString)

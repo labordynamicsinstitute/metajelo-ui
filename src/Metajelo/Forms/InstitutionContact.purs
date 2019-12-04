@@ -15,7 +15,7 @@ import Data.Newtype (class Newtype)
 import Formless as F
 import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, errorDisplay, formSaveButton, initFormState, labelSig', menu)
 import Metajelo.Types as M
-import Metajelo.UI.CSS.ClassProps as MC
+import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.Validation as V
 import Metajelo.View (contactWidg)
 import Text.Email.Validate (EmailAddress, toString)

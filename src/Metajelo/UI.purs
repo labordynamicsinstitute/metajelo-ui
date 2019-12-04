@@ -305,11 +305,11 @@ accumulateRelatedIdent oldIdMay =
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
 relIdSigArray relIdsMay =
-  labelSig (D.span [MC.relatedIdsHeader] []) [MC.relatedIds] $
+  labelSig (D.span [MC.relatedIdsHeader] []) [MC.relatedIdList] $
     nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
-accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" [MC.basicMetaData] do
+accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" [MC.basicMetadata] do
   titleMay <- textInput D.span' "Title: " $
     Opt.get (SProxy :: _ "title") oldBMD
   creatorMay <- textInput D.span' "Creator: " $
