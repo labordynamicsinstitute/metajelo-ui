@@ -5,10 +5,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "testbrowser": "../scripts/testbrowser",
-    "clean": "rimraf output .cache .psci_modules .pulp-cache .spago dist prod testdist",
+    "clean": "rimraf output .cache .psci_modules .pulp-cache .spago dist prod testdist metajelo-ui-css-classes",
     "build": "spago build",
     "debug": "./scripts/debug",
     "prod": "./scripts/prod",
+    "getcss": "./scripts/getcss",
     "parcel": "parcel build --public-url ./ prod/index.html",
     "start": "spago build && parcel --no-hmr --public-url ./ static/index.html",
     "watch": "spago build && parcel watch static/index.html"

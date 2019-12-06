@@ -12,7 +12,8 @@ generated-docs/
 .purs*
 .psa*
 .spago/
-
+css
+metajelo-ui-css-classes
 prod/
 prod/css
 
