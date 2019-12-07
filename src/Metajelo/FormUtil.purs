@@ -133,7 +133,7 @@ textInputWidget :: String -> Widget HTML String
 textInputWidget txt =
   D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
 
--- TODO: remove the first two arguments from textInput' and textInput
+-- TODO: remove the first two arguments from textInput', textInput, and urlInput
 textInput' :: D.El' -> String -> CtrlSignal HTML String
 textInput' tag label initVal = labelSig' tag label [] $ sig initVal
   where

@@ -252,30 +252,29 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
     ]
 
 accumulateSustain :: CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
-accumulateSustain oldSust =
-  labelSig' D.h3' "Institution Sustainability:" [MC.sustainability] do
-    missionUrl_Ei <- urlInput D.span' "Mission Statement URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
-    let missionUrlMay = hush missionUrl_Ei
-    fundingUrl_Ei <- urlInput D.span' "Funding Statement URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
-    let fundingUrlMay = hush fundingUrl_Ei
-    pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
-        (Just missionUrl_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
-        missionUrlMay
-      get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
-        (Just fundingUrl_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
-        fundingUrlMay
-    ) oldSust
+accumulateSustain oldSust = D.div_ [MC.sustainability] do
+  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput D.span' "" $
+    Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
+  let missionUrlMay = hush missionUrl_Ei
+  fundingUrl_Ei <-  D.span_ [MC.fundingStatement] $ urlInput D.span' "" $
+    Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
+  let fundingUrlMay = hush fundingUrl_Ei
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
+      (Just missionUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
+      missionUrlMay
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
+      (Just fundingUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
+      fundingUrlMay
+  ) oldSust
 
 accumulateIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent oldId = D.div_ [MC.identifier] do
-  idMay <- textInput D.span' "Id: " $
+  idMay <- D.span_ [MC.id] $ textInput D.span' "" $
     Opt.get (SProxy :: _ "id") oldId
-  idTypeMay <- labelSig' D.span' "Identifier Type" [] $ menuSignal $
+  idTypeMay <- D.span_ [MC.idType] $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
@@ -283,19 +282,18 @@ accumulateIdent oldId = D.div_ [MC.identifier] do
   ) oldId
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
-accumulateRelatedIdent oldIdMay =
-  labelSig' D.h3' "Related Identifier: " [MC.relatedId] do
-    idMay <- textInput D.span' "Id: " $
-      Opt.get (SProxy :: _ "id") oldId
-    idTypeMay <- labelSig' D.span' "Identifier Type" [] $ menuSignal $
-      Opt.get (SProxy :: _ "idType") oldId
-    relTypeMay <- labelSig' D.span' "Relation Type" [] $ menuSignal $
-      Opt.get (SProxy :: _ "relType") oldId
-    pure $ Just $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-      get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
-      get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
-    ) oldId
+accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
+  idMay <- D.span_ [MC.id] $ textInput D.span' "" $
+    Opt.get (SProxy :: _ "id") oldId
+  idTypeMay <- D.span_ [MC.idType] $ menuSignal $
+    Opt.get (SProxy :: _ "idType") oldId
+  relTypeMay <- D.span_ [MC.relType] $ menuSignal $
+    Opt.get (SProxy :: _ "relType") oldId
+  pure $ Just $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
+  ) oldId
   where oldId = (fromMaybe Opt.empty oldIdMay)
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
