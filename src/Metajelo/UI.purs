@@ -302,12 +302,12 @@ relIdSigArray relIdsMay = D.span_ [MC.relatedIdsHeader] do
     nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
-accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" [MC.basicMetadata] do
-  titleMay <- textInput D.span' "Title: " $
+accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
+  titleMay <- D.span_ [MC.title] $ textInput D.span' "" $
     Opt.get (SProxy :: _ "title") oldBMD
-  creatorMay <- textInput D.span' "Creator: " $
+  creatorMay <- D.span_ [MC.creator] $ textInput D.span' "" $
     Opt.get (SProxy :: _ "creator") oldBMD
-  pubYearMay <- textInput D.span' "Publication Year: " $
+  pubYearMay <- D.span_ [MC.pubyear] $ textInput D.span' "" $
     Opt.get (SProxy :: _ "publicationYear") oldBMD
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
