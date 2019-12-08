@@ -23,9 +23,9 @@ import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatX
   urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
-import Metajelo.CSS.UI.ClassNames as MCN
+-- import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
-import Metajelo.CSS.UI.Util (cList)
+-- import Metajelo.CSS.UI.Util (cList)
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
@@ -316,11 +316,11 @@ accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
   ) oldBMD
 
 accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
-accumulateResType oldRT = labelSig' D.h3' "Resource Type" [MC.resourceType] do
-  descMay <- textInput D.span' "Description: " $
-    join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
-  genTypMay <- labelSig' D.span' "General Type: " [] $ menuSignal $
+accumulateResType oldRT = D.div_ [MC.resourceType] do
+  genTypMay <- D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
+  descMay <- D.span_ [MC.resourceTypeDescr] $ textInput D.span' "" $
+    join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "description") (toString <$> descMay)
     get >>= Opt.maySetOptState (SProxy :: _ "generalType") genTypMay
