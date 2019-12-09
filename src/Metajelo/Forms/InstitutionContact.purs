@@ -62,13 +62,13 @@ validators = InstContactForm {
 contactForm :: FState -> Widget HTML M.InstitutionContact
 contactForm fstate = do
   query <- D.div' [
-      D.div' [D.text "Email"]
-    , D.input [
-        P.defaultValue $ F.getInput proxies.email1 fstate.form
+    D.input [
+        MC.contactEmail
+      , P.defaultValue $ F.getInput proxies.email1 fstate.form
       , (F.setValidate proxies.email1 <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.email1 fstate.form
-    , D.div' [D.text "Contact type: ",  menu fstate.form proxies.contactType]
+    , D.span_ [MC.contactType] $ menu fstate.form proxies.contactType
     , D.div' [ F.submit <$ formSaveButton fstate]
     ]
   res <- F.eval query fstate
@@ -79,8 +79,7 @@ contactForm fstate = do
       pure {emailAddress: form.email1, contactType: form.contactType}
 
 contactSignal :: CtrlSignal HTML (Maybe M.InstitutionContact)
-contactSignal instContactMay =
-  labelSig' D.h2' "Institution Contact" [MC.institutionContact] $
+contactSignal instContactMay = D.div_ [MC.institutionContact] do
     sig instContactMay
     where
       sig icMay = step icMay do
