@@ -21,7 +21,7 @@ import Formless as F
 import Formless.Validation (Validation, hoistFnE)
 import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
 import Metajelo.Types as M
-import Metajelo.UI.CSS.ClassProps as MC
+import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.Validation as V
 import Metajelo.View (ipolicyWidg)
 import Text.URL.Validate (parsePublicURL, urlToString)
@@ -88,14 +88,14 @@ validators = InstPolicyForm {
 policyForm :: FState -> Widget HTML M.InstitutionPolicy
 policyForm fstate = do
   query <- D.div' [
-      D.div' [D.text "Policy: ",  menu fstate.form proxies.polPolType]
+      D.span_ [MC.policy] $ menu fstate.form proxies.polPolType
     , D.input [
         P.defaultValue $ F.getInput proxies.policy fstate.form
       , (F.setValidate proxies.policy <<< P.unsafeTargetValue) <$> P.onChange
       ]
     , errorDisplay $ F.getError proxies.policy fstate.form
-    , D.div' [D.text "Policy type: ",  menu fstate.form proxies.policyType]
-    , D.div' [D.text "Applies to product? ",  menu fstate.form proxies.appliesToProd]
+    , D.span_ [MC.policyType] $ menu fstate.form proxies.policyType
+    , D.span_ [MC.applies] $ menu fstate.form proxies.appliesToProd
     , D.div' [ F.submit <$ formSaveButton fstate]
     ]
   res <- F.eval query fstate
@@ -110,18 +110,17 @@ policyForm fstate = do
       }
 
 policySignal :: CtrlSignal HTML (Maybe M.InstitutionPolicy)
-policySignal instPolicyMay =
-  labelSig' D.h3' "Institution Policy" [MC.institutionPolicy] $
-    sig instPolicyMay
-    where
-      sig ipMay = step ipMay do
-        inputs <- pure $ F.wrapInputFields $ outToInRec ipMay
-        instPolicy <- D.div' [
-          policyForm (initFormState inputs validators)
-        , foldMap ipolicyWidg ipMay
-        ]
-        liftEffect $ logShow instPolicy
-        pure $ sig $ Just instPolicy
+policySignal instPolicyMay = D.div_ [MC.institutionPolicy] do
+  sig instPolicyMay
+  where
+    sig ipMay = step ipMay do
+      inputs <- pure $ F.wrapInputFields $ outToInRec ipMay
+      instPolicy <- D.div' [
+        policyForm (initFormState inputs validators)
+      , foldMap ipolicyWidg ipMay
+      ]
+      liftEffect $ logShow instPolicy
+      pure $ sig $ Just instPolicy
 
 checkPolicy :: ∀ m. Monad m => Validation InstPolicyForm m String String M.Policy
 checkPolicy = hoistFnE $ \form str ->
@@ -132,6 +131,5 @@ checkPolicy = hoistFnE $ \form str ->
 
  -- | The first element of the tuple is the (desired) number of policies
 policySigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray M.InstitutionPolicy)))
-policySigArray instPoliciesMay =
-  labelSig' D.h2' "Institution Policies" [MC.institutionPolicies] $
-    nonEmptyArrayView policySignal instPoliciesMay
+policySigArray instPoliciesMay = D.div_ [MC.institutionPolicies] do
+  nonEmptyArrayView policySignal instPoliciesMay

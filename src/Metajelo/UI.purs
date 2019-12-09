@@ -8,6 +8,7 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
+import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
@@ -23,7 +24,9 @@ import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatX
   urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
-import Metajelo.UI.CSS.ClassProps as MC
+-- import Metajelo.CSS.UI.ClassNames as MCN
+import Metajelo.CSS.UI.ClassProps as MC
+-- import Metajelo.CSS.UI.Util (cList)
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
@@ -36,7 +39,6 @@ runFormSPA divId = runWidgetInDom divId page
 
 page :: ∀ a. Widget HTML a
 page = do
-
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
    --D.text "Hi"
@@ -101,65 +103,61 @@ type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
 type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
 
 accumulateMetajeloRecord ::  Signal HTML (Opt.Option MetajeloRecordRowOpts)
-accumulateMetajeloRecord = labelSig' D.h1' "Metajelo Record Form" [MC.record] $
-  loopS Opt.empty \recOpt -> D.div_ [] do
-    idOpt <- accumulateIdent "Record Identifier" $
-      getOpt (SProxy :: _ "identifier_opt") recOpt
-    let idMay = Opt.getAll idOpt
-    dateMay <- textInput D.span'
-      "Original creation date of this metadata record: " $
-      Opt.get (SProxy :: _ "date") recOpt
-    -- modDateTime <- dateTimeSig
-    let modDateTime = initDate
-    let xsdDateStr_ei = formatXsdDate modDateTime
-    let xsdDateMay = hush xsdDateStr_ei -- TODO: also retain either for errors
+accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
+  idOpt <- D.div_ [MC.recordId] do
+    accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
+  let idMay = Opt.getAll idOpt
+  dateMay <- D.div_ [MC.date] <$> textInput $ Opt.get (SProxy :: _ "date") recOpt
+  -- modDateTime <- dateTimeSig
+  let modDateTime = initDate
+  let xsdDateStr_ei = formatXsdDate modDateTime
+  let xsdDateMay = hush xsdDateStr_ei -- TODO: also retain either for errors
 
-    relIdsTup <- relIdSigArray $ Tuple
-      (Opt.getWithDefault 0 (SProxy :: _ "_numRelIds") recOpt)
-      (Opt.get (SProxy :: _ "relId_opts") recOpt)
-    let _numRelIds = fst relIdsTup
-    let relIdOpts = snd relIdsTup
-    let relIdsMay = join $ (map sequence) $ ((map Opt.getAll) <$> relIdOpts)
+  relIdsTup <- relIdSigArray $ Tuple
+    (Opt.getWithDefault 0 (SProxy :: _ "_numRelIds") recOpt)
+    (Opt.get (SProxy :: _ "relId_opts") recOpt)
+  let _numRelIds = fst relIdsTup
+  let relIdOpts = snd relIdsTup
+  let relIdsMay = join $ (map sequence) $ ((map Opt.getAll) <$> relIdOpts)
 
-    prodsTup <- supProdSigArray $ Tuple
-      (Opt.getWithDefault 0 (SProxy :: _ "_numSupProds") recOpt)
-      (Opt.get (SProxy :: _ "supProd_opts") recOpt)
-    let _numSupProds = fst prodsTup
-    let supProdOpts = snd prodsTup
-    let supProdsMay = join $ (map sequence) $ ((map Opt.getSubset) <$> supProdOpts)
-    newRec <- pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just idOpt)
-      get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMay
-      get >>= Opt.maySetOptState (SProxy :: _ "date") dateMay
-      get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
+  prodsTup <- supProdSigArray $ Tuple
+    (Opt.getWithDefault 0 (SProxy :: _ "_numSupProds") recOpt)
+    (Opt.get (SProxy :: _ "supProd_opts") recOpt)
+  let _numSupProds = fst prodsTup
+  let supProdOpts = snd prodsTup
+  let supProdsMay = join $ (map sequence) $ ((map Opt.getSubset) <$> supProdOpts)
+  newRec <- pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just idOpt)
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "date") dateMay
+    get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
 
-      get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
-      get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") relIdOpts
-      get >>= Opt.maySetOptState (SProxy :: _ "relatedIdentifiers") relIdsMay
+    get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
+    get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") relIdOpts
+    get >>= Opt.maySetOptState (SProxy :: _ "relatedIdentifiers") relIdsMay
 
-      get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
-      get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts") supProdOpts
-      get >>= Opt.maySetOptState (SProxy :: _ "supplementaryProducts") supProdsMay
-    ) recOpt
-    let newRecMay = Opt.getSubset newRec
-    display $ recWidg newRecMay
-    pure newRec
+    get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
+    get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts") supProdOpts
+    get >>= Opt.maySetOptState (SProxy :: _ "supplementaryProducts") supProdsMay
+  ) recOpt
+  let newRecMay = Opt.getSubset newRec
+  display $ recWidg newRecMay
+  pure newRec
   where
     recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
-    recWidg recMay = D.div' [
-      D.h3' [D.text "Metajelo Record preview:"]
-    , D.br'
+    recWidg recMay = D.div [MC.recPreview] [
+      D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
 
 -- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
-accumulateSuppProd prodOptMay = labelSig' D.h1' "Product" [MC.product] do
+accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   basicMdOpt <- accumulateBasicMetaData $
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
   let basicMdMay = Opt.getAll basicMdOpt
-  redIdOpt <- accumulateIdent "Resource ID" $
-    getOpt (SProxy :: _ "resourceID_opt") prodOpt
+  redIdOpt <- D.div_ [MC.resourceId] do
+    accumulateIdent $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
   let resIdMay = Opt.getAll redIdOpt
   resTypeOpt <- accumulateResType $
     getOpt (SProxy :: _ "resourceType_opt") prodOpt
@@ -198,27 +196,26 @@ accumulateSuppProd prodOptMay = labelSig' D.h1' "Product" [MC.product] do
   where
     prodOpt = fromMaybe Opt.empty prodOptMay
     prodWidg :: forall a. Maybe M.SupplementaryProduct ->  Widget HTML a
-    prodWidg prodMay = D.div' [
-      D.h3' [D.text "Product preview:"]
-    , D.br'
+    prodWidg prodMay = D.div [MC.prodPreview] [
+      D.br'
     , fold $ MV.mkSupplementaryProductWidget <$> prodMay
     ]
 
 supProdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialProds))
-supProdSigArray prodsMay = labelSig' D.h1' "Supplementary Products" [MC.products] $
-  nonEmptyArrayView accumulateSuppProd prodsMay
+supProdSigArray prodsMay = D.span_ [MC.productsHeader] do
+  D.div_ [MC.productList] $ nonEmptyArrayView accumulateSuppProd prodsMay
 
 accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
-accumulateLocation locOptMay = labelSig' D.h1' "Location" [MC.location] do
-  identOpt <- accumulateIdent "Identifier" $
+accumulateLocation locOptMay = D.div_ [MC.location] do
+  identOpt <- D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
-  instNameMay <- textInput D.span' "Institution Name: " $
+  instNameMay <- textInput $
     Opt.get (SProxy :: _ "institutionName") locOpt
-  instTypeMay <- labelSig' D.h3' "Institution Type" [] $ menuSignal $
+  instTypeMay <- D.span_ [MC.institutionType] $ menuSignal $
     Opt.get (SProxy :: _ "institutionType") locOpt
   display D.br'
-  sOrgMay <- textInput D.span' "Super Organization (optional): " $
+  sOrgMay <- D.span_ [MC.superOrg] $ textInput $
     join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
   icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
   sustainOpt <- accumulateSustain $ getOpt (SProxy :: _ "iSustain_opt") locOpt
@@ -228,7 +225,7 @@ accumulateLocation locOptMay = labelSig' D.h1' "Location" [MC.location] do
     (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
   let _numPolicies = fst polsMayTup
   let polsMay = snd polsMayTup
-  versioning <- labelSig' D.span' "versioning? " [] $ checkBoxS $
+  versioning <- D.span_ [MC.versioning] $ checkBoxS $
     Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
   newLoc <- pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt") (Just identOpt)
@@ -249,72 +246,66 @@ accumulateLocation locOptMay = labelSig' D.h1' "Location" [MC.location] do
   where
     locOpt = fromMaybe Opt.empty locOptMay
     locWidg :: forall a. Maybe M.Location ->  Widget HTML a
-    locWidg locMay = D.div' [
-      D.h3' [D.text "Location preview:"]
-    , D.br'
+    locWidg locMay = D.div [MC.locPreview] [
+      D.br'
     , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
     ]
 
 accumulateSustain :: CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
-accumulateSustain oldSust =
-  labelSig' D.h3' "Institution Sustainability:" [MC.sustainability] do
-    missionUrl_Ei <- urlInput D.span' "Mission Statement URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
-    let missionUrlMay = hush missionUrl_Ei
-    fundingUrl_Ei <- urlInput D.span' "Funding Statement URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
-    let fundingUrlMay = hush fundingUrl_Ei
-    pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
-        (Just missionUrl_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
-        missionUrlMay
-      get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
-        (Just fundingUrl_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
-        fundingUrlMay
-    ) oldSust
+accumulateSustain oldSust = D.div_ [MC.sustainability] do
+  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput $
+    Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
+  let missionUrlMay = hush missionUrl_Ei
+  fundingUrl_Ei <-  D.span_ [MC.fundingStatement] $ urlInput $
+    Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
+  let fundingUrlMay = hush fundingUrl_Ei
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
+      (Just missionUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "missionStatementURL")
+      missionUrlMay
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
+      (Just fundingUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingStatementURL")
+      fundingUrlMay
+  ) oldSust
 
-accumulateIdent :: String -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
-accumulateIdent idLabel oldId =
-  labelSig' D.h3' idLabel [MC.identifier] do
-    idMay <- textInput D.span' "Id: " $
-      Opt.get (SProxy :: _ "id") oldId
-    idTypeMay <- labelSig' D.span' "Identifier Type" [] $ menuSignal $
-      Opt.get (SProxy :: _ "idType") oldId
-    pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-      get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
-    ) oldId
+accumulateIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
+accumulateIdent oldId = D.div_ [MC.identifier] do
+  idMay <- D.span_ [MC.id] $ textInput $ Opt.get (SProxy :: _ "id") oldId
+  idTypeMay <- D.span_ [MC.idType] $ menuSignal $
+    Opt.get (SProxy :: _ "idType") oldId
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+  ) oldId
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
-accumulateRelatedIdent oldIdMay =
-  labelSig' D.h3' "Related Identifier: " [MC.relatedIdentifier] do
-    idMay <- textInput D.span' "Id: " $
-      Opt.get (SProxy :: _ "id") oldId
-    idTypeMay <- labelSig' D.span' "Identifier Type" [] $ menuSignal $
-      Opt.get (SProxy :: _ "idType") oldId
-    relTypeMay <- labelSig' D.span' "Relation Type" [] $ menuSignal $
-      Opt.get (SProxy :: _ "relType") oldId
-    pure $ Just $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-      get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
-      get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
-    ) oldId
+accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
+  idMay <- D.span_ [MC.id] $ textInput $ Opt.get (SProxy :: _ "id") oldId
+  idTypeMay <- D.span_ [MC.idType] $ menuSignal $
+    Opt.get (SProxy :: _ "idType") oldId
+  relTypeMay <- D.span_ [MC.relType] $ menuSignal $
+    Opt.get (SProxy :: _ "relType") oldId
+  pure $ Just $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
+  ) oldId
   where oldId = (fromMaybe Opt.empty oldIdMay)
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
-relIdSigArray relIdsMay =
-  labelSig' D.h2' "Related Identifiers" [MC.relatedIdentifiers] $
+relIdSigArray relIdsMay = D.span_ [MC.relatedIdsHeader] do
+  D.div_ [MC.relatedIdList] $
     nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
-accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" [MC.basicMetaData] do
-  titleMay <- textInput D.span' "Title: " $
+accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
+  titleMay <- D.span_ [MC.title] $ textInput $
     Opt.get (SProxy :: _ "title") oldBMD
-  creatorMay <- textInput D.span' "Creator: " $
+  creatorMay <- D.span_ [MC.creator] $ textInput $
     Opt.get (SProxy :: _ "creator") oldBMD
-  pubYearMay <- textInput D.span' "Publication Year: " $
+  pubYearMay <- D.span_ [MC.pubyear] $ textInput $
     Opt.get (SProxy :: _ "publicationYear") oldBMD
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
@@ -323,42 +314,43 @@ accumulateBasicMetaData oldBMD = labelSig' D.h3' "Basic Metadata" [MC.basicMetaD
   ) oldBMD
 
 accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
-accumulateResType oldRT = labelSig' D.h3' "Resource Type" [MC.resourceType] do
-  descMay <- textInput D.span' "Description: " $
-    join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
-  genTypMay <- labelSig' D.span' "General Type: " [] $ menuSignal $
+accumulateResType oldRT = D.div_ [MC.resourceType] do
+  genTypMay <- D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
+  descMay <- D.span_ [MC.resourceTypeDescr] $ textInput $
+    join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "description") (toString <$> descMay)
     get >>= Opt.maySetOptState (SProxy :: _ "generalType") genTypMay
   ) oldRT
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
-formatSignal formatMay = textInput D.h3' "Format: " formatMay
+formatSignal formatMay = D.div_ [MC.format] do
+  tooltipS $ textInput formatMay
 
 formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
-formatSigArray formats = labelSig (D.div' [
-  D.h2' [D.text "Formats"], D.text tipText
-]) [] $ arrayView formatSignal formats
-  where
-    tipText = "Technical format of the resource." <>
-      "Use file extension or MIME type where possible."
+formatSigArray formats = D.div_ [MC.formatList] $ arrayView formatSignal formats
 
 accumulateResMdSource :: CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
-accumulateResMdSource oldRMDS =
-  labelSig' D.h3' "Resource Metadata Source" [MC.resourceMDSource] do
-    url_Ei <- urlInput D.span' "URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
-    let urlMay = hush url_Ei
-    relTypMay <- labelSig' D.span' "Relation Type: " [] $ menuSignal $
-      Opt.get (SProxy :: _ "relationType") oldRMDS
-    pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
-        (Just url_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "url")
-        urlMay
-      get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
-    ) oldRMDS
+accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
+  url_Ei <- D.span_ [MC.url] $ urlInput $
+    Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
+  let urlMay = hush url_Ei
+  relTypMay <- D.span_ [MC.relType] $ menuSignal $
+    Opt.get (SProxy :: _ "relationType") oldRMDS
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
+      (Just url_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "url")
+      urlMay
+    get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
+  ) oldRMDS
+
+tooltip :: forall a. Widget HTML a
+tooltip = D.div_ [MC.tooltip] empty
+
+tooltipS :: forall a. Signal HTML a -> Signal HTML a
+tooltipS sigIn = D.div_ [MC.tooltip] sigIn
 
 -- TODO: PR to purescript-option
 getOpt ::
