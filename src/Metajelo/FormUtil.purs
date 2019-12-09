@@ -134,11 +134,14 @@ textInputWidget txt =
   D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
 
 -- TODO: remove the first two arguments from textInput', textInput, and urlInput
-textInput' :: D.El' -> String -> CtrlSignal HTML String
-textInput' tag label initVal = labelSig' tag label [] $ sig initVal
+textInput' :: CtrlSignal HTML String
+textInput' initVal = sig initVal
   where
     sig :: String -> Signal HTML String
-    sig txt = debounce 500.0 txt textInputWidget
+    sig txt = step txt do
+      newTxt <- textInputWidget txt
+      pure $ sig newTxt
+    -- sig txt = debounce 500.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -146,13 +149,12 @@ textFilter txtSig = do
   txt <- txtSig
   pure $ fromString $ trim txt
 
-textInput :: D.El' -> String -> CtrlSignal HTML (Maybe NonEmptyString)
-textInput tag label iVal = textFilter $ textInput' tag label
-  (foldf toString iVal)
+textInput :: CtrlSignal HTML (Maybe NonEmptyString)
+textInput iVal = textFilter $ textInput' (foldf toString iVal)
 
-urlInput :: D.El' -> String -> CtrlSignal HTML (Either String URL)
-urlInput tag label iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput tag label (fromString prevTxt)
+urlInput :: CtrlSignal HTML (Either String URL)
+urlInput iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
   urlEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> parsePublicURL $ toString txt

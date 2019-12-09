@@ -107,8 +107,7 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
   idOpt <- D.div_ [MC.recordId] do
     accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
-  dateMay <- D.div_ [MC.date] <$> textInput D.span' "" $
-    Opt.get (SProxy :: _ "date") recOpt
+  dateMay <- D.div_ [MC.date] <$> textInput $ Opt.get (SProxy :: _ "date") recOpt
   -- modDateTime <- dateTimeSig
   let modDateTime = initDate
   let xsdDateStr_ei = formatXsdDate modDateTime
@@ -211,12 +210,12 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
   identOpt <- D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
-  instNameMay <- textInput D.span' "" $
+  instNameMay <- textInput $
     Opt.get (SProxy :: _ "institutionName") locOpt
   instTypeMay <- D.span_ [MC.institutionType] $ menuSignal $
     Opt.get (SProxy :: _ "institutionType") locOpt
   display D.br'
-  sOrgMay <- D.span_ [MC.superOrg] $ textInput D.span' "" $
+  sOrgMay <- D.span_ [MC.superOrg] $ textInput $
     join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
   icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
   sustainOpt <- accumulateSustain $ getOpt (SProxy :: _ "iSustain_opt") locOpt
@@ -254,10 +253,10 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
 
 accumulateSustain :: CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
 accumulateSustain oldSust = D.div_ [MC.sustainability] do
-  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput D.span' "" $
+  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
   let missionUrlMay = hush missionUrl_Ei
-  fundingUrl_Ei <-  D.span_ [MC.fundingStatement] $ urlInput D.span' "" $
+  fundingUrl_Ei <-  D.span_ [MC.fundingStatement] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
   let fundingUrlMay = hush fundingUrl_Ei
   pure $ execState (do
@@ -273,8 +272,7 @@ accumulateSustain oldSust = D.div_ [MC.sustainability] do
 
 accumulateIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent oldId = D.div_ [MC.identifier] do
-  idMay <- D.span_ [MC.id] $ textInput D.span' "" $
-    Opt.get (SProxy :: _ "id") oldId
+  idMay <- D.span_ [MC.id] $ textInput $ Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- D.span_ [MC.idType] $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
   pure $ execState (do
@@ -284,8 +282,7 @@ accumulateIdent oldId = D.div_ [MC.identifier] do
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
 accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
-  idMay <- D.span_ [MC.id] $ textInput D.span' "" $
-    Opt.get (SProxy :: _ "id") oldId
+  idMay <- D.span_ [MC.id] $ textInput $ Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- D.span_ [MC.idType] $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
   relTypeMay <- D.span_ [MC.relType] $ menuSignal $
@@ -304,11 +301,11 @@ relIdSigArray relIdsMay = D.span_ [MC.relatedIdsHeader] do
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
 accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
-  titleMay <- D.span_ [MC.title] $ textInput D.span' "" $
+  titleMay <- D.span_ [MC.title] $ textInput $
     Opt.get (SProxy :: _ "title") oldBMD
-  creatorMay <- D.span_ [MC.creator] $ textInput D.span' "" $
+  creatorMay <- D.span_ [MC.creator] $ textInput $
     Opt.get (SProxy :: _ "creator") oldBMD
-  pubYearMay <- D.span_ [MC.pubyear] $ textInput D.span' "" $
+  pubYearMay <- D.span_ [MC.pubyear] $ textInput $
     Opt.get (SProxy :: _ "publicationYear") oldBMD
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
@@ -320,7 +317,7 @@ accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
 accumulateResType oldRT = D.div_ [MC.resourceType] do
   genTypMay <- D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
-  descMay <- D.span_ [MC.resourceTypeDescr] $ textInput D.span' "" $
+  descMay <- D.span_ [MC.resourceTypeDescr] $ textInput $
     join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "description") (toString <$> descMay)
@@ -329,14 +326,14 @@ accumulateResType oldRT = D.div_ [MC.resourceType] do
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
 formatSignal formatMay = D.div_ [MC.format] do
-  tooltipS $ textInput D.h3' "" formatMay
+  tooltipS $ textInput formatMay
 
 formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
 formatSigArray formats = D.div_ [MC.formatList] $ arrayView formatSignal formats
 
 accumulateResMdSource :: CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
 accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
-  url_Ei <- D.span_ [MC.url] $ urlInput D.span' "" $
+  url_Ei <- D.span_ [MC.url] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
   let urlMay = hush url_Ei
   relTypMay <- D.span_ [MC.relType] $ menuSignal $
