@@ -8,6 +8,7 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
+import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
@@ -327,31 +328,32 @@ accumulateResType oldRT = D.div_ [MC.resourceType] do
   ) oldRT
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
-formatSignal formatMay = textInput D.h3' "Format: " formatMay
+formatSignal formatMay = D.div_ [MC.format] do
+  tooltipS $ textInput D.h3' "" formatMay
 
 formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
-formatSigArray formats = labelSig (D.div' [
-  D.h2' [D.text "Formats"], D.text tipText
-]) [] $ arrayView formatSignal formats
-  where
-    tipText = "Technical format of the resource." <>
-      "Use file extension or MIME type where possible."
+formatSigArray formats = D.div_ [MC.formatList] $ arrayView formatSignal formats
 
 accumulateResMdSource :: CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
-accumulateResMdSource oldRMDS =
-  labelSig' D.h3' "Resource Metadata Source" [MC.resourceMDSource] do
-    url_Ei <- urlInput D.span' "URL: " $
-      Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
-    let urlMay = hush url_Ei
-    relTypMay <- labelSig' D.span' "Relation Type: " [] $ menuSignal $
-      Opt.get (SProxy :: _ "relationType") oldRMDS
-    pure $ execState (do
-      get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
-        (Just url_Ei)
-      get >>= Opt.maySetOptState (SProxy :: _ "url")
-        urlMay
-      get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
-    ) oldRMDS
+accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
+  url_Ei <- D.span_ [MC.url] $ urlInput D.span' "" $
+    Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
+  let urlMay = hush url_Ei
+  relTypMay <- D.span_ [MC.relType] $ menuSignal $
+    Opt.get (SProxy :: _ "relationType") oldRMDS
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
+      (Just url_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "url")
+      urlMay
+    get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
+  ) oldRMDS
+
+tooltip :: forall a. Widget HTML a
+tooltip = D.div_ [MC.tooltip] empty
+
+tooltipS :: forall a. Signal HTML a -> Signal HTML a
+tooltipS sigIn = D.div_ [MC.tooltip] sigIn
 
 -- TODO: PR to purescript-option
 getOpt ::
