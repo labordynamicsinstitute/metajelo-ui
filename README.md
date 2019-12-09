@@ -14,6 +14,17 @@ Feel free to include it, or modify it (renaming the file is also possible):
 <link rel="stylesheet" href="css/style.css">
 ```
 
+Rather than [buidling](#Building) metajelo-ui to get the JavaScript code, you can retrieve the latest build that is
+[running on github-pages](https://labordynamicsinstitute.github.io/metajelo-ui):
+
+```
+wget -r -np -k https://labordynamicsinstitute.github.io/metajelo-ui/
+```
+
+You can then modify the retrieved `index.html` to use the custom CSS;
+it will by default be using a minified CSS file which might have a name
+like `prod.80f5279b.css`.
+
 # Building
 
 If you have the relevant build tools intalled (npm, spago, pulp, etc.), you can
