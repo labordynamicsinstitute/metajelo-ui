@@ -17,22 +17,22 @@
   "author": "Brandon Barker <brandon.barker@cornell.edu> (https://github.com/bbarker)",
   "license": "MPL2",
   "devDependencies": {
-    "autoprefixer": "^9.6.1",
+    "autoprefixer": "^9.7.4",
     "bower": "^1.8.6",
     "cssmin": "^0.4.3",
     "cssnano": "^4.1.10",
     "google-closure-compiler": "^20190415.0.0",
     "parcel-bundler": "^1.12.4",
     "postcss-font-base64": "^1.0.5",
-    "postcss-modules": "^1.4.1",
+    "postcss-modules": "^1.5.0",
     "pulp": "^13.0.0",
-    "purescript": "^0.13.5",
+    "purescript": "^0.13.6",
     "purescript-psa": "^0.7.3",
-    "rimraf": "^2.6.3"
+    "rimraf": "^2.7.1"
   },
   "dependencies": {
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "browserslist": [
     "defaults"

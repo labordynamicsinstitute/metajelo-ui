@@ -156,7 +156,7 @@ let additions =
             , "tailrec"
             ]
             "https://github.com/purescript-concur/purescript-concur-core.git"
-            "v0.4.1"
+            "f175dd4a4f7b8904d2cc4abb51e3b5179140c294"
       , concur-react =
           mkPackage
             [ "aff"

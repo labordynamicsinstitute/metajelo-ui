@@ -137,11 +137,7 @@ textInputWidget txt =
 textInput' :: CtrlSignal HTML String
 textInput' initVal = sig initVal
   where
-    sig :: String -> Signal HTML String
-    sig txt = step txt do
-      newTxt <- textInputWidget txt
-      pure $ sig newTxt
-    -- sig txt = debounce 500.0 txt textInputWidget
+    sig txt = debounce 500.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
