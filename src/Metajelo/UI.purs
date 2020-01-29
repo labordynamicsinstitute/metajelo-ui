@@ -202,8 +202,9 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     ]
 
 supProdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialProds))
-supProdSigArray prodsMay = D.span_ [MC.productsHeader] do
-  D.div_ [MC.productList] $ nonEmptyArrayView accumulateSuppProd prodsMay
+supProdSigArray prodsMay =
+  D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
+    D.div_ [MC.productList] $ nonEmptyArrayView accumulateSuppProd prodsMay
 
 accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
 accumulateLocation locOptMay = D.div_ [MC.location] do
@@ -295,9 +296,10 @@ accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
   where oldId = (fromMaybe Opt.empty oldIdMay)
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
-relIdSigArray relIdsMay = D.span_ [MC.relatedIdsHeader] do
-  D.div_ [MC.relatedIdList] $
-    nonEmptyArrayView accumulateRelatedIdent relIdsMay
+relIdSigArray relIdsMay =
+  D.div_ [MC.relatedIds] $ D.span_ [MC.relatedIdsHeader] do
+    D.div_ [MC.relatedIdList] $
+      nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
 accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
 accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
