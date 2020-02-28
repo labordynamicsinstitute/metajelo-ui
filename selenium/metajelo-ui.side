@@ -1,0 +1,927 @@
+{
+  "id": "f68a8ebd-8b0c-4d9f-898e-d7f8a1da984b",
+  "version": "2.0",
+  "name": "metajelo-ui",
+  "url": "https://labordynamicsinstitute.github.io/metajelo-ui/",
+  "tests": [{
+    "id": "f4c93966-cbc3-4eb9-8cc5-be183cd1adb8",
+    "name": "QuickRequiredButNotMinimalData",
+    "commands": [{
+      "id": "3c5e926e-fd00-4a4b-9a9e-5f369e982555",
+      "comment": "",
+      "command": "open",
+      "target": "/metajelo-ui/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "cdaeb54e-9460-46be-893e-33a04e0c36a6",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1278x1598",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "207bb1db-7588-4228-94a7-32f14233f1e2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_id > input",
+      "targets": [
+        ["css=.metajelo-ui_id > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "09ddd00c-3d30-4584-9e5c-cc7aee3f1570",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_id > input",
+      "targets": [
+        ["css=.metajelo-ui_id > input", "css:finder"],
+        ["xpath=//input[@value='12323']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "12323"
+    }, {
+      "id": "5e08ffb7-445d-4704-82b4-91cae463a9d3",
+      "comment": "",
+      "command": "click",
+      "target": "css=select",
+      "targets": [
+        ["css=select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "08c6ebe7-e96b-4a6d-b96c-6410eacc853a",
+      "comment": "",
+      "command": "select",
+      "target": "css=select",
+      "targets": [],
+      "value": "label=ARK"
+    }, {
+      "id": "b1cfe514-25ea-4778-b07a-a83fdce66e30",
+      "comment": "",
+      "command": "click",
+      "target": "css=option:nth-child(2)",
+      "targets": [
+        ["css=option:nth-child(2)", "css:finder"],
+        ["xpath=//option[@value='ARK']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div/div/span[2]/select/option[2]", "xpath:idRelative"],
+        ["xpath=//option[2]", "xpath:position"],
+        ["xpath=//option[contains(.,'ARK')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "c72362f9-f2f0-4d1b-81c5-4808714e6a46",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_date > input",
+      "targets": [
+        ["css=.metajelo-ui_date > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "823df172-c5bf-486a-9fbd-17bba58bd9e9",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_date > input",
+      "targets": [
+        ["css=.metajelo-ui_date > input", "css:finder"],
+        ["xpath=//input[@value='10/20/2222']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": "10/20/2222"
+    }, {
+      "id": "dd869632-4f2e-4c50-833b-7947f20f10b6",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relatedIdList button",
+      "targets": [
+        ["css=.metajelo-ui_relatedIdList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Add item')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1933109e-fcf4-4e2e-9f55-a834147b3aef",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.metajelo-ui_relatedIdList button",
+      "targets": [
+        ["css=.metajelo-ui_relatedIdList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Add item')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "38d5663d-f174-4b28-887d-320d747661f5",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.metajelo-ui_relatedIdList div > button",
+      "targets": [
+        ["css=.metajelo-ui_relatedIdList div > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Add item')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "b158bd4b-57a5-43ef-86cb-1281a68078f1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relatedId input",
+      "targets": [
+        ["css=.metajelo-ui_relatedId input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span/input", "xpath:idRelative"],
+        ["xpath=//li/div/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "1266d703-b35e-4862-959f-993660c348ac",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_relatedId input",
+      "targets": [
+        ["css=.metajelo-ui_relatedId input", "css:finder"],
+        ["xpath=//input[@value='asfasdf']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span/input", "xpath:idRelative"],
+        ["xpath=//li/div/span/input", "xpath:position"]
+      ],
+      "value": "asfasdf"
+    }, {
+      "id": "77b98a48-041f-46e8-bb4d-22c29975e24a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relatedId > .metajelo-ui_idType > select",
+      "targets": [
+        ["css=.metajelo-ui_relatedId > .metajelo-ui_idType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//li/div/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "17cd760e-caa9-43b1-8d2f-6d73d5262cf6",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_relatedId > .metajelo-ui_idType > select",
+      "targets": [],
+      "value": "label=arXiv"
+    }, {
+      "id": "1544ec9d-4255-4b17-b52a-f81c36890ed7",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relatedId > .metajelo-ui_idType option:nth-child(3)",
+      "targets": [
+        ["css=.metajelo-ui_relatedId > .metajelo-ui_idType option:nth-child(3)", "css:finder"],
+        ["xpath=(//option[@value='arXiv'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span[2]/select/option[3]", "xpath:idRelative"],
+        ["xpath=//li/div/span[2]/select/option[3]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7c9c1f85-aa6f-478c-94ab-0c41e9529a8d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relType > select",
+      "targets": [
+        ["css=.metajelo-ui_relType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span[3]/select", "xpath:idRelative"],
+        ["xpath=//span[3]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "aa332b81-4df3-4089-af76-59344b6d130e",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_relType > select",
+      "targets": [],
+      "value": "label=Cites"
+    }, {
+      "id": "9b0aad59-c781-45fc-9a8c-bd0260543b8a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relType option:nth-child(3)",
+      "targets": [
+        ["css=.metajelo-ui_relType option:nth-child(3)", "css:finder"],
+        ["xpath=//option[@value='Cites']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[3]/span/div/div/div/li/div/span[3]/select/option[3]", "xpath:idRelative"],
+        ["xpath=//span[3]/select/option[3]", "xpath:position"],
+        ["xpath=//option[contains(.,'Cites')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "160e3b27-cb8c-47b8-8e83-f7b46d86fedf",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_productList button",
+      "targets": [
+        ["css=.metajelo-ui_productList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/span/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8807f943-981a-4023-976b-f2bb70346da4",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.metajelo-ui_productList button",
+      "targets": [
+        ["css=.metajelo-ui_productList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/span/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "936bb14a-b17a-429b-8602-c9b9bc1997aa",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.metajelo-ui_productList > div > div > button",
+      "targets": [
+        ["css=.metajelo-ui_productList > div > div > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/span/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "520d8757-78d8-4b01-8fea-6d61e62bae4e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_title > input",
+      "targets": [
+        ["css=.metajelo-ui_title > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2bd30d5d-ad37-4b04-b20c-bff9053f4a72",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_title > input",
+      "targets": [
+        ["css=.metajelo-ui_title > input", "css:finder"],
+        ["xpath=//input[@value='Foo Bar']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div/span/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/span/input", "xpath:position"]
+      ],
+      "value": "Foo Bar"
+    }, {
+      "id": "1ea29e40-3210-4272-b3d5-b6998835763e",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_creator > input",
+      "targets": [
+        ["css=.metajelo-ui_creator > input", "css:finder"],
+        ["xpath=//input[@value='Bob Baz']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div/span[2]/input", "xpath:idRelative"],
+        ["xpath=//span[2]/input", "xpath:position"]
+      ],
+      "value": "Bob Baz"
+    }, {
+      "id": "b48b83d2-c0d1-45e4-985e-b95faad1134e",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_pubyear > input",
+      "targets": [
+        ["css=.metajelo-ui_pubyear > input", "css:finder"],
+        ["xpath=//input[@value='1084']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div/span[3]/input", "xpath:idRelative"],
+        ["xpath=//span[3]/input", "xpath:position"]
+      ],
+      "value": "1084"
+    }, {
+      "id": "108431d8-06c3-48c0-9606-80e3219fcc74",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceId input",
+      "targets": [
+        ["css=.metajelo-ui_resourceId input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b82e947a-83f4-4bb4-a35e-a54a204b0c5d",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_resourceId input",
+      "targets": [
+        ["css=.metajelo-ui_resourceId input", "css:finder"],
+        ["xpath=//input[@value='OSDF-234']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/span/input", "xpath:position"]
+      ],
+      "value": "OSDF-234"
+    }, {
+      "id": "86c9e3a2-3c75-4ec5-98e7-e292169c3b6d",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceId select",
+      "targets": [
+        ["css=.metajelo-ui_resourceId select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//div[2]/div/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "163ecf60-5c40-4755-9273-00a2ecbfba32",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_resourceId select",
+      "targets": [],
+      "value": "label=UPC"
+    }, {
+      "id": "3873b16f-c3c2-4a08-9cd4-b3e266fc8c15",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceId option:nth-child(17)",
+      "targets": [
+        ["css=.metajelo-ui_resourceId option:nth-child(17)", "css:finder"],
+        ["xpath=(//option[@value='UPC'])[3]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[2]/select/option[17]", "xpath:idRelative"],
+        ["xpath=//div[2]/div/span[2]/select/option[17]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ec852267-6b02-4b57-96bf-89917fa5cdd9",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceTypeGen > select",
+      "targets": [
+        ["css=.metajelo-ui_resourceTypeGen > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[3]/span/select", "xpath:idRelative"],
+        ["xpath=//div[3]/span/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "cd50e208-dd87-4649-83e9-a08f10359c89",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_resourceTypeGen > select",
+      "targets": [],
+      "value": "label=Software"
+    }, {
+      "id": "ae35a872-afa9-4154-ad63-1ef20c8876e3",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceTypeGen option:nth-child(11)",
+      "targets": [
+        ["css=.metajelo-ui_resourceTypeGen option:nth-child(11)", "css:finder"],
+        ["xpath=//option[@value='Software']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[3]/span/select/option[11]", "xpath:idRelative"],
+        ["xpath=//div[3]/span/select/option[11]", "xpath:position"],
+        ["xpath=//option[contains(.,'Software')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "d1a9252b-1a17-4491-ae37-e345c95f2937",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_resourceTypeDescr > input",
+      "targets": [
+        ["css=.metajelo-ui_resourceTypeDescr > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[3]/span[2]/input", "xpath:idRelative"],
+        ["xpath=//div[3]/span[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "dafae719-7766-43c1-aa43-31a76906917d",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_resourceTypeDescr > input",
+      "targets": [
+        ["css=.metajelo-ui_resourceTypeDescr > input", "css:finder"],
+        ["xpath=//input[@value='ZANBAR']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[3]/span[2]/input", "xpath:idRelative"],
+        ["xpath=//div[3]/span[2]/input", "xpath:position"]
+      ],
+      "value": "ZANBAR"
+    }, {
+      "id": "5fb0494c-b6b1-48a6-9aa9-c2c6fb6fc47e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_formatList button",
+      "targets": [
+        ["css=.metajelo-ui_formatList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d3825039-c7cc-4c24-865d-7ed98f007182",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=.metajelo-ui_formatList button",
+      "targets": [
+        ["css=.metajelo-ui_formatList button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0a284510-aac2-4b62-ad19-541d44a1467a",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=.metajelo-ui_formatList div > button",
+      "targets": [
+        ["css=.metajelo-ui_formatList div > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[4]/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3436d356-3243-430f-9c9b-83c578aedc01",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_format",
+      "targets": [
+        ["css=.metajelo-ui_format", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/li/div", "xpath:idRelative"],
+        ["xpath=//div[4]/div/div/li/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "41ac980a-1d2e-4907-a338-94b5844f47bc",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_tooltip > input",
+      "targets": [
+        ["css=.metajelo-ui_tooltip > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/li/div/div/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "352157a3-aa44-43df-86dc-1ce705016370",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_tooltip > input",
+      "targets": [
+        ["css=.metajelo-ui_tooltip > input", "css:finder"],
+        ["xpath=//input[@value='XGML']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/li/div/div/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/input", "xpath:position"]
+      ],
+      "value": "XGML"
+    }, {
+      "id": "5ff1f38d-25a3-4b33-b1a5-8d4df27b4e98",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_url > input",
+      "targets": [
+        ["css=.metajelo-ui_url > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[5]/span/input", "xpath:idRelative"],
+        ["xpath=//div[5]/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8020e93e-fb8a-4834-b718-da8ca1ddea57",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_url > input",
+      "targets": [
+        ["css=.metajelo-ui_url > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[5]/span/input", "xpath:idRelative"],
+        ["xpath=//div[5]/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "52424d11-b092-4239-b760-02e09144e42b",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_url > input",
+      "targets": [
+        ["css=.metajelo-ui_url > input", "css:finder"],
+        ["xpath=//input[@value='https://labordynamicsinstitute.github.io/metajelo-ui/']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[5]/span/input", "xpath:idRelative"],
+        ["xpath=//div[5]/span/input", "xpath:position"]
+      ],
+      "value": "https://labordynamicsinstitute.github.io/metajelo-ui/"
+    }, {
+      "id": "9e1cf25c-950d-4085-b80d-f2157ba1f931",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relType:nth-child(2) > select",
+      "targets": [
+        ["css=.metajelo-ui_relType:nth-child(2) > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[5]/span[2]/select", "xpath:idRelative"],
+        ["xpath=//div[5]/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "57eeb9cf-e790-4e0b-83e2-490b372ba909",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_relType:nth-child(2) > select",
+      "targets": [],
+      "value": "label=IsContinuedBy"
+    }, {
+      "id": "1555915c-9669-402d-8a7c-964f19bfae8b",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_relType:nth-child(2) option:nth-child(6)",
+      "targets": [
+        ["css=.metajelo-ui_relType:nth-child(2) option:nth-child(6)", "css:finder"],
+        ["xpath=(//option[@value='IsContinuedBy'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[5]/span[2]/select/option[6]", "xpath:idRelative"],
+        ["xpath=//div[5]/span[2]/select/option[6]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "6f244914-8be6-4aba-b573-9fd19f5e693f",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId input",
+      "targets": [
+        ["css=.metajelo-ui_institutionId input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span/input", "xpath:idRelative"],
+        ["xpath=//span/div/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "74a2211e-c0ed-48e7-99b3-d9a8113921d2",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_institutionId input",
+      "targets": [
+        ["css=.metajelo-ui_institutionId input", "css:finder"],
+        ["xpath=//input[@value='CU1']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span/input", "xpath:idRelative"],
+        ["xpath=//span/div/span/input", "xpath:position"]
+      ],
+      "value": "CU1"
+    }, {
+      "id": "673bebf4-5ee3-4c2b-8547-930062576688",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId select",
+      "targets": [
+        ["css=.metajelo-ui_institutionId select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//span/div/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "0a317bf3-673c-44aa-9312-f4b244a37a50",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_institutionId select",
+      "targets": [],
+      "value": "label=URL"
+    }, {
+      "id": "4de215c2-5b11-4628-8949-c158ba848300",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId option:nth-child(18)",
+      "targets": [
+        ["css=.metajelo-ui_institutionId option:nth-child(18)", "css:finder"],
+        ["xpath=(//option[@value='URL'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span[2]/select/option[18]", "xpath:idRelative"],
+        ["xpath=//span/div/span[2]/select/option[18]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "271fcd6b-028e-409a-804a-4f95b4b5d276",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId .metajelo-ui_idType",
+      "targets": [
+        ["css=.metajelo-ui_institutionId .metajelo-ui_idType", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span[2]", "xpath:idRelative"],
+        ["xpath=//span/div/span[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c4fd3732-8624-44b4-b740-897c6df43dad",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId select",
+      "targets": [
+        ["css=.metajelo-ui_institutionId select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//span/div/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8254b27e-1a70-4c92-b040-2934b67340b8",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_institutionId select",
+      "targets": [],
+      "value": "label=ARK"
+    }, {
+      "id": "be016ae7-cb2e-4623-a31e-3483f75d32d4",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionId option:nth-child(2)",
+      "targets": [
+        ["css=.metajelo-ui_institutionId option:nth-child(2)", "css:finder"],
+        ["xpath=(//option[@value='ARK'])[4]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span/div/span[2]/select/option[2]", "xpath:idRelative"],
+        ["xpath=//span/div/span[2]/select/option[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "14b44afd-bfac-412c-aa2e-9b90195dbee5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionType > select",
+      "targets": [
+        ["css=.metajelo-ui_institutionType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select", "xpath:idRelative"],
+        ["xpath=//div[6]/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "a2e9be2d-440a-498b-9c9f-029a58021e33",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_location > input",
+      "targets": [
+        ["css=.metajelo-ui_location > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/input", "xpath:idRelative"],
+        ["xpath=//div[6]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b513b352-d612-497c-bd53-0a5afd38bff6",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_location > input",
+      "targets": [
+        ["css=.metajelo-ui_location > input", "css:finder"],
+        ["xpath=//input[@value='Cornell University']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/input", "xpath:idRelative"],
+        ["xpath=//div[6]/input", "xpath:position"]
+      ],
+      "value": "Cornell University"
+    }, {
+      "id": "5f0d962f-6e00-4e53-9a34-62d5beab4f02",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionType > select",
+      "targets": [
+        ["css=.metajelo-ui_institutionType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select", "xpath:idRelative"],
+        ["xpath=//div[6]/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f599256c-d517-4127-9181-8cdac38fefd6",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_institutionType > select",
+      "targets": [],
+      "value": "label=non-profit"
+    }, {
+      "id": "eb13f36c-cd7e-4a33-aeb5-b36c1f3f2ad0",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_institutionType option:nth-child(3)",
+      "targets": [
+        ["css=.metajelo-ui_institutionType option:nth-child(3)", "css:finder"],
+        ["xpath=//option[@value='non-profit']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select/option[3]", "xpath:idRelative"],
+        ["xpath=//div[6]/span[2]/select/option[3]", "xpath:position"],
+        ["xpath=//option[contains(.,'non-profit')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1817bef7-2303-41ab-a46d-144bb2f89176",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_superOrg > input",
+      "targets": [
+        ["css=.metajelo-ui_superOrg > input", "css:finder"],
+        ["xpath=//input[@value='']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/span[3]/input", "xpath:idRelative"],
+        ["xpath=//div[6]/span[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "409093b8-9252-4f94-b765-ca7d9c95346a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_contactEmail",
+      "targets": [
+        ["css=.metajelo-ui_contactEmail", "css:finder"],
+        ["xpath=(//input[@value=''])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "421fca42-99f7-441f-850d-e593c6d5eef0",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_contactEmail",
+      "targets": [
+        ["css=.metajelo-ui_contactEmail", "css:finder"],
+        ["xpath=//input[@value='b@b']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/div/input", "xpath:position"]
+      ],
+      "value": "b@b"
+    }, {
+      "id": "49211caa-de00-4a0a-af3b-2d9dc713a628",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_contactType > select",
+      "targets": [
+        ["css=.metajelo-ui_contactType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div/div/div/span/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/div/span/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "eab40da4-431b-4fd2-80b8-c4a0ac6820c5",
+      "comment": "",
+      "command": "select",
+      "target": "css=.metajelo-ui_contactType > select",
+      "targets": [],
+      "value": "label=dataCustodian"
+    }, {
+      "id": "781a6013-a4b6-4e8b-8c8d-d4130dd40a05",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_contactType option:nth-child(2)",
+      "targets": [
+        ["css=.metajelo-ui_contactType option:nth-child(2)", "css:finder"],
+        ["xpath=//option[@value='dataCustodian']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div/div/div/span/select/option[2]", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/div/span/select/option[2]", "xpath:position"],
+        ["xpath=//option[contains(.,'dataCustodian')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "da5d50a7-04fc-4cc9-99e8-fb37a5986445",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > button",
+      "targets": [
+        ["css=div:nth-child(3) > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[6]/div/div/div/div/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Save')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "e26c37bb-609d-4d78-8eb2-eb1c1069fa65",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_missionStatement > input",
+      "targets": [
+        ["css=.metajelo-ui_missionStatement > input", "css:finder"],
+        ["xpath=(//input[@value=''])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span/input", "xpath:idRelative"],
+        ["xpath=//div[2]/span/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "485a6820-bac9-4015-a662-737f1c5f73f5",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_missionStatement > input",
+      "targets": [
+        ["css=.metajelo-ui_missionStatement > input", "css:finder"],
+        ["xpath=(//input[@value='https://labordynamicsinstitute.github.io/metajelo-ui/'])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span/input", "xpath:idRelative"],
+        ["xpath=//div[2]/span/input", "xpath:position"]
+      ],
+      "value": "https://labordynamicsinstitute.github.io/metajelo-ui/"
+    }, {
+      "id": "bffb74a7-2c48-4747-bb19-9c6077324b69",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_fundingStatement > input",
+      "targets": [
+        ["css=.metajelo-ui_fundingStatement > input", "css:finder"],
+        ["xpath=(//input[@value=''])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/span[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4d52a93d-d568-4bd5-8ae3-ad02374b27db",
+      "comment": "",
+      "command": "type",
+      "target": "css=.metajelo-ui_fundingStatement > input",
+      "targets": [
+        ["css=.metajelo-ui_fundingStatement > input", "css:finder"],
+        ["xpath=(//input[@value='https://labordynamicsinstitute.github.io/metajelo-ui/'])[3]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/span[2]/input", "xpath:position"]
+      ],
+      "value": "https://labordynamicsinstitute.github.io/metajelo-ui/"
+    }, {
+      "id": "ac8affd0-69d8-4955-bbe4-f82077c2a494",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(1) > input:nth-child(2)",
+      "targets": [
+        ["css=div:nth-child(1) > input:nth-child(2)", "css:finder"],
+        ["xpath=(//input[@value=''])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "558d4c04-eef1-487e-8396-bbb96e91f4f9",
+      "comment": "",
+      "command": "type",
+      "target": "css=div:nth-child(1) > input:nth-child(2)",
+      "targets": [
+        ["css=div:nth-child(1) > input:nth-child(2)", "css:finder"],
+        ["xpath=//input[@value='asfd 1234']", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/input", "xpath:idRelative"],
+        ["xpath=//li/div/div/div/input", "xpath:position"]
+      ],
+      "value": "asfd 1234"
+    }, {
+      "id": "d977e203-39eb-49f1-80b1-42105ac12c61",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_policyType > select",
+      "targets": [
+        ["css=.metajelo-ui_policyType > select", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/span[2]/select", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/li/div/div/div/span[2]/select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "2ec5025e-6da5-4a08-b799-c97d85eebf49",
+      "comment": "",
+      "command": "click",
+      "target": "css=.metajelo-ui_policyType option:nth-child(1)",
+      "targets": [
+        ["css=.metajelo-ui_policyType option:nth-child(1)", "css:finder"],
+        ["xpath=(//option[@value=''])[2]", "xpath:attributes"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/span[2]/select/option", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/li/div/div/div/span[2]/select/option", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "ea222d5d-7cac-444e-a862-df64414cd183",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(5) > button",
+      "targets": [
+        ["css=div:nth-child(5) > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/li/div/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "29ad2662-d8aa-4af2-98be-ddbe50f03758",
+      "comment": "",
+      "command": "mouseOver",
+      "target": "css=div:nth-child(5) > button",
+      "targets": [
+        ["css=div:nth-child(5) > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/li/div/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "66b0a1de-7b2d-4aff-b881-23caba3fc3f1",
+      "comment": "",
+      "command": "mouseOut",
+      "target": "css=div:nth-child(5) > button",
+      "targets": [
+        ["css=div:nth-child(5) > button", "css:finder"],
+        ["xpath=//div[@id='metajelo_ui_root']/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/div/button", "xpath:idRelative"],
+        ["xpath=//div[3]/div/div/li/div/div/div/div/button", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "05627fa5-d462-4e25-b759-da7fc4693b2f",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["f4c93966-cbc3-4eb9-8cc5-be183cd1adb8"]
+  }],
+  "urls": ["https://labordynamicsinstitute.github.io/", "file:///home/brandon/workspace/metajelo-ui/dist/index.html", "https://labordynamicsinstitute.github.io/metajelo-ui/"],
+  "plugins": []
+}
