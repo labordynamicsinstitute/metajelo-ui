@@ -1,0 +1,331 @@
+{
+  "Name": "metajelo-ui-1",
+  "CreationDate": "2020-2-28",
+  "Commands": [
+    {
+      "Command": "open",
+      "Target": "file:///home/brandon/workspace/metajelo-ui/dist/index.html",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[1]/input",
+      "Value": "RecId"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[2]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[2]/select",
+      "Value": "label=arXiv"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[1]/div/span[2]/select/option[3]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[2]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[2]/input",
+      "Value": "10/2/2222"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/button",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[1]/input",
+      "Value": "RelId"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[2]/select",
+      "Value": "label=ISBN"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[2]/select/option[10]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[3]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[3]/select",
+      "Value": "label=References"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[3]/span/div/div/div/li/div/span[3]/select/option[13]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/button",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[1]/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[1]/span[1]/input",
+      "Value": "Prod Title"
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[1]/span[2]/input",
+      "Value": "Prod Creator"
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[1]/span[3]/input",
+      "Value": "11/11/1111"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[1]/input",
+      "Value": "ResId"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[2]/select",
+      "Value": "label=PMID"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[2]/div/span[2]/select/option[15]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[3]/span[1]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[3]/span[1]/select",
+      "Value": "label=Text"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[3]/span[1]/select/option[13]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[3]/span[2]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[3]/span[2]/input",
+      "Value": "asdf"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/button",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/li/div/div/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[4]/div/div/li/div/div/input",
+      "Value": "some format"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[5]/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[5]/span[1]/input",
+      "Value": "http://foo.edu"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[5]/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[5]/span[2]/select",
+      "Value": "label=IsPartOf"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[5]/span[2]/select/option[10]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[1]/div/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[1]/div/span[1]/input",
+      "Value": "LocId"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[1]/div/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[1]/div/span[2]/select",
+      "Value": "label=LSID"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[1]/div/span[2]/select/option[14]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/input",
+      "Value": "somethingsomething"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select",
+      "Value": ""
+    },
+    {
+      "Command": "select",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select",
+      "Value": "label=commercial"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[2]/select/option[2]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[3]/input",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[3]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/span[3]/input",
+      "Value": "superOrg"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[1]/div/div/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[1]/div/div/input",
+      "Value": "b@b"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[1]/div/div/div/button",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[1]",
+      "Value": ""
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[1]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[1]/input",
+      "Value": "http://foo.edu"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[2]/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[2]/span[2]/input",
+      "Value": "http://foo.edu"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/input",
+      "Value": ""
+    },
+    {
+      "Command": "type",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/input",
+      "Value": "asdf policy"
+    },
+    {
+      "Command": "click",
+      "Target": "xpath=//*[@id=\"metajelo_ui_root\"]/div/div/div[4]/span/div/div/div/li/div/div[6]/div[3]/div/div/li/div/div/div/div/button",
+      "Value": ""
+    }
+  ]
+}
