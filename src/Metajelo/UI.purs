@@ -6,18 +6,20 @@ import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS)
 import Concur.React (HTML)
 import Concur.React.DOM as D
+import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
 import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Maybe (Maybe(..), fromMaybe, maybe)
 import Data.String.NonEmpty (fromString,toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
+import Global (encodeURIComponent)
 import Metajelo.Forms as MF
 import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatXsdDate,
   initDate, labelSig, labelSig', menuSignal, nonEmptyArrayView, textInput,
@@ -26,6 +28,7 @@ import Metajelo.Types as M
 import Metajelo.View as MV
 -- import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
+import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
 -- import Metajelo.CSS.UI.Util (cList)
 import Option as Opt
 import Prim.Row as Prim.Row
@@ -40,8 +43,33 @@ runFormSPA divId = runWidgetInDom divId page
 page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
-   D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
+   D.div' [
+       downloadRecText "Foo\nBar\n"-- Example string to fail: "\xD800"
+     , D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
+     ]
    --D.text "Hi"
+
+utf8DataAttr :: String
+utf8DataAttr = "data:text/plain;charset=utf-8"
+
+downloadRecText :: forall a. String -> Widget HTML a
+downloadRecText mjStr = D.div_ [] $ do
+  let encodedMjStrMay = encodeURIComponent(mjStr)
+  maybe errorBox downloadButton encodedMjStrMay
+  where
+    downloadButton :: String -> Widget HTML a
+    downloadButton mjEncSr = D.a_ [
+        P.href $ utf8DataAttr <> "," <> mjEncSr
+      , P.download "metajelo.xml"
+      ] (D.text "Download Prototype Button")
+    errorBox = D.div_ [MWC.errorDisplayBox] $
+      D.span [MWC.errorDisplay] [D.text errorMsg]
+    errorMsg = "Couldn't encode XML, please copy to clipboard instead."
+
+-- TODO: downloadRecord :: forall a. M.MetajeloRecord -> Effect ???
+
+-- TODO: copyToClipBoard ::  forall a. M.MetajeloRecord -> Effect ???
+
 
 -- | ViewModel for MetajeloRecord
 type MetajeloRecordExtra r = (
