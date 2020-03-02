@@ -19,6 +19,7 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
+import Effect.Class (liftEffect)
 import Global (encodeURIComponent)
 import Metajelo.Forms as MF
 import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatXsdDate,
@@ -26,6 +27,7 @@ import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatX
   urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
+import Metajelo.XPaths.Write as MXW
 -- import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
@@ -65,10 +67,6 @@ downloadRecText mjStr = D.div_ [] $ do
     errorBox = D.div_ [MWC.errorDisplayBox] $
       D.span [MWC.errorDisplay] [D.text errorMsg]
     errorMsg = "Couldn't encode XML, please copy to clipboard instead."
-
--- TODO: downloadRecord :: forall a. M.MetajeloRecord -> Effect ???
-
--- TODO: copyToClipBoard ::  forall a. M.MetajeloRecord -> Effect ???
 
 
 -- | ViewModel for MetajeloRecord
@@ -174,9 +172,15 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
   where
     recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
     recWidg recMay = D.div [MC.recPreview] [
-      D.br'
+      do
+        mjStr <- liftEffect mjStrEff
+        -- TODO: make greay of mjStr is empty:
+        downloadRecText mjStr
+    , D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
+      where
+      mjStrEff = maybe (pure "") MXW.recordToString recMay
 
 -- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
