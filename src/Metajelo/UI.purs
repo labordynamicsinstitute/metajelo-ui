@@ -56,7 +56,10 @@ page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div' [
-       let mjStr = "Foo\nBar\n" in D.div' [downloadButton mjStr, copyButton mjStr]
+       let mjStr = "Foo\nBar\n" in D.div [MC.previewButtons] [
+            downloadButton mjStr
+          , copyButton mjStr
+          ]
        -- ^^ Example string to fail: "\xD800"
      , D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
      ]
@@ -77,7 +80,7 @@ downloadButton mjStr = D.div_ [] $ do
       dyn $ go cstr
       where
         go str = step str $ do
-          _ <- D.button_ [P.onClick] $ D.text "Download"
+          _ <- D.button_ [MC.downloadBtn, P.onClick] $ D.text "Download"
           _ <- liftEffect clicker
           pure $ go str
     errorBox = D.div_ [MWC.errorDisplayBox] $
@@ -85,7 +88,7 @@ downloadButton mjStr = D.div_ [] $ do
     errorMsg = "Couldn't encode XML, please copy to clipboard instead."
 
 
-mkDLAnchorAndClicker :: String -> Effect (Effect Unit) -- (Maybe HTMLElement)
+mkDLAnchorAndClicker :: String -> Effect (Effect Unit)
 mkDLAnchorAndClicker encTxt = do
   win <- DOM.window
   hdoc <- DOM.document win
@@ -110,7 +113,7 @@ copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
   where
     go str = step str $ do
-      _ <- D.button_ [P.onClick] $ D.text "Copy to Clipboard"
+      _ <- D.button_ [MC.clipBtn, P.onClick] $ D.text "Copy to Clipboard"
       _ <- liftEffect $ copyToClipboard str
       pure $ go str
 
@@ -220,7 +223,7 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
       do
         mjStr <- liftEffect mjStrEff
         -- TODO: make greay of mjStr is empty:
-        D.div' [downloadButton mjStr, copyButton mjStr]
+        D.div [MC.previewButtons] [downloadButton mjStr, copyButton mjStr]
     , D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
