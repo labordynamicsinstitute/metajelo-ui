@@ -20,6 +20,7 @@ import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Effect.Class (liftEffect)
+import Effect.Class.Console (log)
 import Global (encodeURIComponent)
 import Metajelo.Forms as MF
 import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatXsdDate,
@@ -36,6 +37,14 @@ import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
+import Web.HTML (window) as DOM
+import Web.DOM.Document (createElement) as DOM
+import Web.DOM.Element (setAttribute) as DOM
+import Web.HTML.HTMLDocument (toDocument) as HTML
+import Web.HTML.HTMLElement (HTMLElement)
+import Web.HTML.HTMLElement (click) as DOM
+import Web.HTML.HTMLElement (fromElement) as HTML
+import Web.HTML.Window (document) as DOM
 
 -- import Data.Newtype (unwrap)
 -- import Data.Semigroup.First (First(..))
@@ -47,7 +56,7 @@ page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div' [
-       let mjStr = "Foo\nBar\n" in D.div' [downloadRecText mjStr, copyButton mjStr]
+       let mjStr = "Foo\nBar\n" in D.div' [downloadButton mjStr, copyButton mjStr]
        -- ^^ Example string to fail: "\xD800"
      , D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
      ]
@@ -56,19 +65,46 @@ page = do
 utf8DataAttr :: String
 utf8DataAttr = "data:text/plain;charset=utf-8"
 
-downloadRecText :: forall a. String -> Widget HTML a
-downloadRecText mjStr = D.div_ [] $ do
+downloadButton :: forall a. String -> Widget HTML a
+downloadButton mjStr = D.div_ [] $ do
   let encodedMjStrMay = encodeURIComponent(mjStr)
-  maybe errorBox downloadButton encodedMjStrMay
+  dlClicker <- liftEffect $
+    mkDLAnchorAndClicker $ fromMaybe "" encodedMjStrMay
+  maybe errorBox (downloadBtn dlClicker) encodedMjStrMay
   where
-    downloadButton :: String -> Widget HTML a
-    downloadButton mjEncSr = D.a_ [
-        P.href $ utf8DataAttr <> "," <> mjEncSr
-      , P.download "metajelo.xml"
-      ] (D.text "Download Prototype Button")
+    downloadBtn :: Effect Unit -> String -> Widget HTML a
+    downloadBtn clicker cstr  = do
+      dyn $ go cstr
+      where
+        go str = step str $ do
+          _ <- D.button_ [P.onClick] $ D.text "Download"
+          _ <- liftEffect clicker
+          pure $ go str
     errorBox = D.div_ [MWC.errorDisplayBox] $
       D.span [MWC.errorDisplay] [D.text errorMsg]
     errorMsg = "Couldn't encode XML, please copy to clipboard instead."
+
+
+mkDLAnchorAndClicker :: String -> Effect (Effect Unit) -- (Maybe HTMLElement)
+mkDLAnchorAndClicker encTxt = do
+  win <- DOM.window
+  hdoc <- DOM.document win
+  let doc = HTML.toDocument hdoc
+  aEle <- DOM.createElement "a" doc
+  DOM.setAttribute "download" "metajelo.xml" aEle
+  DOM.setAttribute "href" (utf8DataAttr <> "," <> encTxt) aEle
+  pure $ clickAMay $ HTML.fromElement aEle
+  where
+    clickAMay :: Maybe HTMLElement -> Effect Unit
+    clickAMay hEleMay =  case hEleMay of
+      Just hEle -> do
+        log "got a click"
+        DOM.click hEle
+      Nothing -> log $
+        "Couldn't create HTMLElement to click with encoded string"
+        <> encTxt
+
+
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
@@ -184,7 +220,7 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
       do
         mjStr <- liftEffect mjStrEff
         -- TODO: make greay of mjStr is empty:
-        D.div' [downloadRecText mjStr, copyButton mjStr]
+        D.div' [downloadButton mjStr, copyButton mjStr]
     , D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
