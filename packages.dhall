@@ -203,7 +203,7 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "78b9e5e7dd3542f0a75917cfff7018c1a3ed17a5"
+            "f494f0a3571f2594de829dddb8ebe1abe563c8cf"
       , metajelo-web =
           mkPackage
             [ "prelude"
@@ -230,8 +230,8 @@ let additions =
       , nonbili-dom =
         mkPackage
           [ "effect", "web-dom", "web-html" ]
-          "https://github.com/bbarker/purescript-nonbili-dom.git"
-          "b4865774499ab4952114864f4162890d9ad1f1b5"
+          "https://github.com/nonbili/purescript-nonbili-dom.git"
+          "v0.3.0"
       , option =
           mkPackage
             [ "argonaut-codecs"

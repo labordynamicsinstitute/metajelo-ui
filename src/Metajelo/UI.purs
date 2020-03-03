@@ -1,9 +1,9 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (>>=), (<>))
+import Prelude (Unit, bind, discard, join, map, pure, unit, ($), (<$>), (>>=), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS)
+import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -32,6 +32,7 @@ import Metajelo.XPaths.Write as MXW
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
 -- import Metajelo.CSS.UI.Util (cList)
+import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
@@ -46,7 +47,8 @@ page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div' [
-       downloadRecText "Foo\nBar\n"-- Example string to fail: "\xD800"
+       let mjStr = "Foo\nBar\n" in D.div' [downloadRecText mjStr, copyButton mjStr]
+       -- ^^ Example string to fail: "\xD800"
      , D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
      ]
    --D.text "Hi"
@@ -68,6 +70,13 @@ downloadRecText mjStr = D.div_ [] $ do
       D.span [MWC.errorDisplay] [D.text errorMsg]
     errorMsg = "Couldn't encode XML, please copy to clipboard instead."
 
+copyButton :: forall a. String -> Widget HTML a
+copyButton cstr = dyn $ go cstr
+  where
+    go str = step str $ do
+      _ <- D.button_ [P.onClick] $ D.text "Copy to Clipboard"
+      _ <- liftEffect $ copyToClipboard str
+      pure $ go str
 
 -- | ViewModel for MetajeloRecord
 type MetajeloRecordExtra r = (
@@ -175,7 +184,7 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
       do
         mjStr <- liftEffect mjStrEff
         -- TODO: make greay of mjStr is empty:
-        downloadRecText mjStr
+        D.div' [downloadRecText mjStr, copyButton mjStr]
     , D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
