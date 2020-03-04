@@ -40,10 +40,10 @@ could use use a more customized script to retrieve the CSS from
 whatever location is desired.
 
 For example, instead of using `getcss`, let's say we have a build of metajelo-ui
-stored in `metajelo-ui-css-classes`. Then wee can do the following:
+stored in `metajelo-ui-css-testing`. Then wee can do the following:
 
 ```
-cd metajelo-ui-css-classes
+cd metajelo-ui-css-testing
 mkdir css
 ln -s /PATH/TO/metajelo-ui-css-classes/uicss css
 ```
@@ -51,7 +51,7 @@ ln -s /PATH/TO/metajelo-ui-css-classes/uicss css
 Now edit `index.html` and replace `prod.XXXXX.css` with `css/style.css` so that you now have a line that looks like:
 
 ```html
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style-dev.css">
 ```
 
 You should now be able to browse to `index.html` and test CSS changes immediately
