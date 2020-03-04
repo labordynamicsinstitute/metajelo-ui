@@ -1,38 +1,49 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (>>=), (<>))
+import Prelude (Unit, bind, discard, join, map, pure, unit, ($), (<$>), (>>=), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS)
+import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
+import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.State
 import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Maybe (Maybe(..), fromMaybe)
+import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.String.Common (null)
 import Data.String.NonEmpty (fromString,toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
+import Effect.Class (liftEffect)
+import Effect.Class.Console (log)
+import Global (encodeURIComponent)
 import Metajelo.Forms as MF
 import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatXsdDate,
   initDate, labelSig, labelSig', menuSignal, nonEmptyArrayView, textInput,
   urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
--- import Metajelo.CSS.UI.ClassNames as MCN
+import Metajelo.XPaths.Write as MXW
 import Metajelo.CSS.UI.ClassProps as MC
--- import Metajelo.CSS.UI.Util (cList)
+import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
+import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
-
--- import Data.Newtype (unwrap)
--- import Data.Semigroup.First (First(..))
+import Web.HTML (window) as DOM
+import Web.DOM.Document (createElement) as DOM
+import Web.DOM.Element (setAttribute) as DOM
+import Web.HTML.HTMLDocument (toDocument) as HTML
+import Web.HTML.HTMLElement (HTMLElement)
+import Web.HTML.HTMLElement (click) as DOM
+import Web.HTML.HTMLElement (fromElement) as HTML
+import Web.HTML.Window (document) as DOM
 
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
@@ -40,8 +51,68 @@ runFormSPA divId = runWidgetInDom divId page
 page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
-   D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
-   --D.text "Hi"
+   D.div' [
+       {- let mjStr = "\xD800" in D.div [MC.previewButtons] [
+            downloadButton mjStr
+          , copyButton mjStr
+          ]
+       -- ^^ Example string to fail: "\xD800"
+     , -} D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
+     ]
+
+utf8DataAttr :: String
+utf8DataAttr = "data:text/plain;charset=utf-8"
+
+downloadButton :: forall a. String -> Widget HTML a
+downloadButton mjStr = D.div_ [] $ do
+  let encodedMjStrMay = encodeURIComponent(mjStr)
+  dlClicker <- liftEffect $
+    mkDLAnchorAndClicker $ fromMaybe "" encodedMjStrMay
+  maybe errorBox (downloadBtn dlClicker) encodedMjStrMay
+  where
+    downloadBtn :: Effect Unit -> String -> Widget HTML a
+    downloadBtn clicker cstr  = do
+      dyn $ go cstr
+      where
+        go str = step str $ do
+          _ <- D.button_ [MC.downloadBtn, P.onClick, P.disabled $ null str] $
+            D.text "Download"
+          _ <- liftEffect clicker
+          pure $ go str
+    errorBox = D.div_ [MWC.errorDisplayBox] $
+      D.span [MWC.errorDisplay] [D.text errorMsg]
+    errorMsg = "Couldn't encode XML, please copy to clipboard instead."
+
+
+mkDLAnchorAndClicker :: String -> Effect (Effect Unit)
+mkDLAnchorAndClicker encTxt = do
+  win <- DOM.window
+  hdoc <- DOM.document win
+  let doc = HTML.toDocument hdoc
+  aEle <- DOM.createElement "a" doc
+  DOM.setAttribute "download" "metajelo.xml" aEle
+  DOM.setAttribute "href" (utf8DataAttr <> "," <> encTxt) aEle
+  pure $ clickAMay $ HTML.fromElement aEle
+  where
+    clickAMay :: Maybe HTMLElement -> Effect Unit
+    clickAMay hEleMay =  case hEleMay of
+      Just hEle -> do
+        log "got a click"
+        DOM.click hEle
+      Nothing -> log $
+        "Couldn't create HTMLElement to click with encoded string"
+        <> encTxt
+
+
+
+copyButton :: forall a. String -> Widget HTML a
+copyButton cstr = dyn $ go cstr
+  where
+    go str = step str $ do
+      _ <- D.button_ [MC.clipBtn, P.onClick, P.disabled $ null str] $
+        D.text "Copy to Clipboard"
+      _ <- liftEffect $ copyToClipboard str
+      pure $ go str
 
 -- | ViewModel for MetajeloRecord
 type MetajeloRecordExtra r = (
@@ -146,9 +217,15 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt -> D.div_ [MC.record] do
   where
     recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
     recWidg recMay = D.div [MC.recPreview] [
-      D.br'
+      do
+        mjStr <- liftEffect mjStrEff
+        -- TODO: make greay of mjStr is empty:
+        D.div [MC.previewButtons] [downloadButton mjStr, copyButton mjStr]
+    , D.br'
     , fold $ MV.mkRecordWidget <$> recMay
     ]
+      where
+      mjStrEff = maybe (pure "") MXW.recordToString recMay
 
 -- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
@@ -211,7 +288,7 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
   identOpt <- D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
-  instNameMay <- textInput $
+  instNameMay <- D.span_ [MC.institutionName] $ textInput $
     Opt.get (SProxy :: _ "institutionName") locOpt
   instTypeMay <- D.span_ [MC.institutionType] $ menuSignal $
     Opt.get (SProxy :: _ "institutionType") locOpt

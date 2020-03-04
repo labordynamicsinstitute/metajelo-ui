@@ -192,8 +192,9 @@ let additions =
       , metajelo =
           mkPackage
             [ "generics-rep"
-            , "naturals"
             , "email-validate"
+            , "naturals"
+            , "nonbili-dom"
             , "stringutils"
             , "url-validator"
             , "web-dom"
@@ -202,7 +203,7 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "49a28c5c511bdd260b627151c7b898720313cc66"
+            "f494f0a3571f2594de829dddb8ebe1abe563c8cf"
       , metajelo-web =
           mkPackage
             [ "prelude"
@@ -215,17 +216,22 @@ let additions =
             , "url-validator"
             ]
             "https://github.com/labordynamicsinstitute/metajelo-web.git"
-            "bcfddbcf3184d530eb163451f8006b90e2b02631"
+            "c90b1c096ba0bbb4699db363b31325a80589a38c"
       , metajelo-ui-css-classes =
           mkPackage
             [ "prelude", "concur-core", "concur-react" ]
             "https://github.com/labordynamicsinstitute/metajelo-ui-css-classes.git"
-            "v0.1.3"
+            "0746a0dae2ab7cdaded4c9c9fc3f24c3038e506a"
       , naturals =
           mkPackage
             [ "enums", "maybe", "prelude" ]
             "https://github.com/LiamGoodacre/purescript-naturals.git"
             "v3.0.0"
+      , nonbili-dom =
+        mkPackage
+          [ "effect", "web-dom", "web-html" ]
+          "https://github.com/nonbili/purescript-nonbili-dom.git"
+          "v0.3.0"
       , option =
           mkPackage
             [ "argonaut-codecs"
