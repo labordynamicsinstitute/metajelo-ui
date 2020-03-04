@@ -216,12 +216,12 @@ let additions =
             , "url-validator"
             ]
             "https://github.com/labordynamicsinstitute/metajelo-web.git"
-            "bcfddbcf3184d530eb163451f8006b90e2b02631"
+            "c90b1c096ba0bbb4699db363b31325a80589a38c"
       , metajelo-ui-css-classes =
           mkPackage
             [ "prelude", "concur-core", "concur-react" ]
             "https://github.com/labordynamicsinstitute/metajelo-ui-css-classes.git"
-            "48aba9c196fe0f50f69195b77f386e527c2d98bc"
+            "0746a0dae2ab7cdaded4c9c9fc3f24c3038e506a"
       , naturals =
           mkPackage
             [ "enums", "maybe", "prelude" ]

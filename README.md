@@ -57,6 +57,10 @@ Now edit `index.html` and replace `prod.XXXXX.css` with `css/style.css` so that 
 You should now be able to browse to `index.html` and test CSS changes immediately
 after rebuilding the locally referenced clone of `metajelo-ui-css-classes`.
 
+You may also find a CSS-reload addon helpful so that you can fill
+in test data only once while rebuilding and reloading just the CSS.
+An example is [CSS Reload](https://addons.mozilla.org/en-US/firefox/addon/css-reload-we/) for Firefox.
+
 # Building
 
 If you have the relevant build tools installed (`npm`, `spago`, `pulp`, etc.), you can
