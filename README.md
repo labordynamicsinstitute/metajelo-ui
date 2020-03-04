@@ -39,6 +39,24 @@ to point to the repository containing the modified CSS. Alternatively, one
 could use use a more customized script to retrieve the CSS from
 whatever location is desired.
 
+For example, instead of using `getcss`, let's say we have a build of metajelo-ui
+stored in `metajelo-ui-css-classes`. Then wee can do the following:
+
+```
+cd metajelo-ui-css-classes
+mkdir css
+ln -s /PATH/TO/metajelo-ui-css-classes/uicss css
+```
+
+Now edit `index.html` and replace `prod.XXXXX.css` with `css/style.css` so that you now have a line that looks like:
+
+```html
+<link rel="stylesheet" href="css/style.css">
+```
+
+You should now be able to browse to `index.html` and test CSS changes immediately
+after rebuilding the locally referenced clone of `metajelo-ui-css-classes`.
+
 # Building
 
 If you have the relevant build tools installed (`npm`, `spago`, `pulp`, etc.), you can
@@ -61,7 +79,6 @@ Feel free to include it, or modify it (renaming the file is also possible):
 ```html
 <link rel="stylesheet" href="css/style.css">
 ```
-
 
 ## Debugging
 

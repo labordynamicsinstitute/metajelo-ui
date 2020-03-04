@@ -14,6 +14,7 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.String.Common (null)
 import Data.String.NonEmpty (fromString,toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
@@ -80,7 +81,8 @@ downloadButton mjStr = D.div_ [] $ do
       dyn $ go cstr
       where
         go str = step str $ do
-          _ <- D.button_ [MC.downloadBtn, P.onClick] $ D.text "Download"
+          _ <- D.button_ [MC.downloadBtn, P.onClick, P.disabled $ null str] $
+            D.text "Download"
           _ <- liftEffect clicker
           pure $ go str
     errorBox = D.div_ [MWC.errorDisplayBox] $
@@ -113,7 +115,8 @@ copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
   where
     go str = step str $ do
-      _ <- D.button_ [MC.clipBtn, P.onClick] $ D.text "Copy to Clipboard"
+      _ <- D.button_ [MC.clipBtn, P.onClick, P.disabled $ null str] $
+        D.text "Copy to Clipboard"
       _ <- liftEffect $ copyToClipboard str
       pure $ go str
 
