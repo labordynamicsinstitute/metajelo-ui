@@ -48,7 +48,8 @@ mkdir css
 ln -s /PATH/TO/metajelo-ui-css-classes/uicss css
 ```
 
-Now edit `index.html` and replace `prod.XXXXX.css` with `css/style.css` so that you now have a line that looks like:
+Now edit `index.html` and replace `prod.XXXXX.css` with `css/style-dev.css`
+so that you now have a line that looks like:
 
 ```html
 <link rel="stylesheet" href="css/style-dev.css">

@@ -30,10 +30,8 @@ import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, dateTimeSig, formatX
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths.Write as MXW
--- import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
--- import Metajelo.CSS.UI.Util (cList)
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prim.Row as Prim.Row
@@ -47,9 +45,6 @@ import Web.HTML.HTMLElement (click) as DOM
 import Web.HTML.HTMLElement (fromElement) as HTML
 import Web.HTML.Window (document) as DOM
 
--- import Data.Newtype (unwrap)
--- import Data.Semigroup.First (First(..))
-
 runFormSPA :: String -> Effect Unit
 runFormSPA divId = runWidgetInDom divId page
 
@@ -57,14 +52,13 @@ page :: ∀ a. Widget HTML a
 page = do
    -- _ <- dyn $ formatSigArray (Tuple 0 [])
    D.div' [
-       let mjStr = "Foo\nBar\n" in D.div [MC.previewButtons] [
+       {- let mjStr = "\xD800" in D.div [MC.previewButtons] [
             downloadButton mjStr
           , copyButton mjStr
           ]
        -- ^^ Example string to fail: "\xD800"
-     , D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
+     , -} D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
      ]
-   --D.text "Hi"
 
 utf8DataAttr :: String
 utf8DataAttr = "data:text/plain;charset=utf-8"
@@ -294,7 +288,7 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
   identOpt <- D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
-  instNameMay <- textInput $
+  instNameMay <- D.span_ [MC.institutionName] $ textInput $
     Opt.get (SProxy :: _ "institutionName") locOpt
   instTypeMay <- D.span_ [MC.institutionType] $ menuSignal $
     Opt.get (SProxy :: _ "institutionType") locOpt
