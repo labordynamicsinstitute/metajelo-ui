@@ -16851,23 +16851,16 @@ var PS = {};
   a = b.div_(g.widgetShiftMap)([D.tooltip])(r.empty(g.widgetPlus(x.monoidArray)));
 
   var ia = function ia(a) {
-    var b = function b(_b2) {
-      if (_b2 instanceof y.Just) return function () {
-        K.log(C.monadEffectEffect)("got a click")();
-        return da.click(_b2.value0)();
-      };
-      if (_b2 instanceof y.Nothing) return K.log(C.monadEffectEffect)("Couldn't create HTMLElement to click with encoded string" + a);
-      throw Error("Failed pattern match at Metajelo.UI (line 98, column 26 - line 104, column 18): " + [_b2.constructor.name]);
-    };
-
     return function () {
-      var c = V.window();
-      c = ha.document(c)();
-      c = ba.toDocument(c);
-      c = R.createElement("a")(c)();
-      X.setAttribute("download")("metajelo.xml")(c)();
-      X.setAttribute("href")("data:text/plain;charset=utf-8," + a)(c)();
-      return b(da.fromElement(c));
+      var b = V.window();
+      b = ha.document(b)();
+      b = ba.toDocument(b);
+      b = R.createElement("a")(b)();
+      X.setAttribute("download")("metajelo.xml")(b)();
+      X.setAttribute("href")("data:text/plain;charset=utf-8," + a)(b)();
+      b = da.fromElement(b);
+      if (b instanceof y.Just) b = da.click(b.value0);else if (b instanceof y.Nothing) b = K.log(C.monadEffectEffect)("Couldn't create HTMLElement to click with encoded string" + a);else throw Error("Failed pattern match at Metajelo.UI (line 98, column 26 - line 102, column 18): " + [b.constructor.name]);
+      return b;
     };
   },
       Y = function Y(a) {
@@ -17552,4 +17545,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.8f61e0ae.js.map
+//# sourceMappingURL=prod.1c8fc192.js.map
