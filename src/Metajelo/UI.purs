@@ -96,9 +96,7 @@ mkDLAnchorAndClicker encTxt = do
   where
     clickAMay :: Maybe HTMLElement -> Effect Unit
     clickAMay hEleMay =  case hEleMay of
-      Just hEle -> do
-        log "got a click"
-        DOM.click hEle
+      Just hEle -> DOM.click hEle
       Nothing -> log $
         "Couldn't create HTMLElement to click with encoded string"
         <> encTxt
