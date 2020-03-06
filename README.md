@@ -48,6 +48,9 @@ mkdir css
 ln -s /PATH/TO/metajelo-ui-css-classes/uicss css
 ```
 
+On Windows, you will need to use `mklink /d css X:\PATH\TO\metajelo-ui-css-classes\uicss`
+instead of the `ln -s` command.
+
 Now edit `index.html` and replace `prod.XXXXX.css` with `css/style-dev.css`
 so that you now have a line that looks like:
 

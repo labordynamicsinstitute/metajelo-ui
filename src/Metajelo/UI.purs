@@ -403,7 +403,7 @@ accumulateResType oldRT = D.div_ [MC.resourceType] do
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
 formatSignal formatMay = D.div_ [MC.format] do
-  tooltipS $ textInput formatMay
+  textInput formatMay
 
 formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
 formatSigArray formats = D.div_ [MC.formatList] $ arrayView formatSignal formats
@@ -422,12 +422,6 @@ accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
       urlMay
     get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
   ) oldRMDS
-
-tooltip :: forall a. Widget HTML a
-tooltip = D.div_ [MC.tooltip] empty
-
-tooltipS :: forall a. Signal HTML a -> Signal HTML a
-tooltipS sigIn = D.div_ [MC.tooltip] sigIn
 
 -- TODO: PR to purescript-option
 getOpt ::
