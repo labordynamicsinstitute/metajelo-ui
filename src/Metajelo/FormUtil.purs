@@ -3,7 +3,7 @@ module Metajelo.FormUtil where
 import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, debounce, display, loopS, step)
+import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -378,14 +378,11 @@ consoleShow val = display $ do
   mempty
 
 dateTimeWidg :: Widget HTML DateTime
-dateTimeWidg = liftEffect nowDateTime
+dateTimeWidg = do
+  liftEffect nowDateTime
 
 dateTimeSig :: Signal HTML DateTime
-dateTimeSig = sig initDate
-  where
-    sig dt = step dt do
-      newDt <- dateTimeWidg
-      pure $ sig newDt
+dateTimeSig = justWait initDate (fireOnce dateTimeWidg) pure
 
 -- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
 formatXsdDate :: DateTime -> Either String M.XsdDate
