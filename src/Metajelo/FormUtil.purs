@@ -1,12 +1,13 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), (<$>), (<<<), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, step)
+import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, loopW, oneShot, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
+import Control.Alternative (empty)
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
@@ -39,6 +40,7 @@ import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
+import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
 import Effect.Now (nowDateTime)
@@ -317,7 +319,7 @@ arrayView mkWidget oldArrTup = D.div_ [] do
     arrayViewLoop :: Int -> Array (Item a) ->
       Signal HTML (Tuple Int (Array (Item a)))
     arrayViewLoop widgCountIn mayArr = loopS (Tuple widgCountIn mayArr) \tupIn ->
-      D.div_ [] do
+      D.ul_ [] do
         let widgCountIn' = fst tupIn
         let mayArr' = snd tupIn
         emptyArrLen <- step 0 $
@@ -377,12 +379,29 @@ consoleShow val = display $ do
   liftEffect $ logShow val -- FIXME: DEBUG
   mempty
 
-dateTimeWidg :: Widget HTML DateTime
+{- dateTimeWidg :: Widget HTML DateTime
 dateTimeWidg = do
   liftEffect nowDateTime
 
 dateTimeSig :: Signal HTML DateTime
 dateTimeSig = justWait initDate (fireOnce dateTimeWidg) pure
+
+runEffectOnW :: forall a b. Effect b -> Widget HTML a -> Signal HTML (Maybe b)
+runEffectOnW e wWait = loopW Nothing $ \_ -> do
+  b <- liftEffect e
+  b' <- wWait $> b
+  pure $ Just b'
+
+runEffectOnS :: forall a b. Effect b -> Signal HTML a -> Signal HTML (Maybe b)
+runEffectOnS e sWait = runEffectOnW e wWait
+  where
+  wWait = oneShot (Just <$> sWait)
+
+-- Or with a supplied initial value instead of using a Maybe
+runEffectInit :: forall a. a -> Effect a -> Signal HTML a
+runEffectInit i e = step i do
+  a <- liftEffect e
+  pure (step a empty) -}
 
 -- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
 formatXsdDate :: DateTime -> Either String M.XsdDate
@@ -414,3 +433,8 @@ makeDateTime year month day hour minute second millisecond =
 
 safeRange :: Int -> Int -> Array Int
 safeRange i f = if f < i then [] else (i .. f)
+
+fromEither :: forall a b. b -> Either a b -> b
+fromEither def ei = case ei of
+  Right b -> b
+  Left _ -> def
