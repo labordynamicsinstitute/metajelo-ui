@@ -1063,6 +1063,8 @@ if ("production" === 'production') {
 }
 },{"./cjs/react-dom-server.browser.production.min.js":"KA3k"}],"xbCx":[function(require,module,exports) {
 var global = arguments[3];
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 var $jscomp = $jscomp || {};
 $jscomp.scope = {};
 
@@ -1093,7 +1095,14 @@ $jscomp.defineProperty = $jscomp.ASSUME_ES5 || "function" == typeof Object.defin
 };
 
 $jscomp.getGlobal = function (a) {
-  return "undefined" != typeof window && window === a ? a : "undefined" != typeof global && null != global ? global : a;
+  a = ["object" == (typeof window === "undefined" ? "undefined" : _typeof(window)) && window, "object" == (typeof self === "undefined" ? "undefined" : _typeof(self)) && self, "object" == (typeof global === "undefined" ? "undefined" : _typeof(global)) && global, a];
+
+  for (var c = 0; c < a.length; ++c) {
+    var f = a[c];
+    if (f && f.Math == Math) return f;
+  }
+
+  throw Error("Cannot find global object");
 };
 
 $jscomp.global = $jscomp.getGlobal(this);
@@ -1251,59 +1260,6 @@ $jscomp.polyfill("String.prototype.endsWith", function (a) {
     }
 
     return 0 >= g;
-  };
-}, "es6", "es3");
-$jscomp.polyfill("Object.is", function (a) {
-  return a ? a : function (a, f) {
-    return a === f ? 0 !== a || 1 / a === 1 / f : a !== a && f !== f;
-  };
-}, "es6", "es3");
-$jscomp.polyfill("Array.prototype.includes", function (a) {
-  return a ? a : function (a, f) {
-    var c = this;
-    c instanceof String && (c = String(c));
-    var g = c.length;
-    f = f || 0;
-
-    for (0 > f && (f = Math.max(f + g, 0)); f < g; f++) {
-      var b = c[f];
-      if (b === a || Object.is(b, a)) return !0;
-    }
-
-    return !1;
-  };
-}, "es7", "es3");
-$jscomp.polyfill("String.prototype.includes", function (a) {
-  return a ? a : function (a, f) {
-    return -1 !== $jscomp.checkStringArgs(this, a, "includes").indexOf(a, f || 0);
-  };
-}, "es6", "es3");
-$jscomp.polyfill("String.prototype.repeat", function (a) {
-  return a ? a : function (a) {
-    var c = $jscomp.checkStringArgs(this, null, "repeat");
-    if (0 > a || 1342177279 < a) throw new RangeError("Invalid count value");
-    a |= 0;
-
-    for (var k = ""; a;) {
-      if (a & 1 && (k += c), a >>>= 1) c += c;
-    }
-
-    return k;
-  };
-}, "es6", "es3");
-$jscomp.polyfill("String.prototype.startsWith", function (a) {
-  return a ? a : function (a, f) {
-    var c = $jscomp.checkStringArgs(this, a, "startsWith");
-    a += "";
-    var g = c.length,
-        b = a.length;
-    f = Math.max(0, Math.min(f | 0, c.length));
-
-    for (var e = 0; e < b && f < g;) {
-      if (c[f++] != a[e++]) return !1;
-    }
-
-    return e >= b;
   };
 }, "es6", "es3");
 
@@ -10003,10 +9959,10 @@ var PS = {};
   };
 
   c.genericCompare = function (a) {
-    return function (c) {
-      return function (d) {
+    return function (d) {
+      return function (c) {
         return function (e) {
-          return b(c)(f.from(a)(d))(f.from(a)(e));
+          return b(d)(f.from(a)(c))(f.from(a)(e));
         };
       };
     };
@@ -10029,9 +9985,9 @@ var PS = {};
   };
 
   c.genericOrdConstructor = function (a) {
-    return new g(function (c) {
-      return function (d) {
-        return b(a)(c)(d);
+    return new g(function (d) {
+      return function (c) {
+        return b(a)(d)(c);
       };
     });
   };
@@ -10060,8 +10016,8 @@ var PS = {};
 
   c.genericShow = function (a) {
     return function (b) {
-      return function (c) {
-        return (0, b["genericShow'"])(k.from(a)(c));
+      return function (d) {
+        return (0, b["genericShow'"])(k.from(a)(d));
       };
     };
   };
@@ -10070,10 +10026,10 @@ var PS = {};
 
   c.genericShowSum = function (a) {
     return function (b) {
-      return new h(function (c) {
-        if (c instanceof k.Inl) return (0, a["genericShow'"])(c.value0);
-        if (c instanceof k.Inr) return (0, b["genericShow'"])(c.value0);
-        throw Error("Failed pattern match at Data.Generic.Rep.Show (line 26, column 1 - line 28, column 40): " + [c.constructor.name]);
+      return new h(function (d) {
+        if (d instanceof k.Inl) return (0, a["genericShow'"])(d.value0);
+        if (d instanceof k.Inr) return (0, b["genericShow'"])(d.value0);
+        throw Error("Failed pattern match at Data.Generic.Rep.Show (line 26, column 1 - line 28, column 40): " + [d.constructor.name]);
       });
     };
   };
@@ -10162,25 +10118,25 @@ var PS = {};
       k = a["Control.Semigroupoid"],
       g = a["Data.Profunctor"],
       b = a["Data.Tuple"],
-      e = function e(a, b, c) {
+      e = function e(a, b, d) {
     this.Profunctor0 = a;
     this.first = b;
-    this.second = c;
+    this.second = d;
   };
 
   a = new e(function () {
     return g.profunctorFn;
   }, function (a) {
-    return function (c) {
-      return new b.Tuple(a(c.value0), c.value1);
+    return function (d) {
+      return new b.Tuple(a(d.value0), d.value1);
     };
   }, a["Data.Functor"].map(b.functorTuple));
 
   var d = function d(a) {
     return function (b) {
-      return function (c) {
-        return function (d) {
-          return k.composeFlipped(a.Semigroupoid0())((0, b.first)(c))((0, b.second)(d));
+      return function (d) {
+        return function (c) {
+          return k.composeFlipped(a.Semigroupoid0())((0, b.first)(d))((0, b.second)(c));
         };
       };
     };
@@ -10231,8 +10187,8 @@ var PS = {};
       r = new a["Data.Profunctor"].Profunctor(function (a) {
     return function (b) {
       return function (b) {
-        return function (c) {
-          return b(a(c));
+        return function (d) {
+          return b(a(d));
         };
       };
     };
@@ -10318,12 +10274,12 @@ var PS = {};
       e = b.under(f.newtypeForget)(f.newtypeForget)(f.Forget);
 
   c.preview = function (a) {
-    var c = b.unwrap(g.newtypeFirst),
-        d = e(a)(function (a) {
+    var d = b.unwrap(g.newtypeFirst),
+        c = e(a)(function (a) {
       return g.First(k.Just.create(a));
     });
     return function (a) {
-      return c(d(a));
+      return d(c(a));
     };
   };
 })(PS);
@@ -10386,12 +10342,12 @@ var PS = {};
 
   a["Data.Lens.Lens"].lens = function (a) {
     return function (b) {
-      return function (c) {
-        return g(function (c) {
-          return new k.Tuple(a(c), function (a) {
-            return b(c)(a);
+      return function (d) {
+        return g(function (d) {
+          return new k.Tuple(a(d), function (a) {
+            return b(d)(a);
           });
-        })(c);
+        })(d);
       };
     };
   };
@@ -10417,10 +10373,10 @@ var PS = {};
 
   a["Data.Lens.Prism"]["prism'"] = function (a) {
     return function (b) {
-      return function (c) {
+      return function (d) {
         return e(a)(function (a) {
           return k.maybe(new f.Left(a))(f.Right.create)(b(a));
-        })(c);
+        })(d);
       };
     };
   };
@@ -10435,8 +10391,8 @@ var PS = {};
   c.get = function (a) {
     return function (b) {
       return function (b) {
-        return function (c) {
-          return k.unsafeGet(f.reflectSymbol(a)(b))(c);
+        return function (d) {
+          return k.unsafeGet(f.reflectSymbol(a)(b))(d);
         };
       };
     };
@@ -10446,9 +10402,9 @@ var PS = {};
     return function (b) {
       return function (b) {
         return function (b) {
-          return function (c) {
-            return function (d) {
-              return k.unsafeSet(f.reflectSymbol(a)(b))(c)(d);
+          return function (d) {
+            return function (c) {
+              return k.unsafeSet(f.reflectSymbol(a)(b))(d)(c);
             };
           };
         };
@@ -10460,9 +10416,9 @@ var PS = {};
     return function (b) {
       return function (b) {
         return function (b) {
-          return function (c) {
-            return function (d) {
-              return k.unsafeSet(f.reflectSymbol(a)(b))(c)(d);
+          return function (d) {
+            return function (c) {
+              return k.unsafeSet(f.reflectSymbol(a)(b))(d)(c);
             };
           };
         };
@@ -17643,4 +17599,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.5c9adfda.js.map
+//# sourceMappingURL=prod.0c9d3a3d.js.map
