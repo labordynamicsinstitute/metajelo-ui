@@ -17,7 +17,7 @@
   "author": "Brandon Barker <brandon.barker@cornell.edu> (https://github.com/bbarker)",
   "license": "MPL2",
   "devDependencies": {
-    "autoprefixer": "^9.7.5",
+    "autoprefixer": "^9.7.6",
     "bower": "^1.8.6",
     "cross-env": "^7.0.2",
     "cssmin": "^0.4.3",
