@@ -22,7 +22,7 @@
     "cross-env": "^7.0.2",
     "cssmin": "^0.4.3",
     "cssnano": "^4.1.10",
-    "google-closure-compiler": "^20200315.0.0",
+    "google-closure-compiler": "^20200719.0.0",
     "parcel-bundler": "^1.12.4",
     "postcss-font-base64": "^1.0.5",
     "postcss-modules": "^1.5.0",
