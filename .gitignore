@@ -25,3 +25,4 @@ tests/prod/
 \.\#*
 .xdg*
 .fuse_hidden*
+dev_container.cid

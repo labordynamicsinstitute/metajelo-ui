@@ -7,7 +7,7 @@ before_script:
 - chmod a+w -R .
 
 script:
-- IMG_VER=0.13.3_r1 ./scripts/dist_build.sh
+- IMG_VER=0.13.8_r2 ./scripts/dist_build.sh
 
 deploy:
   provider: pages
