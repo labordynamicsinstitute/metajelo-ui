@@ -2,5 +2,8 @@
     "cSpell.words": [
         "metajelo",
         "unminified"
-    ]
+    ],
+    "purescript.addSpagoSources": true,
+    "purescript.addNpmPath": true,
+    "purescript.buildCommand": "spago build --purs-args --json-errors"  
 }

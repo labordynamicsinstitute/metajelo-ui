@@ -1,14 +1,13 @@
 module Metajelo.UI where
 
-import Prelude (Unit, bind, discard, join, map, pure, unit, ($), (<$>), (>>=), (<>))
+import Control.Monad.State
 
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, justWait, loopS, step)
+import Concur.Core.FRP (Signal, display, dyn, loopS, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
-import Control.Monad.State
 import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
@@ -16,7 +15,7 @@ import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..), fromMaybe, maybe)
 import Data.Maybe.First (First(..))
 import Data.String.Common (null)
-import Data.String.NonEmpty (fromString,toString)
+import Data.String.NonEmpty (fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
@@ -25,25 +24,22 @@ import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Now (nowDateTime)
 import Global (encodeURIComponent)
+import Metajelo.CSS.UI.ClassProps as MC
+import Metajelo.CSS.Web.ClassProps as MWC
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, formatXsdDate, initDate, menuSignal, nonEmptyArrayView, textInput, urlInput)
 import Metajelo.Forms as MF
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS,
-  fromEither, formatXsdDate,
-  initDate, labelSig, labelSig', menuSignal, nonEmptyArrayView,
-  textInput,
-  urlInput, consoleShow)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
-import Metajelo.CSS.UI.ClassProps as MC
-import Metajelo.CSS.Web.ClassProps as MWC -- TODO: change occurrences to something UI-specific!
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
+import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
-import Web.HTML (window) as DOM
 import Web.DOM.Document (createElement) as DOM
 import Web.DOM.Element (setAttribute) as DOM
+import Web.HTML (window) as DOM
 import Web.HTML.HTMLDocument (toDocument) as HTML
 import Web.HTML.HTMLElement (HTMLElement)
 import Web.HTML.HTMLElement (click) as DOM

@@ -19,7 +19,7 @@ import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
 import Formless as F
 import Formless.Validation (Validation, hoistFnE)
-import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, labelSig', menu, nonEmptyArrayView)
+import Metajelo.FormUtil (CtrlSignal, IdentityField, MKFState, MKValidators, PolPolType(..), errorDisplay, formSaveButton, initFormState, menu, nonEmptyArrayView)
 import Metajelo.Types as M
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.Validation as V
