@@ -2,8 +2,8 @@ module Metajelo.UI where
 
 import Control.Monad.State
 
-import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS, step)
+import Concur.Core (Widget(..))
+import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -12,7 +12,7 @@ import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.String.Common (null)
 import Data.String.NonEmpty (fromString, toString)
@@ -22,14 +22,18 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
+import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, formatXsdDate, initDate, menuSignal, nonEmptyArrayView, textInput, urlInput)
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, evTargetElem
+                         , formatXsdDate, initDate, menuSignal
+                         , nonEmptyArrayView, textInput, urlInput)
 import Metajelo.Forms as MF
 import Metajelo.Types as M
 import Metajelo.View as MV
+import Metajelo.XPaths as MX
 import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
@@ -102,7 +106,27 @@ mkDLAnchorAndClicker encTxt = do
         "Couldn't create HTMLElement to click with encoded string"
         <> encTxt
 
+uploadButtonSig :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
+uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
+  mjRec <- uploadButton
+  pure $ Opt.fromRecord mjRec
+  where
+    uploadButton :: Widget HTML M.MetajeloRecord
+    uploadButton = do
+      fileTxt <- D.input [P._type "file", evTargetElem <$> P.onChange]
+      log $ "DEBUG: fileTxt is " <> fileTxt
+      parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
+      liftEffect $ MXR.readRecord parseEnv
 
+{-  TODO : do something recursive that displays error but also adds input back
+    TODO: see errorBox example above
+    displayError :: Error -> Effect Unit
+    displayError er = runWidgetInDom elemId $
+      div [MC.errorDisplayBox] $ singleton $
+        span [MC.errorDisplay]
+          [text $ (EX.name er) <> ": " <> (EX.message er)]
+
+   -}
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
@@ -172,9 +196,12 @@ type MayOpt a = Maybe (Opt.Option a)
 type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
 type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
 
-accumulateMetajeloRecord ::  Signal HTML (Opt.Option MetajeloRecordRowOpts)
+accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
-  recOpt <- accumulateMetajeloRecUI recOpt'
+  uploadedRec <- uploadButtonSig
+  let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
+  recOptIn <- accumulateMetajeloRecUI recOpt'
+  let recOpt = if isNothing uploadedRecMay then recOptIn else uploadedRec
   -- let sWait = accumulateMetajeloRecUI recOpt'
   -- modDateTime <- runEffectInit initDate nowDateTime
   let modDateTime = initDate
