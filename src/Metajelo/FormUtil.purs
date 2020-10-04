@@ -439,6 +439,9 @@ fromEither def ei = case ei of
   Right b -> b
   Left _ -> def
 
+-- TODO this safely, need an FFI check: 
+-- https://github.com/facebook/flow/issues/4799#issuecomment-326992974
+-- Maybe do this separately as a small library: e.g.- `NativeEventTarget -> Maybe Node`
 evTarget :: SyntheticInputEvent -> Effect Node
 evTarget = unsafeCoerce <<< target
 

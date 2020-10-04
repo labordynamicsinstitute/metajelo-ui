@@ -8,6 +8,7 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
+import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Either (Either(..), hush)
@@ -20,6 +21,7 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
+import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Exception as EX
@@ -43,11 +45,15 @@ import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
 import Web.DOM.Document (createElement) as DOM
 import Web.DOM.Element (setAttribute) as DOM
+import Web.File.File (toBlob) as File
+import Web.File.FileList (item) as File
+import Web.File.FileReader.Aff (readAsText) as File
 import Web.HTML (window) as DOM
 import Web.HTML.HTMLDocument (toDocument) as HTML
 import Web.HTML.HTMLElement (HTMLElement)
 import Web.HTML.HTMLElement (click) as DOM
 import Web.HTML.HTMLElement (fromElement) as HTML
+import Web.HTML.HTMLInputElement (files, fromElement) as HTMLIn
 import Web.HTML.Window (document) as DOM
 
 runFormSPA :: String -> Effect Unit
@@ -113,10 +119,20 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
   where
     uploadButton :: Widget HTML M.MetajeloRecord
     uploadButton = do
-      fileTxt <- D.input [P._type "file", evTargetElem <$> P.onChange]
-      log $ "DEBUG: fileTxt is " <> fileTxt
-      parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
-      liftEffect $ MXR.readRecord parseEnv
+      targetEleMay <- D.input [P._type "file", evTargetElem <$> P.onChange]
+      blobMay <- liftEffect $ runMaybeT do
+        targetEle <- MaybeT targetEleMay
+        targHtmlEle <- MaybeT $ pure $ HTMLIn.fromElement targetEle
+        eleFiles <- MaybeT $ HTMLIn.files targHtmlEle
+        file <- MaybeT $ pure $ File.item 0 eleFiles
+        pure $ File.toBlob file
+      case blobMay of
+        Nothing -> uploadButton {- Maybe have an error msg here -}
+        Just blob -> do
+          fileTxt <- liftAff $ File.readAsText blob
+          liftEffect $ log $ "DEBUG: fileTxt is " <> fileTxt
+          parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
+          liftEffect $ MXR.readRecord parseEnv
 
 {-  TODO : do something recursive that displays error but also adds input back
     TODO: see errorBox example above
