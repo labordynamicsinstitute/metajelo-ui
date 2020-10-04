@@ -216,8 +216,8 @@ accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   uploadedRec <- uploadButtonSig
   let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
-  recOptIn <- accumulateMetajeloRecUI recOpt'
-  let recOpt = if isNothing uploadedRecMay then recOptIn else uploadedRec
+  let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
+  recOpt <- accumulateMetajeloRecUI upOrInRec
   -- let sWait = accumulateMetajeloRecUI recOpt'
   -- modDateTime <- runEffectInit initDate nowDateTime
   let modDateTime = initDate
