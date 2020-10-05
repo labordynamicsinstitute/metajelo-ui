@@ -8,7 +8,6 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
-import Control.Lazy (fix)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
 import Data.Array.NonEmpty (NonEmptyArray)
@@ -24,13 +23,13 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
 import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (log, logShow)
+import Effect.Class.Console (log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, consoleShow, evTargetElem
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, evTargetElem
                          , formatXsdDate, initDate, menuSignal
                          , nonEmptyArrayView, textInput, urlInput)
 import Metajelo.Forms as MF
@@ -41,7 +40,7 @@ import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
-import Prelude (Unit, bind, discard, join, map, show, pure, unit, ($), (<$>), (<>), (>>=), (*>))
+import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
 import Web.DOM.Document (createElement) as DOM
@@ -231,7 +230,6 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   uploadedRec <- uploadButtonSig
   let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
   let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
-  consoleShow $ "upOrInRec: " <> (show upOrInRec) -- DEBUG
   recOpt <- accumulateMetajeloRecUI upOrInRec
   -- let sWait = accumulateMetajeloRecUI recOpt'
   -- modDateTime <- runEffectInit initDate nowDateTime
@@ -276,11 +274,7 @@ finalizeRecord recIn = do
 accumulateMetajeloRecUI ::  CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecUI recOpt = do
   idOpt <- D.div_ [MC.recordId] do
-    consoleShow $ "recordId(recOpt): " <> (show recOpt) -- DEBUG
-    tmp <- accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt -- DEBUG
-    consoleShow $ "recordId: " <> (show tmp) -- DEBUG
-    pure tmp
-    -- accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
+    accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   dateMay <- D.div_ [MC.date] <$> textInput $ Opt.get (SProxy :: _ "date") recOpt
 
