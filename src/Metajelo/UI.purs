@@ -116,7 +116,7 @@ mkDLAnchorAndClicker encTxt = do
 uploadButtonSig :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
   mjRec <- uploadButton
-  pure $ Opt.fromRecord mjRec
+  pure $ fillMetajeloRecordExtra mjRec
   where
     uploadButton :: Widget HTML M.MetajeloRecord
     uploadButton = do
@@ -165,6 +165,19 @@ type MetajeloRecordExtra r = (
 )
 -- | Decorated state (Model + ViewModel) for MetajeloRecord
 type MetajeloRecordRowOpts = MetajeloRecordExtra M.MetajeloRecordRows
+
+-- | Recomputes View-components of the Model-View from the Model
+-- | (i.e. XML-based record). These fill functions are, in a sense,
+-- | the inverse of the accumulate functions (objectively speaking;
+-- | the types do not lign up as exact inverses).
+fillMetajeloRecordExtra :: M.MetajeloRecord ->  Opt.Option MetajeloRecordRowOpts
+fillMetajeloRecordExtra mjRec = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just identifier_opt)
+  ) mjOptsInit
+  where
+    mjOptsInit = Opt.fromRecord mjRec
+    identifier_opt = Opt.fromRecord mjRec.identifier
+
 
 -- | ViewModel for SupplementaryProduct
 type SupplementaryProductExtra r = (
