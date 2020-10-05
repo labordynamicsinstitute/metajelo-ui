@@ -40,7 +40,7 @@ import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect (Effect)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (logShow)
+import Effect.Class.Console (log, logShow)
 import Effect.Now (nowDateTime)
 import Formless as F
 import Formless.Internal.Transform as Internal
@@ -132,7 +132,8 @@ labelSig widg props sigIn = D.div_ props do
   sigIn
 
 textInputWidget :: String -> Widget HTML String
-textInputWidget txt =
+textInputWidget txt = do
+  liftEffect $ log $ "textInputWidget received: " <> txt -- DEBUG
   D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
 
 -- TODO: remove the first two arguments from textInput', textInput, and urlInput
