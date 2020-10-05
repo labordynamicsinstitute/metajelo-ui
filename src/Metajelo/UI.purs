@@ -10,7 +10,8 @@ import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
-import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Array.NonEmpty as NA
+import Data.Array.NonEmpty (NonEmptyArray, fromArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
@@ -172,10 +173,19 @@ type MetajeloRecordRowOpts = MetajeloRecordExtra M.MetajeloRecordRows
 fillMetajeloRecordExtra :: M.MetajeloRecord ->  Opt.Option MetajeloRecordRowOpts
 fillMetajeloRecordExtra mjRec = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just identifier_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
+    get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") (Just relId_opts)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
+    get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts") (Just supProd_opts)
   ) mjOptsInit
   where
     mjOptsInit = Opt.fromRecord mjRec
     identifier_opt = Opt.fromRecord mjRec.identifier
+    _numRelIds = NA.length mjRec.relatedIdentifiers
+    relId_opts = Opt.fromRecord <$> mjRec.relatedIdentifiers
+    _numSupProds =  NA.length mjRec.supplementaryProducts
+    --TODO: as supProd_opts involves "Extra" view data, it needs a fill function:
+    supProd_opts = Opt.fromRecord <$> mjRec.supplementaryProducts
 
 
 -- | ViewModel for SupplementaryProduct
