@@ -10,6 +10,7 @@ import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
+import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray, fromArray)
 import Data.Either (Either(..), hush)
@@ -185,8 +186,7 @@ fillMetajeloRecordExtra mjRec = execState (do
     relId_opts = Opt.fromRecord <$> mjRec.relatedIdentifiers
     _numSupProds =  NA.length mjRec.supplementaryProducts
     --TODO: as supProd_opts involves "Extra" view data, it needs a fill function:
-    supProd_opts = Opt.fromRecord <$> mjRec.supplementaryProducts
-
+    supProd_opts = fillSProdExtra <$> mjRec.supplementaryProducts
 
 -- | ViewModel for SupplementaryProduct
 type SupplementaryProductExtra r = (
@@ -201,6 +201,26 @@ type SupplementaryProductExtra r = (
 -- | Decorated state (Model + ViewModel) for SupplementaryProduct
 type SupplementaryProductRowOpts =
   SupplementaryProductExtra M.SupplementaryProductRows
+
+fillSProdExtra :: M.SupplementaryProduct -> Opt.Option SupplementaryProductRowOpts
+fillSProdExtra sProd = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
+      (Just basicMetadata_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") resourceID_opt
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt")
+      (Just resourceType_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numFormats")
+      (Just _numFormats)
+    get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") resMdsOpts_opt
+  ) sProdOptInit
+  where
+    sProdOptInit = Opt.fromRecord sProd
+    basicMetadata_opt = Opt.fromRecord sProd.basicMetadata
+    resourceID_opt = Opt.fromRecord <$> sProd.resourceID
+    resourceType_opt = Opt.fromRecord sProd.resourceType
+    _numFormats = A.length sProd.format
+    resMdsOpts_opt = fillResourceMDSExtra <$> sProd.resourceMetadataSource
+    -- locationOpts_opt -- TODO
 
 -- | ViewModel for Location
 type LocationRowExtra r = (
@@ -230,6 +250,16 @@ type ResourceMetadataSourceExtraRows r = (
 -- | Decorated state (Model + ViewModel) for ResourceMetadataSource
 type ResourceMetadataSourceRowOpts =
   ResourceMetadataSourceExtraRows M.ResourceMetadataSourceRows
+
+fillResourceMDSExtra :: M.ResourceMetadataSource
+  -> Opt.Option ResourceMetadataSourceRowOpts
+fillResourceMDSExtra resMDS = execState (do
+  get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
+    (Just url_Ei)
+  ) resMDSOptInit
+  where
+    resMDSOptInit = Opt.fromRecord resMDS
+    url_Ei = Right resMDS.url
 
 type MayOpt a = Maybe (Opt.Option a)
 type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
