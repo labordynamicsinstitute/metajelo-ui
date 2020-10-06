@@ -42,7 +42,8 @@ import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
-import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (<>), (>>=))
+import Prelude (Unit, bind, discard, join
+               , map, pure, show, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
 import Web.DOM.Document (createElement) as DOM
@@ -132,19 +133,15 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
         Nothing -> uploadButton {- Maybe have an error msg here -}
         Just blob -> do
           fileTxt <- liftAff $ File.readAsText blob
-          liftEffect $ log $ "DEBUG: fileTxt is " <> fileTxt
           parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
-          liftEffect $ MXR.readRecord parseEnv
-
-{-  TODO : do something recursive that displays error but also adds input back
-    TODO: see errorBox example above
-    displayError :: Error -> Effect Unit
-    displayError er = runWidgetInDom elemId $
-      div [MC.errorDisplayBox] $ singleton $
-        span [MC.errorDisplay]
-          [text $ (EX.name er) <> ": " <> (EX.message er)]
-
-   -}
+          recResEi <- liftEffect $ EX.try $ MXR.readRecord parseEnv
+          case recResEi of
+            Right recRes -> pure recRes
+            Left err -> errorBox err            
+    errorBox :: forall a. EX.Error -> Widget HTML a
+    errorBox err = D.div_ [MWC.errorDisplayBox] $
+      D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
+    errorMsg err = "Couldn't decode MetajeloXML: " <> (show err)  
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
