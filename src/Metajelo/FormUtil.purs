@@ -1,8 +1,7 @@
 module Metajelo.FormUtil where
 
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
-
 import Concur.Core (Widget)
+import Concur.Core.ElementBuilder (Element)
 import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, loopW, oneShot, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
@@ -17,14 +16,14 @@ import Data.Bounded (bottom)
 import Data.Date (canonicalDate)
 import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
-import Data.Formatter.DateTime as FDT
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
 import Data.Foldable (class Foldable, fold)
+import Data.Formatter.DateTime as FDT
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
-import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Enum as GEnum
+import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, isJust, maybe)
@@ -34,7 +33,6 @@ import Data.Profunctor.Strong (second)
 import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
--- import Data.Time.Duration (Milliseconds(..)) -- What was I doing with this?
 import Data.Time (Time(..))
 import Data.Traversable (traverse)
 import Data.Tuple (Tuple(..), fst, snd)
@@ -44,19 +42,21 @@ import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
 import Effect.Now (nowDateTime)
--- import Data.Unfoldable1 (singleton)
 import Formless as F
 import Formless.Internal.Transform as Internal
 import Metajelo.Types as M
 import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
 import Partial.Unsafe (unsafePartial)
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
-import React.SyntheticEvent (SyntheticMouseEvent)
-import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
-
 import Prim.TypeError (QuoteLabel, class Warn)
+import React.SyntheticEvent (SyntheticMouseEvent, SyntheticInputEvent, target)
+import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
+import Unsafe.Coerce (unsafeCoerce)
+import Web.DOM (Node)
+import Web.DOM.Element as Ele
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
@@ -438,3 +438,14 @@ fromEither :: forall a b. b -> Either a b -> b
 fromEither def ei = case ei of
   Right b -> b
   Left _ -> def
+
+-- TODO this safely, need an FFI check: 
+-- https://github.com/facebook/flow/issues/4799#issuecomment-326992974
+-- Maybe do this separately as a small library: e.g.- `NativeEventTarget -> Maybe Node`
+evTarget :: SyntheticInputEvent -> Effect Node
+evTarget = unsafeCoerce <<< target
+
+evTargetElem :: SyntheticInputEvent -> Effect (Maybe Ele.Element)
+evTargetElem se = Ele.fromNode <$> (evTarget se)
+
+-- NativeEventTarget
