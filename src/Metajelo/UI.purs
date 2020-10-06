@@ -212,6 +212,8 @@ fillSProdExtra sProd = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "_numFormats")
       (Just _numFormats)
     get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") resMdsOpts_opt
+    get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt")
+      (Just locationOpts_opt)
   ) sProdOptInit
   where
     sProdOptInit = Opt.fromRecord sProd
@@ -220,7 +222,7 @@ fillSProdExtra sProd = execState (do
     resourceType_opt = Opt.fromRecord sProd.resourceType
     _numFormats = A.length sProd.format
     resMdsOpts_opt = fillResourceMDSExtra <$> sProd.resourceMetadataSource
-    -- locationOpts_opt -- TODO
+    locationOpts_opt = fillLocationRowExtra sProd.location
 
 -- | ViewModel for Location
 type LocationRowExtra r = (
@@ -232,6 +234,21 @@ type LocationRowExtra r = (
 -- | Decorated state (Model + ViewModel) for Location
 type LocationRowOpts = LocationRowExtra M.LocationRows
 
+fillLocationRowExtra :: M.Location -> Opt.Option LocationRowOpts
+fillLocationRowExtra loc = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
+      (Just institutionID_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies")
+      (Just _numPolicies)
+    get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
+      (Just iSustain_opt)
+  ) locOptInit
+  where
+    locOptInit = Opt.fromRecord loc
+    institutionID_opt = Opt.fromRecord loc.institutionID
+    _numPolicies = NA.length loc.institutionPolicies
+    iSustain_opt = fillSustainExtra loc.institutionSustainability
+
 -- | ViewModel for InstitutionSustainability
 type InstitutionSustainabilityExtraRows r = (
   missionUrl_Ei :: Either String URL
@@ -241,6 +258,19 @@ type InstitutionSustainabilityExtraRows r = (
 -- | Decorated state (Model + ViewModel) for InstitutionSustainability
 type InstitutionSustainabilityRowOpts =
   InstitutionSustainabilityExtraRows M.InstitutionSustainabilityRows
+
+fillSustainExtra :: M.InstitutionSustainability
+  -> Opt.Option InstitutionSustainabilityRowOpts
+fillSustainExtra sust = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
+      (Just missionUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
+      (Just fundingUrl_Ei)
+  ) sustOptInit
+  where
+    sustOptInit = Opt.fromRecord sust
+    missionUrl_Ei = Right sust.missionStatementURL
+    fundingUrl_Ei = Right sust.fundingStatementURL
 
 -- | ViewModel for ResourceMetadataSource
 type ResourceMetadataSourceExtraRows r = (
