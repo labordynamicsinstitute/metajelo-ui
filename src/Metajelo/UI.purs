@@ -8,11 +8,13 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
+import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
 import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray, fromArray)
+import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
@@ -133,15 +135,21 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
         Nothing -> uploadButton {- Maybe have an error msg here -}
         Just blob -> do
           fileTxt <- liftAff $ File.readAsText blob
-          parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
-          recResEi <- liftEffect $ EX.try $ MXR.readRecord parseEnv
+          recResEi <- liftEffect $ runExceptT $ do
+            parseEnv <- ExceptT $ xmlErr <$> (EX.try $ MX.getDefaultParseEnv fileTxt)
+            ExceptT $ EX.try $ MXR.readRecord parseEnv
           case recResEi of
             Right recRes -> pure recRes
             Left err -> errorBox err            
-    errorBox :: forall a. EX.Error -> Widget HTML a
-    errorBox err = D.div_ [MWC.errorDisplayBox] $
-      D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
-    errorMsg err = "Couldn't decode MetajeloXML: " <> (show err)  
+    errorBox :: EX.Error -> Widget HTML M.MetajeloRecord
+    errorBox err = D.div [] [
+        uploadButton
+      , D.div_ [MWC.errorDisplayBox] do
+          D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
+      ]
+    errorMsg err = "Couldn't decode MetajeloXML: " <> (show err)
+    xmlErr = lmap (\_ -> EX.error
+      "Error reading XML - please make sure it is well-formed.")
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
