@@ -2,17 +2,20 @@ module Metajelo.UI where
 
 import Control.Monad.State
 
-import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS, step)
+import Concur.Core (Widget(..))
+import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
+import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
-import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Array as A
+import Data.Array.NonEmpty as NA
+import Data.Array.NonEmpty (NonEmptyArray, fromArray)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Maybe (Maybe(..), fromMaybe, maybe)
+import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.String.Common (null)
 import Data.String.NonEmpty (fromString, toString)
@@ -20,30 +23,40 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Effect (Effect)
+import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
+import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, formatXsdDate, initDate, menuSignal, nonEmptyArrayView, textInput, urlInput)
+import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, evTargetElem
+                         , formatXsdDate, initDate, menuSignal
+                         , nonEmptyArrayView, textInput, urlInput)
 import Metajelo.Forms as MF
 import Metajelo.Types as M
 import Metajelo.View as MV
+import Metajelo.XPaths as MX
 import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
-import Prelude (Unit, bind, discard, join, map, pure, ($), (<$>), (<>), (>>=))
+import Prelude (Unit, bind, discard, join
+               , map, pure, show, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL)
 import Web.DOM.Document (createElement) as DOM
 import Web.DOM.Element (setAttribute) as DOM
+import Web.File.File (toBlob) as File
+import Web.File.FileList (item) as File
+import Web.File.FileReader.Aff (readAsText) as File
 import Web.HTML (window) as DOM
 import Web.HTML.HTMLDocument (toDocument) as HTML
 import Web.HTML.HTMLElement (HTMLElement)
 import Web.HTML.HTMLElement (click) as DOM
 import Web.HTML.HTMLElement (fromElement) as HTML
+import Web.HTML.HTMLInputElement (files, fromElement) as HTMLIn
 import Web.HTML.Window (document) as DOM
 
 runFormSPA :: String -> Effect Unit
@@ -102,7 +115,33 @@ mkDLAnchorAndClicker encTxt = do
         "Couldn't create HTMLElement to click with encoded string"
         <> encTxt
 
-
+uploadButtonSig :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
+uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
+  mjRec <- uploadButton
+  pure $ fillMetajeloRecordExtra mjRec
+  where
+    uploadButton :: Widget HTML M.MetajeloRecord
+    uploadButton = do
+      targetEleMay <- D.input [P._type "file", evTargetElem <$> P.onChange]
+      blobMay <- liftEffect $ runMaybeT do
+        targetEle <- MaybeT targetEleMay
+        targHtmlEle <- MaybeT $ pure $ HTMLIn.fromElement targetEle
+        eleFiles <- MaybeT $ HTMLIn.files targHtmlEle
+        file <- MaybeT $ pure $ File.item 0 eleFiles
+        pure $ File.toBlob file
+      case blobMay of
+        Nothing -> uploadButton {- Maybe have an error msg here -}
+        Just blob -> do
+          fileTxt <- liftAff $ File.readAsText blob
+          parseEnv <- liftEffect $ MX.getDefaultParseEnv fileTxt
+          recResEi <- liftEffect $ EX.try $ MXR.readRecord parseEnv
+          case recResEi of
+            Right recRes -> pure recRes
+            Left err -> errorBox err            
+    errorBox :: forall a. EX.Error -> Widget HTML a
+    errorBox err = D.div_ [MWC.errorDisplayBox] $
+      D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
+    errorMsg err = "Couldn't decode MetajeloXML: " <> (show err)  
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
@@ -125,6 +164,27 @@ type MetajeloRecordExtra r = (
 -- | Decorated state (Model + ViewModel) for MetajeloRecord
 type MetajeloRecordRowOpts = MetajeloRecordExtra M.MetajeloRecordRows
 
+-- | Recomputes View-components of the Model-View from the Model
+-- | (i.e. XML-based record). These fill functions are, in a sense,
+-- | the inverse of the accumulate functions (objectively speaking;
+-- | the types do not lign up as exact inverses).
+fillMetajeloRecordExtra :: M.MetajeloRecord ->  Opt.Option MetajeloRecordRowOpts
+fillMetajeloRecordExtra mjRec = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just identifier_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
+    get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") (Just relId_opts)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
+    get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts") (Just supProd_opts)
+  ) mjOptsInit
+  where
+    mjOptsInit = Opt.fromRecord mjRec
+    identifier_opt = Opt.fromRecord mjRec.identifier
+    _numRelIds = NA.length mjRec.relatedIdentifiers
+    relId_opts = Opt.fromRecord <$> mjRec.relatedIdentifiers
+    _numSupProds =  NA.length mjRec.supplementaryProducts
+    --TODO: as supProd_opts involves "Extra" view data, it needs a fill function:
+    supProd_opts = fillSProdExtra <$> mjRec.supplementaryProducts
+
 -- | ViewModel for SupplementaryProduct
 type SupplementaryProductExtra r = (
   basicMetadata_opt :: Opt.Option M.BasicMetadataRows
@@ -139,6 +199,28 @@ type SupplementaryProductExtra r = (
 type SupplementaryProductRowOpts =
   SupplementaryProductExtra M.SupplementaryProductRows
 
+fillSProdExtra :: M.SupplementaryProduct -> Opt.Option SupplementaryProductRowOpts
+fillSProdExtra sProd = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
+      (Just basicMetadata_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") resourceID_opt
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt")
+      (Just resourceType_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numFormats")
+      (Just _numFormats)
+    get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") resMdsOpts_opt
+    get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt")
+      (Just locationOpts_opt)
+  ) sProdOptInit
+  where
+    sProdOptInit = Opt.fromRecord sProd
+    basicMetadata_opt = Opt.fromRecord sProd.basicMetadata
+    resourceID_opt = Opt.fromRecord <$> sProd.resourceID
+    resourceType_opt = Opt.fromRecord sProd.resourceType
+    _numFormats = A.length sProd.format
+    resMdsOpts_opt = fillResourceMDSExtra <$> sProd.resourceMetadataSource
+    locationOpts_opt = fillLocationRowExtra sProd.location
+
 -- | ViewModel for Location
 type LocationRowExtra r = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
@@ -148,6 +230,21 @@ type LocationRowExtra r = (
 )
 -- | Decorated state (Model + ViewModel) for Location
 type LocationRowOpts = LocationRowExtra M.LocationRows
+
+fillLocationRowExtra :: M.Location -> Opt.Option LocationRowOpts
+fillLocationRowExtra loc = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionID_opt")
+      (Just institutionID_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies")
+      (Just _numPolicies)
+    get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
+      (Just iSustain_opt)
+  ) locOptInit
+  where
+    locOptInit = Opt.fromRecord loc
+    institutionID_opt = Opt.fromRecord loc.institutionID
+    _numPolicies = NA.length loc.institutionPolicies
+    iSustain_opt = fillSustainExtra loc.institutionSustainability
 
 -- | ViewModel for InstitutionSustainability
 type InstitutionSustainabilityExtraRows r = (
@@ -159,6 +256,19 @@ type InstitutionSustainabilityExtraRows r = (
 type InstitutionSustainabilityRowOpts =
   InstitutionSustainabilityExtraRows M.InstitutionSustainabilityRows
 
+fillSustainExtra :: M.InstitutionSustainability
+  -> Opt.Option InstitutionSustainabilityRowOpts
+fillSustainExtra sust = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "missionUrl_Ei")
+      (Just missionUrl_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "fundingUrl_Ei")
+      (Just fundingUrl_Ei)
+  ) sustOptInit
+  where
+    sustOptInit = Opt.fromRecord sust
+    missionUrl_Ei = Right sust.missionStatementURL
+    fundingUrl_Ei = Right sust.fundingStatementURL
+
 -- | ViewModel for ResourceMetadataSource
 type ResourceMetadataSourceExtraRows r = (
   url_Ei :: Either String URL
@@ -168,13 +278,26 @@ type ResourceMetadataSourceExtraRows r = (
 type ResourceMetadataSourceRowOpts =
   ResourceMetadataSourceExtraRows M.ResourceMetadataSourceRows
 
+fillResourceMDSExtra :: M.ResourceMetadataSource
+  -> Opt.Option ResourceMetadataSourceRowOpts
+fillResourceMDSExtra resMDS = execState (do
+  get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
+    (Just url_Ei)
+  ) resMDSOptInit
+  where
+    resMDSOptInit = Opt.fromRecord resMDS
+    url_Ei = Right resMDS.url
+
 type MayOpt a = Maybe (Opt.Option a)
 type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
 type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
 
-accumulateMetajeloRecord ::  Signal HTML (Opt.Option MetajeloRecordRowOpts)
+accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
-  recOpt <- accumulateMetajeloRecUI recOpt'
+  uploadedRec <- uploadButtonSig
+  let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
+  let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
+  recOpt <- accumulateMetajeloRecUI upOrInRec
   -- let sWait = accumulateMetajeloRecUI recOpt'
   -- modDateTime <- runEffectInit initDate nowDateTime
   let modDateTime = initDate
