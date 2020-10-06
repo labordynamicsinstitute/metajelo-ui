@@ -173,7 +173,7 @@ let additions =
             , "web-html"
             ]
             "https://github.com/purescript-concur/purescript-concur-react.git"
-            "v0.4.1"
+            "v0.4.2"
       , enums =
           mkPackage
             [ "control"
