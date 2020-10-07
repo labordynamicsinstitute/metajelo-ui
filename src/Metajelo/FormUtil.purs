@@ -2,7 +2,7 @@ module Metajelo.FormUtil where
 
 import Concur.Core (Widget)
 import Concur.Core.ElementBuilder (Element)
-import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, loopW, oneShot, step)
+import Concur.Core.FRP (Signal, {- debounce, -} display, fireOnce, justWait, loopS, loopW, oneShot, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -57,6 +57,21 @@ import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Node)
 import Web.DOM.Element as Ele
+
+-- For debounce:
+import Data.Time.Duration (Milliseconds(..))
+import Data.Unit (unit)
+import Effect.Aff (Aff(..), Fiber(..), delay, forkAff, joinFiber)
+import Effect.Aff.Class (class MonadAff, liftAff)
+import Control.Alt (class Alt, (<|>))
+import Control.Cofree (Cofree(..))
+import Control.Monad (class Monad)
+--
+import Effect.Aff.AVar as AVar
+--
+type SignalT m a = Cofree m a
+
+
 
 -- Note: Common practice to use `Void` to represent "no error possible"
 
@@ -139,7 +154,7 @@ textInputWidget txt =
 textInput' :: CtrlSignal HTML String
 textInput' initVal = sig initVal
   where
-    sig txt = debounce 500.0 txt textInputWidget
+    sig txt = debounce 1000.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -448,4 +463,36 @@ evTarget = unsafeCoerce <<< target
 evTargetElem :: SyntheticInputEvent -> Effect (Maybe Ele.Element)
 evTargetElem se = Ele.fromNode <$> (evTarget se)
 
--- NativeEventTarget
+-- Debounced output from a widget
+-- wrapped into a signal
+debounce :: forall v a. Monoid v =>
+  Number -> a -> (a -> (Widget v) a) -> SignalT (Widget v) a
+debounce timeoutMs ainit winit = go ainit winit
+  where
+    go :: a -> (a -> (Widget v) a) -> SignalT (Widget v) a
+    go a w = step a do
+      -- Wait until we have a user input
+      -- before starting the timer
+      a' <- w a
+      newSigFiber <- go' a' w
+      liftAff $ joinFiber newSigFiber
+
+    go' :: a -> (a -> (Widget v) a) -> Widget v (Fiber (SignalT (Widget v) a))
+    go' a w = do
+      lock <- liftAff AVar.empty
+      timer <- liftAff (debounceTimeout (Milliseconds timeoutMs) lock)
+      liftAff $ forkAff do
+        AVar.take lock
+        pure $ go a w
+      --notFired <- (pure $ Just unit) <|> (Nothing <$ liftAff (delay (Milliseconds timeoutMs)))
+{-       case notFired of
+        -- Timeout fired
+        Nothing -> pure (go a w)
+        -- Events fired, but we are still in timeout
+        Just _ -> do
+          a' <- w a
+          go' a w -}
+    debounceTimeout :: Milliseconds -> AVar.AVar Unit -> Aff (Fiber Unit)
+    debounceTimeout ms var = forkAff do
+      delay ms
+      AVar.put unit var
