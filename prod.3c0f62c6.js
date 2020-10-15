@@ -214,7 +214,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
   return to;
 };
 },{}],"awqi":[function(require,module,exports) {
-/** @license React v16.13.1
+/** @license React v16.14.0
  * react.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -625,7 +625,7 @@ exports.useState = function (a) {
   return Z().useState(a);
 };
 
-exports.version = "16.13.1";
+exports.version = "16.14.0";
 },{"object-assign":"J4Nk"}],"n8MK":[function(require,module,exports) {
 'use strict';
 
@@ -19099,4 +19099,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.cc7dedf9.js.map
+//# sourceMappingURL=prod.3c0f62c6.js.map
