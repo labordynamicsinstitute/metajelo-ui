@@ -133,9 +133,8 @@ labelSig widg props sigIn = D.div_ props do
 
 textInputWidget :: String -> Widget HTML String
 textInputWidget txt =
-  D.input [P.value txt, P.unsafeTargetValue <$> P.onChange]
+  D.input [P.defaultValue txt, P.unsafeTargetValue <$> P.onChange]
 
--- TODO: remove the first two arguments from textInput', textInput, and urlInput
 textInput' :: CtrlSignal HTML String
 textInput' initVal = sig initVal
   where
