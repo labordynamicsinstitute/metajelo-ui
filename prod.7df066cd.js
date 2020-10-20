@@ -16102,10 +16102,10 @@ var PS = {};
   },
       Fa = function Fa(aa) {
     if (aa instanceof qa || aa instanceof sa) return aa.value0;
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 286, column 1 - line 286, column 34): " + [aa.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 285, column 1 - line 285, column 34): " + [aa.constructor.name]);
   },
       Ba = function Ba(aa) {
-    return e.input(k.widgetLiftWidget)([d.value(aa), I.map(g.functorProps)(d.unsafeTargetValue)(d.onChange)]);
+    return e.input(k.widgetLiftWidget)([d.defaultValue(aa), I.map(g.functorProps)(d.unsafeTargetValue)(d.onChange)]);
   },
       Na = function Na(aa) {
     return m.bind(r.bindCofree(b.widgetAlternative(J.monoidArray)))(aa)(function (ma) {
@@ -16160,11 +16160,11 @@ var PS = {};
       Ha = new H.Generic(function (aa) {
     if (aa instanceof Y) return new H.Inl(H.NoArguments.value);
     if (aa instanceof ka) return new H.Inr(H.NoArguments.value);
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 234, column 1 - line 234, column 58): " + [aa.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 233, column 1 - line 233, column 58): " + [aa.constructor.name]);
   }, function (aa) {
     if (aa instanceof H.Inl) return Y.value;
     if (aa instanceof H.Inr) return ka.value;
-    throw Error("Failed pattern match at Metajelo.FormUtil (line 234, column 1 - line 234, column 58): " + [aa.constructor.name]);
+    throw Error("Failed pattern match at Metajelo.FormUtil (line 233, column 1 - line 233, column 58): " + [aa.constructor.name]);
   });
 
   N = new da.Show(N.genericShow(Ha)(N.genericShowSum(N.genericShowConstructor(N.genericShowArgsNoArguments)(new ba.IsSymbol(function () {
@@ -16183,7 +16183,7 @@ var PS = {};
     return function (ma) {
       if (ma instanceof qa) return qa.create(I.map(O.functorMaybe)(aa)(ma.value0));
       if (ma instanceof sa) return sa.create(I.map(O.functorMaybe)(aa)(ma.value0));
-      throw Error("Failed pattern match at Metajelo.FormUtil (line 273, column 1 - line 275, column 48): " + [aa.constructor.name, ma.constructor.name]);
+      throw Error("Failed pattern match at Metajelo.FormUtil (line 272, column 1 - line 274, column 48): " + [aa.constructor.name, ma.constructor.name]);
     };
   }),
       Ta = function Ta(aa) {
@@ -16287,7 +16287,7 @@ var PS = {};
     return function (ma) {
       if (aa instanceof qa && ma instanceof qa || aa instanceof qa && ma instanceof sa || aa instanceof sa && ma instanceof qa) return qa.create(l.apply(O.applyMaybe)(aa.value0)(ma.value0));
       if (aa instanceof sa && ma instanceof sa) return sa.create(l.apply(O.applyMaybe)(aa.value0)(ma.value0));
-      throw Error("Failed pattern match at Metajelo.FormUtil (line 276, column 1 - line 280, column 63): " + [aa.constructor.name, ma.constructor.name]);
+      throw Error("Failed pattern match at Metajelo.FormUtil (line 275, column 1 - line 279, column 63): " + [aa.constructor.name, ma.constructor.name]);
     };
   }),
       fb = new n.Applicative(function () {
@@ -16323,7 +16323,7 @@ var PS = {};
           oa = function oa(pa) {
         if (pa instanceof sa) return f.step(new sa(O.Nothing.value))(J.mempty(b.widgetMonoid(J.monoidArray)));
         if (pa instanceof qa) return ha(pa);
-        throw Error("Failed pattern match at Metajelo.FormUtil (line 307, column 23 - line 309, column 35): " + [pa.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.FormUtil (line 306, column 23 - line 308, column 35): " + [pa.constructor.name]);
       };
 
       return e.div_(r.shiftMapCofree(J.monoidArray))([])(m.bind(r.bindCofree(b.widgetAlternative(J.monoidArray)))(function (pa) {
@@ -16388,17 +16388,17 @@ var PS = {};
   c.textInput = Va;
 
   c.urlInput = function (aa) {
-    if (aa instanceof x.Left) var ma = "";else if (aa instanceof x.Right) ma = V.toString(ja.urlToNEString(aa.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 169, column 15 - line 171, column 48): " + [aa.constructor.name]);
-    if (aa instanceof x.Left) var za = aa.value0;else if (aa instanceof x.Right) za = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 165, column 15 - line 167, column 20): " + [aa.constructor.name]);
+    if (aa instanceof x.Left) var ma = "";else if (aa instanceof x.Right) ma = V.toString(ja.urlToNEString(aa.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 168, column 15 - line 170, column 48): " + [aa.constructor.name]);
+    if (aa instanceof x.Left) var za = aa.value0;else if (aa instanceof x.Right) za = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 164, column 15 - line 166, column 20): " + [aa.constructor.name]);
     return m.bind(r.bindCofree(b.widgetAlternative(J.monoidArray)))(Va(V.fromString(ma)))(function (Aa) {
       var Ea = m.bind(r.bindCofree(b.widgetAlternative(J.monoidArray))),
           Da = n.pure(r.applicativeCofree(b.widgetAlternative(J.monoidArray)));
-      if (Aa instanceof O.Nothing) Aa = new x.Left(za);else if (Aa instanceof O.Just) Aa = ja.parsePublicURL(V.toString(Aa.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 156, column 19 - line 158, column 46): " + [Aa.constructor.name]);
+      if (Aa instanceof O.Nothing) Aa = new x.Left(za);else if (Aa instanceof O.Just) Aa = ja.parsePublicURL(V.toString(Aa.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 155, column 19 - line 157, column 46): " + [Aa.constructor.name]);
       return Ea(Da(Aa))(function (ha) {
         return m.discard(m.discardUnit)(r.bindCofree(b.widgetAlternative(J.monoidArray)))(f.display(function () {
           if (ha instanceof x.Right) return J.mempty(b.widgetMonoid(J.monoidArray));
           if (ha instanceof x.Left) return Wa(L.toTextString)(new O.Just(ha.value0));
-          throw Error("Failed pattern match at Metajelo.FormUtil (line 159, column 13 - line 161, column 40): " + [ha.constructor.name]);
+          throw Error("Failed pattern match at Metajelo.FormUtil (line 158, column 13 - line 160, column 40): " + [ha.constructor.name]);
         }()))(function () {
           return n.pure(r.applicativeCofree(b.widgetAlternative(J.monoidArray)))(ha);
         });
@@ -16462,10 +16462,10 @@ var PS = {};
         var za = V.fromString(ma.value0);
         if (za instanceof O.Nothing) return new x.Left("Empty Date output from formatXsdDate");
         if (za instanceof O.Just) return new x.Right(za.value0);
-        throw Error("Failed pattern match at Metajelo.FormUtil (line 413, column 27 - line 415, column 30): " + [za.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.FormUtil (line 412, column 27 - line 414, column 30): " + [za.constructor.name]);
       }
 
-      throw Error("Failed pattern match at Metajelo.FormUtil (line 411, column 15 - line 415, column 30): " + [ma.constructor.name]);
+      throw Error("Failed pattern match at Metajelo.FormUtil (line 410, column 15 - line 414, column 30): " + [ma.constructor.name]);
     }();
   };
 
@@ -19099,4 +19099,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.7904fc52.js.map
+//# sourceMappingURL=prod.7df066cd.js.map
