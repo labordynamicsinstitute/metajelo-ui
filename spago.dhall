@@ -5,8 +5,7 @@ You can edit this file as you like.
 { sources = [ "src/**/*.purs", "test/**/*.purs" ]
 , name = "purescript-metajelo-ui"
 , dependencies =
-  [ "concur-formless"
-  , "concur-react"
+  [ "concur-react"
   , "datetime"
   , "dom-filereader"
   , "email-validate"

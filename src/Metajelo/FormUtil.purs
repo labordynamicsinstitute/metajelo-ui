@@ -42,10 +42,7 @@ import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (logShow)
 import Effect.Now (nowDateTime)
-import Formless as F
-import Formless.Internal.Transform as Internal
 import Metajelo.Types as M
-import Metajelo.Validation as V
 import Metajelo.XPaths.Read as MR
 import Partial.Unsafe (unsafePartial)
 import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
@@ -53,19 +50,13 @@ import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
 import React.SyntheticEvent (SyntheticMouseEvent, SyntheticInputEvent, target)
+import Text.Email.Validate as EA
 import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Node)
 import Web.DOM.Element as Ele
 
--- Note: Common practice to use `Void` to represent "no error possible"
-
-type MKFState form = F.State form (Widget HTML)
-type MKValidators form = form Record (F.Validation form (Widget HTML))
-
--- | No validation is needed for this field type, as the input and ouput
--- | types (`io`) are the same.
-type IdentityField f io = f Void io io
+type Email = EA.EmailAddress
 
 mayToString :: ∀ a. Show a => Maybe a -> String
 mayToString mayA = fold $ show <$> mayA
@@ -78,24 +69,6 @@ emptyMeansOptional :: ∀ a. Show a => Maybe a -> String
 emptyMeansOptional mayV = case mayV of
   Nothing -> "(None)"
   x -> mayToString x
-
-menu :: ∀ opt s form e o restF restI inputs fields
-   . IsSymbol s
-   => IsOption opt
-   => BoundedEnum opt
-   => Newtype (form Record F.FormField) (Record fields)
-   => Cons s (F.FormField e opt o) restF fields
-   => Newtype (form Variant F.InputFunction) (Variant inputs)
-   => Cons s (F.InputFunction e opt o) restI inputs
-   => form Record F.FormField
-  -> SProxy s
-  -> Widget HTML (F.Query form)
-menu form field = D.select
-  [ P.defaultValue $ toOptionValue $ F.getInput field form
-  , (F.set field <<< fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
-  ]
-  (upFromIncluding (bottom :: opt) <#> \opt ->
-    D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
 
 -- | A non-formless incantation of menu
 menuSignal :: ∀ opt. BoundedEnum opt => IsOption opt =>
@@ -168,6 +141,26 @@ urlInput iVal = do
     prevTxt = case iVal of
       Left _ -> ""
       Right url -> toString $ urlToNEString url
+
+emailInput :: CtrlSignal HTML (Either String Email)
+emailInput iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
+  emailEi <- pure $ case txtMay of
+    Nothing -> Left prevErr
+    Just txt -> EA.validate $ toString txt
+  display $ case emailEi of
+    Right _ -> mempty
+    Left err -> errorDisplay $ Just err
+  pure emailEi
+  where
+    prevErr :: String
+    prevErr = case iVal of
+      Left err -> err
+      Right _ -> ""
+    prevTxt :: String
+    prevTxt = case iVal of
+      Left _ -> ""
+      Right ea -> EA.toString ea
 
 checkBoxS :: Boolean -> Signal HTML Boolean
 checkBoxS b = step b do
@@ -259,9 +252,15 @@ instance isOptionPolPolType :: IsOption PolPolType where
   toOptionLabel = show
   fromOptionValue = fromMaybe FreeTextPolicy <<<  hush <<< readPolPolType
 
-formSaveButton :: ∀ form. MKFState form -> Widget HTML SyntheticMouseEvent
-formSaveButton fstate = D.button props [D.text "Save"]
-  where props = if fstate.dirty then [P.onClick] else [P.disabled true]
+checkPolicy :: PolPolType -> String -> Either String M.Policy
+checkPolicy pType str = case pType of
+  FreeTextPolicy -> (readNEStringEi str) <#> M.FreeTextPolicy
+  RefPolicy -> (parsePublicURL str) <#> M.RefPolicy
+
+polPolTypeIs :: M.Policy -> PolPolType
+polPolTypeIs p = case p of
+  M.FreeTextPolicy _ -> FreeTextPolicy
+  M.RefPolicy _ -> RefPolicy
 
 data Item a
   =  Keep (Maybe a)
@@ -336,40 +335,16 @@ nonEmptyArrayView mkWidget oldNeArrMay = do
   arrayA <- arrayView mkWidget (second (foldf toArray) oldNeArrMay)
   pure $ second fromArray arrayA
 
-errorDisplay :: ∀ a e. V.ToText e => Maybe e -> Widget HTML a
+errorDisplay :: ∀ a e. Show e => Maybe e -> Widget HTML a
 errorDisplay = maybe mempty (\err ->
-  D.div [P.style {color: "red"}] [D.text $ V.toText err]
+  D.div [P.style {color: "red"}] [D.text $ show err]
 )
 
---TODO: this is in formless-independent
--- | Initialise the form state with default values.
--- | Passing in the initial inputs, and the validations.
-initFormState
-  :: ∀ ixs form is fs m
-   . RowToList is ixs
-  => Internal.InputFieldsToFormFields ixs is fs
-  => Newtype (form Record F.InputField) { | is }
-  => Newtype (form Record F.FormField) { | fs }
-  => form Record F.InputField
-  -> form Record (F.Validation form m)
-  -> F.State form m
-initFormState form validations =
-  { validity: F.Incomplete
-  , dirty: false
-  , submitting: false
-  , errors: 0
-  , submitAttempts: 0
-  , form: Internal.inputFieldsToFormFields form
-  , internal: F.InternalState
-      { initialInputs: form
-      , validators: validations
-      , allTouched: false
-      -- TODO
-      -- , debounceRef: ...
-      -- , validationRef: ...
-      }
-  }
 
+readNEStringEi :: String -> Either String NonEmptyString
+readNEStringEi str = case fromString $ trim str of
+  Just nes -> Right nes
+  Nothing -> Left "Empty string when NonEmptyString expected."
 
 -- NOTE: comment out for production builds
 consoleShow :: ∀ a. Show a => Warn (QuoteLabel "consoleShow in use") =>

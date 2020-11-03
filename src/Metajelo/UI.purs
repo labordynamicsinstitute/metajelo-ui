@@ -19,8 +19,9 @@ import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
+import Data.Monoid (mempty)
 import Data.String.Common (null)
-import Data.String.NonEmpty (fromString, toString)
+import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
@@ -33,10 +34,10 @@ import Effect.Now (nowDateTime)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
-import Metajelo.FormUtil (CtrlSignal, arrayView, checkBoxS, evTargetElem
+import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
+                         , checkPolicy, emailInput, errorDisplay, evTargetElem
                          , formatXsdDate, initDate, menuSignal
-                         , nonEmptyArrayView, textInput, urlInput)
-import Metajelo.Forms as MF
+                         , nonEmptyArrayView, polPolTypeIs, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths as MX
@@ -47,7 +48,7 @@ import Option as Opt
 import Prelude (Unit, bind, discard, join
                , map, pure, show, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
-import Text.URL.Validate (URL)
+import Text.URL.Validate (URL, urlToString)
 import Web.DOM.Document (createElement) as DOM
 import Web.DOM.Element (setAttribute) as DOM
 import Web.File.File (toBlob) as File
@@ -233,6 +234,8 @@ fillSProdExtra sProd = execState (do
 type LocationRowExtra r = (
   institutionID_opt :: Opt.Option (M.BaseIdRows ())
 , _numPolicies :: Int
+, institutionContact_opt :: Opt.Option InstitutionContactRowOpts
+, institutionPolicies_opt :: PartialPols
 , iSustain_opt :: Opt.Option InstitutionSustainabilityRowOpts
 | r
 )
@@ -247,12 +250,32 @@ fillLocationRowExtra loc = execState (do
       (Just _numPolicies)
     get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt")
       (Just iSustain_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionContact_opt")
+      (Just institutionContact_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies_opt")
+      (Just iPol_opts)
   ) locOptInit
   where
     locOptInit = Opt.fromRecord loc
     institutionID_opt = Opt.fromRecord loc.institutionID
     _numPolicies = NA.length loc.institutionPolicies
     iSustain_opt = fillSustainExtra loc.institutionSustainability
+    institutionContact_opt = fillIContactExtra loc.institutionContact
+    iPol_opts = fillPolicyExtra <$> loc.institutionPolicies
+
+type InstitutionContactExtraRows r = (
+  email_Ei :: Either String Email | r
+)
+
+type InstitutionContactRowOpts =
+  InstitutionContactExtraRows M.InstitutionContactRows
+
+fillIContactExtra :: M.InstitutionContact
+  -> Opt.Option InstitutionContactRowOpts
+fillIContactExtra iCont = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "email_Ei")
+      (Just $ Right iCont.emailAddress)
+  ) (Opt.fromRecord iCont)
 
 -- | ViewModel for InstitutionSustainability
 type InstitutionSustainabilityExtraRows r = (
@@ -277,6 +300,31 @@ fillSustainExtra sust = execState (do
     missionUrl_Ei = Right sust.missionStatementURL
     fundingUrl_Ei = Right sust.fundingStatementURL
 
+type InstitutionPolicyExtraRows r = (
+  policy_str :: NonEmptyString
+, polPolType :: PolPolType
+, policy_ei :: Either String M.Policy
+| r
+)
+
+type InstitutionPolicyRowOpts =
+  InstitutionPolicyExtraRows M.InstitutionPolicyRows
+
+fillPolicyExtra :: M.InstitutionPolicy
+  -> Opt.Option InstitutionPolicyRowOpts
+fillPolicyExtra iPolRec = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "policy_str") policyStrMay
+    get >>= Opt.maySetOptState (SProxy :: _ "polPolType")
+      (Just $ polPolTypeIs iPolRec.policy)
+    get >>= Opt.maySetOptState (SProxy :: _ "policy_ei")
+      (Just $ Right iPolRec.policy)
+  ) iPolRecInit
+  where
+    iPolRecInit = Opt.fromRecord iPolRec
+    policyStrMay = case iPolRec.policy of
+      M.FreeTextPolicy txtPol -> Just txtPol
+      M.RefPolicy url -> fromString $ urlToString url
+
 -- | ViewModel for ResourceMetadataSource
 type ResourceMetadataSourceExtraRows r = (
   url_Ei :: Either String URL
@@ -299,6 +347,7 @@ fillResourceMDSExtra resMDS = execState (do
 type MayOpt a = Maybe (Opt.Option a)
 type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
 type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
+type PartialPols = NonEmptyArray (Opt.Option InstitutionPolicyRowOpts)
 
 accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
@@ -448,14 +497,24 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
   display D.br'
   sOrgMay <- D.div_ [] $ D.span_ [MC.superOrg] $ textInput $
     join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
-  icMay <- MF.contactSignal $ Opt.get (SProxy :: _ "institutionContact") locOpt
+  icOpt <- accumulateContact $ getOpt (SProxy :: _ "institutionContact_opt") locOpt
+  let icMay = Opt.getSubset icOpt
   sustainOpt <- accumulateSustain $ getOpt (SProxy :: _ "iSustain_opt") locOpt
   let sustainMay = Opt.getSubset sustainOpt
-  polsMayTup <- MF.policySigArray $ Tuple
+  polsOptTup <- policySigArray $ Tuple
     (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
-    (Opt.get (SProxy :: _ "institutionPolicies") locOpt)
-  let _numPolicies = fst polsMayTup
-  let polsMay = snd polsMayTup
+    (Opt.get (SProxy :: _ "institutionPolicies_opt") locOpt)
+  let _numPolicies = fst polsOptTup
+  let polsOpt = snd polsOptTup
+  let polsMay = join $ (map sequence) $ ((map Opt.getSubset) <$> polsOpt)
+{- 
+  prodsTup <- supProdSigArray $ Tuple
+    (Opt.getWithDefault 0 (SProxy :: _ "_numSupProds") recOpt)
+    (Opt.get (SProxy :: _ "supProd_opts") recOpt)
+  let _numSupProds = fst prodsTup
+  let supProdOpts = snd prodsTup
+  let supProdsMay = join $ (map sequence) $ ((map Opt.getSubset) <$> supProdOpts) -}
+
   versioning <- D.div_ [] $ D.span_ [MC.versioning] $ checkBoxS $
     Opt.getWithDefault false (SProxy :: _ "versioning") locOpt
   newLoc <- pure $ execState (do
@@ -464,10 +523,12 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
     get >>= Opt.maySetOptState (SProxy :: _ "institutionName") instNameMay
     get >>= Opt.maySetOptState (SProxy :: _ "institutionType") instTypeMay
     get >>= Opt.maySetOptState (SProxy :: _ "superOrganizationName") (Just sOrgMay)
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionContact_opt") (Just icOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionContact") icMay
     get >>= Opt.maySetOptState (SProxy :: _ "iSustain_opt") (Just sustainOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionSustainability") sustainMay
     get >>= Opt.maySetOptState (SProxy :: _ "_numPolicies") (Just _numPolicies)
+    get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies_opt") polsOpt
     get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies") polsMay
     get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
   ) locOpt
@@ -577,6 +638,55 @@ accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
       urlMay
     get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
   ) oldRMDS
+
+accumulateContact :: CtrlSignal HTML (Opt.Option InstitutionContactRowOpts)
+accumulateContact oldIC = D.div_ [MC.institutionContact] do
+  email_Ei <- D.div_ [] $ D.span_ [MC.contactEmail] $ emailInput $
+    Opt.getWithDefault (Left "") (SProxy :: _ "email_Ei") oldIC
+  let emailMay = hush email_Ei
+  contactTypMay <- D.div_ [] $ D.span_ [MC.contactType] $ menuSignal $
+    Opt.get (SProxy :: _ "contactType") oldIC
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "email_Ei")
+      (Just email_Ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "emailAddress")
+      emailMay
+    get >>= Opt.maySetOptState (SProxy :: _ "contactType") contactTypMay
+  ) oldIC
+
+accumulatePolicy :: CtrlSignal HTML (MayOpt InstitutionPolicyRowOpts)
+accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
+  polPolTypeMay <- D.div_ [] $ D.span_ [MC.policy] $ menuSignal $ Just $
+    Opt.getWithDefault FreeTextPolicy (SProxy :: _ "polPolType") oldPol
+  let polPolType = fromMaybe FreeTextPolicy polPolTypeMay
+  txtInMay <- D.div_ [] $ D.span_ [MC.policy] $ textInput $
+    Opt.get (SProxy :: _ "policy_str") oldPol
+  let policy_ei = checkPolicy polPolType $ maybe "" toString txtInMay
+  display $ case policy_ei of
+    Right _ -> mempty
+    Left err -> errorDisplay $ Just err
+  let policyMay = hush policy_ei
+  polTypeMay <- D.div_ [] $ D.span_ [MC.policyType] $ menuSignal $
+    Opt.get (SProxy :: _ "policyType") oldPol
+  appliesToProd <- D.div_ [] $ D.span_ [MC.applies] $ menuSignal $
+    Opt.get (SProxy :: _ "appliesToProduct") oldPol
+  pure $ Just $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "polPolType") (Just polPolType)
+    get >>= Opt.maySetOptState (SProxy :: _ "policy_str") txtInMay
+    get >>= Opt.maySetOptState (SProxy :: _ "policy_ei") (Just policy_ei)
+    get >>= Opt.maySetOptState (SProxy :: _ "policy") policyMay
+    get >>= Opt.maySetOptState (SProxy :: _ "policyType") polTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "appliesToProduct") appliesToProd
+  ) oldPol
+  where
+    oldPol = fromMaybe Opt.empty oldPolMay
+
+
+
+ -- | The first element of the tuple is the (desired) number of policies
+policySigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialPols))
+policySigArray instPoliciesMay = D.div_ [MC.institutionPolicies] do
+  nonEmptyArrayView accumulatePolicy instPoliciesMay
 
 tooltip :: forall a. Widget HTML a
 tooltip = D.div_ [MC.tooltip] empty

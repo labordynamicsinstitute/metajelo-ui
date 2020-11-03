@@ -133,16 +133,6 @@ let additions =
             ]
             "https://github.com/garyb/purescript-codec-argonaut.git"
             "v7.1.0"
-      , concur-formless =
-          mkPackage
-            [ "variant"
-            , "heterogeneous"
-            , "generics-rep"
-            , "profunctor-lenses"
-            , "concur-react"
-            ]
-            "https://github.com/ajnsit/purescript-concur-formless.git"
-            "master"
       , concur-core =
           mkPackage
             [ "aff"
