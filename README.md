@@ -21,7 +21,16 @@ wget -r -np -k https://labordynamicsinstitute.github.io/metajelo-ui/
 
 (TODO)
 
-## Modifying existing CSS
+## CSS for Metajelo UI
+
+By default, CSS files are retrieved from a [separate repository](https://github.com/labordynamicsinstitute/metajelo-ui-css-classes) using `scripts/getcss`; the file `css/style.css` contains some default styles used in our examples.
+Feel free to include it, or modify it (renaming the file is also possible):
+
+```html
+<link rel="stylesheet" href="css/style.css">
+```
+
+### Modifying existing CSS
 
 Once you've retrieved a build, as discussed above, or built metajelo-ui,
 you may wish to modify the styles. You can modify the retrieved
@@ -78,15 +87,6 @@ the section on Docker below, and for complete build commands used in CI, see
 the command in the container with the CWD mounted and then exit. Alternatively
 if you want to issue multiple commands in the container quickly, you can
 run `./psc.sh bash`.
-
-## Styling with CSS as part of a build
-
-By default, CSS files are retrieved from a [separate repository](https://github.com/labordynamicsinstitute/metajelo-ui-css-classes) using `scripts/getcss`; the file `css/style.css` contains some default styles used in our examples.
-Feel free to include it, or modify it (renaming the file is also possible):
-
-```html
-<link rel="stylesheet" href="css/style.css">
-```
 
 ## Debugging
 
