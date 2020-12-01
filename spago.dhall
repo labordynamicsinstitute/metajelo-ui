@@ -21,6 +21,7 @@ You can edit this file as you like.
   , "profunctor"
   , "stringutils"
   , "url-validator"
+  , "uuid"
   , "variant"
   ]
 , packages = ./packages.dhall

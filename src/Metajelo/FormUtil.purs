@@ -371,11 +371,13 @@ runEffectOnS e sWait = runEffectOnW e wWait
   where
   wWait = oneShot (Just <$> sWait)
 
+-}
+
 -- Or with a supplied initial value instead of using a Maybe
 runEffectInit :: forall a. a -> Effect a -> Signal HTML a
 runEffectInit i e = step i do
   a <- liftEffect e
-  pure (step a empty) -}
+  pure (step a empty)
 
 -- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
 formatXsdDate :: DateTime -> Either String M.XsdDate

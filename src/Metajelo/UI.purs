@@ -2,7 +2,7 @@ module Metajelo.UI where
 
 import Control.Monad.State
 
-import Concur.Core (Widget(..))
+import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
@@ -13,10 +13,11 @@ import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Plus (empty)
 import Data.Array as A
 import Data.Array.NonEmpty as NA
-import Data.Array.NonEmpty (NonEmptyArray, fromArray)
+import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
+-- import Data.Functor ((<#>))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
@@ -25,6 +26,7 @@ import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
+import Data.UUID as UUID
 import Effect (Effect)
 import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
@@ -37,7 +39,7 @@ import Metajelo.CSS.Web.ClassProps as MWC
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
                          , checkPolicy, emailInput, errorDisplay, evTargetElem
                          , formatXsdDate, initDate, menuSignal
-                         , nonEmptyArrayView, polPolTypeIs, textInput, urlInput)
+                         , nonEmptyArrayView, polPolTypeIs, runEffectInit, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths as MX
@@ -397,8 +399,7 @@ finalizeRecord recIn = do
 -- | for the Metajelo Record.
 accumulateMetajeloRecUI ::  CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecUI recOpt = do
-  idOpt <- D.div_ [MC.recordId] do
-    accumulateIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
+  idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   dateMay <- D.div_ [MC.date] <$> textInput $ Opt.get (SProxy :: _ "date") recOpt
 
@@ -571,6 +572,24 @@ accumulateIdent oldId = D.div_ [MC.identifier] do
     get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
     get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
   ) oldId
+
+genRecIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
+genRecIdent oldId = do
+  let idMay = Opt.get (SProxy :: _ "id") oldId
+  idMayNew <- case idMay of
+    Just idOld -> pure $ Just idOld
+    Nothing -> do
+      uuid <- runEffectInit UUID.emptyUUID UUID.genUUID
+      pure $ do
+        pfx <- urnPrefix
+        uuidNES <- fromString $ UUID.toString uuid
+        pure $ pfx <> uuidNES
+  pure $ execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "id") idMayNew
+    get >>= Opt.maySetOptState (SProxy :: _ "idType") (Just M.URN)
+  ) oldId
+  where
+    urnPrefix = fromString "urn:uuid:"
 
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
 accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do

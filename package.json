@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "react-dom": "^16.14.0",
+    "uuid": "^3.3.2"
   },
   "browserslist": [
     "defaults"
