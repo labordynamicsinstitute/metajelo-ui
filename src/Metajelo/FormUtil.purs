@@ -12,13 +12,13 @@ import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
 import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
+import Data.Bifunctor (lmap)
 import Data.Bounded (bottom)
 import Data.Date (canonicalDate)
 import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
 import Data.Foldable (class Foldable, fold)
-import Data.Formatter.DateTime as FDT
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
@@ -26,8 +26,10 @@ import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
+import Data.Int (round)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, isJust, maybe)
 import Data.Monoid (class Monoid, mempty)
+import Data.Natural (Natural, intToNat, natToInt)
 import Data.Newtype (class Newtype)
 import Data.Profunctor.Strong (second)
 import Data.String (trim)
@@ -40,12 +42,16 @@ import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect (Effect)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (logShow)
+import Effect.Class.Console (logShow, log)
+import Effect.Exception as EX
 import Effect.Now (nowDateTime)
+import Effect.Unsafe (unsafePerformEffect)
+import Global (readInt)
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
+import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -104,14 +110,17 @@ labelSig widg props sigIn = D.div_ props do
   display widg
   sigIn
 
-textInputWidget :: String -> Widget HTML String
-textInputWidget txt =
-  D.input [P.defaultValue txt, P.unsafeTargetValue <$> P.onChange]
-
-textInput' :: CtrlSignal HTML String
-textInput' initVal = sig initVal
+textInputWidget :: Boolean -> String -> Widget HTML String
+textInputWidget refresh txt = do
+  log $ "textInputWidget: " <> (show refresh) <> " " <> txt
+  D.input [valProp txt, P.unsafeTargetValue <$> P.onChange]
   where
-    sig txt = debounce 500.0 txt textInputWidget
+    valProp = if refresh then P.value else P.defaultValue
+
+textInput' :: Boolean -> CtrlSignal HTML String
+textInput' refresh initVal = sig initVal
+  where
+    sig txt = debounce 500.0 txt $ textInputWidget refresh
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -119,12 +128,47 @@ textFilter txtSig = do
   txt <- txtSig
   pure $ fromString $ trim txt
 
-textInput :: CtrlSignal HTML (Maybe NonEmptyString)
-textInput iVal = textFilter $ textInput' (foldf toString iVal)
+textInput :: Boolean -> CtrlSignal HTML (Maybe NonEmptyString)
+textInput refresh iVal = textFilter $ textInput' refresh (foldf toString iVal)
 
-urlInput :: CtrlSignal HTML (Either String URL)
-urlInput iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
+dateInput :: Boolean -> CtrlSignal HTML (Either String M.XsdDate)
+dateInput refresh iVal = do
+  -- iValNesEi <- runEffectInit (runErr iVal) $ dateToNesEi iVal
+  let iValNesEi = unsafePerformEffect $ dateToNesEi iVal -- FIXME: remove
+  prevTxt :: String <- pure $ case iValNesEi of
+    Left _ -> ""
+    Right dtStr -> toString dtStr
+  prevErr <- pure $ case iValNesEi of
+    Left err -> err
+    Right _ -> ""
+  pure $ unsafePerformEffect $ log $ "date retrieved in dateInput: " <> (show iVal)
+  pure $ unsafePerformEffect $ log $ "txt retrieved in dateInput: " <> prevTxt
+  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
+  display $ case iValNesEi of
+    Right _ -> mempty
+    Left err -> errorDisplay $ Just err
+  case txtMay of
+    Just txtNE -> -- runEffectInit (runErr txtNE) $ (lmap show) <$> (EX.try $ MR.parseDate txtNE)
+      pure $ unsafePerformEffect $ (lmap show) <$> (EX.try $ MR.parseDate txtNE) -- FIXME: remove
+    Nothing -> pure $ Left "no date input"
+  where
+    dateToNesEi :: Either String DateTime -> Effect (Either String NonEmptyString)
+    dateToNesEi dtEi = do
+      let dt = fromMaybe bottom $ hush dtEi
+      nesEi <- EX.try $ MW.dateTimeToStr dt
+      pure $ (lmap show) nesEi
+    runErr :: forall a b. Show a => a -> Either String b
+    runErr ei = Left $ "Run time date parsing error on " <> (show ei)
+
+natInput :: Boolean -> CtrlSignal HTML (Maybe Natural)
+natInput refresh iVal = do
+  let iValNES = iVal <#> (natToInt >>> show) >>= fromString
+  txtMay :: Maybe NonEmptyString <- textInput refresh iValNES
+  pure $ (intToNat <<< round <<< readInt 10 <<< toString) <$> txtMay
+
+urlInput :: Boolean -> CtrlSignal HTML (Either String URL)
+urlInput refresh iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
   urlEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> parsePublicURL $ toString txt
@@ -142,9 +186,9 @@ urlInput iVal = do
       Left _ -> ""
       Right url -> toString $ urlToNEString url
 
-emailInput :: CtrlSignal HTML (Either String Email)
-emailInput iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
+emailInput :: Boolean -> CtrlSignal HTML (Either String Email)
+emailInput refresh iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
   emailEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> EA.validate $ toString txt
@@ -358,7 +402,7 @@ dateTimeWidg = do
   liftEffect nowDateTime
 
 dateTimeSig :: Signal HTML DateTime
-dateTimeSig = justWait initDate (fireOnce dateTimeWidg) pure
+dateTimeSig = justWait bottom (fireOnce dateTimeWidg) pure
 
 runEffectOnW :: forall a b. Effect b -> Widget HTML a -> Signal HTML (Maybe b)
 runEffectOnW e wWait = loopW Nothing $ \_ -> do
@@ -378,34 +422,6 @@ runEffectInit :: forall a. a -> Effect a -> Signal HTML a
 runEffectInit i e = step i do
   a <- liftEffect e
   pure (step a empty)
-
--- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
-formatXsdDate :: DateTime -> Either String M.XsdDate
-formatXsdDate dt = xsdDate
-  where
-    xsdDateInit = FDT.formatDateTime "YYYY-MM-DD" dt
-    xsdDate = case xsdDateInit of
-      Left err -> Left err
-      Right xsdDateStr -> case fromString xsdDateStr of
-        Nothing -> Left "Empty Date output from formatXsdDate"
-        Just nes -> Right nes
-
-initDate :: DateTime
-initDate = makeDateTime 0 0 0 0 0 0 0
-
--- TODO: what to do with this?
-makeDateTime ∷ Int → Int → Int → Int → Int → Int → Int → DateTime
-makeDateTime year month day hour minute second millisecond =
-  DateTime
-    (canonicalDate
-      (fromMaybe bottom $ toEnum year)
-      (fromMaybe bottom $ toEnum month)
-      (fromMaybe bottom $ toEnum day))
-    (Time
-        (fromMaybe bottom $ toEnum hour )
-        (fromMaybe bottom $ toEnum minute )
-        (fromMaybe bottom $ toEnum second )
-        (fromMaybe bottom $ toEnum millisecond))
 
 safeRange :: Int -> Int -> Array Int
 safeRange i f = if f < i then [] else (i .. f)

@@ -10,7 +10,6 @@ You can edit this file as you like.
   , "dom-filereader"
   , "email-validate"
   , "foreign-object"
-  , "formatters"
   , "metajelo"
   , "metajelo-ui-css-classes"
   , "metajelo-web"
