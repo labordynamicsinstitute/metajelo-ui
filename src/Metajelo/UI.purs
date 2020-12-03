@@ -400,6 +400,7 @@ accumulateMetajeloRecUI refresh recOpt = do
   idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   let dateInTest = Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
+  pure $ unsafePerformEffect $ log $ "refresh accumulateMetajeloRecUI is : " <> (show $ refresh)
   pure $ unsafePerformEffect $ log $ "date sent to dateInput: " <> (show $ dateInTest)
   date_Ei <- D.div_ [MC.date] <$> dateInput refresh $ Opt.getWithDefault (Left "")
     (SProxy :: _ "date_Ei") recOpt

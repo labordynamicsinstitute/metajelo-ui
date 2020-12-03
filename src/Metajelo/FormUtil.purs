@@ -110,17 +110,30 @@ labelSig widg props sigIn = D.div_ props do
   display widg
   sigIn
 
-textInputWidget :: Boolean -> String -> Widget HTML String
-textInputWidget refresh txt = do
-  log $ "textInputWidget: " <> (show refresh) <> " " <> txt
-  D.input [valProp txt, P.unsafeTargetValue <$> P.onChange]
+
+type RefreshString = {ref :: Boolean, str:: String}
+
+textInputWidget :: RefreshString -> Widget HTML RefreshString
+textInputWidget rs = do
+  log $ "textInputWidget: " <> (show rs.ref) <> " " <> rs.str
+  txtNew <- D.input [valProp rs.str, P.unsafeTargetValue <$> P.onChange]
+  pure {ref: rs.ref, str: txtNew}
   where
-    valProp = if refresh then P.value else P.defaultValue
+    valProp = if rs.ref then P.value else P.defaultValue
 
 textInput' :: Boolean -> CtrlSignal HTML String
-textInput' refresh initVal = sig initVal
+textInput' refresh initVal = do
+  refstrNew <- sigNow refstr
+  pure refstrNew.str
   where
-    sig txt = debounce 500.0 txt $ textInputWidget refresh
+    refstr = {ref: refresh, str: initVal}
+    sigNow rs = step rs $ do
+      pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
+      rsNew <- textInputWidget rs
+      pure $ sigNow rsNew
+    sig rs = do
+      pure $ unsafePerformEffect $ log $ "refstr in textInput sig': " <> (show rs)
+      debounce 500.0 rs textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -129,7 +142,9 @@ textFilter txtSig = do
   pure $ fromString $ trim txt
 
 textInput :: Boolean -> CtrlSignal HTML (Maybe NonEmptyString)
-textInput refresh iVal = textFilter $ textInput' refresh (foldf toString iVal)
+textInput refresh iVal = do
+  pure $ unsafePerformEffect $ log $ "refresh in textInput: " <> (show refresh)
+  textFilter $ textInput' refresh (foldf toString iVal)
 
 dateInput :: Boolean -> CtrlSignal HTML (Either String M.XsdDate)
 dateInput refresh iVal = do
@@ -141,6 +156,7 @@ dateInput refresh iVal = do
   prevErr <- pure $ case iValNesEi of
     Left err -> err
     Right _ -> ""
+  pure $ unsafePerformEffect $ log $ "refresh in dateInput: " <> (show refresh)
   pure $ unsafePerformEffect $ log $ "date retrieved in dateInput: " <> (show iVal)
   pure $ unsafePerformEffect $ log $ "txt retrieved in dateInput: " <> prevTxt
   txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
