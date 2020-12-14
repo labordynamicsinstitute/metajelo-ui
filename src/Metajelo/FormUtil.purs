@@ -52,7 +52,7 @@ import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, when, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -173,7 +173,7 @@ dateInput refresh iVal = do
   pure $ unsafePerformEffect $ log $ "date retrieved in dateInput: " <> (show iVal)
   pure $ unsafePerformEffect $ log $ "txt retrieved in dateInput: " <> prevTxt
   txtMay :: Maybe NonEmptyString <- D.div_ [P._id mjUI_dateInput]
-    $ textInput refresh (fromString prevTxt) -- assumes this id is unique ..
+    $ textInput refresh (fromString prevTxt) -- assumes this id is unique ... (hack) :
   pure $ unsafePerformEffect $ setChildInputByTag mjUI_dateInput "INPUT" prevTxt
   display $ case iValNesEi of
     Right _ -> mempty
@@ -493,9 +493,9 @@ setChildInputByTag id tag value = do
       let childMatches = filter (\c -> Ele.tagName c == tag) childArray
       let childInputs = catMaybes $ HTML.fromElement <$> childMatches
       -- log $ "Child array tags: " <> (show $ Ele.tagName <$> childArray) -- DEBUG
-      when (length childMatches == 0) $ log
-        $ "No children of " <> id <> " with tag == " <> tag
-      when (length childInputs == 0) $ log
-        $ "No input element children of " <> id <> " with tag == " <> tag
+      -- when (length childMatches == 0) $ log
+      --   $ "No children of " <> id <> " with tag == " <> tag
+      -- when (length childInputs == 0) $ log
+      --   $ "No input element children of " <> id <> " with tag == " <> tag
       for_ childInputs (HTML.setValue value)
     Nothing -> log $ "in setChildByTag, couldn't find element with id " <> id
