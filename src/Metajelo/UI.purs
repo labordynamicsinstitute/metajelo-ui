@@ -361,9 +361,7 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   uploadedRec <- uploadButtonSig
   let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
   let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
-  let refresh = isJust uploadedRecMay
-  pure $ unsafePerformEffect $ log $ "refresh init is : " <> (show $ refresh)
-  recOpt <- accumulateMetajeloRecUI refresh upOrInRec
+  recOpt <- accumulateMetajeloRecUI upOrInRec
   let xsdDateLastMay = Opt.get (SProxy :: _ "lastModified") recOpt
   xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just bottom) of
     First x -> x
@@ -395,24 +393,22 @@ finalizeRecord recIn = do
 
 -- | Accumulates user input values (values generated from user input)
 -- | for the Metajelo Record.
-accumulateMetajeloRecUI :: Boolean -> CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
-accumulateMetajeloRecUI refresh recOpt = do
+accumulateMetajeloRecUI :: CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
+accumulateMetajeloRecUI recOpt = do
   idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   let dateInTest = Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
-  pure $ unsafePerformEffect $ log $ "refresh accumulateMetajeloRecUI is : " <> (show $ refresh)
-  pure $ unsafePerformEffect $ log $ "date sent to dateInput: " <> (show $ dateInTest)
-  date_Ei <- D.div_ [MC.date] <$> dateInput refresh $ Opt.getWithDefault (Left "")
+  date_Ei <- D.div_ [MC.date] <$> dateInput $ Opt.getWithDefault (Left "")
     (SProxy :: _ "date_Ei") recOpt
   let dateMay = hush date_Ei
-  relIdsTup <- relIdSigArray refresh $ Tuple
+  relIdsTup <- relIdSigArray $ Tuple
     (Opt.getWithDefault 0 (SProxy :: _ "_numRelIds") recOpt)
     (Opt.get (SProxy :: _ "relId_opts") recOpt)
   let _numRelIds = fst relIdsTup
   let relIdOpts = snd relIdsTup
   let relIdsMay = join $ (map sequence) $ ((map Opt.getAll) <$> relIdOpts)
 
-  prodsTup <- supProdSigArray refresh $ Tuple
+  prodsTup <- supProdSigArray $ Tuple
     (Opt.getWithDefault 0 (SProxy :: _ "_numSupProds") recOpt)
     (Opt.get (SProxy :: _ "supProd_opts") recOpt)
   let _numSupProds = fst prodsTup
@@ -434,26 +430,26 @@ accumulateMetajeloRecUI refresh recOpt = do
   ) recOpt
 
 -- FIXME: check how the header is grouped into these?
-accumulateSuppProd :: Boolean -> CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
-accumulateSuppProd refresh prodOptMay = D.div_ [MC.product] do
-  basicMdOpt <- accumulateBasicMetaData refresh $
+accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
+accumulateSuppProd prodOptMay = D.div_ [MC.product] do
+  basicMdOpt <- accumulateBasicMetaData $
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
   let basicMdMay = Opt.getAll basicMdOpt
   redIdOpt <- D.div_ [MC.resourceId] do
-    accumulateIdent refresh $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
+    accumulateIdent $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
   let resIdMay = Opt.getAll redIdOpt
-  resTypeOpt <- accumulateResType refresh $
+  resTypeOpt <- accumulateResType $
     getOpt (SProxy :: _ "resourceType_opt") prodOpt
   let resTypeMay = Opt.getSubset resTypeOpt
-  formatsTup <- formatSigArray refresh $ Tuple
+  formatsTup <- formatSigArray $ Tuple
     (Opt.getWithDefault 0 (SProxy :: _ "_numFormats") prodOpt)
     (Opt.getWithDefault [] (SProxy :: _ "format") prodOpt)
   let _numFormats = fst formatsTup
   let formats = snd formatsTup
-  resMdOpt <- accumulateResMdSource refresh $
+  resMdOpt <- accumulateResMdSource $
     getOpt (SProxy :: _ "resMdsOpts_opt") prodOpt
   let resMdMay = Opt.getSubset resMdOpt
-  locOptMay <- accumulateLocation refresh $
+  locOptMay <- accumulateLocation $
     Opt.get (SProxy :: _ "locationOpts_opt") prodOpt
   let locMay = join $ Opt.getSubset <$> locOptMay
   newProd <- pure $ execState (do
@@ -484,30 +480,30 @@ accumulateSuppProd refresh prodOptMay = D.div_ [MC.product] do
     , fold $ MV.mkSupplementaryProductWidget <$> prodMay
     ]
 
-supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
-supProdSigArray refresh prodsMay =
+supProdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialProds))
+supProdSigArray prodsMay =
   D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
     D.div_ [MC.productList] 
-      $ nonEmptyArrayView (accumulateSuppProd refresh) prodsMay
+      $ nonEmptyArrayView accumulateSuppProd prodsMay
 
-accumulateLocation :: Boolean -> CtrlSignal HTML (MayOpt LocationRowOpts)
-accumulateLocation refresh locOptMay = D.div_ [MC.location] do
-  identOpt <- D.div_ [] $ D.span_ [MC.institutionId] $ accumulateIdent refresh $
+accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
+accumulateLocation locOptMay = D.div_ [MC.location] do
+  identOpt <- D.div_ [] $ D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
-  instNameMay <- D.div_ [] $ D.span_ [MC.institutionName] $ textInput refresh $
+  instNameMay <- D.div_ [] $ D.span_ [MC.institutionName] $ textInput $
     Opt.get (SProxy :: _ "institutionName") locOpt
   instTypeMay <- D.div_ [] $ D.span_ [MC.institutionType] $ menuSignal $
     Opt.get (SProxy :: _ "institutionType") locOpt
   display D.br'
-  sOrgMay <- D.div_ [] $ D.span_ [MC.superOrg] $ textInput refresh $
+  sOrgMay <- D.div_ [] $ D.span_ [MC.superOrg] $ textInput $
     join $ Opt.get (SProxy :: _ "superOrganizationName") locOpt
-  icOpt <- accumulateContact refresh
+  icOpt <- accumulateContact
     $ getOpt (SProxy :: _ "institutionContact_opt") locOpt
   let icMay = Opt.getSubset icOpt
-  sustainOpt <- accumulateSustain refresh $ getOpt (SProxy :: _ "iSustain_opt") locOpt
+  sustainOpt <- accumulateSustain $ getOpt (SProxy :: _ "iSustain_opt") locOpt
   let sustainMay = Opt.getSubset sustainOpt
-  polsOptTup <- policySigArray refresh $ Tuple
+  polsOptTup <- policySigArray $ Tuple
     (Opt.getWithDefault 1 (SProxy :: _ "_numPolicies") locOpt)
     (Opt.get (SProxy :: _ "institutionPolicies_opt") locOpt)
   let _numPolicies = fst polsOptTup
@@ -549,13 +545,13 @@ accumulateLocation refresh locOptMay = D.div_ [MC.location] do
     , foldMap (\loc -> fold $ MV.spacify $ MV.locElems loc) locMay
     ]
 
-accumulateSustain :: Boolean ->
+accumulateSustain ::
   CtrlSignal HTML (Opt.Option InstitutionSustainabilityRowOpts)
-accumulateSustain refresh oldSust = D.div_ [MC.sustainability] do
-  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput refresh $
+accumulateSustain oldSust = D.div_ [MC.sustainability] do
+  missionUrl_Ei <- D.span_ [MC.missionStatement] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "missionUrl_Ei") oldSust
   let missionUrlMay = hush missionUrl_Ei
-  fundingUrl_Ei <- D.span_ [MC.fundingStatement] $ urlInput refresh $
+  fundingUrl_Ei <- D.span_ [MC.fundingStatement] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "fundingUrl_Ei") oldSust
   let fundingUrlMay = hush fundingUrl_Ei
   pure $ execState (do
@@ -569,9 +565,9 @@ accumulateSustain refresh oldSust = D.div_ [MC.sustainability] do
       fundingUrlMay
   ) oldSust
 
-accumulateIdent :: Boolean -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
-accumulateIdent refresh oldId = D.div_ [MC.identifier] do
-  idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput refresh
+accumulateIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
+accumulateIdent oldId = D.div_ [MC.identifier] do
+  idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput
     $ Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- D.div_ [] $ D.span_ [MC.idType] $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
@@ -598,9 +594,9 @@ genRecIdent oldId = do
   where
     urnPrefix = fromString "urn:uuid:"
 
-accumulateRelatedIdent :: Boolean -> CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
-accumulateRelatedIdent refresh oldIdMay = D.div_ [MC.relatedId] do
-  idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput refresh
+accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
+accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
+  idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput
     $ Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- D.div_ [] $ D.span_ [MC.idType] $ menuSignal $
     Opt.get (SProxy :: _ "idType") oldId
@@ -613,19 +609,19 @@ accumulateRelatedIdent refresh oldIdMay = D.div_ [MC.relatedId] do
   ) oldId
   where oldId = (fromMaybe Opt.empty oldIdMay)
 
-relIdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
-relIdSigArray refresh relIdsMay =
+relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
+relIdSigArray relIdsMay =
   D.div_ [MC.relatedIds] $ D.span_ [MC.relatedIdsHeader] do
     D.div_ [MC.relatedIdList] $
-      nonEmptyArrayView (accumulateRelatedIdent refresh) relIdsMay
+      nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
-accumulateBasicMetaData :: Boolean -> CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
-accumulateBasicMetaData refresh oldBMD = D.div_ [MC.basicMetadata] do
-  titleMay <- D.div_ [] $ D.span_ [MC.title] $ textInput refresh $
+accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
+accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
+  titleMay <- D.div_ [] $ D.span_ [MC.title] $ textInput $
     Opt.get (SProxy :: _ "title") oldBMD
-  creatorMay <- D.div_ [] $ D.span_ [MC.creator] $ textInput refresh $
+  creatorMay <- D.div_ [] $ D.span_ [MC.creator] $ textInput $
     Opt.get (SProxy :: _ "creator") oldBMD
-  pubYearMay <- D.div_ [] $ D.span_ [MC.pubyear] $ natInput refresh $
+  pubYearMay <- D.div_ [] $ D.span_ [MC.pubyear] $ natInput $
     Opt.get (SProxy :: _ "publicationYear") oldBMD
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
@@ -633,29 +629,29 @@ accumulateBasicMetaData refresh oldBMD = D.div_ [MC.basicMetadata] do
     get >>= Opt.maySetOptState (SProxy :: _ "publicationYear") pubYearMay
   ) oldBMD
 
-accumulateResType :: Boolean -> CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
-accumulateResType refresh oldRT = D.div_ [MC.resourceType] do
+accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
+accumulateResType oldRT = D.div_ [MC.resourceType] do
   genTypMay <- D.div_ [] $ D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
-  descMay <- D.div_ [] $ D.span_ [MC.resourceTypeDescr] $ textInput refresh $
+  descMay <- D.div_ [] $ D.span_ [MC.resourceTypeDescr] $ textInput $
     join $ fromString <$> Opt.get (SProxy :: _ "description") oldRT
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "description") (toString <$> descMay)
     get >>= Opt.maySetOptState (SProxy :: _ "generalType") genTypMay
   ) oldRT
 
-formatSignal :: Boolean -> CtrlSignal HTML (Maybe M.Format)
-formatSignal refresh formatMay = D.div_ [MC.format] do
-  tooltipS $ textInput refresh formatMay
+formatSignal :: CtrlSignal HTML (Maybe M.Format)
+formatSignal formatMay = D.div_ [MC.format] do
+  tooltipS $ textInput formatMay
 
-formatSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Array M.Format))
-formatSigArray refresh formats = 
-  D.div_ [MC.formatList] $ arrayView (formatSignal refresh) formats
+formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
+formatSigArray formats =
+  D.div_ [MC.formatList] $ arrayView formatSignal formats
 
-accumulateResMdSource :: Boolean
-  -> CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
-accumulateResMdSource refresh oldRMDS = D.div_ [MC.resourceMDSource] do
-  url_Ei <- D.div_ [] $ D.span_ [MC.url] $ urlInput refresh $
+accumulateResMdSource ::
+  CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
+accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
+  url_Ei <- D.div_ [] $ D.span_ [MC.url] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
   let urlMay = hush url_Ei
   relTypMay <- D.div_ [] $ D.span_ [MC.relType] $ menuSignal $
@@ -668,9 +664,9 @@ accumulateResMdSource refresh oldRMDS = D.div_ [MC.resourceMDSource] do
     get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypMay
   ) oldRMDS
 
-accumulateContact :: Boolean -> CtrlSignal HTML (Opt.Option InstitutionContactRowOpts)
-accumulateContact refresh oldIC = D.div_ [MC.institutionContact] do
-  email_Ei <- D.div_ [] $ D.span_ [MC.contactEmail] $ emailInput refresh $
+accumulateContact :: CtrlSignal HTML (Opt.Option InstitutionContactRowOpts)
+accumulateContact oldIC = D.div_ [MC.institutionContact] do
+  email_Ei <- D.div_ [] $ D.span_ [MC.contactEmail] $ emailInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "email_Ei") oldIC
   let emailMay = hush email_Ei
   contactTypMay <- D.div_ [] $ D.span_ [MC.contactType] $ menuSignal $
@@ -683,12 +679,12 @@ accumulateContact refresh oldIC = D.div_ [MC.institutionContact] do
     get >>= Opt.maySetOptState (SProxy :: _ "contactType") contactTypMay
   ) oldIC
 
-accumulatePolicy :: Boolean -> CtrlSignal HTML (MayOpt InstitutionPolicyRowOpts)
-accumulatePolicy refresh oldPolMay = D.div_ [MC.institutionPolicy] do
+accumulatePolicy :: CtrlSignal HTML (MayOpt InstitutionPolicyRowOpts)
+accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
   polPolTypeMay <- D.div_ [] $ D.span_ [MC.policy] $ menuSignal $ Just $
     Opt.getWithDefault FreeTextPolicy (SProxy :: _ "polPolType") oldPol
   let polPolType = fromMaybe FreeTextPolicy polPolTypeMay
-  txtInMay <- D.div_ [] $ D.span_ [MC.policy] $ textInput refresh $
+  txtInMay <- D.div_ [] $ D.span_ [MC.policy] $ textInput $
     Opt.get (SProxy :: _ "policy_str") oldPol
   let policy_ei = checkPolicy polPolType $ maybe "" toString txtInMay
   display $ case policy_ei of
@@ -713,9 +709,9 @@ accumulatePolicy refresh oldPolMay = D.div_ [MC.institutionPolicy] do
 
 
  -- | The first element of the tuple is the (desired) number of policies
-policySigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialPols))
-policySigArray refresh instPoliciesMay = D.div_ [MC.institutionPolicies] do
-  nonEmptyArrayView (accumulatePolicy refresh) instPoliciesMay
+policySigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialPols))
+policySigArray instPoliciesMay = D.div_ [MC.institutionPolicies] do
+  nonEmptyArrayView accumulatePolicy instPoliciesMay
 
 tooltip :: forall a. Widget HTML a
 tooltip = D.div_ [MC.tooltip] empty

@@ -119,31 +119,19 @@ labelSig widg props sigIn = D.div_ props do
   display widg
   sigIn
 
+textInputWidget :: String -> Widget HTML String
+textInputWidget txt =
+  D.input [P.defaultValue txt, P.unsafeTargetValue <$> P.onChange]
 
-type RefreshString = {ref :: Boolean, str:: String}
-
-textInputWidget :: RefreshString -> Widget HTML RefreshString
-textInputWidget rs = do
-  log $ "textInputWidget: " <> (show rs.ref) <> " " <> rs.str
-  txtNew <- D.input [valProp rs.str, P.unsafeTargetValue <$> P.onChange]
-  pure {ref: rs.ref, str: txtNew}
+textInput' :: CtrlSignal HTML String
+textInput' initVal = sig initVal
   where
-    valProp = if rs.ref then P.value else P.defaultValue
-
-textInput' :: Boolean -> CtrlSignal HTML String
-textInput' refresh initVal = do
-  refstrNew <- sig refstr
-  pure refstrNew.str
-  where
-    refstr = {ref: refresh, str: initVal}
     -- Alternative to 'sig' that doesn't debounce, for debugging:
     -- sigNow rs = step rs $ do
     --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
     --   rsNew <- textInputWidget rs
     --   pure $ sigNow rsNew
-    sig rs = do
-      pure $ unsafePerformEffect $ log $ "refstr in textInput sig': " <> (show rs)
-      debounce 500.0 rs textInputWidget
+    sig txt = debounce 500.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -151,16 +139,14 @@ textFilter txtSig = do
   txt <- txtSig
   pure $ fromString $ trim txt
 
-textInput :: Boolean -> CtrlSignal HTML (Maybe NonEmptyString)
-textInput refresh iVal = do
-  pure $ unsafePerformEffect $ log $ "refresh in textInput: " <> (show refresh)
-  textFilter $ textInput' refresh (foldf toString iVal)
+textInput :: CtrlSignal HTML (Maybe NonEmptyString)
+textInput iVal = textFilter $ textInput' $ foldf toString iVal
 
 mjUI_dateInput :: String
 mjUI_dateInput = "mjUI_dateInput"
 
-dateInput :: Boolean -> CtrlSignal HTML (Either String M.XsdDate)
-dateInput refresh iVal = do
+dateInput :: CtrlSignal HTML (Either String M.XsdDate)
+dateInput iVal = do
   -- iValNesEi <- runEffectInit (runErr iVal) $ dateToNesEi iVal
   let iValNesEi = unsafePerformEffect $ dateToNesEi iVal -- FIXME: remove
   prevTxt :: String <- pure $ case iValNesEi of
@@ -169,11 +155,8 @@ dateInput refresh iVal = do
   prevErr <- pure $ case iValNesEi of
     Left err -> err
     Right _ -> ""
-  pure $ unsafePerformEffect $ log $ "refresh in dateInput: " <> (show refresh)
-  pure $ unsafePerformEffect $ log $ "date retrieved in dateInput: " <> (show iVal)
-  pure $ unsafePerformEffect $ log $ "txt retrieved in dateInput: " <> prevTxt
   txtMay :: Maybe NonEmptyString <- D.div_ [P._id mjUI_dateInput]
-    $ textInput refresh (fromString prevTxt) -- assumes this id is unique ... (hack) :
+    $ textInput (fromString prevTxt) -- assumes this id is unique ... (hack) :
   pure $ unsafePerformEffect $ setChildInputByTag mjUI_dateInput "INPUT" prevTxt
   display $ case iValNesEi of
     Right _ -> mempty
@@ -191,15 +174,15 @@ dateInput refresh iVal = do
     runErr :: forall a b. Show a => a -> Either String b
     runErr ei = Left $ "Run time date parsing error on " <> (show ei)
 
-natInput :: Boolean -> CtrlSignal HTML (Maybe Natural)
-natInput refresh iVal = do
+natInput :: CtrlSignal HTML (Maybe Natural)
+natInput iVal = do
   let iValNES = iVal <#> (natToInt >>> show) >>= fromString
-  txtMay :: Maybe NonEmptyString <- textInput refresh iValNES
+  txtMay :: Maybe NonEmptyString <- textInput iValNES
   pure $ (intToNat <<< round <<< readInt 10 <<< toString) <$> txtMay
 
-urlInput :: Boolean -> CtrlSignal HTML (Either String URL)
-urlInput refresh iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
+urlInput :: CtrlSignal HTML (Either String URL)
+urlInput iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput $ fromString prevTxt
   urlEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> parsePublicURL $ toString txt
@@ -217,9 +200,9 @@ urlInput refresh iVal = do
       Left _ -> ""
       Right url -> toString $ urlToNEString url
 
-emailInput :: Boolean -> CtrlSignal HTML (Either String Email)
-emailInput refresh iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
+emailInput :: CtrlSignal HTML (Either String Email)
+emailInput iVal = do
+  txtMay :: Maybe NonEmptyString <- textInput $ fromString prevTxt
   emailEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> EA.validate $ toString txt
