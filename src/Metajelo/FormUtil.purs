@@ -12,13 +12,14 @@ import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
 import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
+import Data.Bifunctor (lmap)
 import Data.Bounded (bottom)
+import Data.Eq ((==))
 import Data.Date (canonicalDate)
 import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
 import Data.Foldable (class Foldable, fold)
-import Data.Formatter.DateTime as FDT
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Bounded as GBounded
@@ -26,26 +27,32 @@ import Data.Generic.Rep.Enum as GEnum
 import Data.Generic.Rep.Eq (genericEq)
 import Data.Generic.Rep.Ord as GOrd
 import Data.Generic.Rep.Show (genericShow)
+import Data.Int (round)
 import Data.Maybe (Maybe(..), fromJust, fromMaybe, isJust, maybe)
 import Data.Monoid (class Monoid, mempty)
+import Data.Natural (Natural, intToNat, natToInt)
 import Data.Newtype (class Newtype)
 import Data.Profunctor.Strong (second)
 import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time (Time(..))
-import Data.Traversable (traverse)
+import Data.Traversable (for_, traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect (Effect)
 import Effect.Class (liftEffect)
-import Effect.Class.Console (logShow)
+import Effect.Class.Console (logShow, log)
+import Effect.Exception as EX
 import Effect.Now (nowDateTime)
+import Effect.Unsafe (unsafePerformEffect)
+import Global (readInt)
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
+import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (<<<), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -54,7 +61,15 @@ import Text.Email.Validate as EA
 import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Node)
+import Web.DOM.Document (Document, toNonElementParentNode)
 import Web.DOM.Element as Ele
+import Web.DOM.HTMLCollection as HTML
+import Web.HTML.HTMLDocument as HTML
+import Web.HTML.HTMLInputElement as HTML
+import Web.DOM.NonElementParentNode (getElementById)
+import Web.DOM.ParentNode (children)
+import Web.HTML (window)
+import Web.HTML.Window (document)
 
 type Email = EA.EmailAddress
 
@@ -111,6 +126,11 @@ textInputWidget txt =
 textInput' :: CtrlSignal HTML String
 textInput' initVal = sig initVal
   where
+    -- Alternative to 'sig' that doesn't debounce, for debugging:
+    -- sigNow rs = step rs $ do
+    --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
+    --   rsNew <- textInputWidget rs
+    --   pure $ sigNow rsNew
     sig txt = debounce 500.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
@@ -120,11 +140,49 @@ textFilter txtSig = do
   pure $ fromString $ trim txt
 
 textInput :: CtrlSignal HTML (Maybe NonEmptyString)
-textInput iVal = textFilter $ textInput' (foldf toString iVal)
+textInput iVal = textFilter $ textInput' $ foldf toString iVal
+
+mjUI_dateInput :: String
+mjUI_dateInput = "mjUI_dateInput"
+
+dateInput :: CtrlSignal HTML (Either String M.XsdDate)
+dateInput iVal = do
+  -- iValNesEi <- runEffectInit (runErr iVal) $ dateToNesEi iVal
+  let iValNesEi = unsafePerformEffect $ dateToNesEi iVal -- FIXME: remove
+  prevTxt :: String <- pure $ case iValNesEi of
+    Left _ -> ""
+    Right dtStr -> toString dtStr
+  prevErr <- pure $ case iValNesEi of
+    Left err -> err
+    Right _ -> ""
+  txtMay :: Maybe NonEmptyString <- D.div_ [P._id mjUI_dateInput]
+    $ textInput (fromString prevTxt) -- assumes this id is unique ... (hack) :
+  pure $ unsafePerformEffect $ setChildInputByTag mjUI_dateInput "INPUT" prevTxt
+  display $ case iValNesEi of
+    Right _ -> mempty
+    Left err -> errorDisplay $ Just err
+  case txtMay of
+    Just txtNE -> -- runEffectInit (runErr txtNE) $ (lmap show) <$> (EX.try $ MR.parseDate txtNE)
+      pure $ unsafePerformEffect $ (lmap show) <$> (EX.try $ MR.parseDate txtNE) -- FIXME: remove
+    Nothing -> pure $ Left "no date input"
+  where
+    dateToNesEi :: Either String DateTime -> Effect (Either String NonEmptyString)
+    dateToNesEi dtEi = do
+      let dt = fromMaybe bottom $ hush dtEi
+      nesEi <- EX.try $ MW.dateTimeToStr dt
+      pure $ (lmap show) nesEi
+    runErr :: forall a b. Show a => a -> Either String b
+    runErr ei = Left $ "Run time date parsing error on " <> (show ei)
+
+natInput :: CtrlSignal HTML (Maybe Natural)
+natInput iVal = do
+  let iValNES = iVal <#> (natToInt >>> show) >>= fromString
+  txtMay :: Maybe NonEmptyString <- textInput iValNES
+  pure $ (intToNat <<< round <<< readInt 10 <<< toString) <$> txtMay
 
 urlInput :: CtrlSignal HTML (Either String URL)
 urlInput iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
+  txtMay :: Maybe NonEmptyString <- textInput $ fromString prevTxt
   urlEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> parsePublicURL $ toString txt
@@ -144,7 +202,7 @@ urlInput iVal = do
 
 emailInput :: CtrlSignal HTML (Either String Email)
 emailInput iVal = do
-  txtMay :: Maybe NonEmptyString <- textInput (fromString prevTxt)
+  txtMay :: Maybe NonEmptyString <- textInput $ fromString prevTxt
   emailEi <- pure $ case txtMay of
     Nothing -> Left prevErr
     Just txt -> EA.validate $ toString txt
@@ -358,7 +416,7 @@ dateTimeWidg = do
   liftEffect nowDateTime
 
 dateTimeSig :: Signal HTML DateTime
-dateTimeSig = justWait initDate (fireOnce dateTimeWidg) pure
+dateTimeSig = justWait bottom (fireOnce dateTimeWidg) pure
 
 runEffectOnW :: forall a b. Effect b -> Widget HTML a -> Signal HTML (Maybe b)
 runEffectOnW e wWait = loopW Nothing $ \_ -> do
@@ -379,34 +437,6 @@ runEffectInit i e = step i do
   a <- liftEffect e
   pure (step a empty)
 
--- TODO: add UTC offset or 'Z': https://www.w3schools.com/xml/schema_dtypes_date.asp
-formatXsdDate :: DateTime -> Either String M.XsdDate
-formatXsdDate dt = xsdDate
-  where
-    xsdDateInit = FDT.formatDateTime "YYYY-MM-DD" dt
-    xsdDate = case xsdDateInit of
-      Left err -> Left err
-      Right xsdDateStr -> case fromString xsdDateStr of
-        Nothing -> Left "Empty Date output from formatXsdDate"
-        Just nes -> Right nes
-
-initDate :: DateTime
-initDate = makeDateTime 0 0 0 0 0 0 0
-
--- TODO: what to do with this?
-makeDateTime ∷ Int → Int → Int → Int → Int → Int → Int → DateTime
-makeDateTime year month day hour minute second millisecond =
-  DateTime
-    (canonicalDate
-      (fromMaybe bottom $ toEnum year)
-      (fromMaybe bottom $ toEnum month)
-      (fromMaybe bottom $ toEnum day))
-    (Time
-        (fromMaybe bottom $ toEnum hour )
-        (fromMaybe bottom $ toEnum minute )
-        (fromMaybe bottom $ toEnum second )
-        (fromMaybe bottom $ toEnum millisecond))
-
 safeRange :: Int -> Int -> Array Int
 safeRange i f = if f < i then [] else (i .. f)
 
@@ -425,3 +455,30 @@ evTargetElem :: SyntheticInputEvent -> Effect (Maybe Ele.Element)
 evTargetElem se = Ele.fromNode <$> (evTarget se)
 
 -- NativeEventTarget
+
+
+windowDoc :: Effect Document
+windowDoc = do
+  win <- window
+  hDoc <- document win
+  pure $ HTML.toDocument hDoc
+
+setChildInputByTag :: String -> String -> String -> Effect Unit
+setChildInputByTag id tag value = do
+  doc <- windowDoc
+  let root = toNonElementParentNode doc
+  parEleMay <- getElementById id root
+  case parEleMay of
+    Just parEle -> do
+      let par = Ele.toParentNode parEle
+      childCollection <- children par
+      childArray <- HTML.toArray childCollection
+      let childMatches = filter (\c -> Ele.tagName c == tag) childArray
+      let childInputs = catMaybes $ HTML.fromElement <$> childMatches
+      -- log $ "Child array tags: " <> (show $ Ele.tagName <$> childArray) -- DEBUG
+      -- when (length childMatches == 0) $ log
+      --   $ "No children of " <> id <> " with tag == " <> tag
+      -- when (length childInputs == 0) $ log
+      --   $ "No input element children of " <> id <> " with tag == " <> tag
+      for_ childInputs (HTML.setValue value)
+    Nothing -> log $ "in setChildByTag, couldn't find element with id " <> id

@@ -181,8 +181,11 @@ let additions =
             "1979eb74baec39b5e62567948f402b4194230e9f"
       , metajelo =
           mkPackage
-            [ "generics-rep"
-            , "email-validate"
+            [ "email-validate"
+            , "enums"
+            , "generics-rep"
+            , "globals"
+            , "js-date"
             , "naturals"
             , "nonbili-dom"
             , "stringutils"
@@ -193,7 +196,7 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "f494f0a3571f2594de829dddb8ebe1abe563c8cf"
+            "fbf16d93c97d7409fb2b01e28f2ce01bb9b828ca"
       , metajelo-web =
           mkPackage
             [ "prelude"
@@ -206,7 +209,7 @@ let additions =
             , "url-validator"
             ]
             "https://github.com/labordynamicsinstitute/metajelo-web.git"
-            "c90b1c096ba0bbb4699db363b31325a80589a38c"
+            "cf927c663c522b998b6e867efdb34377ee31f280"
       , metajelo-ui-css-classes =
           mkPackage
             [ "prelude", "concur-core", "concur-react" ]
