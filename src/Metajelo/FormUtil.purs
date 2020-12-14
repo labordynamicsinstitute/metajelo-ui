@@ -131,7 +131,7 @@ textInput' initVal = sig initVal
     --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
     --   rsNew <- textInputWidget rs
     --   pure $ sigNow rsNew
-    sig txt = debounce 500.0 txt textInputWidget
+    sig txt = debounce 2000.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
@@ -168,7 +168,8 @@ dateInput iVal = do
   where
     dateToNesEi :: Either String DateTime -> Effect (Either String NonEmptyString)
     dateToNesEi dtEi = do
-      let dt = fromMaybe bottom $ hush dtEi
+      nowTime <- nowDateTime
+      let dt = fromMaybe nowTime $ hush dtEi
       nesEi <- EX.try $ MW.dateTimeToStr dt
       pure $ (lmap show) nesEi
     runErr :: forall a b. Show a => a -> Either String b

@@ -15,11 +15,10 @@ import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
-import Data.Bounded (bottom)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
 -- import Data.Functor ((<#>))
-import Data.Maybe (Maybe(..), fromMaybe, isJust, isNothing, maybe)
+import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
 import Data.String.Common (null)
@@ -363,8 +362,11 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
   recOpt <- accumulateMetajeloRecUI upOrInRec
   let xsdDateLastMay = Opt.get (SProxy :: _ "lastModified") recOpt
-  xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just bottom) of
+  let nowTime = unsafePerformEffect nowDateTime
+  pure $ unsafePerformEffect $ log $ ("nowTime is: " <> (show nowTime))
+  xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just nowTime) of
     First x -> x
+  pure $ unsafePerformEffect $ log $ ("xsdDateMay is: " <> (show xsdDateMay))
   newRec <- pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
   ) recOpt
