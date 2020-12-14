@@ -14,6 +14,7 @@ import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bifunctor (lmap)
 import Data.Bounded (bottom)
+import Data.Eq ((==))
 import Data.Date (canonicalDate)
 import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
@@ -36,7 +37,7 @@ import Data.String (trim)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time (Time(..))
-import Data.Traversable (traverse)
+import Data.Traversable (for_, traverse)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
@@ -51,7 +52,7 @@ import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, when, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -60,7 +61,15 @@ import Text.Email.Validate as EA
 import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Node)
+import Web.DOM.Document (Document, toNonElementParentNode)
 import Web.DOM.Element as Ele
+import Web.DOM.HTMLCollection as HTML
+import Web.HTML.HTMLDocument as HTML
+import Web.HTML.HTMLInputElement as HTML
+import Web.DOM.NonElementParentNode (getElementById)
+import Web.DOM.ParentNode (children)
+import Web.HTML (window)
+import Web.HTML.Window (document)
 
 type Email = EA.EmailAddress
 
@@ -123,14 +132,15 @@ textInputWidget rs = do
 
 textInput' :: Boolean -> CtrlSignal HTML String
 textInput' refresh initVal = do
-  refstrNew <- sigNow refstr
+  refstrNew <- sig refstr
   pure refstrNew.str
   where
     refstr = {ref: refresh, str: initVal}
-    sigNow rs = step rs $ do
-      pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
-      rsNew <- textInputWidget rs
-      pure $ sigNow rsNew
+    -- Alternative to 'sig' that doesn't debounce, for debugging:
+    -- sigNow rs = step rs $ do
+    --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
+    --   rsNew <- textInputWidget rs
+    --   pure $ sigNow rsNew
     sig rs = do
       pure $ unsafePerformEffect $ log $ "refstr in textInput sig': " <> (show rs)
       debounce 500.0 rs textInputWidget
@@ -146,6 +156,9 @@ textInput refresh iVal = do
   pure $ unsafePerformEffect $ log $ "refresh in textInput: " <> (show refresh)
   textFilter $ textInput' refresh (foldf toString iVal)
 
+mjUI_dateInput :: String
+mjUI_dateInput = "mjUI_dateInput"
+
 dateInput :: Boolean -> CtrlSignal HTML (Either String M.XsdDate)
 dateInput refresh iVal = do
   -- iValNesEi <- runEffectInit (runErr iVal) $ dateToNesEi iVal
@@ -159,7 +172,9 @@ dateInput refresh iVal = do
   pure $ unsafePerformEffect $ log $ "refresh in dateInput: " <> (show refresh)
   pure $ unsafePerformEffect $ log $ "date retrieved in dateInput: " <> (show iVal)
   pure $ unsafePerformEffect $ log $ "txt retrieved in dateInput: " <> prevTxt
-  txtMay :: Maybe NonEmptyString <- textInput refresh (fromString prevTxt)
+  txtMay :: Maybe NonEmptyString <- D.div_ [P._id mjUI_dateInput]
+    $ textInput refresh (fromString prevTxt) -- assumes this id is unique ..
+  pure $ unsafePerformEffect $ setChildInputByTag mjUI_dateInput "INPUT" prevTxt
   display $ case iValNesEi of
     Right _ -> mempty
     Left err -> errorDisplay $ Just err
@@ -457,3 +472,30 @@ evTargetElem :: SyntheticInputEvent -> Effect (Maybe Ele.Element)
 evTargetElem se = Ele.fromNode <$> (evTarget se)
 
 -- NativeEventTarget
+
+
+windowDoc :: Effect Document
+windowDoc = do
+  win <- window
+  hDoc <- document win
+  pure $ HTML.toDocument hDoc
+
+setChildInputByTag :: String -> String -> String -> Effect Unit
+setChildInputByTag id tag value = do
+  doc <- windowDoc
+  let root = toNonElementParentNode doc
+  parEleMay <- getElementById id root
+  case parEleMay of
+    Just parEle -> do
+      let par = Ele.toParentNode parEle
+      childCollection <- children par
+      childArray <- HTML.toArray childCollection
+      let childMatches = filter (\c -> Ele.tagName c == tag) childArray
+      let childInputs = catMaybes $ HTML.fromElement <$> childMatches
+      -- log $ "Child array tags: " <> (show $ Ele.tagName <$> childArray) -- DEBUG
+      when (length childMatches == 0) $ log
+        $ "No children of " <> id <> " with tag == " <> tag
+      when (length childInputs == 0) $ log
+        $ "No input element children of " <> id <> " with tag == " <> tag
+      for_ childInputs (HTML.setValue value)
+    Nothing -> log $ "in setChildByTag, couldn't find element with id " <> id
