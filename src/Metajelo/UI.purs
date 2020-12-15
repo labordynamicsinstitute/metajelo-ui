@@ -398,6 +398,7 @@ finalizeRecord recIn = do
 -- | for the Metajelo Record.
 accumulateMetajeloRecUI :: CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecUI recOpt = do
+  display $ mkDescription MI.recordDescr
   idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   let dateInTest = Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
@@ -436,6 +437,7 @@ accumulateMetajeloRecUI recOpt = do
 -- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
+  display $ mkDescription MI.supplementaryProductDescr
   basicMdOpt <- accumulateBasicMetaData $
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
   let basicMdMay = Opt.getAll basicMdOpt
@@ -487,11 +489,13 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
 supProdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray prodsMay =
   D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
+    display $ mkDescription MI.supplementaryProductsDescr
     D.div_ [MC.productList] 
       $ nonEmptyArrayView accumulateSuppProd prodsMay
 
 accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
 accumulateLocation locOptMay = D.div_ [MC.location] do
+  display $ mkDescription MI.locationDescr
   identOpt <- D.div_ [] $ D.span_ [MC.institutionId] $ accumulateIdent $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
@@ -635,6 +639,7 @@ accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
 
 accumulateResType :: CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
 accumulateResType oldRT = D.div_ [MC.resourceType] do
+  display $ mkDescription MI.resourceTypeDescr
   genTypMay <- D.div_ [] $ D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
   descMay <- D.div_ [] $ D.span_ [MC.resourceTypeDescr] $ textInput $
@@ -649,8 +654,9 @@ formatSignal formatMay = D.div_ [MC.format] do
   tooltipS $ textInput formatMay
 
 formatSigArray :: CtrlSignal HTML (Tuple Int (Array M.Format))
-formatSigArray formats =
-  D.div_ [MC.formatList] $ arrayView formatSignal formats
+formatSigArray formats = D.div_ [MC.formatList] do
+  display $ mkDescription MI.formatDescr
+  arrayView formatSignal formats
 
 accumulateResMdSource ::
   CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
@@ -715,6 +721,7 @@ accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
  -- | The first element of the tuple is the (desired) number of policies
 policySigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialPols))
 policySigArray instPoliciesMay = D.div_ [MC.institutionPolicies] do
+  display $ mkDescription MI.institutionPoliciesDescr
   nonEmptyArrayView accumulatePolicy instPoliciesMay
 
 tooltip :: forall a. Widget HTML a
