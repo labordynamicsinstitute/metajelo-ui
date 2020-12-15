@@ -230,6 +230,21 @@ checkBoxS b = step b do
 checkBoxW :: Boolean -> Widget HTML Boolean
 checkBoxW b = not b <$ D.input [P._type "checkbox", P.checked b, P.onChange]
 
+mkDescription :: forall a. String -> Widget HTML a
+mkDescription descrStr = descrWidNE true
+  where
+    descrWidNE :: Boolean -> Widget HTML a
+    descrWidNE b = do
+      newB <- descrWid b
+      descrWidNE newB
+    descrWid :: Boolean -> Widget HTML Boolean
+    descrWid b = D.div_ [] $
+      if b then D.span [] [
+          D.text descrStr
+        , not b <$ (D.button_ [P.onClick] $ D.text "Hide Description")
+        ]
+      else not b <$ (D.button_ [P.onClick] $ D.text "Show Description")
+
 class IsOption a where
   toOptionValue :: a -> String
   toOptionLabel :: a -> String

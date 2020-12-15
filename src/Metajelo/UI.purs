@@ -39,8 +39,9 @@ import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
                          , checkPolicy, dateInput, emailInput
-                         , errorDisplay, evTargetElem, menuSignal, natInput
+                         , errorDisplay, evTargetElem, menuSignal, mkDescription, natInput
                          , nonEmptyArrayView, polPolTypeIs, runEffectInit, textInput, urlInput)
+import Metajelo.SchemaInfo as MI
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths as MX
@@ -400,8 +401,9 @@ accumulateMetajeloRecUI recOpt = do
   idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   let dateInTest = Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
-  date_Ei <- D.div_ [MC.date] <$> dateInput $ Opt.getWithDefault (Left "")
-    (SProxy :: _ "date_Ei") recOpt
+  date_Ei <- D.div_ [MC.date] do
+    display $ mkDescription MI.dateDescr
+    dateInput $ Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
   let dateMay = hush date_Ei
   relIdsTup <- relIdSigArray $ Tuple
     (Opt.getWithDefault 0 (SProxy :: _ "_numRelIds") recOpt)
