@@ -147,7 +147,7 @@ textInput' initVal = sig initVal
     --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
     --   rsNew <- textInputWidget rs
     --   pure $ sigNow rsNew
-    sig txt = debounce 2000.0 txt textInputWidget
+    sig txt = debounce 1000.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)
