@@ -13761,7 +13761,7 @@ var PS = {};
   },
       Pa = function Pa(Q) {
     Q = Ra(x.foldableMaybe)(I.functorMaybe)(w.monoidString)(ja.toString)(Q);
-    Q = f.debounce(w.monoidArray)(2E3)(Q)(gb);
+    Q = f.debounce(w.monoidArray)(1E3)(Q)(gb);
     return hb(Q);
   },
       eb = function eb(Q) {
@@ -16199,4 +16199,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.38cdcab3.js.map
+//# sourceMappingURL=prod.029549d8.js.map
