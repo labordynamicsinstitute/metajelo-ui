@@ -34,6 +34,7 @@ import Data.Natural (Natural, intToNat, natToInt)
 import Data.Newtype (class Newtype)
 import Data.Profunctor.Strong (second)
 import Data.String (trim)
+import Data.String.Common (null)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy)
 import Data.Time (Time(..))
@@ -47,12 +48,14 @@ import Effect.Class.Console (logShow, log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
+import Foreign.Object as FO
 import Global (readInt)
+import Metajelo.SchemaInfo as MI
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, (&&), ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -75,6 +78,19 @@ type Email = EA.EmailAddress
 
 mayToString :: ∀ a. Show a => Maybe a -> String
 mayToString mayA = fold $ show <$> mayA
+
+mjDocMap :: FO.Object String
+mjDocMap = FO.unions [
+    MI.descrAttrMap, MI.descrCTypMap
+  , MI.descrEleMap , MI.descrSTypMap]
+
+strLookup :: String -> FO.Object String -> String
+strLookup key obj = case FO.lookup key obj of
+  Just v -> v
+  Nothing -> ""
+
+mjDscr :: String -> String
+mjDscr key = strLookup key mjDocMap
 
 foldf :: ∀ a f m. Foldable f => Functor f => Monoid m =>
   (a -> m) -> f a -> m
@@ -221,29 +237,28 @@ emailInput iVal = do
       Left _ -> ""
       Right ea -> EA.toString ea
 
-checkBoxS :: Boolean -> Signal HTML Boolean
+checkBoxS :: CtrlSignal HTML Boolean
 checkBoxS b = step b do
-  newB <- checkW
+  newB <- checkBoxW b
   pure $ checkBoxS newB
-  where checkW = checkBoxW b
 
 checkBoxW :: Boolean -> Widget HTML Boolean
 checkBoxW b = not b <$ D.input [P._type "checkbox", P.checked b, P.onChange]
 
-mkDescription :: forall a. String -> Widget HTML a
-mkDescription descrStr = descrWidNE true
+showDesc :: forall a. Boolean -> Widget HTML Boolean
+showDesc on = D.div_ []
+  $ not on <$ (D.button_ [P.onClick] $ D.text buttonTxt)
+  where buttonTxt = if on then "Hide Descriptions" else "Show Descriptions"
+
+showDescSig :: CtrlSignal HTML Boolean
+showDescSig on = step on do
+  onNew <- showDesc on
+  pure $ showDescSig onNew
+
+mkDesc :: forall a. String -> Boolean -> Widget HTML a
+mkDesc key on = if on && (not $ null desc) then D.text desc else mempty
   where
-    descrWidNE :: Boolean -> Widget HTML a
-    descrWidNE b = do
-      newB <- descrWid b
-      descrWidNE newB
-    descrWid :: Boolean -> Widget HTML Boolean
-    descrWid b = D.div_ [] $
-      if b then D.span [] [
-          D.text descrStr
-        , not b <$ (D.button_ [P.onClick] $ D.text "Hide Description")
-        ]
-      else not b <$ (D.button_ [P.onClick] $ D.text "Show Description")
+    desc = mjDscr key
 
 class IsOption a where
   toOptionValue :: a -> String

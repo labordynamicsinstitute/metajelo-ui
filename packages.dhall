@@ -183,6 +183,7 @@ let additions =
           mkPackage
             [ "email-validate"
             , "enums"
+            , "foreign-object"
             , "generics-rep"
             , "globals"
             , "js-date"
@@ -196,7 +197,7 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "1fed7a157e770280795c1579b1f178f7aa330fb8"
+            "856ce671d9e4815ded4675ae287b8ed17a8f6a36"
       , metajelo-web =
           mkPackage
             [ "prelude"
