@@ -6,6 +6,7 @@ import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, lo
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
+import Control.Alt ((<|>))
 import Control.Alternative (empty)
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
@@ -256,9 +257,10 @@ showDescSig on = step on do
   pure $ showDescSig onNew
 
 mkDesc :: forall a. String -> Boolean -> Widget HTML a
-mkDesc key on = if on && (not $ null desc) then D.text desc else mempty
+mkDesc key on = if on && (not $ null desc) then descSpc else mempty
   where
     desc = mjDscr key
+    descSpc = (D.text desc) <|> D.code' [D.text " "]
 
 class IsOption a where
   toOptionValue :: a -> String

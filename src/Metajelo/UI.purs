@@ -418,6 +418,7 @@ accumulateMetajeloRecUI :: CtrlSignal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecUI recOpt = do
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt
   display $ mkDesc "recordEle" descsOn
+  display $ mkDesc "recordTypeCTyp" descsOn
   idOpt <- genRecIdent $ getOpt (SProxy :: _ "identifier_opt") recOpt
   let idMay = Opt.getAll idOpt
   let dateInTest = Opt.getWithDefault (Left "") (SProxy :: _ "date_Ei") recOpt
@@ -463,7 +464,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
   let basicMdMay = Opt.getAll basicMdOpt
   redIdOpt <- D.div_ [MC.resourceId] do
-    accumulateIdent $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
+    accumulateIdent descsOn $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
   let resIdMay = Opt.getAll redIdOpt
   resTypeOpt <- accumulateResType descsOn $
     getOpt (SProxy :: _ "resourceType_opt") prodOpt
@@ -473,15 +474,11 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     (Opt.getWithDefault [] (SProxy :: _ "format") prodOpt)
   let _numFormats = fst formatsTup
   let formats = snd formatsTup
-  resMdOpt <- accumulateResMdSource $
-    getOpt (SProxy :: _ "resMdsOpts_opt") prodOpt
+  resMdOpt <- accumulateResMdSource $ fromMaybe Opt.empty
+    $ updateDescOn (SProxy :: _ "resMdsOpts_opt") prodOpt descsOn
   let resMdMay = Opt.getSubset resMdOpt
-  locOptMay <- accumulateLocation $
-    ((Opt.get (SProxy :: _ "locationOpts_opt") prodOpt)
-      <#> (\lo -> execState (do
-        get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)) lo
-        )
-      )
+  locOptMay <- accumulateLocation
+    $ updateDescOn (SProxy :: _ "locationOpts_opt") prodOpt descsOn
   let locMay = join $ Opt.getSubset <$> locOptMay
   newProd <- pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
@@ -512,6 +509,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     , fold $ MV.mkSupplementaryProductWidget <$> prodMay
     ]
 
+
 supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray descsOn prodsMayOld =
   D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
@@ -527,7 +525,7 @@ accumulateLocation :: CtrlSignal HTML (MayOpt LocationRowOpts)
 accumulateLocation locOptMay = D.div_ [MC.location] do
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") locOpt
   display $ mkDesc "locationEle" descsOn
-  identOpt <- D.div_ [] $ D.span_ [MC.institutionId] $ accumulateIdent $
+  identOpt <- D.div_ [] $ D.span_ [MC.institutionId] $ accumulateIdent descsOn $
     getOpt (SProxy :: _ "institutionID_opt") locOpt
   let identMay = Opt.getAll identOpt
   instNameMay <- D.div_ [] $ D.span_ [MC.institutionName] $ textInput $
@@ -598,8 +596,9 @@ accumulateSustain oldSust = D.div_ [MC.sustainability] do
       fundingUrlMay
   ) oldSust
 
-accumulateIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
-accumulateIdent oldId = D.div_ [MC.identifier] do
+accumulateIdent :: Boolean -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
+accumulateIdent descsOn oldId = D.div_ [MC.identifier] do
+  display $ mkDesc "identifierTypeSTyp" descsOn
   idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput
     $ Opt.get (SProxy :: _ "id") oldId
   idTypeMay <- D.div_ [] $ D.span_ [MC.idType] $ menuSignal $
@@ -665,6 +664,7 @@ accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
 accumulateResType :: Boolean -> CtrlSignal HTML (Opt.Option M.ResourceTypeRows)
 accumulateResType descsOn oldRT = D.div_ [MC.resourceType] do
   display $ mkDesc "resourceTypeEle" descsOn
+  display $ mkDesc "resourceTypeSTyp" descsOn
   genTypMay <- D.div_ [] $ D.span_ [MC.resourceTypeGen] $ menuSignal $
     Opt.get (SProxy :: _ "generalType") oldRT
   descMay <- D.div_ [] $ D.span_ [MC.resourceTypeDescr] $ textInput $
@@ -687,11 +687,13 @@ formatSigArray descsOn formats = D.div_ [MC.formatList] do
 accumulateResMdSource ::
   CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
 accumulateResMdSource oldRMDS = D.div_ [MC.resourceMDSource] do
+  let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") oldRMDS
   url_Ei <- D.div_ [] $ D.span_ [MC.url] $ urlInput $
     Opt.getWithDefault (Left "") (SProxy :: _ "url_Ei") oldRMDS
   let urlMay = hush url_Ei
-  relTypMay <- D.div_ [] $ D.span_ [MC.relType] $ menuSignal $
-    Opt.get (SProxy :: _ "relationType") oldRMDS
+  relTypMay <- D.div_ [MC.relType] $ D.span_ [] $ do
+    display $ mkDesc "relationTypeSTyp" descsOn
+    menuSignal $ Opt.get (SProxy :: _ "relationType") oldRMDS
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "url_Ei")
       (Just url_Ei)
@@ -717,6 +719,7 @@ accumulateContact oldIC = D.div_ [MC.institutionContact] do
 
 accumulatePolicy :: CtrlSignal HTML (MayOpt InstitutionPolicyRowOpts)
 accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
+  let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") oldPol
   polPolTypeMay <- D.div_ [] $ D.span_ [MC.policy] $ menuSignal $ Just $
     Opt.getWithDefault FreeTextPolicy (SProxy :: _ "polPolType") oldPol
   let polPolType = fromMaybe FreeTextPolicy polPolTypeMay
@@ -727,10 +730,11 @@ accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
     Right _ -> mempty
     Left err -> errorDisplay $ Just err
   let policyMay = hush policy_ei
-  polTypeMay <- D.div_ [] $ D.span_ [MC.policyType] $ menuSignal $
-    Opt.get (SProxy :: _ "policyType") oldPol
-  appliesToProd <- D.div_ [] $ D.span_ [MC.applies] $ menuSignal $
-    Opt.get (SProxy :: _ "appliesToProduct") oldPol
+  polTypeMay <- D.div_ [MC.policyType] $ D.span_ [] $ do
+    menuSignal $ Opt.get (SProxy :: _ "policyType") oldPol
+  appliesToProd <- D.div_ [MC.applies] $ D.span_ [] $ do
+    display $ mkDesc "appliesToProductAttr" descsOn
+    menuSignal $ Opt.get (SProxy :: _ "appliesToProduct") oldPol
   pure $ Just $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "polPolType") (Just polPolType)
     get >>= Opt.maySetOptState (SProxy :: _ "policy_str") txtInMay
@@ -767,3 +771,9 @@ getOpt ::
   Opt.Option option ->
   Opt.Option suboption
 getOpt = Opt.getWithDefault Opt.empty
+
+updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
+  <#> (\lo -> execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)) lo
+    )
+  )
