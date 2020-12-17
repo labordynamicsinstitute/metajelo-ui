@@ -772,6 +772,11 @@ getOpt ::
   Opt.Option suboption
 getOpt = Opt.getWithDefault Opt.empty
 
+
+-- Used for updating an option in the view-model, typically to inject data
+-- from higher up in the component tree to lower down.
+-- Type is something like, x? and y? need Cons/Lack constraints:
+-- Sproxy a -> Opt.option (x?) -> Boolean -> Maybe (Opt.option y?)
 updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
   <#> (\lo -> execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)) lo

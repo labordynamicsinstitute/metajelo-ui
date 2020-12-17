@@ -88,6 +88,24 @@ the command in the container with the CWD mounted and then exit. Alternatively
 if you want to issue multiple commands in the container quickly, you can
 run `./psc.sh bash`.
 
+## Updating Dependendencies or the Metajelo Schema
+
+Dependencies for JavaScript are minimal and are controlled by [npm](https://docs.npmjs.com/)
+and specified in `package.json`. PureScript dependencies are controlled by
+[spago](https://github.com/purescript/spago) and specified
+in `spago.dhall`, but in some cases, packages not included in the standard package
+set must also be described in `packages.dhall`. In particular, when updating
+the Metajelo schema to be used in metajelo-ui, it will be necessary to specify
+a new version of `purescript-metajelo` (with the `purescript-` prefix dropped
+in `packages.dhall`). This can simply be done by specifying a git commit hash
+or by specifying a version in the relevant section of `packages.dhall`.
+
+See the [purescript-metajelo documentation](https://github.com/labordynamicsinstitute/purescript-metajelo#a-note-on-source-generation)
+for details.
+
+It may also be required from time to time to update other dependencies, especially
+`metajelo-web`.
+
 ## Debugging
 
 For an unminified build that is easier to debug from the browser, use
