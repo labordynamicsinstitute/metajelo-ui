@@ -56,7 +56,7 @@ import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
 import Metajelo.XPaths.Write as MW
 import Partial.Unsafe (unsafePartial)
-import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, (&&), ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
+import Prelude (class Bounded, class Eq, class Ord, class Show, Void, bind, discard, join, map, max, not, pure, show, unit, (&&), ($), (+), (-), (<), (<#>), (<$), ($>), (<$>), (>>=), (<<<), (>>>), (<>))
 import Prim.Row (class Cons)
 import Prim.RowList (class RowToList)
 import Prim.TypeError (QuoteLabel, class Warn)
@@ -514,4 +514,5 @@ setChildInputByTag id tag value = do
       -- when (length childInputs == 0) $ log
       --   $ "No input element children of " <> id <> " with tag == " <> tag
       for_ childInputs (HTML.setValue value)
-    Nothing -> log $ "in setChildByTag, couldn't find element with id " <> id
+    Nothing -> pure unit
+      --log $ "in setChildByTag, couldn't find element with id " <> id

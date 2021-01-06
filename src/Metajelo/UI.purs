@@ -1,7 +1,9 @@
 module Metajelo.UI where
 
-import Control.Monad.State
 
+import Affjax as AJ
+import Affjax.ResponseFormat as AJ
+import Control.Monad.State
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
@@ -21,6 +23,7 @@ import Data.Functor ((<#>))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
+import Data.String.CodePoints (take)
 import Data.String.Common (null)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
@@ -28,6 +31,7 @@ import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.UUID as UUID
 import Effect (Effect)
+import Effect.Aff (launchAff_)
 import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
@@ -72,15 +76,22 @@ runFormSPA divId = runWidgetInDom divId page
 
 page :: ∀ a. Widget HTML a
 page = do
-   -- _ <- dyn $ formatSigArray (Tuple 0 [])
-   D.div' [
+  _ <- liftAff do
+    res <- AJ.get AJ.string "https://api.datacite.org/dois/10.3886/E100590V1"
+    case res of
+      Left err -> do
+        log $ "GET /api response failed to decode: " <> AJ.printError err
+      Right response -> do
+        log $ "Received response, first 100 chars: " <> take 100 response.body
+
+  D.div' [
        {- let mjStr = "\xD800" in D.div [MC.previewButtons] [
             downloadButton mjStr
           , copyButton mjStr
           ]
        -- ^^ Example string to fail: "\xD800"
      , -} D.div [MC.page] $ pure $ dyn $ accumulateMetajeloRecord
-     ]
+    ]
 
 utf8DataAttr :: String
 utf8DataAttr = "data:text/plain;charset=utf-8"
@@ -381,10 +392,10 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   recOpt <- accumulateMetajeloRecUI upOrInRec
   let xsdDateLastMay = Opt.get (SProxy :: _ "lastModified") recOpt
   let nowTime = unsafePerformEffect nowDateTime
-  pure $ unsafePerformEffect $ log $ ("nowTime is: " <> (show nowTime))
+  -- pure $ unsafePerformEffect $ log $ ("nowTime is: " <> (show nowTime))
   xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just nowTime) of
     First x -> x
-  pure $ unsafePerformEffect $ log $ ("xsdDateMay is: " <> (show xsdDateMay))
+  -- pure $ unsafePerformEffect $ log $ ("xsdDateMay is: " <> (show xsdDateMay))
   newRec <- pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
