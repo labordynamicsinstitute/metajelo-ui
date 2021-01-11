@@ -164,6 +164,18 @@ let additions =
             ]
             "https://github.com/purescript-concur/purescript-concur-react.git"
             "v0.4.2"
+      , datacite =
+          { dependencies =
+            [ "effect", "functors", "generics-rep", "simple-json" ]
+          , repo = "https://github.com/CornellCAC/purescript-datacite.git"
+          , version = "b54176303ae818ec40298d69cea6d7752c11ad14"
+          }
+        , either-extra =
+          { dependencies =
+            [ "either" ]
+          , repo = "https://github.com/bbarker/purescript-either-extra.git"
+          , version = "v0.0.4"
+          }
       , enums =
           mkPackage
             [ "control"
@@ -181,9 +193,10 @@ let additions =
             "1979eb74baec39b5e62567948f402b4194230e9f"
       , metajelo =
           mkPackage
-            [ "email-validate"
+            [ "datacite"
+            , "either-extra"
+            , "email-validate"
             , "enums"
-            , "foreign-object"
             , "generics-rep"
             , "globals"
             , "js-date"
@@ -197,11 +210,13 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "856ce671d9e4815ded4675ae287b8ed17a8f6a36"
+            "37e46c618c78f25a12eed10bfcee82adb5bf7019"
       , metajelo-web =
           mkPackage
             [ "prelude"
             , "concur-react"
+            , "datacite"
+            , "either-extra"
             , "email-validate"
             , "foreign-object"
             , "metajelo"
@@ -210,12 +225,12 @@ let additions =
             , "url-validator"
             ]
             "https://github.com/labordynamicsinstitute/metajelo-web.git"
-            "cf927c663c522b998b6e867efdb34377ee31f280"
+            "e919b0419210e5a43a22e33c05511f608124e1bf"
       , metajelo-ui-css-classes =
           mkPackage
             [ "prelude", "concur-core", "concur-react" ]
             "https://github.com/labordynamicsinstitute/metajelo-ui-css-classes.git"
-            "0746a0dae2ab7cdaded4c9c9fc3f24c3038e506a"
+            "e34097b5d6bcc4d2630b7f56cb7065f1553c6a27"
       , naturals =
           mkPackage
             [ "enums", "maybe", "prelude" ]

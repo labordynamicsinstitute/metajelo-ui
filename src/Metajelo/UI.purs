@@ -158,7 +158,7 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
             ExceptT $ EX.try $ MXR.readRecord parseEnv
           case recResEi of
             Right recRes -> pure recRes
-            Left err -> errorBox err            
+            Left err -> errorBox err
     errorBox :: EX.Error -> Widget HTML M.MetajeloRecord
     errorBox err = D.div [] [
         uploadButton
@@ -217,7 +217,7 @@ fillMetajeloRecordExtra mjRec = execState (do
 
 -- | ViewModel for SupplementaryProduct
 type SupplementaryProductExtra r = (
-  basicMetadata_opt :: Opt.Option M.BasicMetadataRows
+  basicMetadata_opt :: Opt.Option BasicMetadataRowOpts
 , resourceID_opt :: Opt.Option (M.BaseIdRows ())
 , resourceType_opt :: Opt.Option M.ResourceTypeRows
 , _numFormats :: Int
@@ -246,12 +246,30 @@ fillSProdExtra sProd = execState (do
   ) sProdOptInit
   where
     sProdOptInit = Opt.fromRecord sProd
-    basicMetadata_opt = Opt.fromRecord sProd.basicMetadata
+    basicMetadata_opt = fillBasicMetadataExtra sProd.basicMetadata
     resourceID_opt = Opt.fromRecord <$> sProd.resourceID
     resourceType_opt = Opt.fromRecord sProd.resourceType
     _numFormats = A.length sProd.format
     resMdsOpts_opt = fillResourceMDSExtra <$> sProd.resourceMetadataSource
     locationOpts_opt = fillLocationRowExtra sProd.location
+
+type BasicMetadataExtraRows r = (
+  _numTitles :: Int
+, _numCreators :: Int | r
+)
+
+type BasicMetadataRowOpts = BasicMetadataExtraRows M.BasicMetadataRows
+
+fillBasicMetadataExtra :: M.BasicMetadata -> Opt.Option BasicMetadataRowOpts
+fillBasicMetadataExtra bMD = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "_numTitles")
+      (Just _numTitles)
+    get >>= Opt.maySetOptState (SProxy :: _ "_numCreators")
+      (Just _numCreators)
+  ) (Opt.fromRecord bMD)
+  where
+    _numTitles = NA.length bMD.titles
+    _numCreators = NA.length bMD.creators
 
 -- | ViewModel for Location
 type LocationRowExtra r = (
@@ -471,9 +489,9 @@ accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
-  basicMdOpt <- accumulateBasicMetaData $
+  basicMdOpt <- accumulateBasicMetadata $
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
-  let basicMdMay = Opt.getAll basicMdOpt
+  let basicMdMay = Opt.getSubset basicMdOpt
   redIdOpt <- D.div_ [MC.resourceId] do
     accumulateIdent descsOn $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
   let resIdMay = Opt.getAll redIdOpt
@@ -525,7 +543,7 @@ supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray descsOn prodsMayOld =
   D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
     display $ mkDesc "supplementaryProductsEle" descsOn
-    D.div_ [MC.productList] 
+    D.div_ [MC.productList]
       $ nonEmptyArrayView accumulateSuppProd $ Tuple (fst prodsMayOld) prodsMay
   where
     prodsMay = (snd prodsMayOld) <#> (\ps -> ps <#> (\p -> execState (do
@@ -611,17 +629,17 @@ accumulateIdent :: Boolean -> CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 accumulateIdent descsOn oldId = D.div_ [MC.identifier] do
   display $ mkDesc "identifierTypeSTyp" descsOn
   idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput
-    $ Opt.get (SProxy :: _ "id") oldId
+    $ Opt.get (SProxy :: _ "identifier") oldId
   idTypeMay <- D.div_ [] $ D.span_ [MC.idType] $ menuSignal $
-    Opt.get (SProxy :: _ "idType") oldId
+    Opt.get (SProxy :: _ "identifierType") oldId
   pure $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "identifierType") idTypeMay
   ) oldId
 
 genRecIdent :: CtrlSignal HTML (Opt.Option (M.BaseIdRows ()))
 genRecIdent oldId = do
-  let idMay = Opt.get (SProxy :: _ "id") oldId
+  let idMay = Opt.get (SProxy :: _ "identifier") oldId
   idMayNew <- case idMay of
     Just idOld -> pure $ Just idOld
     Nothing -> do
@@ -631,8 +649,8 @@ genRecIdent oldId = do
         uuidNES <- fromString $ UUID.toString uuid
         pure $ pfx <> uuidNES
   pure $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "id") idMayNew
-    get >>= Opt.maySetOptState (SProxy :: _ "idType") (Just M.URN)
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMayNew
+    get >>= Opt.maySetOptState (SProxy :: _ "identifierType") (Just M.URN)
   ) oldId
   where
     urnPrefix = fromString "urn:uuid:"
@@ -640,15 +658,15 @@ genRecIdent oldId = do
 accumulateRelatedIdent :: CtrlSignal HTML (MayOpt M.RelatedIdentifierRows)
 accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
   idMay <- D.div_ [] $ D.span_ [MC.id] $ textInput
-    $ Opt.get (SProxy :: _ "id") oldId
+    $ Opt.get (SProxy :: _ "identifier") oldId
   idTypeMay <- D.div_ [] $ D.span_ [MC.idType] $ menuSignal $
-    Opt.get (SProxy :: _ "idType") oldId
+    Opt.get (SProxy :: _ "identifierType") oldId
   relTypeMay <- D.div_ [] $ D.span_ [MC.relType] $ menuSignal $
-    Opt.get (SProxy :: _ "relType") oldId
+    Opt.get (SProxy :: _ "relationType") oldId
   pure $ Just $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "id") idMay
-    get >>= Opt.maySetOptState (SProxy :: _ "idType") idTypeMay
-    get >>= Opt.maySetOptState (SProxy :: _ "relType") relTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMay
+    get >>= Opt.maySetOptState (SProxy :: _ "identifierType") idTypeMay
+    get >>= Opt.maySetOptState (SProxy :: _ "relationType") relTypeMay
   ) oldId
   where oldId = (fromMaybe Opt.empty oldIdMay)
 
@@ -658,17 +676,25 @@ relIdSigArray relIdsMay =
     D.div_ [MC.relatedIdList] $
       nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
-accumulateBasicMetaData :: CtrlSignal HTML (Opt.Option M.BasicMetadataRows)
-accumulateBasicMetaData oldBMD = D.div_ [MC.basicMetadata] do
-  titleMay <- D.div_ [] $ D.span_ [MC.title] $ textInput $
-    Opt.get (SProxy :: _ "title") oldBMD
-  creatorMay <- D.div_ [] $ D.span_ [MC.creator] $ textInput $
-    Opt.get (SProxy :: _ "creator") oldBMD
+accumulateBasicMetadata :: CtrlSignal HTML (Opt.Option BasicMetadataRowOpts)
+accumulateBasicMetadata oldBMD = D.div_ [MC.basicMetadata] do
+  titlesTup <- titleSigArray $ Tuple
+    (Opt.getWithDefault 1 (SProxy :: _ "_numTitles") oldBMD)
+    (Opt.get (SProxy :: _ "titles") oldBMD)
+  let _numTitles = fst titlesTup
+  let titles = snd titlesTup
+  creatorsTup <- creatorSigArray $ Tuple
+    (Opt.getWithDefault 1 (SProxy :: _ "_numCreators") oldBMD)
+    (Opt.get (SProxy :: _ "creators") oldBMD)
+  let _numCreators = fst creatorsTup
+  let creators = snd creatorsTup
   pubYearMay <- D.div_ [] $ D.span_ [MC.pubyear] $ natInput $
     Opt.get (SProxy :: _ "publicationYear") oldBMD
   pure $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "title") titleMay
-    get >>= Opt.maySetOptState (SProxy :: _ "creator") creatorMay
+    get >>= Opt.maySetOptState (SProxy :: _ "titles") titles
+    get >>= Opt.maySetOptState (SProxy :: _ "_numTitles") (Just _numTitles)
+    get >>= Opt.maySetOptState (SProxy :: _ "creators") creators
+    get >>= Opt.maySetOptState (SProxy :: _ "_numCreators") (Just _numCreators)
     get >>= Opt.maySetOptState (SProxy :: _ "publicationYear") pubYearMay
   ) oldBMD
 
@@ -686,14 +712,29 @@ accumulateResType descsOn oldRT = D.div_ [MC.resourceType] do
   ) oldRT
 
 formatSignal :: CtrlSignal HTML (Maybe M.Format)
-formatSignal formatMay = D.div_ [MC.format] do
-  tooltipS $ textInput formatMay
+formatSignal formatMay = D.div_ [MC.format]
+  $ textInput formatMay
 
 formatSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Array M.Format))
 formatSigArray descsOn formats = D.div_ [MC.formatList] do
   display $ mkDesc "formatEle" descsOn
   arrayView formatSignal formats
 
+titleSignal :: CtrlSignal HTML (Maybe NonEmptyString)
+titleSignal titleMay = D.div_ [MC.title]
+  $ textInput titleMay
+
+titleSigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray NonEmptyString)))
+titleSigArray titles = D.div_ [MC.titleList] do
+  nonEmptyArrayView titleSignal titles
+
+creatorSignal :: CtrlSignal HTML (Maybe NonEmptyString)
+creatorSignal creatorMay = D.div_ [MC.creator]
+  $ textInput creatorMay
+
+creatorSigArray :: CtrlSignal HTML (Tuple Int (Maybe (NonEmptyArray NonEmptyString)))
+creatorSigArray creators = D.div_ [MC.creatorList] do
+  nonEmptyArrayView creatorSignal creators
 
 accumulateResMdSource ::
   CtrlSignal HTML (Opt.Option ResourceMetadataSourceRowOpts)
@@ -766,12 +807,6 @@ policySigArray descsOn polsMayOld = D.div_ [MC.institutionPolicies] do
     polsMay = (snd polsMayOld) <#> (\ps -> ps <#> (\p -> execState (do
       get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
     ) p))
-
-tooltip :: forall a. Widget HTML a
-tooltip = D.div_ [MC.tooltip] empty
-
-tooltipS :: forall a. Signal HTML a -> Signal HTML a
-tooltipS sigIn = D.div_ [MC.tooltip] sigIn
 
 -- TODO: PR to purescript-option
 getOpt ::
