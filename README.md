@@ -32,6 +32,10 @@ Feel free to include it, or modify it (renaming the file is also possible):
 
 ### Modifying existing CSS
 
+**Note**, for rapidly testing CSS display changes without building or using
+metajelo-ui, see [this note](https://github.com/labordynamicsinstitute/metajelo-ui-css-classes#testing-the-css)
+in the CSS repository.
+
 Once you've retrieved a build, as discussed above, or built metajelo-ui,
 you may wish to modify the styles. You can modify the retrieved
 `index.html` to use the custom CSS;
@@ -110,4 +114,3 @@ It may also be required from time to time to update other dependencies, especial
 
 For an unminified build that is easier to debug from the browser, use
 `npm run debug` instead of `npm run prod`.
-
