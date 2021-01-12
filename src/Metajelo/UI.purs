@@ -401,26 +401,28 @@ type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
 type PartialPols = NonEmptyArray (Opt.Option InstitutionPolicyRowOpts)
 
 accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
-accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
-  let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
-  descsOn <- showDescSig descsOnInit
-  uploadedRec <- uploadButtonSig
-  let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
-  let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
-  recOpt <- accumulateMetajeloRecUI upOrInRec
-  let xsdDateLastMay = Opt.get (SProxy :: _ "lastModified") recOpt
-  let nowTime = unsafePerformEffect nowDateTime
-  -- pure $ unsafePerformEffect $ log $ ("nowTime is: " <> (show nowTime))
-  xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just nowTime) of
-    First x -> x
-  -- pure $ unsafePerformEffect $ log $ ("xsdDateMay is: " <> (show xsdDateMay))
-  newRec <- pure $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
-    get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
-  ) recOpt
-  let newRecMay = Opt.getSubset newRec
-  display $ recWidg newRecMay
-  pure newRec
+accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record]
+  $ D.div_ [MC.recFlexBox] $ do
+    newRec <- D.div_ [MC.recEditor] do
+      let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
+      descsOn <- showDescSig descsOnInit
+      uploadedRec <- uploadButtonSig
+      let uploadedRecMay = (Opt.getSubset uploadedRec :: Maybe M.MetajeloRecord)
+      let upOrInRec = if isNothing uploadedRecMay then recOpt' else uploadedRec
+      recOpt <- accumulateMetajeloRecUI upOrInRec
+      let xsdDateLastMay = Opt.get (SProxy :: _ "lastModified") recOpt
+      let nowTime = unsafePerformEffect nowDateTime
+      -- pure $ unsafePerformEffect $ log $ ("nowTime is: " <> (show nowTime))
+      xsdDateMay <- pure $ case (First xsdDateLastMay) <> (First $ Just nowTime) of
+        First x -> x
+      -- pure $ unsafePerformEffect $ log $ ("xsdDateMay is: " <> (show xsdDateMay))
+      pure $ execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "lastModified") xsdDateMay
+        get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
+      ) recOpt
+    let newRecMay = Opt.getSubset newRec
+    D.div_ [MC.sideBar] $ display $ recWidg newRecMay
+    pure newRec
   where
     recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
     recWidg recMay = do
