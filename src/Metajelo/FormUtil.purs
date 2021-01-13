@@ -51,6 +51,7 @@ import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
 import Foreign.Object as FO
 import Global (readInt)
+import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.SchemaInfo as MI
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
@@ -403,7 +404,8 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       pure newItem
     delButton :: Item a -> Signal HTML (Item a)
     delButton item = step item $ do
-      delMay <- (Delete $ toMaybe item) <$ D.button [P.onClick] [D.text "Delete"]
+      delMay <- (Delete $ toMaybe item)
+        <$ D.button [P.onClick, MC.deleteItem] [D.text "Delete"]
       pure $ delButton delMay
     arrayViewLoop :: Int -> Array (Item a) ->
       Signal HTML (Tuple Int (Array (Item a)))
@@ -411,9 +413,9 @@ arrayView mkWidget oldArrTup = D.div_ [] do
       D.ul_ [] do
         let widgCountIn' = fst tupIn
         let mayArr' = snd tupIn
-        emptyArrLen <- step 0 $
-          (pure 1) <$ D.button [P.onClick] [D.text "Add item"]
         mayArrNewUnfiltered <- traverse mkItemView mayArr'
+        emptyArrLen <- step 0 $
+          (pure 1) <$ D.button [P.onClick, MC.addItem] [D.text "Add item"]
         let mayArrNew = filter isKeep mayArrNewUnfiltered
         let widgCountNew = length mayArrNew + emptyArrLen
         let emptyArr = (safeRange 1 emptyArrLen) <#> (\_ -> emptyElem)
@@ -478,7 +480,7 @@ fromEither def ei = case ei of
   Right b -> b
   Left _ -> def
 
--- TODO this safely, need an FFI check: 
+-- TODO this safely, need an FFI check:
 -- https://github.com/facebook/flow/issues/4799#issuecomment-326992974
 -- Maybe do this separately as a small library: e.g.- `NativeEventTarget -> Maybe Node`
 evTarget :: SyntheticInputEvent -> Effect Node
