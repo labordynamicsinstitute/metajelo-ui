@@ -19,7 +19,7 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
 import Data.Foldable (fold, foldMap)
-import Data.Functor ((<#>))
+import Data.Functor (void, (<#>), (<$))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
@@ -30,6 +30,7 @@ import Data.Symbol (class IsSymbol, SProxy(..))
 import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.UUID as UUID
+import Data.Void (Void, absurd)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Effect.Aff.Class (liftAff)
@@ -55,7 +56,7 @@ import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
-               , map, pure, show, ($), (<$>), (<>), (>>=))
+               , map, pure, show, unit, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL, urlToString)
 import Web.DOM.Document (createElement) as DOM
@@ -421,21 +422,21 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record]
         get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
       ) recOpt
     let newRecMay = Opt.getSubset newRec
-    D.div_ [MC.sideBar] $ display $ recWidg newRecMay
+    D.div_ [MC.sideBar] $ display $ makeSidebar newRecMay unit 0
     pure newRec
+
+recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
+recWidg recMay = do
+  recMay' <- liftEffect $ sequence $ finalizeRecord <$> recMay
+  D.div [MC.recPreview] [
+    do
+      mjStr <- liftEffect $ mjStrEff recMay'
+      D.div [MC.previewButtons] [downloadButton mjStr, copyButton mjStr]
+  , D.br'
+  , fold $ MV.mkRecordWidget <$> recMay'
+  ]
   where
-    recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
-    recWidg recMay = do
-      recMay' <- liftEffect $ sequence $ finalizeRecord <$> recMay
-      D.div [MC.recPreview] [
-        do
-          mjStr <- liftEffect $ mjStrEff recMay'
-          D.div [MC.previewButtons] [downloadButton mjStr, copyButton mjStr]
-      , D.br'
-      , fold $ MV.mkRecordWidget <$> recMay'
-      ]
-      where
-      mjStrEff rm = maybe (pure "") MXW.recordToString rm
+  mjStrEff rm = maybe (pure "") MXW.recordToString rm
 
 finalizeRecord :: M.MetajeloRecord -> Effect M.MetajeloRecord
 finalizeRecord recIn = do
@@ -529,8 +530,9 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
   ) prodOpt
-  let newProdMay = Opt.getSubset newProd
-  display $ prodWidg newProdMay
+  -- TODO: move to sidebar when full preview unavailable
+  -- let newProdMay = Opt.getSubset newProd
+  -- display $ prodWidg newProdMay
   pure $ Just newProd
   where
     prodOpt = fromMaybe Opt.empty prodOptMay
@@ -596,8 +598,9 @@ accumulateLocation locOptMay = D.div_ [MC.location] do
     get >>= Opt.maySetOptState (SProxy :: _ "versioning") (Just versioning)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
   ) locOpt
-  let newLocMay = Opt.getSubset newLoc
-  display $ locWidg newLocMay
+  -- TODO: move to sidebar when full preview unavailable
+  -- let newLocMay = Opt.getSubset newLoc
+  -- display $ locWidg newLocMay
   pure $ Just newLoc
   where
     locOpt = fromMaybe Opt.empty locOptMay
@@ -830,3 +833,53 @@ updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)) lo
     )
   )
+
+makeSidebar :: forall a. Maybe M.MetajeloRecord -> Unit -> Int -> Widget HTML a
+makeSidebar recMay dataCite ix = createTabWidget tabPages 0
+  where
+    tabPages = [previewTP, dataCiteTP]
+    previewTP = {
+        tab: D.text "Preview"
+      , page: recWidg recMay
+      }
+    dataCiteTP = {
+        tab: D.text "DataCite Retrieval"
+      , page: D.text "TODO"
+    }
+
+type Tab = Widget HTML Void
+type Page = Widget HTML Void
+type TabPage = {
+  tab :: Tab
+, page :: Page
+}
+
+createTabWidget :: forall a. Array TabPage -> Int -> Widget HTML a
+createTabWidget tPages ix0 = do
+  tabSel <- tabPageDiv' [
+    D.nav [MC.sideBarNav] $ tabIndexer tabs
+  , ix0 <$ pageAt ix0
+  ]
+  createTabWidget tPages tabSel
+  where
+    tabIndexer :: Array Tab -> Array (Widget HTML Int)
+    tabIndexer ts = map mkIxedTw $ A.zip (0 `A.(..)` A.length ts) ts
+      where
+        mkIxedTw :: Tuple Int Tab -> Widget HTML Int
+        mkIxedTw ixtb = do
+          void $ D.div [P.onClick, MC.sideBarTab] [absurd <$> snd ixtb]
+          pure (fst ixtb)
+    tabs = (\tp -> tp.tab) <$> tPages
+    pages :: Array Page
+    pages = (\tp -> tp.page) <$> tPages
+    emptyPage :: Page
+    emptyPage = D.div' [D.text "No pages to show!"]
+    pageAt :: Int -> Page
+    pageAt ix = fromMaybe emptyPage (pages A.!! ix)
+    tabPageDiv' :: D.El'
+    tabPageDiv' els =
+      D.div [MC.sideBarGrid] [
+        D.div [MC.sideBarMenu] [
+          D.div [MC.sideBarCol] els
+        ]
+      ]
