@@ -1,18 +1,18 @@
 module Metajelo.UI where
 
 
-import Affjax as AJ
-import Affjax.ResponseFormat as AJ
-import Control.Monad.State
+import Affjax (Error, Response, get, printError) as AJ
+import Affjax.ResponseFormat (string) as AJ
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
+import Control.Apply ((<*))
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
-import Control.Plus (empty)
+import Control.Monad.State
 import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
@@ -23,7 +23,6 @@ import Data.Functor (void, (<#>), (<$))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
-import Data.String.CodePoints (take)
 import Data.String.Common (null)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
@@ -31,20 +30,23 @@ import Data.Traversable (sequence)
 import Data.Tuple (Tuple(..), fst, snd)
 import Data.UUID as UUID
 import Data.Void (Void, absurd)
+import DataCite.JSON.Decode.Simple (JSONWithErr, readRecordJSON)
+import DataCite.Types (Resource)
 import Effect (Effect)
-import Effect.Aff (launchAff_)
 import Effect.Aff.Class (liftAff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
+import Foreign (MultipleErrors)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
+import Metajelo.CSS.UI.Util as MCU
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
                          , checkPolicy, dateInput, emailInput
-                         , errorDisplay, evTargetElem, menuSignal
+                         , errorDisplay, evTargetElem, getInputTextLE, menuSignal
                          , mkDesc, natInput
                          , nonEmptyArrayView, polPolTypeIs, runEffectInit
                          , showDescSig, textInput, urlInput)
@@ -58,7 +60,7 @@ import Option as Opt
 import Prelude (Unit, bind, discard, join
                , map, pure, show, unit, ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
-import Text.URL.Validate (URL, urlToString)
+import Text.URL.Validate (URL, parsePublicURL, urlToString)
 import Web.DOM.Document (createElement) as DOM
 import Web.DOM.Element (setAttribute) as DOM
 import Web.File.File (toBlob) as File
@@ -77,14 +79,6 @@ runFormSPA divId = runWidgetInDom divId page
 
 page :: ∀ a. Widget HTML a
 page = do
-  _ <- liftAff do
-    res <- AJ.get AJ.string "https://api.datacite.org/dois/10.3886/E100590V1"
-    case res of
-      Left err -> do
-        log $ "GET /api response failed to decode: " <> AJ.printError err
-      Right response -> do
-        log $ "Received response, first 100 chars: " <> take 100 response.body
-
   D.div' [
        {- let mjStr = "\xD800" in D.div [MC.previewButtons] [
             downloadButton mjStr
@@ -169,6 +163,42 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
     errorMsg err = "Couldn't decode MetajeloXML: " <> (show err)
     xmlErr = lmap (\_ -> EX.error
       "Error reading XML - please make sure it is well-formed.")
+
+type DataCiteRetrieval = Maybe (JSONWithErr (Either MultipleErrors Resource))
+
+dataCiteButtonSig :: Signal HTML DataCiteRetrieval
+dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
+  where
+    dcDoiInputId = MCU.mjUiClassPfx <> "dataCiteDOI_Input"
+    dCiteJsonUrlPfx = "https://api.datacite.org/dois/"
+    dataCiteButton :: Widget HTML DataCiteRetrieval
+    dataCiteButton = D.div_ [] do
+      void $ D.button_ [P.onClick] $ D.text "Retrieve DataCite Record"
+      doiMay :: Maybe String <- D.span [] [
+          D.input [P._id dcDoiInputId, P.placeholder "Input DOI here"]
+        , getInputTextLE dcDoiInputId <* (D.button_ [P.onClick] $ D.text "Retrieve")
+        , Nothing <$ (D.button_ [P.onClick] $ D.text "Cancel")
+        ]
+      case doiMay of
+        Nothing -> dataCiteButton
+        Just doi -> case parsePublicURL $ dCiteJsonUrlPfx <> doi of
+          Left err -> errorBox $ EX.error err
+          Right jsonUrl -> do
+            res <- liftAff $ AJ.get AJ.string $ urlToString jsonUrl
+            processResponse res
+    processResponse :: Either AJ.Error (AJ.Response String)
+      ->  Widget HTML DataCiteRetrieval
+    processResponse res = case res of
+      Left err -> errorBox $ EX.error $
+        "GET /api response failed to decode: " <> AJ.printError err
+      Right response -> pure $ Just $ readRecordJSON response.body
+    errorBox :: EX.Error -> Widget HTML DataCiteRetrieval
+    errorBox err = D.div [] [
+        dataCiteButton
+      , D.div_ [MWC.errorDisplayBox] do
+          D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
+      ]
+    errorMsg err = "In DataCite retrieval: " <> (show err)
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr

@@ -44,7 +44,7 @@ import Data.Tuple (Tuple(..), fst, snd)
 import Data.Unit (Unit)
 import Data.Variant (Variant)
 import Effect (Effect)
-import Effect.Class (liftEffect)
+import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Class.Console (logShow, log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
@@ -247,7 +247,7 @@ checkBoxS b = step b do
 checkBoxW :: Boolean -> Widget HTML Boolean
 checkBoxW b = not b <$ D.input [P._type "checkbox", P.checked b, P.onChange]
 
-showDesc :: forall a. Boolean -> Widget HTML Boolean
+showDesc :: Boolean -> Widget HTML Boolean
 showDesc on = D.div_ []
   $ not on <$ (D.button_ [P.onClick] $ D.text buttonTxt)
   where buttonTxt = if on then "Hide Descriptions" else "Show Descriptions"
@@ -518,3 +518,15 @@ setChildInputByTag id tag value = do
       for_ childInputs (HTML.setValue value)
     Nothing -> pure unit
       --log $ "in setChildByTag, couldn't find element with id " <> id
+
+getInputText :: String -> Effect (Maybe String)
+getInputText id = do
+  doc <- windowDoc
+  let root = toNonElementParentNode doc
+  eleMay <- getElementById id root
+  traverse HTML.value do
+    ele <- eleMay
+    HTML.fromElement ele
+
+getInputTextLE :: forall m. MonadEffect m => String -> m (Maybe String)
+getInputTextLE id = liftEffect $ getInputText id
