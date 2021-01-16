@@ -13,6 +13,7 @@ import Control.Apply ((<*))
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Monad.State
+import Control.Monad.Writer (Writer, runWriter)
 import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
@@ -23,6 +24,7 @@ import Data.Functor (void, (<#>), (<$))
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
+import Data.Newtype (unwrap)
 import Data.String.Common (null)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
@@ -204,8 +206,7 @@ dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
 fillWithDataCite :: Opt.Option SupplementaryProductRowOpts -> Resource
   -> Opt.Option SupplementaryProductRowOpts
 fillWithDataCite spOpt dcRes = execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
-      (Just bMDnew)
+    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt") (Just bMDnew)
   ) spOpt
   where
     bMDorig = getOpt (SProxy :: _ "basicMetadata_opt") spOpt
@@ -544,10 +545,18 @@ accumulateMetajeloRecUI recOpt = do
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
   ) recOpt
 
--- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
-  dataCiteJson <- dataCiteButtonSig
+  dataCiteJsonWMay <- dataCiteButtonSig
+  let prodOpt = prodOpt0
+  foo <- pure $ case dataCiteJsonWMay of
+    Nothing -> prodOpt0
+    Just dataCiteJsonW ->
+      let dataCiteJsonTup@(Tuple dCiteEi _) = runWriter $ unwrap dataCiteJsonW
+      in case dCiteEi of
+        Right dCite -> fillWithDataCite prodOpt0 dCite
+        Left _ -> prodOpt0
+  -- TODO : add datacite error handling
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
   basicMdOpt <- accumulateBasicMetadata $
@@ -593,7 +602,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   -- display $ prodWidg newProdMay
   pure $ Just newProd
   where
-    prodOpt = fromMaybe Opt.empty prodOptMay
+    prodOpt0 = fromMaybe Opt.empty prodOptMay
     prodWidg :: forall a. Maybe M.SupplementaryProduct ->  Widget HTML a
     prodWidg prodMay = D.div [MC.prodPreview] [
       D.br'
