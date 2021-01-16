@@ -548,8 +548,7 @@ accumulateMetajeloRecUI recOpt = do
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   dataCiteJsonWMay <- dataCiteButtonSig
-  let prodOpt = prodOpt0
-  foo <- pure $ case dataCiteJsonWMay of
+  prodOpt <- pure $ case dataCiteJsonWMay of
     Nothing -> prodOpt0
     Just dataCiteJsonW ->
       let dataCiteJsonTup@(Tuple dCiteEi _) = runWriter $ unwrap dataCiteJsonW
