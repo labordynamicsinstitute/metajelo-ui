@@ -129,6 +129,7 @@ mkDLAnchorAndClicker encTxt = do
         "Couldn't create HTMLElement to click with encoded string"
         <> encTxt
 
+--TODO: add a CSS style here with a ::before label
 uploadButtonSig :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
   mjRec <- uploadButton
@@ -199,6 +200,32 @@ dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
           D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
       ]
     errorMsg err = "In DataCite retrieval: " <> (show err)
+
+fillWithDataCite :: Opt.Option SupplementaryProductRowOpts -> Resource
+  -> Opt.Option SupplementaryProductRowOpts
+fillWithDataCite spOpt dcRes = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
+      (Just bMDnew)
+  ) spOpt
+  where
+    bMDorig = getOpt (SProxy :: _ "basicMetadata_opt") spOpt
+    titlesOrigMay = Opt.get (SProxy :: _ "titles") bMDorig
+    dcTitles = (\t -> t.title) <$> dcRes.data.attributes.titles
+    titlesNew = maybe dcTitles (\ts -> ts <> dcTitles) titlesOrigMay
+    _numTitles = NA.length titlesNew
+    creatorsOrigMay = Opt.get (SProxy :: _ "creators") bMDorig
+    dcCreators = (\c -> c.name) <$> dcRes.data.attributes.creators
+    creatorsNew = maybe dcCreators (\cs -> cs <> dcCreators) creatorsOrigMay
+    _numCreators = NA.length creatorsNew
+    bMDnew :: Opt.Option BasicMetadataRowOpts
+    bMDnew = execState (do
+        get >>= Opt.maySetOptState (SProxy :: _ "titles") (Just titlesNew)
+        get >>= Opt.maySetOptState (SProxy :: _ "_numTitles")
+          (Just _numTitles)
+        get >>= Opt.maySetOptState (SProxy :: _ "creators") (Just creatorsNew)
+        get >>= Opt.maySetOptState (SProxy :: _ "_numCreators")
+          (Just _numCreators)
+      ) bMDorig
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
@@ -520,6 +547,7 @@ accumulateMetajeloRecUI recOpt = do
 -- FIXME: check how the header is grouped into these?
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
+  dataCiteJson <- dataCiteButtonSig
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
   basicMdOpt <- accumulateBasicMetadata $
