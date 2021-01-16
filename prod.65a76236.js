@@ -1610,8 +1610,8 @@ $jscomp.polyfill("String.fromCodePoint", function (a) {
 }, "es6", "es3");
 $jscomp.polyfill("Array.from", function (a) {
   return a ? a : function (c, e, g) {
-    e = null != e ? e : function (m) {
-      return m;
+    e = null != e ? e : function (l) {
+      return l;
     };
     var f = [],
         k = "undefined" != typeof Symbol && Symbol.iterator && c[Symbol.iterator];
@@ -1702,12 +1702,12 @@ var PS = {};
     return function (e, g) {
       return function (f, k) {
         var p = c.newXHR(),
-            m = c.fixupUrl(g.url, p);
-        p.open(g.method || "GET", m, !0, g.username, g.password);
+            l = c.fixupUrl(g.url, p);
+        p.open(g.method || "GET", l, !0, g.username, g.password);
         if (g.headers) try {
-          m = 0;
+          l = 0;
 
-          for (var n; null != (n = g.headers[m]); m++) {
+          for (var n; null != (n = g.headers[l]); l++) {
             p.setRequestHeader(n.field, n.value);
           }
         } catch (q) {
@@ -1757,8 +1757,8 @@ var PS = {};
 (function (a) {
   a.arrayApply = function (c) {
     return function (e) {
-      for (var g = c.length, f = e.length, k = Array(g * f), p = 0, m = 0; m < g; m++) {
-        for (var n = c[m], q = 0; q < f; q++) {
+      for (var g = c.length, f = e.length, k = Array(g * f), p = 0, l = 0; l < g; l++) {
+        for (var n = c[l], q = 0; q < f; q++) {
           k[p++] = n(e[q]);
         }
       }
@@ -1887,9 +1887,9 @@ var PS = {};
   };
 
   c.mapFlipped = function (p) {
-    return function (m) {
+    return function (l) {
       return function (n) {
-        return (0, p.map)(n)(m);
+        return (0, p.map)(n)(l);
       };
     };
   };
@@ -1899,8 +1899,8 @@ var PS = {};
   };
 
   c.voidRight = function (p) {
-    return function (m) {
-      return (0, p.map)(f["const"](m));
+    return function (l) {
+      return (0, p.map)(f["const"](l));
     };
   };
 
@@ -1916,17 +1916,17 @@ var PS = {};
       f = a["Data.Function"],
       k = a["Data.Functor"];
 
-  a = function a(m, n) {
-    this.Functor0 = m;
+  a = function a(l, n) {
+    this.Functor0 = l;
     this.apply = n;
   };
 
   var p = new a(function () {
     return k.functorFn;
-  }, function (m) {
+  }, function (l) {
     return function (n) {
       return function (q) {
-        return m(q)(n(q));
+        return l(q)(n(q));
       };
     };
   });
@@ -1935,31 +1935,31 @@ var PS = {};
   }, e.arrayApply);
   c.Apply = a;
 
-  c.apply = function (m) {
-    return m.apply;
+  c.apply = function (l) {
+    return l.apply;
   };
 
-  c.applyFirst = function (m) {
+  c.applyFirst = function (l) {
     return function (n) {
       return function (q) {
-        return (0, m.apply)(k.map(m.Functor0())(f["const"])(n))(q);
+        return (0, l.apply)(k.map(l.Functor0())(f["const"])(n))(q);
       };
     };
   };
 
-  c.applySecond = function (m) {
+  c.applySecond = function (l) {
     return function (n) {
       return function (q) {
-        return (0, m.apply)(k.map(m.Functor0())(f["const"](g.identity(g.categoryFn)))(n))(q);
+        return (0, l.apply)(k.map(l.Functor0())(f["const"](g.identity(g.categoryFn)))(n))(q);
       };
     };
   };
 
-  c.lift2 = function (m) {
+  c.lift2 = function (l) {
     return function (n) {
       return function (q) {
         return function (w) {
-          return (0, m.apply)(k.map(m.Functor0())(n)(q))(w);
+          return (0, l.apply)(k.map(l.Functor0())(n)(q))(w);
         };
       };
     };
@@ -2032,7 +2032,7 @@ var PS = {};
   var p = function p(n) {
     return f.flip(n.bind);
   },
-      m = new function (n) {
+      l = new function (n) {
     this.discard = n;
   }(function (n) {
     return n.bind;
@@ -2067,7 +2067,7 @@ var PS = {};
   };
 
   c.bindArray = a;
-  c.discardUnit = m;
+  c.discardUnit = l;
 })(PS);
 
 (function (a) {
@@ -2168,8 +2168,8 @@ var PS = {};
       g = a["Data.Eq"],
       f = a["Data.Ordering"];
 
-  a = function a(m, n) {
-    this.Eq0 = m;
+  a = function a(l, n) {
+    this.Eq0 = l;
     this.compare = n;
   };
 
@@ -2184,14 +2184,14 @@ var PS = {};
   }, e.ordBooleanImpl(f.LT.value)(f.EQ.value)(f.GT.value));
   c.Ord = a;
 
-  c.compare = function (m) {
-    return m.compare;
+  c.compare = function (l) {
+    return l.compare;
   };
 
-  c.max = function (m) {
+  c.max = function (l) {
     return function (n) {
       return function (q) {
-        var w = (0, m.compare)(n)(q);
+        var w = (0, l.compare)(n)(q);
         if (w instanceof f.LT) return q;
         if (w instanceof f.EQ || w instanceof f.GT) return n;
         throw Error("Failed pattern match at Data.Ord (line 167, column 3 - line 170, column 12): " + [w.constructor.name]);
@@ -2210,9 +2210,9 @@ var PS = {};
       e = a["Data.Bounded"],
       g = a["Data.Ord"];
 
-  a = function a(p, m, n) {
+  a = function a(p, l, n) {
     this.Ord0 = p;
-    this.bottom = m;
+    this.bottom = l;
     this.top = n;
   };
 
@@ -2249,7 +2249,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Category"],
       p = a["Data.Bounded"],
-      m = a["Data.Eq"],
+      l = a["Data.Eq"],
       n = a["Data.Function"],
       q = a["Data.Functor"],
       w = a["Data.Ord"],
@@ -2261,22 +2261,22 @@ var PS = {};
     return u;
   }(),
       d = function () {
-    function u(B) {
-      this.value0 = B;
+    function u(E) {
+      this.value0 = E;
     }
 
-    u.create = function (B) {
-      return new u(B);
+    u.create = function (E) {
+      return new u(E);
     };
 
     return u;
   }(),
       r = function r(u) {
-    return function (B) {
+    return function (E) {
       return function (F) {
         if (F instanceof h) return u;
-        if (F instanceof d) return B(F.value0);
-        throw Error("Failed pattern match at Data.Maybe (line 217, column 1 - line 217, column 51): " + [u.constructor.name, B.constructor.name, F.constructor.name]);
+        if (F instanceof d) return E(F.value0);
+        throw Error("Failed pattern match at Data.Maybe (line 217, column 1 - line 217, column 51): " + [u.constructor.name, E.constructor.name, F.constructor.name]);
       };
     };
   };
@@ -2285,47 +2285,47 @@ var PS = {};
   n = r(!1)(n["const"](!0));
 
   var x = new q.Functor(function (u) {
-    return function (B) {
-      return B instanceof d ? new d(u(B.value0)) : h.value;
+    return function (E) {
+      return E instanceof d ? new d(u(E.value0)) : h.value;
     };
   }),
       t = function t(u) {
-    return new m.Eq(function (B) {
+    return new l.Eq(function (E) {
       return function (F) {
-        return B instanceof h && F instanceof h ? !0 : B instanceof d && F instanceof d ? m.eq(u)(B.value0)(F.value0) : !1;
+        return E instanceof h && F instanceof h ? !0 : E instanceof d && F instanceof d ? l.eq(u)(E.value0)(F.value0) : !1;
       };
     });
   },
-      C = function C(u) {
+      D = function D(u) {
     return new w.Ord(function () {
       return t(u.Eq0());
-    }, function (B) {
+    }, function (E) {
       return function (F) {
-        if (B instanceof h && F instanceof h) return b.EQ.value;
-        if (B instanceof h) return b.LT.value;
+        if (E instanceof h && F instanceof h) return b.EQ.value;
+        if (E instanceof h) return b.LT.value;
         if (F instanceof h) return b.GT.value;
-        if (B instanceof d && F instanceof d) return w.compare(u)(B.value0)(F.value0);
-        throw Error("Failed pattern match at Data.Maybe (line 194, column 1 - line 194, column 51): " + [B.constructor.name, F.constructor.name]);
+        if (E instanceof d && F instanceof d) return w.compare(u)(E.value0)(F.value0);
+        throw Error("Failed pattern match at Data.Maybe (line 194, column 1 - line 194, column 51): " + [E.constructor.name, F.constructor.name]);
       };
     });
   },
       y = new g.Apply(function () {
     return x;
   }, function (u) {
-    return function (B) {
-      if (u instanceof d) return q.map(x)(u.value0)(B);
+    return function (E) {
+      if (u instanceof d) return q.map(x)(u.value0)(E);
       if (u instanceof h) return h.value;
-      throw Error("Failed pattern match at Data.Maybe (line 67, column 1 - line 69, column 30): " + [u.constructor.name, B.constructor.name]);
+      throw Error("Failed pattern match at Data.Maybe (line 67, column 1 - line 69, column 30): " + [u.constructor.name, E.constructor.name]);
     };
   });
 
   g = new f.Bind(function () {
     return y;
   }, function (u) {
-    return function (B) {
-      if (u instanceof d) return B(u.value0);
+    return function (E) {
+      if (u instanceof d) return E(u.value0);
       if (u instanceof h) return h.value;
-      throw Error("Failed pattern match at Data.Maybe (line 125, column 1 - line 127, column 28): " + [u.constructor.name, B.constructor.name]);
+      throw Error("Failed pattern match at Data.Maybe (line 125, column 1 - line 127, column 28): " + [u.constructor.name, E.constructor.name]);
     };
   });
   e = new e.Applicative(function () {
@@ -2343,9 +2343,9 @@ var PS = {};
   c.isNothing = a;
 
   c.fromJust = function (u) {
-    return function (B) {
-      if (B instanceof d) return B.value0;
-      throw Error("Failed pattern match at Data.Maybe (line 268, column 1 - line 268, column 46): " + [B.constructor.name]);
+    return function (E) {
+      if (E instanceof d) return E.value0;
+      throw Error("Failed pattern match at Data.Maybe (line 268, column 1 - line 268, column 46): " + [E.constructor.name]);
     };
   };
 
@@ -2353,11 +2353,11 @@ var PS = {};
   c.applyMaybe = y;
   c.applicativeMaybe = e;
   c.bindMaybe = g;
-  c.ordMaybe = C;
+  c.ordMaybe = D;
 
   c.boundedMaybe = function (u) {
     return new p.Bounded(function () {
-      return C(u.Ord0());
+      return D(u.Ord0());
     }, h.value, new d(p.top(u)));
   };
 })(PS);
@@ -2420,7 +2420,7 @@ var PS = {};
 
     return w;
   }(),
-      m = function () {
+      l = function () {
     function w(b) {
       this.value0 = b;
     }
@@ -2458,7 +2458,7 @@ var PS = {};
   c.Blob = f;
   c.Document = k;
   c.String = p;
-  c.FormData = m;
+  c.FormData = l;
   c.FormURLEncoded = n;
   c.Json = q;
 
@@ -2489,12 +2489,12 @@ var PS = {};
   a["Data.HeytingAlgebra"] = a["Data.HeytingAlgebra"] || {};
   var c = a["Data.HeytingAlgebra"];
   a = a["Data.HeytingAlgebra"];
-  var e = new function (g, f, k, p, m, n) {
+  var e = new function (g, f, k, p, l, n) {
     this.conj = g;
     this.disj = f;
     this.ff = k;
     this.implies = p;
-    this.not = m;
+    this.not = l;
     this.tt = n;
   }(a.boolConj, a.boolDisj, !1, function (g) {
     return function (f) {
@@ -2538,7 +2538,7 @@ var PS = {};
   };
 
   var f = new a(function (p) {
-    return function (m) {
+    return function (l) {
       return g.unit;
     };
   }),
@@ -2560,9 +2560,9 @@ var PS = {};
 
   var c = a["Data.Monoid"],
       e = a["Data.Semigroup"],
-      g = function g(p, m) {
+      g = function g(p, l) {
     this.Semigroup0 = p;
-    this.mempty = m;
+    this.mempty = l;
   };
 
   a = new g(function () {
@@ -2593,9 +2593,9 @@ var PS = {};
       g = a["Data.Monoid"],
       f = a["Data.Semigroup"],
       k = function k(p) {
-    return new f.Semigroup(function (m) {
+    return new f.Semigroup(function (l) {
       return function (n) {
-        return e.disj(p)(m)(n);
+        return e.disj(p)(l)(n);
       };
     });
   };
@@ -2634,10 +2634,10 @@ var PS = {};
   c.alaF = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
+        return function (l) {
           return function (n) {
             return function (q) {
-              var w = e.map(k)(m.unwrap),
+              var w = e.map(k)(l.unwrap),
                   b = e.map(f)(p.wrap);
               return function (h) {
                 return w(q(b(h)));
@@ -2670,56 +2670,56 @@ var PS = {};
       e = a["Data.MediaType"],
       g = a["Data.Newtype"],
       f = function () {
-    function m(n) {
+    function l(n) {
       this.value0 = n;
     }
 
-    m.create = function (n) {
-      return new m(n);
+    l.create = function (n) {
+      return new l(n);
     };
 
-    return m;
+    return l;
   }(),
       k = function () {
-    function m(n) {
+    function l(n) {
       this.value0 = n;
     }
 
-    m.create = function (n) {
-      return new m(n);
+    l.create = function (n) {
+      return new l(n);
     };
 
-    return m;
+    return l;
   }(),
       p = function () {
-    function m(n, q) {
+    function l(n, q) {
       this.value0 = n;
       this.value1 = q;
     }
 
-    m.create = function (n) {
+    l.create = function (n) {
       return function (q) {
-        return new m(n, q);
+        return new l(n, q);
       };
     };
 
-    return m;
+    return l;
   }();
 
   c.Accept = f;
   c.ContentType = k;
 
-  c.name = function (m) {
-    if (m instanceof f) return "Accept";
-    if (m instanceof k) return "Content-Type";
-    if (m instanceof p) return m.value0;
-    throw Error("Failed pattern match at Affjax.RequestHeader (line 21, column 1 - line 21, column 32): " + [m.constructor.name]);
+  c.name = function (l) {
+    if (l instanceof f) return "Accept";
+    if (l instanceof k) return "Content-Type";
+    if (l instanceof p) return l.value0;
+    throw Error("Failed pattern match at Affjax.RequestHeader (line 21, column 1 - line 21, column 32): " + [l.constructor.name]);
   };
 
-  c.value = function (m) {
-    if (m instanceof f || m instanceof k) return g.unwrap(e.newtypeMediaType)(m.value0);
-    if (m instanceof p) return m.value1;
-    throw Error("Failed pattern match at Affjax.RequestHeader (line 26, column 1 - line 26, column 33): " + [m.constructor.name]);
+  c.value = function (l) {
+    if (l instanceof f || l instanceof k) return g.unwrap(e.newtypeMediaType)(l.value0);
+    if (l instanceof p) return l.value1;
+    throw Error("Failed pattern match at Affjax.RequestHeader (line 26, column 1 - line 26, column 33): " + [l.constructor.name]);
   };
 })(PS);
 
@@ -2752,7 +2752,7 @@ var PS = {};
 
     return b;
   }(),
-      m = function () {
+      l = function () {
     function b(h) {
       this.value0 = h;
     }
@@ -2801,7 +2801,7 @@ var PS = {};
   e = new w(e.identity(e.categoryFn));
   c.ArrayBuffer = k;
   c.Blob = p;
-  c.Document = m;
+  c.Document = l;
   c.Json = n;
   c.String = q;
   c.Ignore = w;
@@ -2811,7 +2811,7 @@ var PS = {};
   c.toResponseType = function (b) {
     if (b instanceof k) return "arraybuffer";
     if (b instanceof p) return "blob";
-    if (b instanceof m) return "document";
+    if (b instanceof l) return "document";
     if (b instanceof n || b instanceof q) return "text";
     if (b instanceof w) return "";
     throw Error("Failed pattern match at Affjax.ResponseFormat (line 46, column 3 - line 52, column 19): " + [b.constructor.name]);
@@ -2864,9 +2864,9 @@ var PS = {};
 
   c.ap = function (k) {
     return function (p) {
-      return function (m) {
+      return function (l) {
         return g.bind(k.Bind1())(p)(function (n) {
-          return g.bind(k.Bind1())(m)(function (q) {
+          return g.bind(k.Bind1())(l)(function (q) {
             return e.pure(k.Applicative0())(n(q));
           });
         });
@@ -2906,77 +2906,77 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Data.Bifunctor"],
-      m = a["Data.Function"],
+      l = a["Data.Function"],
       n = a["Data.Functor"],
       q = a["Data.Maybe"],
       w = function () {
-    function t(C) {
-      this.value0 = C;
+    function t(D) {
+      this.value0 = D;
     }
 
-    t.create = function (C) {
-      return new t(C);
+    t.create = function (D) {
+      return new t(D);
     };
 
     return t;
   }(),
       b = function () {
-    function t(C) {
-      this.value0 = C;
+    function t(D) {
+      this.value0 = D;
     }
 
-    t.create = function (C) {
-      return new t(C);
+    t.create = function (D) {
+      return new t(D);
     };
 
     return t;
   }(),
       h = new n.Functor(function (t) {
-    return function (C) {
-      if (C instanceof w) return new w(C.value0);
-      if (C instanceof b) return new b(t(C.value0));
-      throw Error("Failed pattern match at Data.Either (line 38, column 1 - line 38, column 52): " + [C.constructor.name]);
+    return function (D) {
+      if (D instanceof w) return new w(D.value0);
+      if (D instanceof b) return new b(t(D.value0));
+      throw Error("Failed pattern match at Data.Either (line 38, column 1 - line 38, column 52): " + [D.constructor.name]);
     };
   });
 
   a = function a(t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
         if (y instanceof w) return t(y.value0);
-        if (y instanceof b) return C(y.value0);
-        throw Error("Failed pattern match at Data.Either (line 238, column 1 - line 238, column 64): " + [t.constructor.name, C.constructor.name, y.constructor.name]);
+        if (y instanceof b) return D(y.value0);
+        throw Error("Failed pattern match at Data.Either (line 238, column 1 - line 238, column 64): " + [t.constructor.name, D.constructor.name, y.constructor.name]);
       };
     };
   };
 
-  m = a(m["const"](q.Nothing.value))(q.Just.create);
+  l = a(l["const"](q.Nothing.value))(q.Just.create);
   p = new p.Bifunctor(function (t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
         if (y instanceof w) return new w(t(y.value0));
-        if (y instanceof b) return new b(C(y.value0));
-        throw Error("Failed pattern match at Data.Either (line 46, column 1 - line 48, column 36): " + [t.constructor.name, C.constructor.name, y.constructor.name]);
+        if (y instanceof b) return new b(D(y.value0));
+        throw Error("Failed pattern match at Data.Either (line 46, column 1 - line 48, column 36): " + [t.constructor.name, D.constructor.name, y.constructor.name]);
       };
     };
   });
   var d = new g.Apply(function () {
     return h;
   }, function (t) {
-    return function (C) {
+    return function (D) {
       if (t instanceof w) return new w(t.value0);
-      if (t instanceof b) return n.map(h)(t.value0)(C);
-      throw Error("Failed pattern match at Data.Either (line 82, column 1 - line 84, column 30): " + [t.constructor.name, C.constructor.name]);
+      if (t instanceof b) return n.map(h)(t.value0)(D);
+      throw Error("Failed pattern match at Data.Either (line 82, column 1 - line 84, column 30): " + [t.constructor.name, D.constructor.name]);
     };
   }),
       r = new f.Bind(function () {
     return d;
   }, a(function (t) {
-    return function (C) {
+    return function (D) {
       return new w(t);
     };
   })(function (t) {
-    return function (C) {
-      return C(t);
+    return function (D) {
+      return D(t);
     };
   })),
       x = new e.Applicative(function () {
@@ -2995,7 +2995,7 @@ var PS = {};
     return q.maybe(new w(t))(b.create);
   };
 
-  c.hush = m;
+  c.hush = l;
   c.functorEither = h;
   c.bifunctorEither = p;
   c.applicativeEither = x;
@@ -3031,9 +3031,9 @@ var PS = {};
   c["try"] = function (k) {
     return function (p) {
       return (0, k.catchError)(f.map(k.MonadThrow0().Monad0().Bind1().Apply0().Functor0())(g.Right.create)(p))(function () {
-        var m = e.pure(k.MonadThrow0().Monad0().Applicative0());
+        var l = e.pure(k.MonadThrow0().Monad0().Applicative0());
         return function (n) {
-          return m(g.Left.create(n));
+          return l(g.Left.create(n));
         };
       }());
     };
@@ -3099,7 +3099,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Control.Monad"],
-      m = a["Control.Monad.Error.Class"],
+      l = a["Control.Monad.Error.Class"],
       n = a["Control.Monad.Trans.Class"],
       q = a["Control.Monad.Writer.Class"],
       w = a["Data.Either"],
@@ -3130,9 +3130,9 @@ var PS = {};
       return x(b.map(F)(b.map(w.functorEither)(K)));
     });
   },
-      C = function C(F) {
+      D = function D(F) {
     return new p.Monad(function () {
-      return B(F);
+      return E(F);
     }, function () {
       return y(F);
     });
@@ -3156,9 +3156,9 @@ var PS = {};
       u = function u(F) {
     return new f.Apply(function () {
       return t(F.Bind1().Apply0().Functor0());
-    }, p.ap(C(F)));
+    }, p.ap(D(F)));
   },
-      B = function B(F) {
+      E = function E(F) {
     return new g.Applicative(function () {
       return u(F);
     }, function () {
@@ -3191,7 +3191,7 @@ var PS = {};
 
   c.newtypeExceptT = a;
   c.functorExceptT = t;
-  c.applicativeExceptT = B;
+  c.applicativeExceptT = E;
   c.bindExceptT = y;
 
   c.altExceptT = function (F) {
@@ -3215,8 +3215,8 @@ var PS = {};
   };
 
   c.monadThrowExceptT = function (F) {
-    return new m.MonadThrow(function () {
-      return C(F);
+    return new l.MonadThrow(function () {
+      return D(F);
     }, function () {
       var K = g.pure(F.Applicative0());
       return function (H) {
@@ -3227,7 +3227,7 @@ var PS = {};
 
   c.monadTellExceptT = function (F) {
     return new q.MonadTell(function () {
-      return C(F.Monad0());
+      return D(F.Monad0());
     }, function () {
       var K = n.lift(r)(F.Monad0()),
           H = q.tell(F);
@@ -3247,13 +3247,13 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Data.Functor"],
-      m = function m(h) {
+      l = function l(h) {
     return h;
   };
 
   a = new a["Data.Newtype"].Newtype(function (h) {
     return h;
-  }, m);
+  }, l);
   var n = new p.Functor(function (h) {
     return function (d) {
       return h(d);
@@ -3275,13 +3275,13 @@ var PS = {};
   }),
       b = new e.Applicative(function () {
     return q;
-  }, m);
+  }, l);
   e = new k.Monad(function () {
     return b;
   }, function () {
     return w;
   });
-  c.Identity = m;
+  c.Identity = l;
   c.newtypeIdentity = a;
   c.functorIdentity = n;
   c.applicativeIdentity = b;
@@ -3298,8 +3298,8 @@ var PS = {};
 
   var k = function () {
     var p = f.unwrap(g.newtypeIdentity);
-    return function (m) {
-      return p(e.runExceptT(m));
+    return function (l) {
+      return p(e.runExceptT(l));
     };
   }();
 
@@ -3360,14 +3360,14 @@ var PS = {};
             };
           }
 
-          var m = f,
+          var l = f,
               n;
 
           for (n in k) {
-            hasOwnProperty.call(k, n) && (m = e(m)(p(n)));
+            hasOwnProperty.call(k, n) && (l = e(l)(p(n)));
           }
 
-          return m;
+          return l;
         };
       };
     };
@@ -3422,7 +3422,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Control.Monad"],
-      m = new a["Data.Functor"].Functor(e.map_);
+      l = new a["Data.Functor"].Functor(e.map_);
   a = new p.Monad(function () {
     return w;
   }, function () {
@@ -3432,7 +3432,7 @@ var PS = {};
     return q;
   }, e.bind_),
       q = new f.Apply(function () {
-    return m;
+    return l;
   }, p.ap(a)),
       w = new g.Applicative(function () {
     return q;
@@ -3475,7 +3475,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Category"],
       p = a["Data.Function"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Maybe"],
       q = a["Data.Monoid"],
       w = a["Data.Monoid.Disj"],
@@ -3483,19 +3483,19 @@ var PS = {};
       h = a["Data.Semigroup"],
       d = a["Data.Unit"];
 
-  a = function a(y, u, B) {
+  a = function a(y, u, E) {
     this.foldMap = y;
     this.foldl = u;
-    this.foldr = B;
+    this.foldr = E;
   };
 
   var r = function r(y) {
     return function (u) {
-      return function (B) {
+      return function (E) {
         return (0, u.foldr)(function () {
           var F = f.applySecond(y.Apply0());
           return function (K) {
-            return F(B(K));
+            return F(E(K));
           };
         }())(g.pure(y)(d.unit));
       };
@@ -3503,42 +3503,42 @@ var PS = {};
   },
       x = new a(function (y) {
     return function (u) {
-      return function (B) {
-        if (B instanceof n.Nothing) return q.mempty(y);
-        if (B instanceof n.Just) return u(B.value0);
-        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [u.constructor.name, B.constructor.name]);
+      return function (E) {
+        if (E instanceof n.Nothing) return q.mempty(y);
+        if (E instanceof n.Just) return u(E.value0);
+        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [u.constructor.name, E.constructor.name]);
       };
     };
   }, function (y) {
     return function (u) {
-      return function (B) {
-        if (B instanceof n.Nothing) return u;
-        if (B instanceof n.Just) return y(u)(B.value0);
-        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [y.constructor.name, u.constructor.name, B.constructor.name]);
+      return function (E) {
+        if (E instanceof n.Nothing) return u;
+        if (E instanceof n.Just) return y(u)(E.value0);
+        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [y.constructor.name, u.constructor.name, E.constructor.name]);
       };
     };
   }, function (y) {
     return function (u) {
-      return function (B) {
-        if (B instanceof n.Nothing) return u;
-        if (B instanceof n.Just) return y(B.value0)(u);
-        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [y.constructor.name, u.constructor.name, B.constructor.name]);
+      return function (E) {
+        if (E instanceof n.Nothing) return u;
+        if (E instanceof n.Just) return y(E.value0)(u);
+        throw Error("Failed pattern match at Data.Foldable (line 129, column 1 - line 135, column 27): " + [y.constructor.name, u.constructor.name, E.constructor.name]);
       };
     };
   }),
       t = function t(y) {
     return function (u) {
-      return function (B) {
+      return function (E) {
         return (0, y.foldr)(function (F) {
           return function (K) {
-            return h.append(u.Semigroup0())(B(F))(K);
+            return h.append(u.Semigroup0())(E(F))(K);
           };
         })(q.mempty(u));
       };
     };
   },
-      C = new a(function (y) {
-    return t(C)(y);
+      D = new a(function (y) {
+    return t(D)(y);
   }, e.foldlArray, e.foldrArray);
 
   c.Foldable = a;
@@ -3571,7 +3571,7 @@ var PS = {};
 
   c.intercalate = function (y) {
     return function (u) {
-      return function (B) {
+      return function (E) {
         return function (F) {
           return (0, y.foldl)(function (K) {
             return function (H) {
@@ -3580,7 +3580,7 @@ var PS = {};
                 acc: H
               } : {
                 init: !1,
-                acc: h.append(u.Semigroup0())(K.acc)(h.append(u.Semigroup0())(B)(H))
+                acc: h.append(u.Semigroup0())(K.acc)(h.append(u.Semigroup0())(E)(H))
               };
             };
           })({
@@ -3594,21 +3594,21 @@ var PS = {};
 
   c.any = function (y) {
     return function (u) {
-      return b.alaF(m.functorFn)(m.functorFn)(b.newtypeDisj)(b.newtypeDisj)(w.Disj)((0, y.foldMap)(w.monoidDisj(u)));
+      return b.alaF(l.functorFn)(l.functorFn)(b.newtypeDisj)(b.newtypeDisj)(w.Disj)((0, y.foldMap)(w.monoidDisj(u)));
     };
   };
 
   c.find = function (y) {
     return function (u) {
-      return (0, y.foldl)(function (B) {
+      return (0, y.foldl)(function (E) {
         return function (F) {
-          return B instanceof n.Nothing && u(F) ? new n.Just(F) : B;
+          return E instanceof n.Nothing && u(F) ? new n.Just(F) : E;
         };
       })(n.Nothing.value);
     };
   };
 
-  c.foldableArray = C;
+  c.foldableArray = D;
   c.foldableMaybe = x;
 })(PS);
 
@@ -3697,56 +3697,56 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad.ST.Internal"],
       p = a["Data.Foldable"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Foreign.Object.ST"],
       q = a["Unsafe.Coerce"],
       w = e._copyST,
       b = function b(t) {
-    return function (C) {
+    return function (D) {
       return e.runST(function () {
-        var y = w(C)();
+        var y = w(D)();
         t(y)();
         return y;
       });
     };
   },
-      h = a["Data.Function.Uncurried"].runFn4(e._lookup)(m.Nothing.value)(m.Just.create),
+      h = a["Data.Function.Uncurried"].runFn4(e._lookup)(l.Nothing.value)(l.Just.create),
       d = function d(t) {
-    return function (C) {
-      return b(n.poke(t)(C));
+    return function (D) {
+      return b(n.poke(t)(D));
     };
   },
       r = function r(t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
-        return e._foldM(f.bind(t.Bind1()))(C)(g.pure(t.Applicative0())(y));
+        return e._foldM(f.bind(t.Bind1()))(D)(g.pure(t.Applicative0())(y));
       };
     };
   },
       x = function x(t) {
-    return b(function (C) {
+    return b(function (D) {
       return r(k.monadST)(function (y) {
         return function (u) {
-          return function (B) {
-            return n.poke(u)(B)(y);
+          return function (E) {
+            return n.poke(u)(E)(y);
           };
         };
-      })(C)(t);
+      })(D)(t);
     });
   };
 
   c.lookup = h;
 
   c.fromFoldableWith = function (t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
         return e.runST(function () {
           var u = n["new"]();
-          p.for_(k.applicativeST)(t)(y)(function (B) {
+          p.for_(k.applicativeST)(t)(y)(function (E) {
             return function () {
-              var F = e._lookupST(B.value1, C(B.value1), B.value0, u)();
+              var F = e._lookupST(E.value1, D(E.value1), E.value0, u)();
 
-              return n.poke(B.value0)(F)(u)();
+              return n.poke(E.value0)(F)(u)();
             };
           })();
           return u;
@@ -3760,11 +3760,11 @@ var PS = {};
   };
 
   c.alter = function (t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
-        var u = t(h(C)(y));
-        if (u instanceof m.Nothing) return b(n["delete"](C))(y);
-        if (u instanceof m.Just) return d(C)(u.value0)(y);
+        var u = t(h(D)(y));
+        if (u instanceof l.Nothing) return b(n["delete"](D))(y);
+        if (u instanceof l.Just) return d(D)(u.value0)(y);
         throw Error("Failed pattern match at Foreign.Object (line 206, column 15 - line 208, column 25): " + [u.constructor.name]);
       };
     };
@@ -3835,10 +3835,10 @@ var PS = {};
     return function (f) {
       return function (k) {
         var p = [],
-            m = 0;
+            l = 0;
 
         for (k = f(e)(g)(k); k !== g;) {
-          p[m++] = k.head, k = k.tail;
+          p[l++] = k.head, k = k.tail;
         }
 
         return p;
@@ -3975,12 +3975,12 @@ var PS = {};
       f = a["Control.Category"],
       k = a["Data.Boolean"],
       p = a["Data.Foldable"],
-      m = a["Data.Function"],
+      l = a["Data.Function"],
       n = a["Data.Maybe"];
   a = e.zipWith(a["Data.Tuple"].Tuple.create);
 
   var q = e._updateAt(n.Just.create)(n.Nothing.value),
-      w = e["uncons'"](m["const"](n.Nothing.value))(function (r) {
+      w = e["uncons'"](l["const"](n.Nothing.value))(function (r) {
     return function (x) {
       return new n.Just({
         head: r,
@@ -3992,7 +3992,7 @@ var PS = {};
     return [r];
   },
       h = e.indexImpl(n.Just.create)(n.Nothing.value),
-      d = m.flip(g.bind(g.bindArray));
+      d = l.flip(g.bind(g.bindArray));
 
   g = function (r) {
     return d(function () {
@@ -4076,8 +4076,8 @@ var PS = {};
 
     function g(k) {
       return function (p) {
-        return function (m) {
-          return [k, p, m];
+        return function (l) {
+          return [k, p, l];
         };
       };
     }
@@ -4090,13 +4090,13 @@ var PS = {};
 
     return function (k) {
       return function (p) {
-        return function (m) {
+        return function (l) {
           return function (n) {
             return function (q) {
               function w(b, h) {
                 switch (h - b) {
                   case 0:
-                    return m([]);
+                    return l([]);
 
                   case 1:
                     return p(c)(n(q[b]));
@@ -4130,7 +4130,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Category"],
       p = a["Data.Foldable"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Maybe"];
 
   a = function a(h, d, r, x) {
@@ -4147,14 +4147,14 @@ var PS = {};
   }, function (h) {
     return function (d) {
       if (d instanceof n.Nothing) return g.pure(h)(n.Nothing.value);
-      if (d instanceof n.Just) return m.map(h.Apply0().Functor0())(n.Just.create)(d.value0);
+      if (d instanceof n.Just) return l.map(h.Apply0().Functor0())(n.Just.create)(d.value0);
       throw Error("Failed pattern match at Data.Traversable (line 86, column 1 - line 90, column 33): " + [d.constructor.name]);
     };
   }, function (h) {
     return function (d) {
       return function (r) {
         if (r instanceof n.Nothing) return g.pure(h)(n.Nothing.value);
-        if (r instanceof n.Just) return m.map(h.Apply0().Functor0())(n.Just.create)(d(r.value0));
+        if (r instanceof n.Just) return l.map(h.Apply0().Functor0())(n.Just.create)(d(r.value0));
         throw Error("Failed pattern match at Data.Traversable (line 86, column 1 - line 90, column 33): " + [d.constructor.name, r.constructor.name]);
       };
     };
@@ -4167,11 +4167,11 @@ var PS = {};
       b = new a(function () {
     return p.foldableArray;
   }, function () {
-    return m.functorArray;
+    return l.functorArray;
   }, function (h) {
     return w(b)(h);
   }, function (h) {
-    return e.traverseArrayImpl(f.apply(h.Apply0()))(m.map(h.Apply0().Functor0()))(g.pure(h));
+    return e.traverseArrayImpl(f.apply(h.Apply0()))(l.map(h.Apply0().Functor0()))(g.pure(h));
   });
 
   c.traverse = function (h) {
@@ -4229,17 +4229,17 @@ var PS = {};
       f = a["Data.Maybe"],
       k = a["Data.String.Common"],
       p = a["Data.Traversable"],
-      m = a.Global;
+      l = a.Global;
 
   a = function () {
     var n = g.map(f.functorMaybe)(k.joinWith("&")),
         q = p.traverse(p.traversableArray)(f.applicativeMaybe)(function (w) {
-      if (w.value1 instanceof f.Nothing) return m.encodeURIComponent(w.value0);
+      if (w.value1 instanceof f.Nothing) return l.encodeURIComponent(w.value0);
       if (w.value1 instanceof f.Just) return e.apply(f.applyMaybe)(g.map(f.functorMaybe)(function (b) {
         return function (h) {
           return b + ("=" + h);
         };
-      })(m.encodeURIComponent(w.value0)))(m.encodeURIComponent(w.value1.value0));
+      })(l.encodeURIComponent(w.value0)))(l.encodeURIComponent(w.value1.value0));
       throw Error("Failed pattern match at Data.FormURLEncoded (line 37, column 18 - line 39, column 108): " + [w.constructor.name]);
     });
     return function (w) {
@@ -4361,123 +4361,123 @@ var PS = {};
   a = a["Data.Show"];
 
   var g = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       f = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       k = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       p = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
-      m = function () {
-    function B() {}
+      l = function () {
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       n = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       q = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       w = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       b = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       h = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       d = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       r = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       x = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       t = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
-      C = function () {
-    function B() {}
+      D = function () {
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
       y = function () {
-    function B() {}
+    function E() {}
 
-    B.value = new B();
-    return B;
+    E.value = new E();
+    return E;
   }(),
-      u = new a.Show(function (B) {
-    if (B instanceof g) return "OPTIONS";
-    if (B instanceof f) return "GET";
-    if (B instanceof k) return "HEAD";
-    if (B instanceof p) return "POST";
-    if (B instanceof m) return "PUT";
-    if (B instanceof n) return "DELETE";
-    if (B instanceof q) return "TRACE";
-    if (B instanceof w) return "CONNECT";
-    if (B instanceof b) return "PROPFIND";
-    if (B instanceof h) return "PROPPATCH";
-    if (B instanceof d) return "MKCOL";
-    if (B instanceof r) return "COPY";
-    if (B instanceof x) return "MOVE";
-    if (B instanceof t) return "LOCK";
-    if (B instanceof C) return "UNLOCK";
-    if (B instanceof y) return "PATCH";
-    throw Error("Failed pattern match at Data.HTTP.Method (line 40, column 1 - line 56, column 23): " + [B.constructor.name]);
+      u = new a.Show(function (E) {
+    if (E instanceof g) return "OPTIONS";
+    if (E instanceof f) return "GET";
+    if (E instanceof k) return "HEAD";
+    if (E instanceof p) return "POST";
+    if (E instanceof l) return "PUT";
+    if (E instanceof n) return "DELETE";
+    if (E instanceof q) return "TRACE";
+    if (E instanceof w) return "CONNECT";
+    if (E instanceof b) return "PROPFIND";
+    if (E instanceof h) return "PROPPATCH";
+    if (E instanceof d) return "MKCOL";
+    if (E instanceof r) return "COPY";
+    if (E instanceof x) return "MOVE";
+    if (E instanceof t) return "LOCK";
+    if (E instanceof D) return "UNLOCK";
+    if (E instanceof y) return "PATCH";
+    throw Error("Failed pattern match at Data.HTTP.Method (line 40, column 1 - line 56, column 23): " + [E.constructor.name]);
   });
 
-  e = e.either(a.show(u))(function (B) {
-    return B;
+  e = e.either(a.show(u))(function (E) {
+    return E;
   });
   c.GET = f;
   c.print = e;
@@ -4528,7 +4528,7 @@ var PS = {};
       return b;
     };
   },
-      m = new a(function () {
+      l = new a(function () {
     return g.monadEither;
   }, function (n) {
     return function (q) {
@@ -4559,7 +4559,7 @@ var PS = {};
   };
 
   c.bifunctorStep = e;
-  c.monadRecEither = m;
+  c.monadRecEither = l;
 })(PS);
 
 (function (a) {
@@ -4593,7 +4593,7 @@ var PS = {};
       f = a["Data.Functor"],
       k = a["Data.Semigroup"],
       p = a["Data.Show"],
-      m = function () {
+      l = function () {
     function n(q, w) {
       this.value0 = q;
       this.value1 = w;
@@ -4608,11 +4608,11 @@ var PS = {};
     return n;
   }();
 
-  c.NonEmpty = m;
+  c.NonEmpty = l;
 
   c.singleton = function (n) {
     return function (q) {
-      return new m(q, e.empty(n));
+      return new l(q, e.empty(n));
     };
   };
 
@@ -4627,7 +4627,7 @@ var PS = {};
   c.functorNonEmpty = function (n) {
     return new f.Functor(function (q) {
       return function (w) {
-        return new m(q(w.value0), f.map(n)(q)(w.value1));
+        return new l(q(w.value0), f.map(n)(q)(w.value1));
       };
     });
   };
@@ -4664,7 +4664,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Plus"],
       p = a["Data.Foldable"],
-      m = a["Data.Function"],
+      l = a["Data.Function"],
       n = a["Data.Functor"],
       q = a["Data.Monoid"],
       w = a["Data.NonEmpty"],
@@ -4677,40 +4677,40 @@ var PS = {};
     return M;
   }(),
       r = function () {
-    function M(R, A) {
-      this.value0 = R;
+    function M(Q, A) {
+      this.value0 = Q;
       this.value1 = A;
     }
 
-    M.create = function (R) {
+    M.create = function (Q) {
       return function (A) {
-        return new M(R, A);
+        return new M(Q, A);
       };
     };
 
     return M;
   }(),
       x = new n.Functor(function (M) {
-    return function (R) {
+    return function (Q) {
       return function (A) {
-        function D(W, G) {
-          if (G instanceof r && G.value1 instanceof r && G.value1.value1 instanceof r) N = new r(G, W), A = G.value1.value1.value1;else return z = !0, function (Q) {
+        function B(W, G) {
+          if (G instanceof r && G.value1 instanceof r && G.value1.value1 instanceof r) N = new r(G, W), A = G.value1.value1.value1;else return z = !0, function (R) {
             return function (v) {
-              for (var na = Q, ma = !1, Aa; !ma;) {
-                Aa = na;
+              for (var oa = R, ma = !1, Aa; !ma;) {
+                Aa = oa;
                 var za = v;
-                Aa instanceof r && Aa.value0 instanceof r && Aa.value0.value1 instanceof r && Aa.value0.value1.value1 instanceof r ? (na = Aa.value1, v = new r(M(Aa.value0.value0), new r(M(Aa.value0.value1.value0), new r(M(Aa.value0.value1.value1.value0), za))), Aa = void 0) : (ma = !0, Aa = za);
+                Aa instanceof r && Aa.value0 instanceof r && Aa.value0.value1 instanceof r && Aa.value0.value1.value1 instanceof r ? (oa = Aa.value1, v = new r(M(Aa.value0.value0), new r(M(Aa.value0.value1.value0), new r(M(Aa.value0.value1.value1.value0), za))), Aa = void 0) : (ma = !0, Aa = za);
               }
 
               return Aa;
             };
-          }(W)(function (Q) {
-            return Q instanceof r && Q.value1 instanceof r && Q.value1.value1 instanceof d ? new r(M(Q.value0), new r(M(Q.value1.value0), d.value)) : Q instanceof r && Q.value1 instanceof d ? new r(M(Q.value0), d.value) : d.value;
+          }(W)(function (R) {
+            return R instanceof r && R.value1 instanceof r && R.value1.value1 instanceof d ? new r(M(R.value0), new r(M(R.value1.value0), d.value)) : R instanceof r && R.value1 instanceof d ? new r(M(R.value0), d.value) : d.value;
           }(G));
         }
 
-        for (var N = R, z = !1, O; !z;) {
-          O = D(N, A);
+        for (var N = Q, z = !1, O; !z;) {
+          O = B(N, A);
         }
 
         return O;
@@ -4718,23 +4718,23 @@ var PS = {};
     }(d.value);
   }),
       t = w.functorNonEmpty(x),
-      C = new p.Foldable(function (M) {
-    return function (R) {
-      return p.foldl(C)(function (A) {
-        var D = b.append(M.Semigroup0())(A);
+      D = new p.Foldable(function (M) {
+    return function (Q) {
+      return p.foldl(D)(function (A) {
+        var B = b.append(M.Semigroup0())(A);
         return function (N) {
-          return D(R(N));
+          return B(Q(N));
         };
       })(q.mempty(M));
     };
   }, function (M) {
-    return function (R) {
+    return function (Q) {
       return function (A) {
-        for (var D = R, N = !1, z; !N;) {
-          z = D;
+        for (var B = Q, N = !1, z; !N;) {
+          z = B;
           var O = A;
           if (O instanceof d) N = !0;else {
-            if (O instanceof r) D = M(z)(O.value0), A = O.value1;else throw Error("Failed pattern match at Data.List.Types (line 109, column 12 - line 111, column 30): " + [O.constructor.name]);
+            if (O instanceof r) B = M(z)(O.value0), A = O.value1;else throw Error("Failed pattern match at Data.List.Types (line 109, column 12 - line 111, column 30): " + [O.constructor.name]);
             z = void 0;
           }
         }
@@ -4743,49 +4743,49 @@ var PS = {};
       };
     };
   }, function (M) {
-    return function (R) {
-      var A = p.foldl(C)(m.flip(r.create))(d.value),
-          D = p.foldl(C)(m.flip(M))(R);
+    return function (Q) {
+      var A = p.foldl(D)(l.flip(r.create))(d.value),
+          B = p.foldl(D)(l.flip(M))(Q);
       return function (N) {
-        return D(A(N));
+        return B(A(N));
       };
     };
   });
 
-  a = w.foldableNonEmpty(C);
+  a = w.foldableNonEmpty(D);
 
   var y = new b.Semigroup(function (M) {
-    return function (R) {
-      return p.foldr(C)(r.create)(R)(M);
+    return function (Q) {
+      return p.foldr(D)(r.create)(Q)(M);
     };
   }),
       u = new q.Monoid(function () {
     return y;
   }, d.value),
-      B = new b.Semigroup(function (M) {
-    return function (R) {
-      return new w.NonEmpty(M.value0, b.append(y)(M.value1)(new r(R.value0, R.value1)));
+      E = new b.Semigroup(function (M) {
+    return function (Q) {
+      return new w.NonEmpty(M.value0, b.append(y)(M.value1)(new r(Q.value0, Q.value1)));
     };
   }),
       F = function F(M) {
-    return new h.Show(function (R) {
-      return R instanceof d ? "Nil" : "(" + (p.intercalate(C)(q.monoidString)(" : ")(n.map(x)(h.show(M))(R)) + " : Nil)");
+    return new h.Show(function (Q) {
+      return Q instanceof d ? "Nil" : "(" + (p.intercalate(D)(q.monoidString)(" : ")(n.map(x)(h.show(M))(Q)) + " : Nil)");
     });
   },
       K = new f.Apply(function () {
     return x;
   }, function (M) {
-    return function (R) {
+    return function (Q) {
       if (M instanceof d) return d.value;
-      if (M instanceof r) return b.append(y)(n.map(x)(M.value0)(R))(f.apply(K)(M.value1)(R));
-      throw Error("Failed pattern match at Data.List.Types (line 155, column 1 - line 157, column 48): " + [M.constructor.name, R.constructor.name]);
+      if (M instanceof r) return b.append(y)(n.map(x)(M.value0)(Q))(f.apply(K)(M.value1)(Q));
+      throw Error("Failed pattern match at Data.List.Types (line 155, column 1 - line 157, column 48): " + [M.constructor.name, Q.constructor.name]);
     };
   }),
       H = new f.Apply(function () {
     return t;
   }, function (M) {
-    return function (R) {
-      return new w.NonEmpty(M.value0(R.value0), b.append(y)(f.apply(K)(M.value1)(new r(R.value0, d.value)))(f.apply(K)(new r(M.value0, M.value1))(R.value1)));
+    return function (Q) {
+      return new w.NonEmpty(M.value0(Q.value0), b.append(y)(f.apply(K)(M.value1)(new r(Q.value0, d.value)))(f.apply(K)(new r(M.value0, M.value1))(Q.value1)));
     };
   }),
       I = new e.Alt(function () {
@@ -4799,8 +4799,8 @@ var PS = {};
     return H;
   }, function () {
     var M = w.singleton(L);
-    return function (R) {
-      return M(R);
+    return function (Q) {
+      return M(Q);
     };
   }());
   c.Nil = d;
@@ -4811,18 +4811,18 @@ var PS = {};
   };
 
   c.monoidList = u;
-  c.foldableList = C;
+  c.foldableList = D;
   c.plusList = L;
 
   c.showNonEmptyList = function (M) {
-    return new h.Show(function (R) {
-      return "(NonEmptyList " + (h.show(w.showNonEmpty(M)(F(M)))(R) + ")");
+    return new h.Show(function (Q) {
+      return "(NonEmptyList " + (h.show(w.showNonEmpty(M)(F(M)))(Q) + ")");
     });
   };
 
   c.functorNonEmptyList = t;
   c.applicativeNonEmptyList = e;
-  c.semigroupNonEmptyList = B;
+  c.semigroupNonEmptyList = E;
   c.foldableNonEmptyList = a;
 })(PS);
 
@@ -4835,7 +4835,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad.Rec.Class"],
       p = a["Data.Bifunctor"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.List.Types"],
       q = a["Data.Maybe"],
       w = a["Data.Unit"],
@@ -4844,9 +4844,9 @@ var PS = {};
       return function (d) {
         for (var r = h, x = !1, t; !x;) {
           t = r;
-          var C = d;
-          if (C instanceof n.Nil) x = !0;else {
-            if (C instanceof n.Cons) r = new n.Cons(C.value0, t), d = C.value1;else throw Error("Failed pattern match at Data.List (line 368, column 3 - line 368, column 19): " + [t.constructor.name, C.constructor.name]);
+          var D = d;
+          if (D instanceof n.Nil) x = !0;else {
+            if (D instanceof n.Cons) r = new n.Cons(D.value0, t), d = D.value1;else throw Error("Failed pattern match at Data.List (line 368, column 3 - line 368, column 19): " + [t.constructor.name, D.constructor.name]);
             t = void 0;
           }
         }
@@ -4860,10 +4860,10 @@ var PS = {};
     return function (d) {
       return function (r) {
         return k.tailRecM(h)(function (x) {
-          return f.bind(h.Monad0().Bind1())(e.alt(d.Plus1().Alt0())(m.map(d.Plus1().Alt0().Functor0())(k.Loop.create)(r))(g.pure(d.Applicative0())(new k.Done(w.unit))))(function (t) {
-            return g.pure(d.Applicative0())(p.bimap(k.bifunctorStep)(function (C) {
-              return new n.Cons(C, x);
-            })(function (C) {
+          return f.bind(h.Monad0().Bind1())(e.alt(d.Plus1().Alt0())(l.map(d.Plus1().Alt0().Functor0())(k.Loop.create)(r))(g.pure(d.Applicative0())(new k.Done(w.unit))))(function (t) {
+            return g.pure(d.Applicative0())(p.bimap(k.bifunctorStep)(function (D) {
+              return new n.Cons(D, x);
+            })(function (D) {
               return b(x);
             })(t));
           });
@@ -4891,11 +4891,11 @@ var PS = {};
         return function (f) {
           return function (k) {
             return function (p) {
-              for (var m = [];;) {
+              for (var l = [];;) {
                 p = k(p);
-                if (c(p)) return m;
+                if (c(p)) return l;
                 p = e(p);
-                m.push(g(p));
+                l.push(g(p));
                 p = f(p);
               }
             };
@@ -4913,11 +4913,11 @@ var PS = {};
         return function (f) {
           return function (k) {
             return function (p) {
-              for (var m = [];;) {
+              for (var l = [];;) {
                 p = k(p);
-                m.push(g(p));
+                l.push(g(p));
                 p = f(p);
-                if (c(p)) return m;
+                if (c(p)) return l;
                 p = e(p);
               }
             };
@@ -4939,13 +4939,13 @@ var PS = {};
   }(a["Data.Unfoldable1"].unfoldr1ArrayImpl(g.isNothing)(g.fromJust())(f.fst)(f.snd));
 
   var k = function k(p) {
-    return function (m) {
+    return function (l) {
       return function (n) {
         return (0, p.unfoldr1)(function (q) {
           if (0 >= q) return new f.Tuple(n, g.Nothing.value);
           if (e.otherwise) return new f.Tuple(n, new g.Just(q - 1 | 0));
           throw Error("Failed pattern match at Data.Unfoldable1 (line 64, column 5 - line 64, column 39): " + [q.constructor.name]);
-        })(m - 1 | 0);
+        })(l - 1 | 0);
       };
     };
   };
@@ -4969,19 +4969,19 @@ var PS = {};
       f = a["Data.Maybe"],
       k = a["Data.Tuple"],
       p = a["Data.Unfoldable1"];
-  a = new function (m, n) {
-    this.Unfoldable10 = m;
+  a = new function (l, n) {
+    this.Unfoldable10 = l;
     this.unfoldr = n;
   }(function () {
     return p.unfoldable1Array;
   }, a["Data.Unfoldable"].unfoldrArrayImpl(f.isNothing)(f.fromJust())(k.fst)(k.snd));
 
-  c.unfoldr = function (m) {
-    return m.unfoldr;
+  c.unfoldr = function (l) {
+    return l.unfoldr;
   };
 
-  c.fromMaybe = function (m) {
-    return (0, m.unfoldr)(function (n) {
+  c.fromMaybe = function (l) {
+    return (0, l.unfoldr)(function (n) {
       return g.map(f.functorMaybe)(e.flip(k.Tuple.create)(f.Nothing.value))(n);
     });
   };
@@ -4997,7 +4997,7 @@ var PS = {};
       f = a["Data.List.Types"],
       k = a["Data.Maybe"],
       p = a["Data.NonEmpty"],
-      m = a["Data.Tuple"],
+      l = a["Data.Tuple"],
       n = a["Data.Unfoldable"];
 
   a = function () {
@@ -5010,7 +5010,7 @@ var PS = {};
   c.toUnfoldable = function (q) {
     var w = n.unfoldr(q)(function (b) {
       return e.map(k.functorMaybe)(function (h) {
-        return new m.Tuple(h.head, h.tail);
+        return new l.Tuple(h.head, h.tail);
       })(g.uncons(b));
     });
     return function (b) {
@@ -5061,8 +5061,8 @@ var PS = {};
     }
 
     function g(d) {
-      var r = function r(x, t, C) {
-        return new e(d, x, t, C);
+      var r = function r(x, t, D) {
+        return new e(d, x, t, D);
       };
 
       r.tag = d;
@@ -5091,7 +5091,7 @@ var PS = {};
       }
     }
 
-    function m(d, r, x) {
+    function l(d, r, x) {
       try {
         return r(x)();
       } catch (t) {
@@ -5107,41 +5107,41 @@ var PS = {};
               u = 1;
 
               try {
-                B = H(B), null === I ? H = null : (H = I._1, I = I._2);
-              } catch (Q) {
-                u = 5, F = d.left(Q), B = null;
+                E = H(E), null === I ? H = null : (H = I._1, I = I._2);
+              } catch (R) {
+                u = 5, F = d.left(R), E = null;
               }
 
               break;
 
             case 3:
-              d.isLeft(B) ? (u = 5, F = B, B = null) : null === H ? u = 5 : (u = 2, B = d.fromRight(B));
+              d.isLeft(E) ? (u = 5, F = E, E = null) : null === H ? u = 5 : (u = 2, E = d.fromRight(E));
               break;
 
             case 1:
-              switch (B.tag) {
+              switch (E.tag) {
                 case "Bind":
                   H && (I = new e("Cons", H, I));
-                  H = B._2;
+                  H = E._2;
                   u = 1;
-                  B = B._1;
+                  E = E._1;
                   break;
 
                 case "Pure":
-                  null === H ? (u = 5, B = d.right(B._1)) : (u = 2, B = B._1);
+                  null === H ? (u = 5, E = d.right(E._1)) : (u = 2, E = E._1);
                   break;
 
                 case "Sync":
                   u = 3;
-                  B = p(d.left, d.right, B._1);
+                  E = p(d.left, d.right, E._1);
                   break;
 
                 case "Async":
                   u = 4;
-                  B = m(d.left, B._1, function (Q) {
+                  E = l(d.left, E._1, function (R) {
                     return function () {
                       y === N && (y++, h.enqueue(function () {
-                        y === N + 1 && (u = 3, B = Q, t(y));
+                        y === N + 1 && (u = 3, E = R, t(y));
                       }));
                     };
                   });
@@ -5149,85 +5149,85 @@ var PS = {};
 
                 case "Throw":
                   u = 5;
-                  F = d.left(B._1);
-                  B = null;
+                  F = d.left(E._1);
+                  E = null;
                   break;
 
                 case "Catch":
-                  L = null === H ? new e("Cons", B, L, K) : new e("Cons", B, new e("Cons", new e("Resume", H, I), L, K), K);
+                  L = null === H ? new e("Cons", E, L, K) : new e("Cons", E, new e("Cons", new e("Resume", H, I), L, K), K);
                   I = H = null;
                   u = 1;
-                  B = B._1;
+                  E = E._1;
                   break;
 
                 case "Bracket":
                   M++;
-                  L = null === H ? new e("Cons", B, L, K) : new e("Cons", B, new e("Cons", new e("Resume", H, I), L, K), K);
+                  L = null === H ? new e("Cons", E, L, K) : new e("Cons", E, new e("Cons", new e("Resume", H, I), L, K), K);
                   I = H = null;
                   u = 1;
-                  B = B._1;
+                  E = E._1;
                   break;
 
                 case "Fork":
                   u = 3;
-                  z = n(d, r, B._2);
+                  z = n(d, r, E._2);
                   r && r.register(z);
-                  B._1 && z.run();
-                  B = d.right(z);
+                  E._1 && z.run();
+                  E = d.right(z);
                   break;
 
                 case "Sequential":
-                  u = 1, B = w(d, r, B._1);
+                  u = 1, E = w(d, r, E._1);
               }
 
               break;
 
             case 5:
               I = H = null;
-              if (null === L) u = 6, B = K || F || B;else switch (z = L._3, W = L._1, L = L._2, W.tag) {
+              if (null === L) u = 6, E = K || F || E;else switch (z = L._3, W = L._1, L = L._2, W.tag) {
                 case "Catch":
-                  K && K !== z && 0 === M ? u = 5 : F && (u = 1, B = W._2(d.fromLeft(F)), F = null);
+                  K && K !== z && 0 === M ? u = 5 : F && (u = 1, E = W._2(d.fromLeft(F)), F = null);
                   break;
 
                 case "Resume":
-                  K && K !== z && 0 === M || F ? u = 5 : (H = W._1, I = W._2, u = 2, B = d.fromRight(B));
+                  K && K !== z && 0 === M || F ? u = 5 : (H = W._1, I = W._2, u = 2, E = d.fromRight(E));
                   break;
 
                 case "Bracket":
                   M--;
-                  null === F && (O = d.fromRight(B), L = new e("Cons", new e("Release", W._2, O), L, z), K === z || 0 < M) && (u = 1, B = W._3(O));
+                  null === F && (O = d.fromRight(E), L = new e("Cons", new e("Release", W._2, O), L, z), K === z || 0 < M) && (u = 1, E = W._3(O));
                   break;
 
                 case "Release":
-                  L = new e("Cons", new e("Finalized", B, F), L, K);
+                  L = new e("Cons", new e("Finalized", E, F), L, K);
                   u = 1;
-                  B = K && K !== z && 0 === M ? W._1.killed(d.fromLeft(K))(W._2) : F ? W._1.failed(d.fromLeft(F))(W._2) : W._1.completed(d.fromRight(B))(W._2);
+                  E = K && K !== z && 0 === M ? W._1.killed(d.fromLeft(K))(W._2) : F ? W._1.failed(d.fromLeft(F))(W._2) : W._1.completed(d.fromRight(E))(W._2);
                   F = null;
                   M++;
                   break;
 
                 case "Finalizer":
                   M++;
-                  L = new e("Cons", new e("Finalized", B, F), L, K);
+                  L = new e("Cons", new e("Finalized", E, F), L, K);
                   u = 1;
-                  B = W._1;
+                  E = W._1;
                   break;
 
                 case "Finalized":
-                  M--, u = 5, B = W._1, F = W._2;
+                  M--, u = 5, E = W._1, F = W._2;
               }
               break;
 
             case 6:
               for (var G in A) {
-                A.hasOwnProperty(G) && (D = D && A[G].rethrow, k(A[G].handler(B)));
+                A.hasOwnProperty(G) && (B = B && A[G].rethrow, k(A[G].handler(E)));
               }
 
               A = null;
               K && F ? setTimeout(function () {
                 throw d.fromLeft(F);
-              }, 0) : d.isLeft(B) && D && setTimeout(function () {
-                if (D) throw d.fromLeft(B);
+              }, 0) : d.isLeft(E) && B && setTimeout(function () {
+                if (B) throw d.fromLeft(E);
               }, 0);
               return;
 
@@ -5241,10 +5241,10 @@ var PS = {};
         }
       }
 
-      function C(N) {
+      function D(N) {
         return function () {
-          if (6 === u) return D = D && N.rethrow, N.handler(B)(), function () {};
-          var z = R++;
+          if (6 === u) return B = B && N.rethrow, N.handler(E)(), function () {};
+          var z = Q++;
           A = A || {};
           A[z] = N;
           return function () {
@@ -5255,21 +5255,21 @@ var PS = {};
 
       var y = 0,
           u = 0,
-          B = x,
+          E = x,
           F = null,
           K = null,
           H = null,
           I = null,
           L = null,
           M = 0,
-          R = 0,
+          Q = 0,
           A = null,
-          D = !0;
+          B = !0;
       return {
         kill: function kill(N, z) {
           return function () {
             if (6 === u) return z(d.right(void 0))(), function () {};
-            var O = C({
+            var O = D({
               rethrow: !1,
               handler: function handler() {
                 return z(d.right(void 0));
@@ -5280,17 +5280,17 @@ var PS = {};
               case 0:
                 K = d.left(N);
                 u = 6;
-                B = K;
+                E = K;
                 t(y);
                 break;
 
               case 4:
                 null === K && (K = d.left(N));
-                0 === M && (4 === u && (L = new e("Cons", new e("Finalizer", B(N)), L, K)), u = 5, F = B = null, t(++y));
+                0 === M && (4 === u && (L = new e("Cons", new e("Finalizer", E(N)), L, K)), u = 5, F = E = null, t(++y));
                 break;
 
               default:
-                null === K && (K = d.left(N)), 0 === M && (u = 5, F = B = null);
+                null === K && (K = d.left(N)), 0 === M && (u = 5, F = E = null);
             }
 
             return O;
@@ -5298,7 +5298,7 @@ var PS = {};
         },
         join: function join(N) {
           return function () {
-            var z = C({
+            var z = D({
               rethrow: !1,
               handler: N
             })();
@@ -5306,7 +5306,7 @@ var PS = {};
             return z;
           };
         },
-        onComplete: C,
+        onComplete: D,
         isSuspended: function isSuspended() {
           return 0 === u;
         },
@@ -5319,19 +5319,19 @@ var PS = {};
     }
 
     function q(d, r, x, t) {
-      function C(A, D, N) {
-        var z = D,
+      function D(A, B, N) {
+        var z = B,
             O = null,
             W = null,
             G = 0;
-        D = {};
+        B = {};
 
         a: for (;;) {
-          var Q = null;
+          var R = null;
 
           switch (z.tag) {
             case "Forked":
-              z._3 === b && (Q = K[z._1], D[G++] = Q.kill(A, function (v) {
+              z._3 === b && (R = K[z._1], B[G++] = R.kill(A, function (v) {
                 return function () {
                   G--;
                   0 === G && N(v)();
@@ -5352,13 +5352,13 @@ var PS = {};
           }
         }
 
-        if (0 === G) N(d.right(void 0))();else for (A = 0, Q = G; A < Q; A++) {
-          D[A] = D[A]();
+        if (0 === G) N(d.right(void 0))();else for (A = 0, R = G; A < R; A++) {
+          B[A] = B[A]();
         }
-        return D;
+        return B;
       }
 
-      function y(A, D, N) {
+      function y(A, B, N) {
         var z, O;
 
         if (d.isLeft(A)) {
@@ -5367,29 +5367,29 @@ var PS = {};
         } else G = A, W = null;
 
         for (;;) {
-          var Q = O = z = A = null;
+          var R = O = z = A = null;
           if (null !== M) break;
 
-          if (null === D) {
+          if (null === B) {
             t(W || G)();
             break;
           }
 
-          if (D._3 !== b) break;
+          if (B._3 !== b) break;
 
-          switch (D.tag) {
+          switch (B.tag) {
             case "Map":
-              null === W ? (D._3 = d.right(D._1(d.fromRight(G))), G = D._3) : D._3 = W;
+              null === W ? (B._3 = d.right(B._1(d.fromRight(G))), G = B._3) : B._3 = W;
               break;
 
             case "Apply":
-              A = D._1._3;
-              z = D._2._3;
+              A = B._1._3;
+              z = B._2._3;
 
               if (W) {
-                if (D._3 = W, O = !0, Q = H++, I[Q] = C(L, W === A ? D._2 : D._1, function () {
+                if (B._3 = W, O = !0, R = H++, I[R] = D(L, W === A ? B._2 : B._1, function () {
                   return function () {
-                    delete I[Q];
+                    delete I[R];
                     O ? O = !1 : null === N ? y(W, null, null) : y(W, N._1, N._2);
                   };
                 }), O) {
@@ -5399,18 +5399,18 @@ var PS = {};
               } else {
                 if (A === b || z === b) return;
                 G = d.right(d.fromRight(A)(d.fromRight(z)));
-                D._3 = G;
+                B._3 = G;
               }
 
               break;
 
             case "Alt":
-              A = D._1._3;
-              z = D._2._3;
+              A = B._1._3;
+              z = B._2._3;
               if (A === b && d.isLeft(z) || z === b && d.isLeft(A)) return;
-              if (A !== b && d.isLeft(A) && z !== b && d.isLeft(z)) W = G === A ? z : A, G = null, D._3 = W;else if (D._3 = G, O = !0, Q = H++, I[Q] = C(L, G === A ? D._2 : D._1, function () {
+              if (A !== b && d.isLeft(A) && z !== b && d.isLeft(z)) W = G === A ? z : A, G = null, B._3 = W;else if (B._3 = G, O = !0, R = H++, I[R] = D(L, G === A ? B._2 : B._1, function () {
                 return function () {
-                  delete I[Q];
+                  delete I[R];
                   O ? O = !1 : null === N ? y(G, null, null) : y(G, N._1, N._2);
                 };
               }), O) {
@@ -5419,21 +5419,21 @@ var PS = {};
               }
           }
 
-          null === N ? D = null : (D = N._1, N = N._2);
+          null === N ? B = null : (B = N._1, N = N._2);
         }
       }
 
       function u(A) {
-        return function (D) {
+        return function (B) {
           return function () {
             delete K[A._1];
-            A._3 = D;
-            y(D, A._2._1, A._2._2);
+            A._3 = B;
+            y(B, A._2._1, A._2._2);
           };
         };
       }
 
-      function B(A, D) {
+      function E(A, B) {
         M = d.left(A);
         var N;
 
@@ -5448,12 +5448,12 @@ var PS = {};
         }
 
         I = null;
-        var O = C(A, R, D);
+        var O = D(A, Q, B);
         return function (W) {
           return new e("Async", function (G) {
             return function () {
-              for (var Q in O) {
-                if (O.hasOwnProperty(Q)) O[Q]();
+              for (var R in O) {
+                if (O.hasOwnProperty(R)) O[R]();
               }
 
               return f;
@@ -5468,45 +5468,45 @@ var PS = {};
           I = {},
           L = Error("[ParAff] Early exit"),
           M = null,
-          R = b;
+          Q = b;
 
       (function () {
         var A = 1,
-            D = x,
+            B = x,
             N = null,
             z = null;
 
         a: for (;;) {
           switch (A) {
             case 1:
-              switch (D.tag) {
+              switch (B.tag) {
                 case "Map":
                   N && (z = new e("Cons", N, z));
-                  N = new e("Map", D._1, b, b);
-                  D = D._2;
+                  N = new e("Map", B._1, b, b);
+                  B = B._2;
                   break;
 
                 case "Apply":
                   N && (z = new e("Cons", N, z));
-                  N = new e("Apply", b, D._2, b);
-                  D = D._1;
+                  N = new e("Apply", b, B._2, b);
+                  B = B._1;
                   break;
 
                 case "Alt":
                   N && (z = new e("Cons", N, z));
-                  N = new e("Alt", b, D._2, b);
-                  D = D._1;
+                  N = new e("Alt", b, B._2, b);
+                  B = B._1;
                   break;
 
                 default:
                   var O = F++;
                   A = 5;
-                  var W = D;
-                  D = new e("Forked", O, new e("Cons", N, z), b);
+                  var W = B;
+                  B = new e("Forked", O, new e("Cons", N, z), b);
                   W = n(d, r, W);
                   W.onComplete({
                     rethrow: !1,
-                    handler: u(D)
+                    handler: u(B)
                   })();
                   K[O] = W;
                   r && r.register(W);
@@ -5516,11 +5516,11 @@ var PS = {};
 
             case 5:
               if (null === N) break a;
-              N._1 === b ? (N._1 = D, A = 1, D = N._2, N._2 = b) : (N._2 = D, D = N, null === z ? N = null : (N = z._1, z = z._2));
+              N._1 === b ? (N._1 = B, A = 1, B = N._2, N._2 = b) : (N._2 = B, B = N, null === z ? N = null : (N = z._1, z = z._2));
           }
         }
 
-        R = D;
+        Q = B;
 
         for (O = 0; O < F; O++) {
           K[O].run();
@@ -5528,9 +5528,9 @@ var PS = {};
       })();
 
       return function (A) {
-        return new e("Async", function (D) {
+        return new e("Async", function (B) {
           return function () {
-            return B(A, D);
+            return E(A, B);
           };
         });
       };
@@ -5547,7 +5547,7 @@ var PS = {};
     var b = {},
         h = function () {
       function d() {
-        for (C = !0; 0 !== r;) {
+        for (D = !0; 0 !== r;) {
           r--;
           var y = t[x];
           t[x] = void 0;
@@ -5555,27 +5555,27 @@ var PS = {};
           y();
         }
 
-        C = !1;
+        D = !1;
       }
 
       var r = 0,
           x = 0,
           t = Array(1024),
-          C = !1;
+          D = !1;
       return {
         isDraining: function isDraining() {
-          return C;
+          return D;
         },
         enqueue: function enqueue(y) {
           if (1024 === r) {
-            var u = C;
+            var u = D;
             d();
-            C = u;
+            D = u;
           }
 
           t[(x + r) % 1024] = y;
           r++;
-          C || d();
+          D || d();
         }
       };
     }();
@@ -5600,9 +5600,9 @@ var PS = {};
           x = 0,
           t = 0;
       return {
-        register: function register(C) {
+        register: function register(D) {
           var y = x++;
-          C.onComplete({
+          D.onComplete({
             rethrow: !0,
             handler: function handler(u) {
               return function () {
@@ -5611,34 +5611,34 @@ var PS = {};
               };
             }
           })();
-          r[y] = C;
+          r[y] = D;
           t++;
         },
         isEmpty: function isEmpty() {
           return 0 === t;
         },
-        killAll: function killAll(C, y) {
+        killAll: function killAll(D, y) {
           return function () {
             function u(H) {
-              F[H] = r[H].kill(C, function (I) {
+              F[H] = r[H].kill(D, function (I) {
                 return function () {
                   delete F[H];
-                  B--;
+                  E--;
                   d.isLeft(I) && d.fromLeft(I) && setTimeout(function () {
                     throw d.fromLeft(I);
                   }, 0);
-                  0 === B && y();
+                  0 === E && y();
                 };
               })();
             }
 
             if (0 === t) return y();
-            var B = 0,
+            var E = 0,
                 F = {},
                 K;
 
             for (K in r) {
-              r.hasOwnProperty(K) && (B++, u(K));
+              r.hasOwnProperty(K) && (E++, u(K));
             }
 
             r = {};
@@ -5722,8 +5722,8 @@ var PS = {};
           var p = e(f, k(g()));
           return function () {
             return c.Sync(function () {
-              var m = 0 === f && "undefined" !== typeof clearImmediate ? clearImmediate(p) : clearTimeout(p);
-              return g(m);
+              var l = 0 === f && "undefined" !== typeof clearImmediate ? clearImmediate(p) : clearTimeout(p);
+              return g(l);
             });
           };
         };
@@ -5762,12 +5762,12 @@ var PS = {};
       g = a["Data.Foldable"],
       f = function f(k) {
     return function (p) {
-      return function (m) {
+      return function (l) {
         var n = e.sequential(k),
             q = g.traverse_(k.Applicative1())(p)(function () {
           var w = e.parallel(k);
           return function (b) {
-            return w(m(b));
+            return w(l(b));
           };
         }());
         return function (w) {
@@ -5808,7 +5808,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Control.Monad"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Monoid"],
       q = a["Data.Semigroup"];
   a = new p.Monad(function () {
@@ -5825,7 +5825,7 @@ var PS = {};
       h = new g.Applicative(function () {
     return b;
   }, e.pureE),
-      d = new m.Functor(g.liftA1(h));
+      d = new l.Functor(g.liftA1(h));
   c.functorEffect = d;
   c.applyEffect = b;
   c.applicativeEffect = h;
@@ -5905,17 +5905,17 @@ var PS = {};
       p = a.Effect;
   a = new a["Data.Show"].Show(e.showErrorImpl);
 
-  c["throw"] = function (m) {
-    return e.throwException(e.error(m));
+  c["throw"] = function (l) {
+    return e.throwException(e.error(l));
   };
 
-  c["try"] = function (m) {
+  c["try"] = function (l) {
     return e.catchException(function () {
       var n = g.pure(p.applicativeEffect);
       return function (q) {
         return n(f.Left.create(q));
       };
-    }())(k.map(p.functorEffect)(f.Right.create)(m));
+    }())(k.map(p.functorEffect)(f.Right.create)(l));
   };
 
   c.showError = a;
@@ -5962,7 +5962,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Apply"],
       p = a["Control.Bind"],
-      m = a["Control.Monad"],
+      l = a["Control.Monad"],
       n = a["Control.Monad.Error.Class"],
       q = a["Control.Parallel"],
       w = a["Control.Parallel.Class"],
@@ -5972,10 +5972,10 @@ var PS = {};
       r = a["Data.Function"],
       x = a["Data.Functor"],
       t = a["Data.Monoid"],
-      C = a["Data.Semigroup"],
+      D = a["Data.Semigroup"],
       y = a["Data.Unit"],
       u = a.Effect,
-      B = a["Effect.Class"],
+      E = a["Effect.Class"],
       F = a["Effect.Exception"],
       K = a["Partial.Unsafe"];
   a = a["Unsafe.Coerce"];
@@ -6005,37 +6005,37 @@ var PS = {};
   }(),
       M = function M(ja) {
     return function () {
-      var va = e._makeFiber(L, ja)();
+      var wa = e._makeFiber(L, ja)();
 
-      va.run();
-      return va;
+      wa.run();
+      return wa;
     };
   },
-      R = new k.Apply(function () {
+      Q = new k.Apply(function () {
     return H;
   }, e._parAffApply),
-      A = new m.Monad(function () {
+      A = new l.Monad(function () {
     return z;
   }, function () {
-    return D;
+    return B;
   }),
-      D = new p.Bind(function () {
+      B = new p.Bind(function () {
     return N;
   }, e._bind),
       N = new k.Apply(function () {
     return I;
-  }, m.ap(A)),
+  }, l.ap(A)),
       z = new f.Applicative(function () {
     return N;
   }, e._pure),
-      O = new B.MonadEffect(function () {
+      O = new E.MonadEffect(function () {
     return A;
   }, e._liftEffect);
 
   k = function () {
-    var ja = B.liftEffect(O);
-    return function (va) {
-      return r["const"](ja(va));
+    var ja = E.liftEffect(O);
+    return function (wa) {
+      return r["const"](ja(wa));
     };
   }();
 
@@ -6045,42 +6045,42 @@ var PS = {};
       G = new n.MonadError(function () {
     return W;
   }, e._catchError),
-      Q = function Q(ja) {
-    return function (va) {
-      return M(p.bindFlipped(D)(function () {
-        var P = B.liftEffect(O);
+      R = function R(ja) {
+    return function (wa) {
+      return M(p.bindFlipped(B)(function () {
+        var P = E.liftEffect(O);
         return function (fa) {
           return P(ja(fa));
         };
-      }())(n["try"](G)(va)));
+      }())(n["try"](G)(wa)));
     };
   },
       v = new w.Parallel(function () {
-    return na;
+    return oa;
   }, function () {
     return A;
   }, a.unsafeCoerce, e._sequential),
-      na = new f.Applicative(function () {
-    return R;
+      oa = new f.Applicative(function () {
+    return Q;
   }, function () {
     var ja = w.parallel(v),
-        va = f.pure(z);
+        wa = f.pure(z);
     return function (P) {
-      return ja(va(P));
+      return ja(wa(P));
     };
   }()),
-      ma = new C.Semigroup(function (ja) {
-    return function (va) {
+      ma = new D.Semigroup(function (ja) {
+    return function (wa) {
       return function (P) {
-        return q.parSequence_(v)(d.foldableArray)([ja(P), va(P)]);
+        return q.parSequence_(v)(d.foldableArray)([ja(P), wa(P)]);
       };
     };
   });
 
-  C = r["const"](f.pure(z)(y.unit));
+  D = r["const"](f.pure(z)(y.unit));
   var Aa = new t.Monoid(function () {
     return ma;
-  }, C);
+  }, D);
   y = e.makeAff(function (ja) {
     return f.pure(u.applicativeEffect)(t.mempty(Aa));
   });
@@ -6090,8 +6090,8 @@ var PS = {};
       da = new g.Alt(function () {
     return I;
   }, function (ja) {
-    return function (va) {
-      return n.catchError(G)(ja)(r["const"](va));
+    return function (wa) {
+      return n.catchError(G)(ja)(r["const"](wa));
     };
   });
   g = new b.Plus(function () {
@@ -6102,8 +6102,8 @@ var PS = {};
   }, w.parallel(v)(b.empty(g)));
 
   c.runAff_ = function (ja) {
-    return function (va) {
-      return x["void"](u.functorEffect)(Q(ja)(va));
+    return function (wa) {
+      return x["void"](u.functorEffect)(R(ja)(wa));
     };
   };
 
@@ -6112,11 +6112,11 @@ var PS = {};
   };
 
   c.never = y;
-  c.nonCanceler = C;
+  c.nonCanceler = D;
   c.effectCanceler = k;
   c.functorAff = I;
   c.applicativeAff = z;
-  c.bindAff = D;
+  c.bindAff = B;
   c.monadErrorAff = G;
   c.monadEffectAff = O;
   c.altParAff = za;
@@ -6140,12 +6140,12 @@ var PS = {};
           return f(c.Right.create(p))();
         });
         return function (p) {
-          return e.makeAff(function (m) {
+          return e.makeAff(function (l) {
             return function () {
               k(p, function (n) {
-                return m(c.Left.create(n))();
+                return l(c.Left.create(n))();
               }, function (n) {
-                return m(c.Right.create(n))();
+                return l(c.Right.create(n))();
               });
               return e.nonCanceler;
             };
@@ -6195,7 +6195,7 @@ var PS = {};
       f = a["Control.Monad.Error.Class"],
       k = a["Control.Monad.Except.Trans"],
       p = a["Data.Boolean"],
-      m = a["Data.Identity"],
+      l = a["Data.Identity"],
       n = a["Data.List.NonEmpty"],
       q = a["Data.Show"],
       w = function () {
@@ -6210,42 +6210,42 @@ var PS = {};
     return y;
   }(),
       b = function () {
-    function y(u, B) {
+    function y(u, E) {
       this.value0 = u;
-      this.value1 = B;
+      this.value1 = E;
     }
 
     y.create = function (u) {
-      return function (B) {
-        return new y(u, B);
+      return function (E) {
+        return new y(u, E);
       };
     };
 
     return y;
   }(),
       h = function () {
-    function y(u, B) {
+    function y(u, E) {
       this.value0 = u;
-      this.value1 = B;
+      this.value1 = E;
     }
 
     y.create = function (u) {
-      return function (B) {
-        return new y(u, B);
+      return function (E) {
+        return new y(u, E);
       };
     };
 
     return y;
   }(),
       d = function () {
-    function y(u, B) {
+    function y(u, E) {
       this.value0 = u;
-      this.value1 = B;
+      this.value1 = E;
     }
 
     y.create = function (u) {
-      return function (B) {
-        return new y(u, B);
+      return function (E) {
+        return new y(u, E);
       };
     };
 
@@ -6266,7 +6266,7 @@ var PS = {};
     throw Error("Failed pattern match at Foreign (line 72, column 1 - line 72, column 45): " + [y.constructor.name]);
   },
       t = function () {
-    var y = f.throwError(k.monadThrowExceptT(m.monadIdentity));
+    var y = f.throwError(k.monadThrowExceptT(l.monadIdentity));
     return function (u) {
       return y(n.singleton(u));
     };
@@ -6274,23 +6274,23 @@ var PS = {};
 
   a = function a(y) {
     return function (u) {
-      if (e.tagOf(u) === y) return g.pure(k.applicativeExceptT(m.monadIdentity))(e.unsafeFromForeign(u));
+      if (e.tagOf(u) === y) return g.pure(k.applicativeExceptT(l.monadIdentity))(e.unsafeFromForeign(u));
       if (p.otherwise) return t(new b(y, e.tagOf(u)));
       throw Error("Failed pattern match at Foreign (line 106, column 1 - line 106, column 55): " + [y.constructor.name, u.constructor.name]);
     };
   };
 
-  var C = a("String");
+  var D = a("String");
   c.ForeignError = w;
   c.TypeMismatch = b;
   c.ErrorAtIndex = h;
   c.ErrorAtProperty = d;
   c.renderForeignError = x;
   c.unsafeReadTagged = a;
-  c.readString = C;
+  c.readString = D;
 
   c.readArray = function (y) {
-    if (e.isArray(y)) return g.pure(k.applicativeExceptT(m.monadIdentity))(e.unsafeFromForeign(y));
+    if (e.isArray(y)) return g.pure(k.applicativeExceptT(l.monadIdentity))(e.unsafeFromForeign(y));
     if (p.otherwise) return t(new b("array", e.tagOf(y)));
     throw Error("Failed pattern match at Foreign (line 147, column 1 - line 147, column 42): " + [y.constructor.name]);
   };
@@ -6312,7 +6312,7 @@ var PS = {};
       f = a["Affjax.RequestHeader"],
       k = a["Affjax.ResponseFormat"],
       p = a["Affjax.ResponseHeader"],
-      m = a["Control.Applicative"],
+      l = a["Control.Applicative"],
       n = a["Control.Bind"],
       q = a["Control.Monad.Error.Class"],
       w = a["Control.Monad.Except"],
@@ -6322,19 +6322,19 @@ var PS = {};
       r = a["Data.Array"],
       x = a["Data.Either"],
       t = a["Data.Eq"],
-      C = a["Data.Foldable"],
+      D = a["Data.Foldable"],
       y = a["Data.FormURLEncoded"],
       u = a["Data.Function"],
-      B = a["Data.Functor"],
+      E = a["Data.Functor"],
       F = a["Data.HTTP.Method"],
       K = a["Data.HeytingAlgebra"],
       H = a["Data.Identity"],
       I = a["Data.List.NonEmpty"],
       L = a["Data.Maybe"],
       M = a["Data.Nullable"],
-      R = a["Data.Unit"],
+      Q = a["Data.Unit"],
       A = a["Effect.Aff"],
-      D = a["Effect.Aff.Compat"],
+      B = a["Effect.Aff.Compat"],
       N = a["Effect.Exception"],
       z = a.Foreign,
       O = function () {
@@ -6349,14 +6349,14 @@ var PS = {};
     return da;
   }(),
       W = function () {
-    function da(ja, va) {
+    function da(ja, wa) {
       this.value0 = ja;
-      this.value1 = va;
+      this.value1 = wa;
     }
 
     da.create = function (ja) {
-      return function (va) {
-        return new da(ja, va);
+      return function (wa) {
+        return new da(ja, wa);
       };
     };
 
@@ -6373,13 +6373,13 @@ var PS = {};
 
     return da;
   }(),
-      Q = function Q(da) {
+      R = function R(da) {
     var ja = function ja(sa) {
-      return "" === sa ? m.pure(b.applicativeExceptT(H.monadIdentity))(h.jsonEmptyObject) : x.either(function (Ca) {
+      return "" === sa ? l.pure(b.applicativeExceptT(H.monadIdentity))(h.jsonEmptyObject) : x.either(function (Ca) {
         return z.fail(z.ForeignError.create(Ca));
-      })(m.pure(b.applicativeExceptT(H.monadIdentity)))(d.jsonParser(sa));
+      })(l.pure(b.applicativeExceptT(H.monadIdentity)))(d.jsonParser(sa));
     },
-        va = function () {
+        wa = function () {
       if (da.responseFormat instanceof k.ArrayBuffer) return z.unsafeReadTagged("ArrayBuffer");
       if (da.responseFormat instanceof k.Blob) return z.unsafeReadTagged("Blob");
       if (da.responseFormat instanceof k.Document) return z.unsafeReadTagged("Document");
@@ -6387,29 +6387,29 @@ var PS = {};
         return da.responseFormat.value0(ja(sa));
       })(z.unsafeReadTagged("String"));
       if (da.responseFormat instanceof k.String) return z.unsafeReadTagged("String");
-      if (da.responseFormat instanceof k.Ignore) return u["const"](da.responseFormat.value0(m.pure(b.applicativeExceptT(H.monadIdentity))(R.unit)));
+      if (da.responseFormat instanceof k.Ignore) return u["const"](da.responseFormat.value0(l.pure(b.applicativeExceptT(H.monadIdentity))(Q.unit)));
       throw Error("Failed pattern match at Affjax (line 237, column 18 - line 243, column 57): " + [da.responseFormat.constructor.name]);
     }(),
         P = function P(sa) {
       if (sa instanceof g.ArrayView) return x.Right.create(sa.value0(z.unsafeToForeign));
       if (sa instanceof g.Blob || sa instanceof g.Document || sa instanceof g.String || sa instanceof g.FormData) return x.Right.create(z.unsafeToForeign(sa.value0));
-      if (sa instanceof g.FormURLEncoded) return x.note("Body contains values that cannot be encoded as application/x-www-form-urlencoded")(B.map(L.functorMaybe)(z.unsafeToForeign)(y.encode(sa.value0)));
+      if (sa instanceof g.FormURLEncoded) return x.note("Body contains values that cannot be encoded as application/x-www-form-urlencoded")(E.map(L.functorMaybe)(z.unsafeToForeign)(y.encode(sa.value0)));
       if (sa instanceof g.Json) return x.Right.create(z.unsafeToForeign(h.stringify(sa.value0)));
       throw Error("Failed pattern match at Affjax (line 203, column 20 - line 218, column 69): " + [sa.constructor.name]);
     },
         fa = function fa(sa) {
       return function (Ca) {
-        return sa instanceof L.Just && !C.any(C.foldableArray)(K.heytingAlgebraBoolean)(u.on(t.eq(t.eqString))(f.name)(sa.value0))(Ca) ? r.snoc(Ca)(sa.value0) : Ca;
+        return sa instanceof L.Just && !D.any(D.foldableArray)(K.heytingAlgebraBoolean)(u.on(t.eq(t.eqString))(f.name)(sa.value0))(Ca) ? r.snoc(Ca)(sa.value0) : Ca;
       };
     },
         Ba = function Ba(sa) {
-      return fa(B.map(L.functorMaybe)(f.ContentType.create)(n.bindFlipped(L.bindMaybe)(g.toMediaType)(sa)))(fa(B.map(L.functorMaybe)(f.Accept.create)(k.toMediaType(da.responseFormat)))(da.headers));
+      return fa(E.map(L.functorMaybe)(f.ContentType.create)(n.bindFlipped(L.bindMaybe)(g.toMediaType)(sa)))(fa(E.map(L.functorMaybe)(f.Accept.create)(k.toMediaType(da.responseFormat)))(da.headers));
     },
-        oa = function oa(sa) {
+        pa = function pa(sa) {
       return {
         method: F.print(da.method),
         url: da.url,
-        headers: B.map(B.functorArray)(function (Ca) {
+        headers: E.map(E.functorArray)(function (Ca) {
           return {
             field: f.name(Ca),
             value: f.value(Ca)
@@ -6423,9 +6423,9 @@ var PS = {};
       };
     },
         qa = function qa(sa) {
-      return B.mapFlipped(A.functorAff)(q["try"](A.monadErrorAff)(D.fromEffectFnAff(e._ajax(p.ResponseHeader.create, oa(sa)))))(function (Ca) {
+      return E.mapFlipped(A.functorAff)(q["try"](A.monadErrorAff)(B.fromEffectFnAff(e._ajax(p.ResponseHeader.create, pa(sa)))))(function (Ca) {
         if (Ca instanceof x.Right) {
-          var Ga = w.runExcept(va(Ca.value0.body));
+          var Ga = w.runExcept(wa(Ca.value0.body));
           if (Ga instanceof x.Left) return new x.Left(new W(I.head(Ga.value0), Ca.value0));
           if (Ga instanceof x.Right) return new x.Right({
             body: Ga.value0,
@@ -6446,14 +6446,14 @@ var PS = {};
     if (da.content instanceof L.Just) {
       P = P(da.content.value0);
       if (P instanceof x.Right) return qa(M.toNullable(new L.Just(P.value0)));
-      if (P instanceof x.Left) return m.pure(A.applicativeAff)(new x.Left(new O(P.value0)));
+      if (P instanceof x.Left) return l.pure(A.applicativeAff)(new x.Left(new O(P.value0)));
       throw Error("Failed pattern match at Affjax (line 173, column 7 - line 177, column 48): " + [P.constructor.name]);
     }
 
     throw Error("Failed pattern match at Affjax (line 169, column 3 - line 177, column 48): " + [da.content.constructor.name]);
   },
       v = new x.Left(F.GET.value),
-      na = [],
+      oa = [],
       ma = L.Nothing.value,
       Aa = L.Nothing.value,
       za = L.Nothing.value;
@@ -6467,10 +6467,10 @@ var PS = {};
 
   c.get = function (da) {
     return function (ja) {
-      return Q({
+      return R({
         method: v,
         url: ja,
-        headers: na,
+        headers: oa,
         content: ma,
         username: Aa,
         password: za,
@@ -6499,36 +6499,36 @@ var PS = {};
       f = a["Data.Maybe"],
       k = a["Data.Tuple"],
       p = function () {
-    function m(n, q) {
+    function l(n, q) {
       this.value0 = n;
       this.value1 = q;
     }
 
-    m.create = function (n) {
+    l.create = function (n) {
       return function (q) {
-        return new m(n, q);
+        return new l(n, q);
       };
     };
 
-    return m;
+    return l;
   }();
 
   a = new p(g.Nil.value, g.Nil.value);
   c.empty = a;
 
-  c["null"] = function (m) {
-    return m.value0 instanceof g.Nil && m.value1 instanceof g.Nil ? !0 : !1;
+  c["null"] = function (l) {
+    return l.value0 instanceof g.Nil && l.value1 instanceof g.Nil ? !0 : !1;
   };
 
-  c.snoc = function (m) {
+  c.snoc = function (l) {
     return function (n) {
-      return new p(m.value0, new g.Cons(n, m.value1));
+      return new p(l.value0, new g.Cons(n, l.value1));
     };
   };
 
-  c.uncons = function (m) {
+  c.uncons = function (l) {
     for (var n = !1, q; !n;) {
-      if (q = m, q.value0 instanceof g.Nil && q.value1 instanceof g.Nil) n = !0, q = f.Nothing.value;else if (q.value0 instanceof g.Nil) m = new p(e.reverse(q.value1), g.Nil.value), q = void 0;else if (q.value0 instanceof g.Cons) n = !0, q = new f.Just(new k.Tuple(q.value0.value0, new p(q.value0.value1, q.value1)));else throw Error("Failed pattern match at Data.CatQueue (line 83, column 1 - line 83, column 63): " + [q.constructor.name]);
+      if (q = l, q.value0 instanceof g.Nil && q.value1 instanceof g.Nil) n = !0, q = f.Nothing.value;else if (q.value0 instanceof g.Nil) l = new p(e.reverse(q.value1), g.Nil.value), q = void 0;else if (q.value0 instanceof g.Cons) n = !0, q = new f.Just(new k.Tuple(q.value0.value0, new p(q.value0.value1, q.value1)));else throw Error("Failed pattern match at Data.CatQueue (line 83, column 1 - line 83, column 63): " + [q.constructor.name]);
     }
 
     return q;
@@ -6544,7 +6544,7 @@ var PS = {};
       f = a["Data.Maybe"],
       k = a["Data.Semigroup"],
       p = a["Data.Tuple"],
-      m = function () {
+      l = function () {
     function b() {}
 
     b.value = new b();
@@ -6566,8 +6566,8 @@ var PS = {};
   }(),
       q = function q(b) {
     return function (h) {
-      if (b instanceof m) return h;
-      if (h instanceof m) return b;
+      if (b instanceof l) return h;
+      if (h instanceof l) return b;
       if (b instanceof n) return new n(b.value0, e.snoc(b.value1)(h));
       throw Error("Failed pattern match at Data.CatList (line 109, column 1 - line 109, column 54): " + [b.constructor.name, h.constructor.name]);
     };
@@ -6577,13 +6577,13 @@ var PS = {};
       return function (d) {
         var r = function r(x) {
           return function (t) {
-            return function (C) {
-              for (var y = x, u = t, B = !1, F; !B;) {
+            return function (D) {
+              for (var y = x, u = t, E = !1, F; !E;) {
                 F = y;
                 var K = u,
-                    H = C;
-                if (H instanceof g.Nil) B = !0, F = K;else {
-                  if (H instanceof g.Cons) y = F, u = F(K)(H.value0), C = H.value1;else throw Error("Failed pattern match at Data.CatList (line 125, column 3 - line 125, column 59): " + [F.constructor.name, K.constructor.name, H.constructor.name]);
+                    H = D;
+                if (H instanceof g.Nil) E = !0, F = K;else {
+                  if (H instanceof g.Cons) y = F, u = F(K)(H.value0), D = H.value1;else throw Error("Failed pattern match at Data.CatList (line 125, column 3 - line 125, column 59): " + [F.constructor.name, K.constructor.name, H.constructor.name]);
                   F = void 0;
                 }
               }
@@ -6595,7 +6595,7 @@ var PS = {};
 
         return function (x) {
           return function (t) {
-            function C(F, K) {
+            function D(F, K) {
               F = e.uncons(F);
               if (F instanceof f.Nothing) return u = !0, r(function (H) {
                 return function (I) {
@@ -6605,18 +6605,18 @@ var PS = {};
               if (F instanceof f.Just) y = F.value0.value1, t = new g.Cons(b(F.value0.value0), K);else throw Error("Failed pattern match at Data.CatList (line 121, column 14 - line 123, column 67): " + [F.constructor.name]);
             }
 
-            for (var y = x, u = !1, B; !u;) {
-              B = C(y, t);
+            for (var y = x, u = !1, E; !u;) {
+              E = D(y, t);
             }
 
-            return B;
+            return E;
           };
         }(d)(g.Nil.value);
       };
     };
   };
 
-  a = m.value;
+  a = l.value;
   k = new k.Semigroup(q);
   c.empty = a;
 
@@ -6627,13 +6627,13 @@ var PS = {};
   };
 
   c.uncons = function (b) {
-    if (b instanceof m) return f.Nothing.value;
+    if (b instanceof l) return f.Nothing.value;
 
     if (b instanceof n) {
       var h = f.Just,
           d = p.Tuple,
           r = b.value0;
-      b = e["null"](b.value1) ? m.value : w(q)(m.value)(b.value1);
+      b = e["null"](b.value1) ? l.value : w(q)(l.value)(b.value1);
       return new h(new d(r, b));
     }
 
@@ -6652,7 +6652,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Data.CatList"],
-      m = a["Data.Either"],
+      l = a["Data.Either"],
       n = a["Data.Functor"],
       q = a["Data.Maybe"],
       w = a["Data.Semigroup"],
@@ -6699,21 +6699,21 @@ var PS = {};
       x = function x(F) {
     function K(L) {
       var M = function M(A) {
-        return function (D) {
-          return new h(A.value0, w.append(p.semigroupCatList)(A.value1)(D));
+        return function (B) {
+          return new h(A.value0, w.append(p.semigroupCatList)(A.value1)(B));
         };
       };
 
       if (L.value0 instanceof d) {
-        var R = p.uncons(L.value1);
-        if (R instanceof q.Nothing) return H = !0, new d(L.value0.value0);
+        var Q = p.uncons(L.value1);
+        if (Q instanceof q.Nothing) return H = !0, new d(L.value0.value0);
 
-        if (R instanceof q.Just) {
-          F = M((0, R.value0.value0)(L.value0.value0))(R.value0.value1);
+        if (Q instanceof q.Just) {
+          F = M((0, Q.value0.value0)(L.value0.value0))(Q.value0.value1);
           return;
         }
 
-        throw Error("Failed pattern match at Control.Monad.Free (line 227, column 7 - line 231, column 64): " + [R.constructor.name]);
+        throw Error("Failed pattern match at Control.Monad.Free (line 227, column 7 - line 231, column 64): " + [Q.constructor.name]);
       }
 
       if (L.value0 instanceof r) return H = !0, new r(L.value0.value0, function (A) {
@@ -6740,14 +6740,14 @@ var PS = {};
   };
 
   a = new k.Monad(function () {
-    return B;
+    return E;
   }, function () {
     return y;
   });
-  var C = new n.Functor(function (F) {
+  var D = new n.Functor(function (F) {
     return function (K) {
       return f.bindFlipped(y)(function () {
-        var H = e.pure(B);
+        var H = e.pure(E);
         return function (I) {
           return H(F(I));
         };
@@ -6762,9 +6762,9 @@ var PS = {};
     };
   }),
       u = new g.Apply(function () {
-    return C;
+    return D;
   }, k.ap(a)),
-      B = new e.Applicative(function () {
+      E = new e.Applicative(function () {
     return u;
   }, function (F) {
     return new h(d.create(F), p.empty);
@@ -6776,7 +6776,7 @@ var PS = {};
 
   c.liftF = function (F) {
     return new h(new r(F, function () {
-      var K = e.pure(B);
+      var K = e.pure(E);
       return function (H) {
         return K(H);
       };
@@ -6786,15 +6786,15 @@ var PS = {};
   c.resume = function (F) {
     return t(function (K) {
       return function (H) {
-        return new m.Left(n.map(F)(H)(K));
+        return new l.Left(n.map(F)(H)(K));
       };
-    })(m.Right.create);
+    })(l.Right.create);
   };
 
   c["resume'"] = t;
-  c.freeFunctor = C;
+  c.freeFunctor = D;
   c.freeBind = y;
-  c.freeApplicative = B;
+  c.freeApplicative = E;
   c.freeApply = u;
 })(PS);
 
@@ -6834,18 +6834,18 @@ var PS = {};
   a = a["Unsafe.Coerce"];
   var k = a.unsafeCoerce,
       p = a.unsafeCoerce,
-      m = a.unsafeCoerce;
+      l = a.unsafeCoerce;
 
   a = function (q) {
     var w = f.fromJust();
     return function (b) {
-      return w(q(m(b)));
+      return w(q(l(b)));
     };
   }(e.uncons);
 
   var n = function (q) {
     return function (w) {
-      return q(m(w));
+      return q(l(w));
     };
   }(e.length);
 
@@ -6855,7 +6855,7 @@ var PS = {};
     throw Error("Failed pattern match at Data.Array.NonEmpty (line 134, column 1 - line 134, column 58): " + [q.constructor.name]);
   };
 
-  c.toArray = m;
+  c.toArray = l;
 
   c.singleton = function (q) {
     return p(e.singleton(q));
@@ -6871,7 +6871,7 @@ var PS = {};
 
   c.snoc = function (q) {
     return function (w) {
-      return p(e.snoc(m(q))(w));
+      return p(e.snoc(l(q))(w));
     };
   };
 
@@ -6881,7 +6881,7 @@ var PS = {};
     return function (w) {
       var b = e.updateAt(q)(w);
       return function (h) {
-        return k(b(m(h)));
+        return k(b(l(h)));
       };
     };
   };
@@ -6951,7 +6951,7 @@ var PS = {};
 
     return q;
   }(),
-      m = function m(q) {
+      l = function l(q) {
     return function (w) {
       return function (b) {
         return (0, q.foldrWithIndex)(function (h) {
@@ -6972,7 +6972,7 @@ var PS = {};
   }(function () {
     return e.foldableArray;
   }, function (q) {
-    return m(n)(q);
+    return l(n)(q);
   }, function (q) {
     return function (w) {
       var b = e.foldl(e.foldableArray)(function (d) {
@@ -7025,10 +7025,10 @@ var PS = {};
     return function (f) {
       return function (k) {
         return function (p) {
-          var m = (0, g.fold1)(k),
+          var l = (0, g.fold1)(k),
               n = e.map(f)(p);
           return function (q) {
-            return m(n(q));
+            return l(n(q));
           };
         };
       };
@@ -7044,7 +7044,7 @@ var PS = {};
       f = a["Data.Semigroup.Foldable"],
       k = a["Data.Unfoldable1"].unfoldable1Array,
       p = a["Data.Traversable"].traversableArray,
-      m = g.semigroupArray,
+      l = g.semigroupArray,
       n = a["Data.Functor"].functorArray,
       q = a["Data.FoldableWithIndex"].foldableWithIndexArray,
       w = a["Data.Foldable"].foldableArray,
@@ -7055,7 +7055,7 @@ var PS = {};
   }, function (h) {
     return f.foldMap1Default(b)(n)(h);
   });
-  c.semigroupNonEmptyArray = m;
+  c.semigroupNonEmptyArray = l;
   c.functorNonEmptyArray = n;
   c.foldableNonEmptyArray = w;
   c.foldableWithIndexNonEmptyArray = q;
@@ -7122,7 +7122,7 @@ var PS = {};
       return w.value;
     }
 
-    function m(q) {
+    function l(q) {
       switch (q.size) {
         case 0:
           return null;
@@ -7175,10 +7175,10 @@ var PS = {};
     };
 
     f.takeLast = p;
-    f.takeHead = m;
+    f.takeHead = l;
 
     f.deleteCell = function (q) {
-      null !== q.queue && (q.queue.last === q ? p(q.queue) : q.queue.head === q ? m(q.queue) : (q.prev && (q.prev.next = q.next), q.next && (q.next.prev = q.prev), q.queue.size--, q.queue = null, q.value = null, q.next = null, q.prev = null));
+      null !== q.queue && (q.queue.last === q ? p(q.queue) : q.queue.head === q ? l(q.queue) : (q.prev && (q.prev.next = q.next), q.next && (q.next.prev = q.prev), q.queue.size--, q.queue = null, q.value = null, q.next = null, q.prev = null));
     };
 
     f.drainVar = function (q, w) {
@@ -7191,33 +7191,33 @@ var PS = {};
 
         for (w.draining = !0;;) {
           var t = r = null;
-          var C = w.value;
+          var D = w.value;
           var y = d.size;
 
           if (null !== w.error) {
-            for (C = q.left(w.error); r = m(b);) {
-              k(r.cb(C));
+            for (D = q.left(w.error); r = l(b);) {
+              k(r.cb(D));
             }
 
-            for (; t = m(d);) {
-              k(t(C));
+            for (; t = l(d);) {
+              k(t(D));
             }
 
-            for (; x = m(h);) {
-              k(x(C));
+            for (; x = l(h);) {
+              k(x(D));
             }
 
             break;
           }
 
-          C === n && (r = m(b)) && (w.value = C = r.value);
+          D === n && (r = l(b)) && (w.value = D = r.value);
 
-          if (C !== n) {
-            for (x = m(h); y-- && (t = m(d));) {
-              k(t(q.right(C)));
+          if (D !== n) {
+            for (x = l(h); y-- && (t = l(d));) {
+              k(t(q.right(D)));
             }
 
-            null !== x && (w.value = n, k(x(q.right(C))));
+            null !== x && (w.value = n, k(x(q.right(D))));
           }
 
           null !== r && k(r.cb(q.right(void 0)));
@@ -7297,7 +7297,7 @@ var PS = {};
     n.value = new n();
     return n;
   }(),
-      m = {
+      l = {
     left: g.Left.create,
     right: g.Right.create,
     nothing: a.Nothing.value,
@@ -7309,17 +7309,17 @@ var PS = {};
 
   c.take = function (n) {
     return function (q) {
-      return e._takeVar(m, n, q);
+      return e._takeVar(l, n, q);
     };
   };
 
   c.tryTake = function (n) {
-    return e._tryTakeVar(m, n);
+    return e._tryTakeVar(l, n);
   };
 
   c.tryPut = function (n) {
     return function (q) {
-      return e._tryPutVar(m, n, q);
+      return e._tryPutVar(l, n, q);
     };
   };
 
@@ -7386,7 +7386,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Bind"],
       p = a["Control.Category"],
-      m = a["Control.Monad"],
+      l = a["Control.Monad"],
       n = a["Control.Monad.Free"],
       q = a["Control.MultiAlternative"],
       w = a["Control.Parallel.Class"],
@@ -7396,81 +7396,81 @@ var PS = {};
       r = a["Data.Either"],
       x = a["Data.FoldableWithIndex"],
       t = a["Data.Functor"],
-      C = a["Data.Maybe"],
+      D = a["Data.Maybe"],
       y = a["Data.Monoid"],
       u = a["Data.Semigroup"],
-      B = a["Data.Semigroup.Foldable"],
+      E = a["Data.Semigroup.Foldable"],
       F = a["Data.Show"],
       K = a["Data.Tuple"],
       H = a.Effect,
       I = a["Effect.AVar"],
       L = a["Effect.Aff"],
       M = a["Effect.Aff.AVar"],
-      R = a["Effect.Aff.Class"],
+      Q = a["Effect.Aff.Class"],
       A = a["Effect.Class"],
-      D = a["Effect.Console"],
+      B = a["Effect.Console"],
       N = a["Effect.Exception"];
-  a = new a["Control.ShiftMap"].ShiftMap(function (oa) {
-    return oa(p.identity(p.categoryFn));
+  a = new a["Control.ShiftMap"].ShiftMap(function (pa) {
+    return pa(p.identity(p.categoryFn));
   });
 
   var z = n.freeFunctor,
       O = n.freeBind,
       W = n.freeApply,
       G = n.freeApplicative,
-      Q = new m.Monad(function () {
+      R = new l.Monad(function () {
     return G;
   }, function () {
     return O;
   }),
-      v = function v(oa) {
-    return oa;
+      v = function v(pa) {
+    return pa;
   },
-      na = function na(oa) {
+      oa = function oa(pa) {
     return n["resume'"](function (qa) {
       return function (sa) {
-        return new r.Right(t.map(oa)(sa)(qa));
+        return new r.Right(t.map(pa)(sa)(qa));
       };
     })(r.Left.create);
   },
-      ma = new t.Functor(function (oa) {
+      ma = new t.Functor(function (pa) {
     return function (qa) {
       if (qa instanceof r.Right) qa = new r.Right({
-        cont: t.map(L.functorAff)(oa)(qa.value0.cont),
+        cont: t.map(L.functorAff)(pa)(qa.value0.cont),
         view: qa.value0.view
-      });else if (qa instanceof r.Left) qa = new r.Left(t.map(H.functorEffect)(oa)(qa.value0));else throw Error("Failed pattern match at Concur.Core.Types (line 45, column 5 - line 45, column 57): " + [qa.constructor.name]);
+      });else if (qa instanceof r.Left) qa = new r.Left(t.map(H.functorEffect)(pa)(qa.value0));else throw Error("Failed pattern match at Concur.Core.Types (line 45, column 5 - line 45, column 57): " + [qa.constructor.name]);
       return qa;
     };
   }),
-      Aa = function Aa(oa) {
-    return n.liftF(r.Left.create(oa));
+      Aa = function Aa(pa) {
+    return n.liftF(r.Left.create(pa));
   },
-      za = function za(oa) {
+      za = function za(pa) {
     return new A.MonadEffect(function () {
-      return Q;
+      return R;
     }, Aa);
   },
-      da = function da(oa) {
+      da = function da(pa) {
     return n.liftF(new r.Right({
-      view: oa,
+      view: pa,
       cont: L.never
     }));
   },
-      ja = function ja(oa) {
+      ja = function ja(pa) {
     return new u.Semigroup(function (qa) {
       return function (sa) {
-        return q.orr(P(oa))([qa, sa]);
+        return q.orr(P(pa))([qa, sa]);
       };
     });
   },
-      va = function va(oa) {
+      wa = function wa(pa) {
     return new b.Plus(function () {
-      return fa(oa);
-    }, da(y.mempty(oa)));
+      return fa(pa);
+    }, da(y.mempty(pa)));
   },
-      P = function P(oa) {
+      P = function P(pa) {
     return new q.MultiAlternative(function () {
-      return va(oa);
+      return wa(pa);
     }, function (qa) {
       var sa = function sa(aa) {
         return function (J) {
@@ -7480,12 +7480,12 @@ var PS = {};
             })(J);
             return k.bind(L.bindAff)(w.sequential(L.parallelAff)(x.foldlWithIndex(d.foldableWithIndexNonEmptyArray)(function (Da) {
               return function (Fa) {
-                return function (Ka) {
-                  return e.alt(L.altParAff)(w.parallel(L.parallelAff)(t.map(L.functorAff)(K.Tuple.create(Da))(Ka)))(Fa);
+                return function (La) {
+                  return e.alt(L.altParAff)(w.parallel(L.parallelAff)(t.map(L.functorAff)(K.Tuple.create(Da))(La)))(Fa);
                 };
               };
             })(b.empty(L.plusParAff))(Z)))(function (Da) {
-              return f.pure(L.applicativeAff)(la(aa)(C.fromMaybe(ua)(h.updateAt(Da.value0)(Da.value1)(ua))));
+              return f.pure(L.applicativeAff)(la(aa)(D.fromMaybe(ua)(h.updateAt(Da.value0)(Da.value1)(ua))));
             });
           };
         };
@@ -7493,7 +7493,7 @@ var PS = {};
           Ca = function Ca(aa) {
         return function (J) {
           return n.wrap(new r.Right({
-            view: B.foldMap1(d.foldable1NonEmptyArray)(aa.Semigroup0())(function (Z) {
+            view: E.foldMap1(d.foldable1NonEmptyArray)(aa.Semigroup0())(function (Z) {
               return Z.view;
             })(J),
             cont: sa(aa)(J)(t.map(d.functorNonEmptyArray)(function (Z) {
@@ -7506,7 +7506,7 @@ var PS = {};
         return function (J) {
           return function (Z) {
             var ua = h.uncons(Z),
-                Da = na(ma)(ua.head);
+                Da = oa(ma)(ua.head);
             if (Da instanceof r.Left) return f.pure(n.freeApplicative)(Da.value0);
 
             if (Da instanceof r.Right) {
@@ -7514,7 +7514,7 @@ var PS = {};
                 var Fa = Da.value0.value0();
                 return Ga(aa)(J)(h["cons'"](Fa)(ua.tail));
               }));
-              if (Da.value0 instanceof r.Right) return U(aa)(h.snoc(J)(Da.value0.value0))(ua.tail);
+              if (Da.value0 instanceof r.Right) return V(aa)(h.snoc(J)(Da.value0.value0))(ua.tail);
               throw Error("Failed pattern match at Concur.Core.Types (line 138, column 34 - line 142, column 61): " + [Da.value0.constructor.name]);
             }
 
@@ -7522,12 +7522,12 @@ var PS = {};
           };
         };
       },
-          U = function U(aa) {
+          V = function V(aa) {
         return function (J) {
           return function (Z) {
             Z = h.fromArray(Z);
-            if (Z instanceof C.Nothing) return Ca(aa)(J);
-            if (Z instanceof C.Just) return Ga(aa)(J)(Z.value0);
+            if (Z instanceof D.Nothing) return Ca(aa)(J);
+            if (Z instanceof D.Just) return Ga(aa)(J)(Z.value0);
             throw Error("Failed pattern match at Concur.Core.Types (line 113, column 31 - line 116, column 49): " + [Z.constructor.name]);
           };
         };
@@ -7535,7 +7535,7 @@ var PS = {};
           la = function la(aa) {
         return function (J) {
           var Z = h.uncons(J),
-              ua = na(ma)(Z.head);
+              ua = oa(ma)(Z.head);
           if (ua instanceof r.Left) return f.pure(n.freeApplicative)(ua.value0);
 
           if (ua instanceof r.Right) {
@@ -7543,7 +7543,7 @@ var PS = {};
               var Da = ua.value0.value0();
               return la(aa)(h["cons'"](Da)(Z.tail));
             }));
-            if (ua.value0 instanceof r.Right) return U(aa)(h.singleton(ua.value0.value0))(Z.tail);
+            if (ua.value0 instanceof r.Right) return V(aa)(h.singleton(ua.value0.value0))(Z.tail);
             throw Error("Failed pattern match at Concur.Core.Types (line 101, column 34 - line 105, column 63): " + [ua.value0.constructor.name]);
           }
 
@@ -7552,21 +7552,21 @@ var PS = {};
       };
 
       qa = h.fromArray(qa);
-      if (qa instanceof C.Just) return la(oa)(t.map(d.functorNonEmptyArray)(v)(qa.value0));
-      if (qa instanceof C.Nothing) return b.empty(va(oa));
+      if (qa instanceof D.Just) return la(pa)(t.map(d.functorNonEmptyArray)(v)(qa.value0));
+      if (qa instanceof D.Nothing) return b.empty(wa(pa));
       throw Error("Failed pattern match at Concur.Core.Types (line 88, column 13 - line 90, column 21): " + [qa.constructor.name]);
     });
   },
-      fa = function fa(oa) {
+      fa = function fa(pa) {
     return new e.Alt(function () {
       return z;
-    }, u.append(ja(oa)));
+    }, u.append(ja(pa)));
   },
-      Ba = function Ba(oa) {
+      Ba = function Ba(pa) {
     return function (qa) {
       var sa = function sa(Ca) {
         return function (Ga) {
-          if (Ga instanceof r.Left) return D.log("Aff failed - " + F.show(N.showError)(Ga.value0));
+          if (Ga instanceof r.Left) return B.log("Aff failed - " + F.show(N.showError)(Ga.value0));
           if (Ga instanceof r.Right) return t["void"](H.functorEffect)(I.tryPut(Ga.value0)(Ca));
           throw Error("Failed pattern match at Concur.Core.Types (line 237, column 3 - line 237, column 55): " + [Ca.constructor.name, Ga.constructor.name]);
         };
@@ -7576,9 +7576,9 @@ var PS = {};
         var Ca = I.empty();
         L.runAff_(sa(Ca))(qa)();
         var Ga = I.tryTake(Ca)();
-        if (Ga instanceof C.Just) return f.pure(n.freeApplicative)(Ga.value0);
-        if (Ga instanceof C.Nothing) return n.liftF(new r.Right({
-          view: oa,
+        if (Ga instanceof D.Just) return f.pure(n.freeApplicative)(Ga.value0);
+        if (Ga instanceof D.Nothing) return n.liftF(new r.Right({
+          view: pa,
           cont: M.take(Ca)
         }));
         throw Error("Failed pattern match at Concur.Core.Types (line 232, column 8 - line 234, column 75): " + [Ga.constructor.name]);
@@ -7586,16 +7586,16 @@ var PS = {};
     };
   };
 
-  c.WidgetStep = function (oa) {
-    return oa;
+  c.WidgetStep = function (pa) {
+    return pa;
   };
 
-  c.Widget = function (oa) {
-    return oa;
+  c.Widget = function (pa) {
+    return pa;
   };
 
   c.unWidget = v;
-  c.resume = na;
+  c.resume = oa;
   c.display = da;
   c.functorWidgetStep = ma;
   c.widgetFunctor = z;
@@ -7605,29 +7605,29 @@ var PS = {};
   c.widgetShiftMap = a;
   c.widgetMultiAlternative = P;
 
-  c.widgetMonoid = function (oa) {
+  c.widgetMonoid = function (pa) {
     return new y.Monoid(function () {
-      return ja(oa);
-    }, b.empty(va(oa)));
+      return ja(pa);
+    }, b.empty(wa(pa)));
   };
 
   c.widgetAlt = fa;
-  c.widgetPlus = va;
+  c.widgetPlus = wa;
 
-  c.widgetAlternative = function (oa) {
+  c.widgetAlternative = function (pa) {
     return new g.Alternative(function () {
       return G;
     }, function () {
-      return va(oa);
+      return wa(pa);
     });
   };
 
   c.widgetMonadEff = za;
 
-  c.widgetMonadAff = function (oa) {
-    return new R.MonadAff(function () {
-      return za(oa);
-    }, Ba(y.mempty(oa)));
+  c.widgetMonadAff = function (pa) {
+    return new Q.MonadAff(function () {
+      return za(pa);
+    }, Ba(y.mempty(pa)));
   };
 })(PS);
 
@@ -7640,7 +7640,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Monad.Free"],
       p = a["Control.Parallel.Class"],
-      m = a["Data.Either"],
+      l = a["Data.Either"],
       n = a["Data.Functor"],
       q = a.Effect,
       w = a["Effect.AVar"],
@@ -7649,37 +7649,37 @@ var PS = {};
       d = a["Effect.Aff.Class"],
       r = function r(x) {
     return function (t) {
-      var C = e.resume(e.functorWidgetStep)(t);
-      if (C instanceof m.Left) return f.pure(k.freeApplicative)(C.value0);
+      var D = e.resume(e.functorWidgetStep)(t);
+      if (D instanceof l.Left) return f.pure(k.freeApplicative)(D.value0);
 
-      if (C instanceof m.Right) {
-        if (C.value0 instanceof m.Left) return k.wrap(e.WidgetStep(new m.Left(function () {
-          var y = C.value0.value0();
+      if (D instanceof l.Right) {
+        if (D.value0 instanceof l.Left) return k.wrap(e.WidgetStep(new l.Left(function () {
+          var y = D.value0.value0();
           return r(x)(y);
         })));
-        if (C.value0 instanceof m.Right) return k.wrap(e.WidgetStep(new m.Left(function () {
+        if (D.value0 instanceof l.Right) return k.wrap(e.WidgetStep(new l.Left(function () {
           var y = w.empty(),
-              u = p.sequential(b.parallelAff)(g.alt(b.altParAff)(p.parallel(b.parallelAff)(d.liftAff(d.monadAffAff)(h.take(y))))(p.parallel(b.parallelAff)(n.map(b.functorAff)(r(x))(C.value0.value0.cont))));
-          return k.wrap(e.WidgetStep(new m.Right({
-            view: x(function (B) {
-              return n["void"](q.functorEffect)(w.tryPut(f.pure(k.freeApplicative)(B))(y));
-            })(C.value0.value0.view),
+              u = p.sequential(b.parallelAff)(g.alt(b.altParAff)(p.parallel(b.parallelAff)(d.liftAff(d.monadAffAff)(h.take(y))))(p.parallel(b.parallelAff)(n.map(b.functorAff)(r(x))(D.value0.value0.cont))));
+          return k.wrap(e.WidgetStep(new l.Right({
+            view: x(function (E) {
+              return n["void"](q.functorEffect)(w.tryPut(f.pure(k.freeApplicative)(E))(y));
+            })(D.value0.value0.view),
             cont: u
           })));
         })));
-        throw Error("Failed pattern match at Concur.Core (line 36, column 28 - line 49, column 10): " + [C.value0.constructor.name]);
+        throw Error("Failed pattern match at Concur.Core (line 36, column 28 - line 49, column 10): " + [D.value0.constructor.name]);
       }
 
-      throw Error("Failed pattern match at Concur.Core (line 34, column 26 - line 49, column 10): " + [C.constructor.name]);
+      throw Error("Failed pattern match at Concur.Core (line 34, column 26 - line 49, column 10): " + [D.constructor.name]);
     };
   };
 
   c.mkLeafWidget = function (x) {
-    return e.Widget(k.wrap(e.WidgetStep(new m.Left(function () {
+    return e.Widget(k.wrap(e.WidgetStep(new l.Left(function () {
       var t = w.empty();
-      return k.wrap(e.WidgetStep(new m.Right({
-        view: x(function (C) {
-          return n["void"](q.functorEffect)(w.tryPut(f.pure(k.freeApplicative)(C))(t));
+      return k.wrap(e.WidgetStep(new l.Right({
+        view: x(function (D) {
+          return n["void"](q.functorEffect)(w.tryPut(f.pure(k.freeApplicative)(D))(t));
         }),
         cont: d.liftAff(d.monadAffAff)(h.take(t))
       })));
@@ -7740,8 +7740,8 @@ var PS = {};
     return function (k) {
       if (k instanceof e) return new e(k.value0);
       if (k instanceof g) return new g(function (p) {
-        return k.value0(function (m) {
-          return p(f(m));
+        return k.value0(function (l) {
+          return p(f(l));
         });
       });
       throw Error("Failed pattern match at Concur.Core.Props (line 13, column 1 - line 15, column 48): " + [f.constructor.name, k.constructor.name]);
@@ -7770,7 +7770,7 @@ var PS = {};
       f = a["Concur.Core.Props"],
       k = a["Control.MultiAlternative"],
       p = a["Control.ShiftMap"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = function n(q) {
     return function (w) {
       return function (b) {
@@ -7779,11 +7779,11 @@ var PS = {};
             return function (r) {
               return e.mkNodeWidget(function (x) {
                 return function (t) {
-                  return b(m.map(w)(function () {
-                    var C = f.mkProp(x),
-                        y = m.map(f.functorProps)(d);
+                  return b(l.map(w)(function () {
+                    var D = f.mkProp(x),
+                        y = l.map(f.functorProps)(d);
                     return function (u) {
-                      return C(y(u));
+                      return D(y(u));
                     };
                   }())(h))(t);
                 };
@@ -7802,7 +7802,7 @@ var PS = {};
       return function (b) {
         return function (h) {
           return g.liftWidget(q)(e.mkLeafWidget(function (d) {
-            return b(m.map(w)(f.mkProp(d))(h));
+            return b(l.map(w)(f.mkProp(d))(h));
           }));
         };
       };
@@ -7835,14 +7835,14 @@ var PS = {};
       f = a["Control.Monad.Free"],
       k = a["Data.Either"],
       p = a["Data.Functor"],
-      m = a["Data.Monoid"],
+      l = a["Data.Monoid"],
       n = a["Data.Tuple"],
       q = a.Effect,
       w = a["Effect.Aff"],
       b = function b(d) {
     return function (r) {
       var x = f.resume(e.functorWidgetStep)(e.unWidget(r));
-      if (x instanceof k.Right) return g.pure(q.applicativeEffect)(new n.Tuple(r, m.mempty(d)));
+      if (x instanceof k.Right) return g.pure(q.applicativeEffect)(new n.Tuple(r, l.mempty(d)));
 
       if (x instanceof k.Left) {
         if (x.value0 instanceof k.Left) return function () {
@@ -7860,18 +7860,18 @@ var PS = {};
     return function (r) {
       return function (x) {
         var t = f.resume(e.functorWidgetStep)(x);
-        if (t instanceof k.Right) return g.pure(q.applicativeEffect)(m.mempty(d));
+        if (t instanceof k.Right) return g.pure(q.applicativeEffect)(l.mempty(d));
 
         if (t instanceof k.Left) {
           if (t.value0 instanceof k.Left) return function () {
-            var C = t.value0.value0();
-            return h(d)(r)(C)();
+            var D = t.value0.value0();
+            return h(d)(r)(D)();
           };
           if (t.value0 instanceof k.Right) return function () {
             w.runAff_(function () {
-              var C = p.map(k.functorEither)(e.Widget);
+              var D = p.map(k.functorEither)(e.Widget);
               return function (y) {
-                return r(C(y));
+                return r(D(y));
               };
             }())(t.value0.value0.cont)();
             return t.value0.value0.view;
@@ -7952,7 +7952,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Apply"],
       p = a["Control.Bind"],
-      m = a["Control.Comonad"],
+      l = a["Control.Comonad"],
       n = a["Control.Extend"],
       q = a["Control.Monad"],
       w = a["Control.Plus"],
@@ -7970,15 +7970,15 @@ var PS = {};
       });
     };
   },
-      C = function C(I) {
+      D = function D(I) {
     return r.fst(d.force(I));
   },
       y = function y(I) {
     return new h.Functor(function (L) {
-      var M = function M(R) {
+      var M = function M(Q) {
         return h.map(d.functorLazy)(function (A) {
           return new r.Tuple(L(A.value0), h.map(I)(M)(A.value1));
-        })(R);
+        })(Q);
       };
 
       return M;
@@ -7988,16 +7988,16 @@ var PS = {};
     return new n.Extend(function () {
       return y(I);
     }, function (L) {
-      var M = function M(R) {
+      var M = function M(Q) {
         return h.map(d.functorLazy)(function (A) {
-          return new r.Tuple(L(R), h.map(I)(M)(A.value1));
-        })(R);
+          return new r.Tuple(L(Q), h.map(I)(M)(A.value1));
+        })(Q);
       };
 
       return M;
     });
   },
-      B = function B(I) {
+      E = function E(I) {
     return new q.Monad(function () {
       return H(I);
     }, function () {
@@ -8009,15 +8009,15 @@ var PS = {};
       return K(I);
     }, function (L) {
       return function (M) {
-        var R = function R(D) {
+        var Q = function Q(B) {
           return function (N) {
-            var z = h.map(I.Plus1().Alt0().Functor0())(R(D))(x(N)),
-                O = h.map(I.Plus1().Alt0().Functor0())(A)(x(D));
-            return t(C(N))(g.alt(I.Plus1().Alt0())(O)(z));
+            var z = h.map(I.Plus1().Alt0().Functor0())(Q(B))(x(N)),
+                O = h.map(I.Plus1().Alt0().Functor0())(A)(x(B));
+            return t(D(N))(g.alt(I.Plus1().Alt0())(O)(z));
           };
         },
-            A = function A(D) {
-          return R(D)(M(C(D)));
+            A = function A(B) {
+          return Q(B)(M(D(B)));
         };
 
         return A(L);
@@ -8027,7 +8027,7 @@ var PS = {};
       K = function K(I) {
     return new k.Apply(function () {
       return y(I.Plus1().Alt0().Functor0());
-    }, q.ap(B(I)));
+    }, q.ap(E(I)));
   },
       H = function H(I) {
     return new f.Applicative(function () {
@@ -8041,9 +8041,9 @@ var PS = {};
   c.tail = x;
 
   c.comonadCofree = function (I) {
-    return new m.Comonad(function () {
+    return new l.Comonad(function () {
       return u(I);
-    }, C);
+    }, D);
   };
 
   c.applicativeCofree = H;
@@ -8052,9 +8052,9 @@ var PS = {};
   c.shiftMapCofree = function (I) {
     return new b.ShiftMap(function (L) {
       return function (M) {
-        return d.defer(function (R) {
-          R = d.force(M);
-          return new r.Tuple(R.value0, L(f.pure(H(e.widgetAlternative(I))))(R.value1));
+        return d.defer(function (Q) {
+          Q = d.force(M);
+          return new r.Tuple(Q.value0, L(f.pure(H(e.widgetAlternative(I))))(Q.value1));
         });
       };
     });
@@ -8070,7 +8070,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Bind"],
       p = a["Control.Cofree"],
-      m = a["Control.Comonad"],
+      l = a["Control.Comonad"],
       n = a["Data.Functor"],
       q = a["Data.Maybe"],
       w = a["Data.Unit"],
@@ -8080,23 +8080,23 @@ var PS = {};
       r = p.mkCofree,
       x = function x(y) {
     return function (u) {
-      return r(y)(n.map(e.widgetFunctor)(function (B) {
-        return x(B)(u);
+      return r(y)(n.map(e.widgetFunctor)(function (E) {
+        return x(E)(u);
       })(u(y)));
     };
   },
       t = function t(y) {
     return function (u) {
-      return function (B) {
-        var F = B(u);
-        return r(m.extract(p.comonadCofree(e.widgetFunctor))(F))(k.bind(e.widgetBind)(d(F))(function (K) {
-          return f.pure(e.widgetApplicative)(t(y)(m.extract(p.comonadCofree(e.widgetFunctor))(K))(B));
+      return function (E) {
+        var F = E(u);
+        return r(l.extract(p.comonadCofree(e.widgetFunctor))(F))(k.bind(e.widgetBind)(d(F))(function (K) {
+          return f.pure(e.widgetApplicative)(t(y)(l.extract(p.comonadCofree(e.widgetFunctor))(K))(E));
         }));
       };
     };
   },
-      C = function C(y) {
-    return k.bind(e.widgetBind)(d(y))(C);
+      D = function D(y) {
+    return k.bind(e.widgetBind)(d(y))(D);
   };
 
   c.step = r;
@@ -8107,11 +8107,11 @@ var PS = {};
 
   c.loopW = x;
   c.loopS = t;
-  c.dyn = C;
+  c.dyn = D;
 
   c.debounce = function (y) {
     return function (u) {
-      return function (B) {
+      return function (E) {
         return function (F) {
           var K = function K(I) {
             return function (L) {
@@ -8130,7 +8130,7 @@ var PS = {};
             };
           };
 
-          return H(B)(F);
+          return H(E)(F);
         };
       };
     };
@@ -8148,27 +8148,27 @@ var PS = {};
 
   var e = require("react"),
       g = function (f) {
-    function k(p, m, n) {
-      switch (m) {
+    function k(p, l, n) {
+      switch (l) {
         case "state":
         case "render":
         case "componentDidMount":
         case "componentWillUnmount":
-          p[m] = n;
+          p[l] = n;
           break;
 
         case "componentDidCatch":
         case "componentWillUpdate":
         case "shouldComponentUpdate":
         case "getSnapshotBeforeUpdate":
-          p[m] = function (q, w) {
+          p[l] = function (q, w) {
             return n(q)(w)();
           };
 
           break;
 
         case "componentDidUpdate":
-          p[m] = function (q, w, b) {
+          p[l] = function (q, w, b) {
             return n(q)(w)(b)();
           };
 
@@ -8193,15 +8193,15 @@ var PS = {};
           break;
 
         default:
-          throw Error("[purescript-react] Not a component property: " + m);
+          throw Error("[purescript-react] Not a component property: " + l);
       }
     }
 
     return function (p) {
-      return function (m) {
+      return function (l) {
         var n = function n(q) {
           f.call(this, q);
-          q = m(this)();
+          q = l(this)();
 
           for (var w in q) {
             k(this, w, q[w]);
@@ -8289,7 +8289,7 @@ var PS = {};
       f = a["Data.Either"],
       k = a["Data.Functor"],
       p = a["Data.Monoid"],
-      m = a["Data.Show"],
+      l = a["Data.Show"],
       n = a["Data.Unit"],
       q = a.Effect,
       w = a["Effect.Console"],
@@ -8300,16 +8300,16 @@ var PS = {};
       var t = function t(y) {
         return h.toElement(h.isReactElementArray)(y.view);
       },
-          C = function C(y) {
+          D = function D(y) {
         return function (u) {
           if (u instanceof f.Right) return function () {
-            var B = e.discharge(p.monoidArray)(C(y))(u.value0)();
+            var E = e.discharge(p.monoidArray)(D(y))(u.value0)();
             return k["void"](q.functorEffect)(h.writeState(y)({
-              view: B
+              view: E
             }))();
           };
           if (u instanceof f.Left) return function () {
-            w.log("FAILED! " + m.show(b.showError)(u.value0))();
+            w.log("FAILED! " + l.show(b.showError)(u.value0))();
             return n.unit;
           };
           throw Error("Failed pattern match at Concur.React (line 32, column 5 - line 34, column 52): " + [y.constructor.name, u.constructor.name]);
@@ -8324,7 +8324,7 @@ var PS = {};
               view: u.value1
             },
             render: k.map(q.functorEffect)(t)(h.getState(y)),
-            componentDidMount: g.applySecond(q.applyEffect)(r)(C(y)(new f.Right(u.value0)))
+            componentDidMount: g.applySecond(q.applyEffect)(r)(D(y)(new f.Right(u.value0)))
           };
         };
       });
@@ -8408,7 +8408,7 @@ var PS = {};
   var f = e.unsafeMkProps("target"),
       k = e.unsafeUnfoldProps("style"),
       p = e.unsafeMkProps("placeholder"),
-      m = e.unsafeMkProps("href"),
+      l = e.unsafeMkProps("href"),
       n = e.unsafeMkProps("disabled"),
       q = e.unsafeMkProps("defaultValue"),
       w = e.unsafeMkProps("className"),
@@ -8420,7 +8420,7 @@ var PS = {};
   c.className = w;
   c.defaultValue = q;
   c.disabled = n;
-  c.href = m;
+  c.href = l;
   c._id = d;
   c.placeholder = p;
   c.target = f;
@@ -8446,18 +8446,18 @@ var PS = {};
   a = a["Unsafe.Coerce"].unsafeCoerce;
 
   var f = function f(t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
         if (t) {
           if (t) var u = e.createElementTagNameDynamic;else throw Error("Failed pattern match at React.DOM (line 15, column 5 - line 17, column 55): " + [t.constructor.name]);
         } else u = e.createElementTagName;
-        return u(C)(g.unsafeFromPropsArray(y));
+        return u(D)(g.unsafeFromPropsArray(y));
       };
     };
   },
       k = f(!1)("nav"),
       p = f(!1)("option"),
-      m = f(!1)("select"),
+      l = f(!1)("select"),
       n = f(!1)("span"),
       q = f(!1)("ul"),
       w = f(!1)("li"),
@@ -8486,7 +8486,7 @@ var PS = {};
   c.li = w;
   c.nav = k;
   c.option = p;
-  c.select = m;
+  c.select = l;
   c.span = n;
   c.ul = q;
 })(PS);
@@ -8500,67 +8500,67 @@ var PS = {};
       f = a["Concur.Core.Types"],
       k = a["Data.Functor"],
       p = a["React.DOM"],
-      m = function m(t) {
-    return function (C) {
+      l = function l(t) {
+    return function (D) {
       return function (y) {
-        return [t(C)(y)];
+        return [t(D)(y)];
       };
     };
   },
       n = function n(t) {
-    return function (C) {
+    return function (D) {
       return e.elLeaf(t)(k.functorArray)(function (y) {
-        return [C(y)];
+        return [D(y)];
       });
     };
   },
       q = function q(t) {
-    return function (C) {
+    return function (D) {
       return function (y) {
-        return e["el'"](t)(C)(k.functorArray)(m(y));
+        return e["el'"](t)(D)(k.functorArray)(l(y));
       };
     };
   },
       w = function w(t) {
-    return function (C) {
-      return q(C)(t)(p.li);
+    return function (D) {
+      return q(D)(t)(p.li);
     };
   },
       b = function b(t) {
-    return function (C) {
-      return q(C)(t)(p.span);
+    return function (D) {
+      return q(D)(t)(p.span);
     };
   },
       h = function h(t) {
-    return function (C) {
-      return e.el(t)(k.functorArray)(m(C));
+    return function (D) {
+      return e.el(t)(k.functorArray)(l(D));
     };
   },
       d = function d(t) {
-    return function (C) {
-      return q(C)(t)(p.div);
+    return function (D) {
+      return q(D)(t)(p.div);
     };
   },
       r = function r(t) {
-    return function (C) {
-      return q(C)(t)(p.code);
+    return function (D) {
+      return q(D)(t)(p.code);
     };
   },
       x = function x(t) {
-    return function (C) {
-      return q(C)(t)(p.cite);
+    return function (D) {
+      return q(D)(t)(p.cite);
     };
   };
 
   c.text = function (t) {
-    return function (C) {
-      return g.liftWidget(t)(f.display([p.text(C)]));
+    return function (D) {
+      return g.liftWidget(t)(f.display([p.text(D)]));
     };
   };
 
   c.a = function (t) {
-    return function (C) {
-      return q(C)(t)(p.a);
+    return function (D) {
+      return q(D)(t)(p.a);
     };
   };
 
@@ -8573,20 +8573,20 @@ var PS = {};
   };
 
   c.button = function (t) {
-    return function (C) {
-      return q(C)(t)(p.button);
+    return function (D) {
+      return q(D)(t)(p.button);
     };
   };
 
   c["cite'"] = function (t) {
-    return function (C) {
-      return x(t)(C)([]);
+    return function (D) {
+      return x(t)(D)([]);
     };
   };
 
   c["code'"] = function (t) {
-    return function (C) {
-      return r(t)(C)([]);
+    return function (D) {
+      return r(t)(D)([]);
     };
   };
 
@@ -8597,8 +8597,8 @@ var PS = {};
   c.div = d;
 
   c["div'"] = function (t) {
-    return function (C) {
-      return d(t)(C)([]);
+    return function (D) {
+      return d(t)(D)([]);
     };
   };
 
@@ -8613,26 +8613,26 @@ var PS = {};
   c.li = w;
 
   c["li'"] = function (t) {
-    return function (C) {
-      return w(t)(C)([]);
+    return function (D) {
+      return w(t)(D)([]);
     };
   };
 
   c.nav = function (t) {
-    return function (C) {
-      return q(C)(t)(p.nav);
+    return function (D) {
+      return q(D)(t)(p.nav);
     };
   };
 
   c.option = function (t) {
-    return function (C) {
-      return q(C)(t)(p.option);
+    return function (D) {
+      return q(D)(t)(p.option);
     };
   };
 
   c.select = function (t) {
-    return function (C) {
-      return q(C)(t)(p.select);
+    return function (D) {
+      return q(D)(t)(p.select);
     };
   };
 
@@ -8643,8 +8643,8 @@ var PS = {};
   c.span = b;
 
   c["span'"] = function (t) {
-    return function (C) {
-      return b(t)(C)([]);
+    return function (D) {
+      return b(t)(D)([]);
     };
   };
 
@@ -8653,8 +8653,8 @@ var PS = {};
   };
 
   c.ul = function (t) {
-    return function (C) {
-      return q(C)(t)(p.ul);
+    return function (D) {
+      return q(D)(t)(p.ul);
     };
   };
 })(PS);
@@ -8667,12 +8667,12 @@ var PS = {};
       f = a["Data.Foldable"],
       k = a["Data.Maybe"],
       p = a["Data.Monoid"],
-      m = a["React.DOM.Props"];
-  a = new e.Handler(m.onClick);
+      l = a["React.DOM.Props"];
+  a = new e.Handler(l.onClick);
 
-  var n = new e.Handler(m.onChange),
+  var n = new e.Handler(l.onChange),
       q = function q(b) {
-    return e.PrimProp.create(m.className(b));
+    return e.PrimProp.create(l.className(b));
   },
       w = function () {
     var b = f.intercalate(f.foldableArray)(p.monoidString)(" "),
@@ -8691,41 +8691,41 @@ var PS = {};
   };
 
   c.style = function (b) {
-    return e.PrimProp.create(m.style(b));
+    return e.PrimProp.create(l.style(b));
   };
 
   c.checked = function (b) {
-    return e.PrimProp.create(m.checked(b));
+    return e.PrimProp.create(l.checked(b));
   };
 
   c.className = q;
 
   c.defaultValue = function (b) {
-    return e.PrimProp.create(m.defaultValue(b));
+    return e.PrimProp.create(l.defaultValue(b));
   };
 
   c.disabled = function (b) {
-    return e.PrimProp.create(m.disabled(b));
+    return e.PrimProp.create(l.disabled(b));
   };
 
   c.href = function (b) {
-    return e.PrimProp.create(m.href(b));
+    return e.PrimProp.create(l.href(b));
   };
 
   c._id = function (b) {
-    return e.PrimProp.create(m._id(b));
+    return e.PrimProp.create(l._id(b));
   };
 
   c.placeholder = function (b) {
-    return e.PrimProp.create(m.placeholder(b));
+    return e.PrimProp.create(l.placeholder(b));
   };
 
   c._type = function (b) {
-    return e.PrimProp.create(m._type(b));
+    return e.PrimProp.create(l._type(b));
   };
 
   c.value = function (b) {
-    return e.PrimProp.create(m.value(b));
+    return e.PrimProp.create(l.value(b));
   };
 
   c.onChange = n;
@@ -8777,10 +8777,10 @@ var PS = {};
 
   a["Web.DOM.NonElementParentNode"].getElementById = function (k) {
     var p = e.map(f.functorEffect)(g.toMaybe),
-        m = c._getElementById(k);
+        l = c._getElementById(k);
 
     return function (n) {
-      return p(m(n));
+      return p(l(n));
     };
   };
 })(PS);
@@ -8826,7 +8826,7 @@ var PS = {};
       f = a["Data.Unit"],
       k = a.Effect,
       p = a.ReactDOM,
-      m = a["Web.DOM.NonElementParentNode"],
+      l = a["Web.DOM.NonElementParentNode"],
       n = a["Web.HTML"],
       q = a["Web.HTML.HTMLDocument"],
       w = a["Web.HTML.Window"];
@@ -8837,7 +8837,7 @@ var PS = {};
         var d = n.window();
         d = w.document(d)();
         d = q.toNonElementParentNode(d);
-        d = m.getElementById(b)(d)();
+        d = l.getElementById(b)(d)();
         if (d instanceof g.Nothing) return f.unit;
         if (d instanceof g.Just) return e["void"](k.functorEffect)(p.render(c.renderComponent(h))(d.value0))();
         throw Error("Failed pattern match at Concur.React.Run (line 23, column 3 - line 25, column 65): " + [d.constructor.name]);
@@ -8855,11 +8855,11 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Data.Functor"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = function n(d) {
     return new p.Functor(function (r) {
       return function (x) {
-        return p.map(d)(p.map(m.functorMaybe)(r))(x);
+        return p.map(d)(p.map(l.functorMaybe)(r))(x);
       };
     });
   },
@@ -8876,8 +8876,8 @@ var PS = {};
     }, function (r) {
       return function (x) {
         return f.bind(d.Bind1())(r)(function (t) {
-          if (t instanceof m.Nothing) return e.pure(d.Applicative0())(m.Nothing.value);
-          if (t instanceof m.Just) return x(t.value0);
+          if (t instanceof l.Nothing) return e.pure(d.Applicative0())(l.Nothing.value);
+          if (t instanceof l.Just) return x(t.value0);
           throw Error("Failed pattern match at Control.Monad.Maybe.Trans (line 54, column 11 - line 56, column 42): " + [t.constructor.name]);
         });
       };
@@ -8894,7 +8894,7 @@ var PS = {};
     }, function () {
       var r = e.pure(d.Applicative0());
       return function (x) {
-        return r(m.Just.create(x));
+        return r(l.Just.create(x));
       };
     }());
   };
@@ -8956,15 +8956,15 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Control.Monad.State.Class"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Tuple"],
       q = function q(r) {
-    return new m.Functor(function (x) {
+    return new l.Functor(function (x) {
       return function (t) {
-        return function (C) {
-          return m.map(r)(function (y) {
+        return function (D) {
+          return l.map(r)(function (y) {
             return new n.Tuple(x(y.value0), y.value1);
-          })(t(C));
+          })(t(D));
         };
       };
     });
@@ -8981,8 +8981,8 @@ var PS = {};
       return h(r);
     }, function (x) {
       return function (t) {
-        return function (C) {
-          return f.bind(r.Bind1())(x(C))(function (y) {
+        return function (D) {
+          return f.bind(r.Bind1())(x(D))(function (y) {
             return t(y.value0)(y.value1);
           });
         };
@@ -9012,8 +9012,8 @@ var PS = {};
     }, function (x) {
       return function () {
         var t = e.pure(r.Applicative0());
-        return function (C) {
-          return t(x(C));
+        return function (D) {
+          return t(x(D));
         };
       }();
     });
@@ -9029,7 +9029,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Control.Monad.Writer.Class"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Monoid"],
       q = a["Data.Semigroup"],
       w = a["Data.Tuple"],
@@ -9040,9 +9040,9 @@ var PS = {};
     };
   },
       d = function d(y) {
-    return new m.Functor(function (u) {
-      return h(m.map(y)(function (B) {
-        return new w.Tuple(u(B.value0), B.value1);
+    return new l.Functor(function (u) {
+      return h(l.map(y)(function (E) {
+        return new w.Tuple(u(E.value0), E.value1);
       }));
     });
   },
@@ -9050,13 +9050,13 @@ var PS = {};
     return function (u) {
       return new g.Apply(function () {
         return d(u.Functor0());
-      }, function (B) {
+      }, function (E) {
         return function (F) {
-          return g.apply(u)(m.map(u.Functor0())(function (K) {
+          return g.apply(u)(l.map(u.Functor0())(function (K) {
             return function (H) {
               return new w.Tuple(K.value0(H.value0), q.append(y)(K.value1)(H.value1));
             };
-          })(B))(F);
+          })(E))(F);
         };
       });
     };
@@ -9065,11 +9065,11 @@ var PS = {};
     return function (u) {
       return new f.Bind(function () {
         return r(y)(u.Apply0());
-      }, function (B) {
+      }, function (E) {
         return function (F) {
-          return f.bind(u)(B)(function (K) {
+          return f.bind(u)(E)(function (K) {
             var H = F(K.value0);
-            return m.map(u.Apply0().Functor0())(function (I) {
+            return l.map(u.Apply0().Functor0())(function (I) {
               return new w.Tuple(I.value0, q.append(y)(K.value1)(I.value1));
             })(H);
           });
@@ -9081,12 +9081,12 @@ var PS = {};
     return function (u) {
       return new e.Applicative(function () {
         return r(y.Semigroup0())(u.Apply0());
-      }, function (B) {
-        return e.pure(u)(new w.Tuple(B, n.mempty(y)));
+      }, function (E) {
+        return e.pure(u)(new w.Tuple(E, n.mempty(y)));
       });
     };
   },
-      C = function C(y) {
+      D = function D(y) {
     return function (u) {
       return new k.Monad(function () {
         return t(y)(u.Applicative0());
@@ -9100,17 +9100,17 @@ var PS = {};
     return y;
   };
 
-  c.monadWriterT = C;
+  c.monadWriterT = D;
 
   c.monadTellWriterT = function (y) {
     return function (u) {
       return new p.MonadTell(function () {
-        return C(y)(u);
+        return D(y)(u);
       }, function () {
-        var B = e.pure(u.Applicative0()),
+        var E = e.pure(u.Applicative0()),
             F = w.Tuple.create(b.unit);
         return function (K) {
-          return B(F(K));
+          return E(F(K));
         };
       }());
     };
@@ -9152,7 +9152,7 @@ var PS = {};
       f = a["Data.Bounded"],
       k = a["Data.Functor"],
       p = a["Data.Maybe"],
-      m = a["Data.Newtype"],
+      l = a["Data.Newtype"],
       n = a["Data.Ord"],
       q = a["Data.Tuple"],
       w = a["Data.Unfoldable1"];
@@ -9169,17 +9169,17 @@ var PS = {};
     this.pred = I;
     this.succ = L;
   },
-      d = function d(H, I, L, M, R) {
+      d = function d(H, I, L, M, Q) {
     this.Bounded0 = H;
     this.Enum1 = I;
     this.cardinality = L;
     this.fromEnum = M;
-    this.toEnum = R;
+    this.toEnum = Q;
   },
       r = new b(function () {
     return f.boundedBoolean;
   }),
-      x = new m.Newtype(function (H) {
+      x = new l.Newtype(function (H) {
     return H;
   }, a),
       t = function t(H) {
@@ -9195,7 +9195,7 @@ var PS = {};
       throw Error("Failed pattern match at Data.Enum (line 82, column 1 - line 86, column 32): " + [I.constructor.name]);
     });
   },
-      C = new h(function () {
+      D = new h(function () {
     return n.ordBoolean;
   }, function (H) {
     return H ? new p.Just(!1) : p.Nothing.value;
@@ -9216,22 +9216,22 @@ var PS = {};
       };
     };
   },
-      B = function B(H) {
+      E = function E(H) {
     return H >= f.bottom(f.boundedInt) && H <= f.top(f.boundedInt) ? new p.Just(e.fromCharCode(H)) : p.Nothing.value;
   },
       F = new h(function () {
     return n.ordChar;
-  }, u(B)(e.toCharCode), y(B)(e.toCharCode));
+  }, u(E)(e.toCharCode), y(E)(e.toCharCode));
 
-  B = new d(function () {
+  E = new d(function () {
     return f.boundedChar;
   }, function () {
     return F;
-  }, e.toCharCode(f.top(f.boundedChar)) - e.toCharCode(f.bottom(f.boundedChar)) | 0, e.toCharCode, B);
+  }, e.toCharCode(f.top(f.boundedChar)) - e.toCharCode(f.bottom(f.boundedChar)) | 0, e.toCharCode, E);
   var K = new d(function () {
     return f.boundedBoolean;
   }, function () {
-    return C;
+    return D;
   }, 2, function (H) {
     if (!H) return 0;
     if (H) return 1;
@@ -9254,10 +9254,10 @@ var PS = {};
     return function (I) {
       return function (L) {
         return function (M) {
-          var R = (0, H.toEnum)(M);
-          if (R instanceof p.Just) return R.value0;
-          if (R instanceof p.Nothing) return M < (0, H.fromEnum)(f.bottom(H.Bounded0())) ? I : L;
-          throw Error("Failed pattern match at Data.Enum (line 160, column 33 - line 162, column 62): " + [R.constructor.name]);
+          var Q = (0, H.toEnum)(M);
+          if (Q instanceof p.Just) return Q.value0;
+          if (Q instanceof p.Nothing) return M < (0, H.fromEnum)(f.bottom(H.Bounded0())) ? I : L;
+          throw Error("Failed pattern match at Data.Enum (line 160, column 33 - line 162, column 62): " + [Q.constructor.name]);
         };
       };
     };
@@ -9275,7 +9275,7 @@ var PS = {};
   c.defaultPred = u;
   c.SmallBounded = b;
   c.boundedEnumBoolean = K;
-  c.boundedEnumChar = B;
+  c.boundedEnumChar = E;
   c.newtypeCardinality = x;
 
   c.boundedEnumMaybe = function (H) {
@@ -9284,7 +9284,7 @@ var PS = {};
         return p.boundedMaybe(I.Bounded0());
       }, function () {
         return t(I);
-      }, m.unwrap(x)(I.cardinality) + 1 | 0, function (L) {
+      }, l.unwrap(x)(I.cardinality) + 1 | 0, function (L) {
         if (L instanceof p.Nothing) return 0;
         if (L instanceof p.Just) return (0, I.fromEnum)(L.value0) + 1 | 0;
         throw Error("Failed pattern match at Data.Enum (line 334, column 1 - line 340, column 39): " + [L.constructor.name]);
@@ -9382,7 +9382,7 @@ var PS = {};
       f = a["Data.Enum"],
       k = a["Data.Eq"],
       p = a["Data.Maybe"],
-      m = a["Data.Ord"],
+      l = a["Data.Ord"],
       n = a["Data.Ordering"],
       q = function () {
     function G() {}
@@ -9432,7 +9432,7 @@ var PS = {};
     G.value = new G();
     return G;
   }(),
-      C = function () {
+      D = function () {
     function G() {}
 
     G.value = new G();
@@ -9450,60 +9450,60 @@ var PS = {};
     G.value = new G();
     return G;
   }(),
-      B = function () {
+      E = function () {
     function G() {}
 
     G.value = new G();
     return G;
   }(),
-      F = m.ordInt,
-      K = m.ordInt;
+      F = l.ordInt,
+      K = l.ordInt;
 
   a = k.eqInt;
   var H = new k.Eq(function (G) {
-    return function (Q) {
-      return G instanceof q && Q instanceof q || G instanceof w && Q instanceof w || G instanceof b && Q instanceof b || G instanceof h && Q instanceof h || G instanceof d && Q instanceof d || G instanceof r && Q instanceof r || G instanceof x && Q instanceof x || G instanceof t && Q instanceof t || G instanceof C && Q instanceof C || G instanceof y && Q instanceof y || G instanceof u && Q instanceof u || G instanceof B && Q instanceof B ? !0 : !1;
+    return function (R) {
+      return G instanceof q && R instanceof q || G instanceof w && R instanceof w || G instanceof b && R instanceof b || G instanceof h && R instanceof h || G instanceof d && R instanceof d || G instanceof r && R instanceof r || G instanceof x && R instanceof x || G instanceof t && R instanceof t || G instanceof D && R instanceof D || G instanceof y && R instanceof y || G instanceof u && R instanceof u || G instanceof E && R instanceof E ? !0 : !1;
     };
   }),
-      I = new m.Ord(function () {
+      I = new l.Ord(function () {
     return H;
   }, function (G) {
-    return function (Q) {
-      if (G instanceof q && Q instanceof q) return n.EQ.value;
+    return function (R) {
+      if (G instanceof q && R instanceof q) return n.EQ.value;
       if (G instanceof q) return n.LT.value;
-      if (Q instanceof q) return n.GT.value;
-      if (G instanceof w && Q instanceof w) return n.EQ.value;
+      if (R instanceof q) return n.GT.value;
+      if (G instanceof w && R instanceof w) return n.EQ.value;
       if (G instanceof w) return n.LT.value;
-      if (Q instanceof w) return n.GT.value;
-      if (G instanceof b && Q instanceof b) return n.EQ.value;
+      if (R instanceof w) return n.GT.value;
+      if (G instanceof b && R instanceof b) return n.EQ.value;
       if (G instanceof b) return n.LT.value;
-      if (Q instanceof b) return n.GT.value;
-      if (G instanceof h && Q instanceof h) return n.EQ.value;
+      if (R instanceof b) return n.GT.value;
+      if (G instanceof h && R instanceof h) return n.EQ.value;
       if (G instanceof h) return n.LT.value;
-      if (Q instanceof h) return n.GT.value;
-      if (G instanceof d && Q instanceof d) return n.EQ.value;
+      if (R instanceof h) return n.GT.value;
+      if (G instanceof d && R instanceof d) return n.EQ.value;
       if (G instanceof d) return n.LT.value;
-      if (Q instanceof d) return n.GT.value;
-      if (G instanceof r && Q instanceof r) return n.EQ.value;
+      if (R instanceof d) return n.GT.value;
+      if (G instanceof r && R instanceof r) return n.EQ.value;
       if (G instanceof r) return n.LT.value;
-      if (Q instanceof r) return n.GT.value;
-      if (G instanceof x && Q instanceof x) return n.EQ.value;
+      if (R instanceof r) return n.GT.value;
+      if (G instanceof x && R instanceof x) return n.EQ.value;
       if (G instanceof x) return n.LT.value;
-      if (Q instanceof x) return n.GT.value;
-      if (G instanceof t && Q instanceof t) return n.EQ.value;
+      if (R instanceof x) return n.GT.value;
+      if (G instanceof t && R instanceof t) return n.EQ.value;
       if (G instanceof t) return n.LT.value;
-      if (Q instanceof t) return n.GT.value;
-      if (G instanceof C && Q instanceof C) return n.EQ.value;
-      if (G instanceof C) return n.LT.value;
-      if (Q instanceof C) return n.GT.value;
-      if (G instanceof y && Q instanceof y) return n.EQ.value;
+      if (R instanceof t) return n.GT.value;
+      if (G instanceof D && R instanceof D) return n.EQ.value;
+      if (G instanceof D) return n.LT.value;
+      if (R instanceof D) return n.GT.value;
+      if (G instanceof y && R instanceof y) return n.EQ.value;
       if (G instanceof y) return n.LT.value;
-      if (Q instanceof y) return n.GT.value;
-      if (G instanceof u && Q instanceof u) return n.EQ.value;
+      if (R instanceof y) return n.GT.value;
+      if (G instanceof u && R instanceof u) return n.EQ.value;
       if (G instanceof u) return n.LT.value;
-      if (Q instanceof u) return n.GT.value;
-      if (G instanceof B && Q instanceof B) return n.EQ.value;
-      throw Error("Failed pattern match at Data.Date.Component (line 61, column 1 - line 61, column 38): " + [G.constructor.name, Q.constructor.name]);
+      if (R instanceof u) return n.GT.value;
+      if (G instanceof E && R instanceof E) return n.EQ.value;
+      throw Error("Failed pattern match at Data.Date.Component (line 61, column 1 - line 61, column 38): " + [G.constructor.name, R.constructor.name]);
     };
   });
   k = k.eqInt;
@@ -9512,8 +9512,8 @@ var PS = {};
   }, -271820, 275759),
       M = new g.Bounded(function () {
     return I;
-  }, q.value, B.value),
-      R = new f.BoundedEnum(function () {
+  }, q.value, E.value),
+      Q = new f.BoundedEnum(function () {
     return L;
   }, function () {
     return A;
@@ -9527,19 +9527,19 @@ var PS = {};
       A = new f.Enum(function () {
     return F;
   }, function () {
-    var G = f.toEnum(R),
-        Q = f.fromEnum(R);
+    var G = f.toEnum(Q),
+        R = f.fromEnum(Q);
     return function (v) {
-      return G(Q(v) - 1 | 0);
+      return G(R(v) - 1 | 0);
     };
   }(), function () {
-    var G = f.toEnum(R),
-        Q = f.fromEnum(R);
+    var G = f.toEnum(Q),
+        R = f.fromEnum(Q);
     return function (v) {
-      return G(Q(v) + 1 | 0);
+      return G(R(v) + 1 | 0);
     };
   }()),
-      D = new f.BoundedEnum(function () {
+      B = new f.BoundedEnum(function () {
     return M;
   }, function () {
     return N;
@@ -9552,27 +9552,27 @@ var PS = {};
     if (G instanceof r) return 6;
     if (G instanceof x) return 7;
     if (G instanceof t) return 8;
-    if (G instanceof C) return 9;
+    if (G instanceof D) return 9;
     if (G instanceof y) return 10;
     if (G instanceof u) return 11;
-    if (G instanceof B) return 12;
+    if (G instanceof E) return 12;
     throw Error("Failed pattern match at Data.Date.Component (line 87, column 14 - line 99, column 19): " + [G.constructor.name]);
   }, function (G) {
-    return 1 === G ? new p.Just(q.value) : 2 === G ? new p.Just(w.value) : 3 === G ? new p.Just(b.value) : 4 === G ? new p.Just(h.value) : 5 === G ? new p.Just(d.value) : 6 === G ? new p.Just(r.value) : 7 === G ? new p.Just(x.value) : 8 === G ? new p.Just(t.value) : 9 === G ? new p.Just(C.value) : 10 === G ? new p.Just(y.value) : 11 === G ? new p.Just(u.value) : 12 === G ? new p.Just(B.value) : p.Nothing.value;
+    return 1 === G ? new p.Just(q.value) : 2 === G ? new p.Just(w.value) : 3 === G ? new p.Just(b.value) : 4 === G ? new p.Just(h.value) : 5 === G ? new p.Just(d.value) : 6 === G ? new p.Just(r.value) : 7 === G ? new p.Just(x.value) : 8 === G ? new p.Just(t.value) : 9 === G ? new p.Just(D.value) : 10 === G ? new p.Just(y.value) : 11 === G ? new p.Just(u.value) : 12 === G ? new p.Just(E.value) : p.Nothing.value;
   }),
       N = new f.Enum(function () {
     return I;
   }, function () {
-    var G = f.toEnum(D),
-        Q = f.fromEnum(D);
+    var G = f.toEnum(B),
+        R = f.fromEnum(B);
     return function (v) {
-      return G(Q(v) - 1 | 0);
+      return G(R(v) - 1 | 0);
     };
   }(), function () {
-    var G = f.toEnum(D),
-        Q = f.fromEnum(D);
+    var G = f.toEnum(B),
+        R = f.fromEnum(B);
     return function (v) {
-      return G(Q(v) + 1 | 0);
+      return G(R(v) + 1 | 0);
     };
   }()),
       z = new g.Bounded(function () {
@@ -9593,25 +9593,25 @@ var PS = {};
     return K;
   }, function () {
     var G = f.toEnum(O),
-        Q = f.fromEnum(O);
+        R = f.fromEnum(O);
     return function (v) {
-      return G(Q(v) - 1 | 0);
+      return G(R(v) - 1 | 0);
     };
   }(), function () {
     var G = f.toEnum(O),
-        Q = f.fromEnum(O);
+        R = f.fromEnum(O);
     return function (v) {
-      return G(Q(v) + 1 | 0);
+      return G(R(v) + 1 | 0);
     };
   }());
   c.eqYear = a;
   c.ordYear = F;
   c.boundedYear = L;
-  c.boundedEnumYear = R;
+  c.boundedEnumYear = Q;
   c.eqMonth = H;
   c.ordMonth = I;
   c.boundedMonth = M;
-  c.boundedEnumMonth = D;
+  c.boundedEnumMonth = B;
   c.eqDay = k;
   c.ordDay = K;
   c.boundedDay = z;
@@ -9627,7 +9627,7 @@ var PS = {};
       f = a["Data.Date.Component"],
       k = a["Data.Enum"],
       p = a["Data.Eq"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Data.Ord"],
       q = a["Data.Ordering"],
       w = function () {
@@ -9672,9 +9672,9 @@ var PS = {};
     return function (r) {
       return function (x) {
         return e.canonicalDateImpl(function (t) {
-          return function (C) {
+          return function (D) {
             return function (y) {
-              return new w(t, m.fromJust()(k.toEnum(f.boundedEnumMonth)(C)), y);
+              return new w(t, l.fromJust()(k.toEnum(f.boundedEnumMonth)(D)), y);
             };
           };
         }, d, k.fromEnum(f.boundedEnumMonth)(r), x);
@@ -9708,7 +9708,7 @@ var PS = {};
       k = a["Data.Eq"],
       p = a["Data.Maybe"];
   a = a["Data.Ord"];
-  var m = a.ordInt,
+  var l = a.ordInt,
       n = a.ordInt,
       q = a.ordInt,
       w = a.ordInt,
@@ -9716,7 +9716,7 @@ var PS = {};
       h = k.eqInt;
   k = k.eqInt;
   var d = new g.Bounded(function () {
-    return m;
+    return l;
   }, 0, 59),
       r = new g.Bounded(function () {
     return n;
@@ -9727,7 +9727,7 @@ var PS = {};
       t = new g.Bounded(function () {
     return w;
   }, 0, 23),
-      C = new f.BoundedEnum(function () {
+      D = new f.BoundedEnum(function () {
     return d;
   }, function () {
     return y;
@@ -9739,24 +9739,24 @@ var PS = {};
     throw Error("Failed pattern match at Data.Time.Component (line 90, column 1 - line 95, column 26): " + [L.constructor.name]);
   }),
       y = new f.Enum(function () {
-    return m;
+    return l;
   }, function () {
-    var L = f.toEnum(C),
-        M = f.fromEnum(C);
-    return function (R) {
-      return L(M(R) - 1 | 0);
+    var L = f.toEnum(D),
+        M = f.fromEnum(D);
+    return function (Q) {
+      return L(M(Q) - 1 | 0);
     };
   }(), function () {
-    var L = f.toEnum(C),
-        M = f.fromEnum(C);
-    return function (R) {
-      return L(M(R) + 1 | 0);
+    var L = f.toEnum(D),
+        M = f.fromEnum(D);
+    return function (Q) {
+      return L(M(Q) + 1 | 0);
     };
   }()),
       u = new f.BoundedEnum(function () {
     return r;
   }, function () {
-    return B;
+    return E;
   }, 60, function (L) {
     return L;
   }, function (L) {
@@ -9764,19 +9764,19 @@ var PS = {};
     if (e.otherwise) return p.Nothing.value;
     throw Error("Failed pattern match at Data.Time.Component (line 61, column 1 - line 66, column 26): " + [L.constructor.name]);
   }),
-      B = new f.Enum(function () {
+      E = new f.Enum(function () {
     return n;
   }, function () {
     var L = f.toEnum(u),
         M = f.fromEnum(u);
-    return function (R) {
-      return L(M(R) - 1 | 0);
+    return function (Q) {
+      return L(M(Q) - 1 | 0);
     };
   }(), function () {
     var L = f.toEnum(u),
         M = f.fromEnum(u);
-    return function (R) {
-      return L(M(R) + 1 | 0);
+    return function (Q) {
+      return L(M(Q) + 1 | 0);
     };
   }()),
       F = new f.BoundedEnum(function () {
@@ -9795,14 +9795,14 @@ var PS = {};
   }, function () {
     var L = f.toEnum(F),
         M = f.fromEnum(F);
-    return function (R) {
-      return L(M(R) - 1 | 0);
+    return function (Q) {
+      return L(M(Q) - 1 | 0);
     };
   }(), function () {
     var L = f.toEnum(F),
         M = f.fromEnum(F);
-    return function (R) {
-      return L(M(R) + 1 | 0);
+    return function (Q) {
+      return L(M(Q) + 1 | 0);
     };
   }()),
       H = new f.BoundedEnum(function () {
@@ -9821,14 +9821,14 @@ var PS = {};
   }, function () {
     var L = f.toEnum(H),
         M = f.fromEnum(H);
-    return function (R) {
-      return L(M(R) - 1 | 0);
+    return function (Q) {
+      return L(M(Q) - 1 | 0);
     };
   }(), function () {
     var L = f.toEnum(H),
         M = f.fromEnum(H);
-    return function (R) {
-      return L(M(R) + 1 | 0);
+    return function (Q) {
+      return L(M(Q) + 1 | 0);
     };
   }());
   c.eqHour = k;
@@ -9840,9 +9840,9 @@ var PS = {};
   c.boundedMinute = r;
   c.boundedEnumMinute = u;
   c.eqSecond = a;
-  c.ordSecond = m;
+  c.ordSecond = l;
   c.boundedSecond = d;
-  c.boundedEnumSecond = C;
+  c.boundedEnumSecond = D;
   c.eqMillisecond = h;
   c.ordMillisecond = q;
   c.boundedMillisecond = x;
@@ -9879,13 +9879,13 @@ var PS = {};
     return q;
   }();
 
-  var m = new g.Eq(function (q) {
+  var l = new g.Eq(function (q) {
     return function (w) {
       return g.eq(p.eqHour)(q.value0)(w.value0) && g.eq(p.eqMinute)(q.value1)(w.value1) && g.eq(p.eqSecond)(q.value2)(w.value2) && g.eq(p.eqMillisecond)(q.value3)(w.value3);
     };
   }),
       n = new f.Ord(function () {
-    return m;
+    return l;
   }, function (q) {
     return function (w) {
       var b = f.compare(p.ordHour)(q.value0)(w.value0);
@@ -9919,7 +9919,7 @@ var PS = {};
     return q.value3;
   };
 
-  c.eqTime = m;
+  c.eqTime = l;
   c.ordTime = n;
   c.boundedTime = e;
 })(PS);
@@ -9932,7 +9932,7 @@ var PS = {};
       f = a["Data.Eq"],
       k = a["Data.Ord"],
       p = a["Data.Ordering"],
-      m = a["Data.Time"];
+      l = a["Data.Time"];
 
   a = function () {
     function w(b, h) {
@@ -9951,7 +9951,7 @@ var PS = {};
 
   var n = new f.Eq(function (w) {
     return function (b) {
-      return f.eq(g.eqDate)(w.value0)(b.value0) && f.eq(m.eqTime)(w.value1)(b.value1);
+      return f.eq(g.eqDate)(w.value0)(b.value0) && f.eq(l.eqTime)(w.value1)(b.value1);
     };
   }),
       q = new k.Ord(function () {
@@ -9959,12 +9959,12 @@ var PS = {};
   }, function (w) {
     return function (b) {
       var h = k.compare(g.ordDate)(w.value0)(b.value0);
-      return h instanceof p.LT ? p.LT.value : h instanceof p.GT ? p.GT.value : k.compare(m.ordTime)(w.value1)(b.value1);
+      return h instanceof p.LT ? p.LT.value : h instanceof p.GT ? p.GT.value : k.compare(l.ordTime)(w.value1)(b.value1);
     };
   });
   e = new e.Bounded(function () {
     return q;
-  }, new a(e.bottom(g.boundedDate), e.bottom(m.boundedTime)), new a(e.top(g.boundedDate), e.top(m.boundedTime)));
+  }, new a(e.bottom(g.boundedDate), e.bottom(l.boundedTime)), new a(e.top(g.boundedDate), e.top(l.boundedTime)));
   c.DateTime = a;
   c.boundedDateTime = e;
 })(PS);
@@ -9986,7 +9986,7 @@ var PS = {};
       f = a["Data.Date"],
       k = a["Data.Date.Component"],
       p = a["Data.DateTime"],
-      m = a["Data.Enum"],
+      l = a["Data.Enum"],
       n = a["Data.Maybe"],
       q = a["Data.Time"];
 
@@ -9998,7 +9998,7 @@ var PS = {};
             return function (r) {
               return function (x) {
                 return function (t) {
-                  return new p.DateTime(f.canonicalDate(w)(n.fromJust()(m.toEnum(k.boundedEnumMonth)(b)))(h), new q.Time(d, r, x, t));
+                  return new p.DateTime(f.canonicalDate(w)(n.fromJust()(l.toEnum(k.boundedEnumMonth)(b)))(h), new q.Time(d, r, x, t));
                 };
               };
             };
@@ -10026,7 +10026,7 @@ var PS = {};
       f = a["Control.Category"],
       k = a["Control.Plus"],
       p = a["Data.Either"],
-      m = a["Data.Function"],
+      l = a["Data.Function"],
       n = function n(h) {
     return function (d) {
       return function (r) {
@@ -10048,7 +10048,7 @@ var PS = {};
       w = function w(h) {
     return function (d) {
       return function (r) {
-        return m.flip(g.bind(h.Bind1()))(n(k.empty(d))(function () {
+        return l.flip(g.bind(h.Bind1()))(n(k.empty(d))(function () {
           var x = e.pure(h.Applicative0());
           return function (t) {
             return x(r(t));
@@ -10060,7 +10060,7 @@ var PS = {};
       b = function b(h) {
     return function (d) {
       return function (r) {
-        return m.flip(g.bind(h.Bind1()))(q(k.empty(d))(function () {
+        return l.flip(g.bind(h.Bind1()))(q(k.empty(d))(function () {
           var x = e.pure(h.Applicative0());
           return function (t) {
             return x(r(t));
@@ -10108,11 +10108,11 @@ var PS = {};
   var c = a["Data.EuclideanRing"],
       e = a["Data.EuclideanRing"],
       g = a["Data.CommutativeRing"];
-  a = new function (f, k, p, m) {
+  a = new function (f, k, p, l) {
     this.CommutativeRing0 = f;
     this.degree = k;
     this.div = p;
-    this.mod = m;
+    this.mod = l;
   }(function () {
     return g.commutativeRingInt;
   }, e.intDegree, e.intDiv, e.intMod);
@@ -10201,15 +10201,15 @@ var PS = {};
     return n["genericTop'"];
   },
       p = new f(e.NoArguments.value),
-      m = function m(n) {
+      l = function l(n) {
     return n["genericBottom'"];
   };
 
-  c["genericBottom'"] = m;
+  c["genericBottom'"] = l;
 
   c.genericBottom = function (n) {
     return function (q) {
-      return e.to(n)(m(q));
+      return e.to(n)(l(q));
     };
   };
 
@@ -10224,11 +10224,11 @@ var PS = {};
   c.genericBottomNoArguments = p;
 
   c.genericBottomSum = function (n) {
-    return new f(new e.Inl(m(n)));
+    return new f(new e.Inl(l(n)));
   };
 
   c.genericBottomConstructor = function (n) {
-    return new f(m(n));
+    return new f(l(n));
   };
 
   c.genericTopNoArguments = a;
@@ -10251,127 +10251,127 @@ var PS = {};
       f = a["Data.Functor"],
       k = a["Data.Generic.Rep"],
       p = a["Data.Generic.Rep.Bounded"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Data.Newtype"],
-      q = function q(C, y) {
-    this["genericPred'"] = C;
+      q = function q(D, y) {
+    this["genericPred'"] = D;
     this["genericSucc'"] = y;
   },
-      w = function w(C, y, u) {
-    this["genericCardinality'"] = C;
+      w = function w(D, y, u) {
+    this["genericCardinality'"] = D;
     this["genericFromEnum'"] = y;
     this["genericToEnum'"] = u;
   },
-      b = function b(C) {
-    return C["genericToEnum'"];
+      b = function b(D) {
+    return D["genericToEnum'"];
   },
-      h = function h(C) {
-    return C["genericSucc'"];
+      h = function h(D) {
+    return D["genericSucc'"];
   },
-      d = function d(C) {
-    return C["genericPred'"];
+      d = function d(D) {
+    return D["genericPred'"];
   },
-      r = function r(C) {
-    return C["genericFromEnum'"];
+      r = function r(D) {
+    return D["genericFromEnum'"];
   };
 
-  a = new q(function (C) {
-    return m.Nothing.value;
-  }, function (C) {
-    return m.Nothing.value;
+  a = new q(function (D) {
+    return l.Nothing.value;
+  }, function (D) {
+    return l.Nothing.value;
   });
 
-  var x = function x(C) {
-    return C["genericCardinality'"];
+  var x = function x(D) {
+    return D["genericCardinality'"];
   },
-      t = new w(1, function (C) {
+      t = new w(1, function (D) {
     return 0;
-  }, function (C) {
-    return 0 === C ? new m.Just(k.NoArguments.value) : m.Nothing.value;
+  }, function (D) {
+    return 0 === D ? new l.Just(k.NoArguments.value) : l.Nothing.value;
   });
 
-  c.genericPred = function (C) {
+  c.genericPred = function (D) {
     return function (y) {
-      var u = f.map(m.functorMaybe)(k.to(C)),
-          B = d(y),
-          F = k.from(C);
+      var u = f.map(l.functorMaybe)(k.to(D)),
+          E = d(y),
+          F = k.from(D);
       return function (K) {
-        return u(B(F(K)));
+        return u(E(F(K)));
       };
     };
   };
 
-  c.genericSucc = function (C) {
+  c.genericSucc = function (D) {
     return function (y) {
-      var u = f.map(m.functorMaybe)(k.to(C)),
-          B = h(y),
-          F = k.from(C);
+      var u = f.map(l.functorMaybe)(k.to(D)),
+          E = h(y),
+          F = k.from(D);
       return function (K) {
-        return u(B(F(K)));
+        return u(E(F(K)));
       };
     };
   };
 
-  c.genericCardinality = function (C) {
+  c.genericCardinality = function (D) {
     return function (y) {
       return n.unwrap(g.newtypeCardinality)(x(y));
     };
   };
 
-  c.genericToEnum = function (C) {
+  c.genericToEnum = function (D) {
     return function (y) {
-      var u = f.map(m.functorMaybe)(k.to(C)),
-          B = b(y);
+      var u = f.map(l.functorMaybe)(k.to(D)),
+          E = b(y);
       return function (F) {
-        return u(B(F));
+        return u(E(F));
       };
     };
   };
 
-  c.genericFromEnum = function (C) {
+  c.genericFromEnum = function (D) {
     return function (y) {
       var u = r(y),
-          B = k.from(C);
+          E = k.from(D);
       return function (F) {
-        return u(B(F));
+        return u(E(F));
       };
     };
   };
 
   c.genericEnumNoArguments = a;
 
-  c.genericEnumConstructor = function (C) {
+  c.genericEnumConstructor = function (D) {
     return new q(function (y) {
-      return f.map(m.functorMaybe)(k.Constructor)(d(C)(y));
+      return f.map(l.functorMaybe)(k.Constructor)(d(D)(y));
     }, function (y) {
-      return f.map(m.functorMaybe)(k.Constructor)(h(C)(y));
+      return f.map(l.functorMaybe)(k.Constructor)(h(D)(y));
     });
   };
 
-  c.genericEnumSum = function (C) {
+  c.genericEnumSum = function (D) {
     return function (y) {
       return function (u) {
-        return function (B) {
+        return function (E) {
           return new q(function (F) {
-            if (F instanceof k.Inl) return f.map(m.functorMaybe)(k.Inl.create)(d(C)(F.value0));
+            if (F instanceof k.Inl) return f.map(l.functorMaybe)(k.Inl.create)(d(D)(F.value0));
 
             if (F instanceof k.Inr) {
               F = d(u)(F.value0);
-              if (F instanceof m.Nothing) return new m.Just(new k.Inl(p["genericTop'"](y)));
-              if (F instanceof m.Just) return new m.Just(new k.Inr(F.value0));
+              if (F instanceof l.Nothing) return new l.Just(new k.Inl(p["genericTop'"](y)));
+              if (F instanceof l.Just) return new l.Just(new k.Inr(F.value0));
               throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 30, column 14 - line 32, column 31): " + [F.constructor.name]);
             }
 
             throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 28, column 18 - line 32, column 31): " + [F.constructor.name]);
           }, function (F) {
             if (F instanceof k.Inl) {
-              F = h(C)(F.value0);
-              if (F instanceof m.Nothing) return new m.Just(new k.Inr(p["genericBottom'"](B)));
-              if (F instanceof m.Just) return new m.Just(new k.Inl(F.value0));
+              F = h(D)(F.value0);
+              if (F instanceof l.Nothing) return new l.Just(new k.Inr(p["genericBottom'"](E)));
+              if (F instanceof l.Just) return new l.Just(new k.Inl(F.value0));
               throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 34, column 14 - line 36, column 31): " + [F.constructor.name]);
             }
 
-            if (F instanceof k.Inr) return f.map(m.functorMaybe)(k.Inr.create)(h(u)(F.value0));
+            if (F instanceof k.Inr) return f.map(l.functorMaybe)(k.Inr.create)(h(u)(F.value0));
             throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 33, column 18 - line 37, column 36): " + [F.constructor.name]);
           });
         };
@@ -10381,23 +10381,23 @@ var PS = {};
 
   c.genericBoundedEnumNoArguments = t;
 
-  c.genericBoundedEnumConstructor = function (C) {
-    return new w(n.unwrap(g.newtypeCardinality)(x(C)), function (y) {
-      return r(C)(y);
+  c.genericBoundedEnumConstructor = function (D) {
+    return new w(n.unwrap(g.newtypeCardinality)(x(D)), function (y) {
+      return r(D)(y);
     }, function (y) {
-      return f.map(m.functorMaybe)(k.Constructor)(b(C)(y));
+      return f.map(l.functorMaybe)(k.Constructor)(b(D)(y));
     });
   };
 
-  c.genericBoundedEnumSum = function (C) {
+  c.genericBoundedEnumSum = function (D) {
     return function (y) {
-      return new w(g.Cardinality(n.unwrap(g.newtypeCardinality)(x(C)) + n.unwrap(g.newtypeCardinality)(x(y)) | 0), function (u) {
-        if (u instanceof k.Inl) return r(C)(u.value0);
-        if (u instanceof k.Inr) return r(y)(u.value0) + n.unwrap(g.newtypeCardinality)(x(C)) | 0;
+      return new w(g.Cardinality(n.unwrap(g.newtypeCardinality)(x(D)) + n.unwrap(g.newtypeCardinality)(x(y)) | 0), function (u) {
+        if (u instanceof k.Inl) return r(D)(u.value0);
+        if (u instanceof k.Inr) return r(y)(u.value0) + n.unwrap(g.newtypeCardinality)(x(D)) | 0;
         throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 87, column 22 - line 89, column 80): " + [u.constructor.name]);
       }, function (u) {
-        var B = x(C);
-        if (0 <= u && u < B) u = f.map(m.functorMaybe)(k.Inl.create)(b(C)(u));else if (e.otherwise) u = f.map(m.functorMaybe)(k.Inr.create)(b(y)(u - B | 0));else throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 83, column 5 - line 83, column 43): " + [B.constructor.name]);
+        var E = x(D);
+        if (0 <= u && u < E) u = f.map(l.functorMaybe)(k.Inl.create)(b(D)(u));else if (e.otherwise) u = f.map(l.functorMaybe)(k.Inr.create)(b(y)(u - E | 0));else throw Error("Failed pattern match at Data.Generic.Rep.Enum (line 83, column 5 - line 83, column 43): " + [E.constructor.name]);
         return u;
       });
     };
@@ -10422,8 +10422,8 @@ var PS = {};
   c.genericEq = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
-          return (0, k["genericEq'"])(e.from(f)(p))(e.from(f)(m));
+        return function (l) {
+          return (0, k["genericEq'"])(e.from(f)(p))(e.from(f)(l));
         };
       };
     };
@@ -10434,8 +10434,8 @@ var PS = {};
   c.genericEqSum = function (f) {
     return function (k) {
       return new g(function (p) {
-        return function (m) {
-          return p instanceof e.Inl && m instanceof e.Inl ? (0, f["genericEq'"])(p.value0)(m.value0) : p instanceof e.Inr && m instanceof e.Inr ? (0, k["genericEq'"])(p.value0)(m.value0) : !1;
+        return function (l) {
+          return p instanceof e.Inl && l instanceof e.Inl ? (0, f["genericEq'"])(p.value0)(l.value0) : p instanceof e.Inr && l instanceof e.Inr ? (0, k["genericEq'"])(p.value0)(l.value0) : !1;
         };
       });
     };
@@ -10461,7 +10461,7 @@ var PS = {};
   };
 
   a = new f(function (p) {
-    return function (m) {
+    return function (l) {
       return g.EQ.value;
     };
   });
@@ -10471,10 +10471,10 @@ var PS = {};
   };
 
   c.genericCompare = function (p) {
-    return function (m) {
+    return function (l) {
       return function (n) {
         return function (q) {
-          return k(m)(e.from(p)(n))(e.from(p)(q));
+          return k(l)(e.from(p)(n))(e.from(p)(q));
         };
       };
     };
@@ -10483,11 +10483,11 @@ var PS = {};
   c.genericOrdNoArguments = a;
 
   c.genericOrdSum = function (p) {
-    return function (m) {
+    return function (l) {
       return new f(function (n) {
         return function (q) {
           if (n instanceof e.Inl && q instanceof e.Inl) return k(p)(n.value0)(q.value0);
-          if (n instanceof e.Inr && q instanceof e.Inr) return k(m)(n.value0)(q.value0);
+          if (n instanceof e.Inr && q instanceof e.Inr) return k(l)(n.value0)(q.value0);
           if (n instanceof e.Inl && q instanceof e.Inr) return g.LT.value;
           if (n instanceof e.Inr && q instanceof e.Inl) return g.GT.value;
           throw Error("Failed pattern match at Data.Generic.Rep.Ord (line 19, column 1 - line 23, column 41): " + [n.constructor.name, q.constructor.name]);
@@ -10497,9 +10497,9 @@ var PS = {};
   };
 
   c.genericOrdConstructor = function (p) {
-    return new f(function (m) {
+    return new f(function (l) {
       return function (n) {
-        return k(p)(m)(n);
+        return k(p)(l)(n);
       };
     });
   };
@@ -10536,7 +10536,7 @@ var PS = {};
       f = a["Data.Monoid"],
       k = a["Data.Semigroup"],
       p = a["Data.Symbol"],
-      m = function m(n) {
+      l = function l(n) {
     this["genericShow'"] = n;
   };
 
@@ -10558,7 +10558,7 @@ var PS = {};
 
   c.genericShowSum = function (n) {
     return function (q) {
-      return new m(function (w) {
+      return new l(function (w) {
         if (w instanceof g.Inl) return (0, n["genericShow'"])(w.value0);
         if (w instanceof g.Inr) return (0, q["genericShow'"])(w.value0);
         throw Error("Failed pattern match at Data.Generic.Rep.Show (line 26, column 1 - line 28, column 40): " + [w.constructor.name]);
@@ -10568,7 +10568,7 @@ var PS = {};
 
   c.genericShowConstructor = function (n) {
     return function (q) {
-      return new m(function (w) {
+      return new l(function (w) {
         var b = p.reflectSymbol(q)(p.SProxy.value);
         w = (0, n.genericShowArgs)(w);
         return 0 === w.length ? b : "(" + (e.intercalate(e.foldableArray)(f.monoidString)(" ")(k.append(k.semigroupArray)([b])(w)) + ")");
@@ -10615,7 +10615,7 @@ var PS = {};
       f = a["Data.Bounded"],
       k = a["Data.Maybe"],
       p = a.Global,
-      m = a.Math,
+      l = a.Math,
       n = e.fromNumberImpl(k.Just.create)(k.Nothing.value),
       q = function q(w) {
     if (w === p.infinity || w === -p.infinity) return 0;
@@ -10626,7 +10626,7 @@ var PS = {};
   };
 
   c.round = function (w) {
-    return q(m.round(w));
+    return q(l.round(w));
   };
 
   c.hexadecimal = 16;
@@ -10680,7 +10680,7 @@ var PS = {};
       f = a["Data.Date.Component"],
       k = a["Data.DateTime.Instant"],
       p = a["Data.Enum"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Int"],
       q = a["Data.Maybe"],
       w = a["Data.Time"],
@@ -10689,7 +10689,7 @@ var PS = {};
   a = a["Control.Bind"].composeKleisliFlipped(q.bindMaybe)(function (d) {
     return k.instant(h.Milliseconds(d));
   })(e.toInstantImpl(q.Just.create)(q.Nothing.value));
-  m = m.map(m.functorFn)(m.map(q.functorMaybe)(k.toDateTime))(a);
+  l = l.map(l.functorFn)(l.map(q.functorMaybe)(k.toDateTime))(a);
 
   c.fromDateTime = function (d) {
     return e.jsdate({
@@ -10703,7 +10703,7 @@ var PS = {};
     });
   };
 
-  c.toDateTime = m;
+  c.toDateTime = l;
 
   c.toISOString = function (d) {
     return e.dateMethodEff("toISOString", d);
@@ -10780,40 +10780,40 @@ var PS = {};
       g = a["Control.Semigroupoid"],
       f = a["Data.Profunctor"],
       k = a["Data.Tuple"];
-  a = new function (m, n, q) {
-    this.Profunctor0 = m;
+  a = new function (l, n, q) {
+    this.Profunctor0 = l;
     this.first = n;
     this.second = q;
   }(function () {
     return f.profunctorFn;
-  }, function (m) {
+  }, function (l) {
     return function (n) {
-      return new k.Tuple(m(n.value0), n.value1);
+      return new k.Tuple(l(n.value0), n.value1);
     };
   }, a["Data.Functor"].map(k.functorTuple));
 
-  var p = function p(m) {
+  var p = function p(l) {
     return function (n) {
       return function (q) {
         return function (w) {
-          return g.composeFlipped(m.Semigroupoid0())((0, n.first)(q))((0, n.second)(w));
+          return g.composeFlipped(l.Semigroupoid0())((0, n.first)(q))((0, n.second)(w));
         };
       };
     };
   };
 
-  c.second = function (m) {
-    return m.second;
+  c.second = function (l) {
+    return l.second;
   };
 
-  c.fanout = function (m) {
+  c.fanout = function (l) {
     return function (n) {
       return function (q) {
         return function (w) {
           var b = f.dimap(n.Profunctor0())(e.identity(e.categoryFn))(function (h) {
             return new k.Tuple(h, h);
-          })(e.identity(m));
-          return g.composeFlipped(m.Semigroupoid0())(b)(p(m)(n)(q)(w));
+          })(e.identity(l));
+          return g.composeFlipped(l.Semigroupoid0())(b)(p(l)(n)(q)(w));
         };
       };
     };
@@ -10836,15 +10836,15 @@ var PS = {};
 
   a._codePointAt = function (k) {
     return function (p) {
-      return function (m) {
+      return function (l) {
         return function (n) {
           return function (q) {
             return function (w) {
               var b = w.length;
-              if (0 > q || q >= b) return m;
+              if (0 > q || q >= b) return l;
               if (e) for (w = w[Symbol.iterator](), b = q;; --b) {
                 var h = w.next();
-                if (h.done) return m;
+                if (h.done) return l;
                 if (0 === b) return p(n(h.value));
               }
               return k(q)(w);
@@ -10861,12 +10861,12 @@ var PS = {};
 
   a._take = function (k) {
     return function (p) {
-      return e ? function (m) {
+      return e ? function (l) {
         var n = "";
-        m = m[Symbol.iterator]();
+        l = l[Symbol.iterator]();
 
         for (var q = 0; q < p; ++q) {
-          var w = m.next();
+          var w = l.next();
           if (w.done) break;
           n += w.value;
         }
@@ -10878,8 +10878,8 @@ var PS = {};
 
   a._toCodePointArray = function (k) {
     return function (p) {
-      return c ? function (m) {
-        return Array.from(m, p);
+      return c ? function (l) {
+        return Array.from(l, p);
       } : k;
     };
   };
@@ -10939,16 +10939,16 @@ var PS = {};
       k = e._indexOf(g.Just.create)(g.Nothing.value);
 
   c.stripSuffix = function (p) {
-    return function (m) {
-      var n = f(p)(m);
-      return n instanceof g.Just && n.value0 === (e.length(m) - e.length(p) | 0) ? g.Just.create(e.take(n.value0)(m)) : g.Nothing.value;
+    return function (l) {
+      var n = f(p)(l);
+      return n instanceof g.Just && n.value0 === (e.length(l) - e.length(p) | 0) ? g.Just.create(e.take(n.value0)(l)) : g.Nothing.value;
     };
   };
 
   c.contains = function (p) {
-    var m = k(p);
+    var l = k(p);
     return function (n) {
-      return g.isJust(m(n));
+      return g.isJust(l(n));
     };
   };
 
@@ -10980,7 +10980,7 @@ var PS = {};
       f = a["Data.Boolean"],
       k = a["Data.Bounded"],
       p = a["Data.Enum"],
-      m = a["Data.Eq"],
+      l = a["Data.Eq"],
       n = a["Data.EuclideanRing"],
       q = a["Data.Functor"],
       w = a["Data.Int"],
@@ -10990,7 +10990,7 @@ var PS = {};
       r = a["Data.String.Common"],
       x = a["Data.String.Unsafe"],
       t = a["Data.Tuple"],
-      C = a["Data.Unfoldable"],
+      D = a["Data.Unfoldable"],
       y = function y(z) {
     return function (O) {
       return ((1024 * (z - 55296 | 0) | 0) + (O - 56320 | 0) | 0) + 65536 | 0;
@@ -11018,7 +11018,7 @@ var PS = {};
       tail: d.drop(1)(z)
     });
   },
-      B = function B(z) {
+      E = function E(z) {
     return q.map(b.functorMaybe)(function (O) {
       return new t.Tuple(O.head, O.tail);
     })(u(z));
@@ -11028,7 +11028,7 @@ var PS = {};
     return 55296 <= O && 56319 >= O && 1 < d.length(z) && (z = p.fromEnum(p.boundedEnumChar)(x.charAt(1)(z)), 56320 <= z && 57343 >= z) ? y(O)(z) : O;
   }),
       K = e._toCodePointArray(function (z) {
-    return C.unfoldr(C.unfoldableArray)(B)(z);
+    return D.unfoldr(D.unfoldableArray)(E)(z);
   })(F),
       H = function () {
     var z = p.toEnumWithDefaults(p.boundedEnumChar)(k.bottom(k.boundedChar))(k.top(k.boundedChar));
@@ -11052,12 +11052,12 @@ var PS = {};
 
   e._take(L);
 
-  var M = new m.Eq(function (z) {
+  var M = new l.Eq(function (z) {
     return function (O) {
       return z === O;
     };
   }),
-      R = new h.Ord(function () {
+      Q = new h.Ord(function () {
     return M;
   }, function (z) {
     return function (O) {
@@ -11066,21 +11066,21 @@ var PS = {};
   }),
       A = function A(z) {
     return function (O) {
-      for (var W = z, G = !1, Q; !G;) {
-        Q = W;
+      for (var W = z, G = !1, R; !G;) {
+        R = W;
         var v = u(O);
-        v instanceof b.Just ? 0 === Q ? (G = !0, Q = new b.Just(v.value0.head)) : (W = Q - 1 | 0, O = v.value0.tail, Q = void 0) : (G = !0, Q = b.Nothing.value);
+        v instanceof b.Just ? 0 === R ? (G = !0, R = new b.Just(v.value0.head)) : (W = R - 1 | 0, O = v.value0.tail, R = void 0) : (G = !0, R = b.Nothing.value);
       }
 
-      return Q;
+      return R;
     };
   },
-      D = new k.Bounded(function () {
-    return R;
+      B = new k.Bounded(function () {
+    return Q;
   }, 0, 1114111);
 
-  m = new p.BoundedEnum(function () {
-    return D;
+  l = new p.BoundedEnum(function () {
+    return B;
   }, function () {
     return N;
   }, 1114112, function (z) {
@@ -11091,8 +11091,8 @@ var PS = {};
     throw Error("Failed pattern match at Data.String.CodePoints (line 63, column 1 - line 68, column 26): " + [z.constructor.name]);
   });
   var N = new p.Enum(function () {
-    return R;
-  }, p.defaultPred(p.toEnum(m))(p.fromEnum(m)), p.defaultSucc(p.toEnum(m))(p.fromEnum(m)));
+    return Q;
+  }, p.defaultPred(p.toEnum(l))(p.fromEnum(l)), p.defaultSucc(p.toEnum(l))(p.fromEnum(l)));
   c.singleton = I;
   c.toCodePointArray = K;
 
@@ -11107,7 +11107,7 @@ var PS = {};
   };
 
   c.showCodePoint = a;
-  c.boundedEnumCodePoint = m;
+  c.boundedEnumCodePoint = l;
 })(PS);
 
 (function (a) {
@@ -11169,19 +11169,19 @@ var PS = {};
       e = a["Data.FoldableWithIndex"],
       g = a["Data.FunctorWithIndex"],
       f = a["Data.Traversable"],
-      k = function k(m) {
+      k = function k(l) {
     return function (n) {
       return function (q) {
-        var w = f.sequence(m.Traversable2())(n),
-            b = g.mapWithIndex(m.FunctorWithIndex0())(q);
+        var w = f.sequence(l.Traversable2())(n),
+            b = g.mapWithIndex(l.FunctorWithIndex0())(q);
         return function (h) {
           return w(b(h));
         };
       };
     };
   },
-      p = new function (m, n, q, w) {
-    this.FoldableWithIndex1 = m;
+      p = new function (l, n, q, w) {
+    this.FoldableWithIndex1 = l;
     this.FunctorWithIndex0 = n;
     this.Traversable2 = q;
     this.traverseWithIndex = w;
@@ -11191,12 +11191,12 @@ var PS = {};
     return g.functorWithIndexArray;
   }, function () {
     return f.traversableArray;
-  }, function (m) {
-    return k(p)(m);
+  }, function (l) {
+    return k(p)(l);
   });
 
-  c.traverseWithIndex = function (m) {
-    return m.traverseWithIndex;
+  c.traverseWithIndex = function (l) {
+    return l.traverseWithIndex;
   };
 
   c.traversableWithIndexArray = p;
@@ -11245,11 +11245,11 @@ var PS = {};
   a["Data.XPath"] = a["Data.XPath"] || {};
   var c = a["Data.XPath"],
       e = a["Data.Semigroup"],
-      g = new function (f, k, p, m, n, q) {
+      g = new function (f, k, p, l, n, q) {
     this.Semigroup0 = f;
     this.at = k;
     this.pathAppend = p;
-    this.pathAppendNSx = m;
+    this.pathAppendNSx = l;
     this.root = n;
     this.xx = q;
   }(function () {
@@ -11347,8 +11347,8 @@ var PS = {};
       k = a.Foreign;
 
   a["Foreign.Index"].readProp = function (p) {
-    return function (m) {
-      return c.unsafeReadPropImpl(k.fail(new k.TypeMismatch("object", k.typeOf(m))), e.pure(g.applicativeExceptT(f.monadIdentity)), p, m);
+    return function (l) {
+      return c.unsafeReadPropImpl(k.fail(new k.TypeMismatch("object", k.typeOf(l))), e.pure(g.applicativeExceptT(f.monadIdentity)), p, l);
     };
   };
 })(PS);
@@ -11391,11 +11391,11 @@ var PS = {};
 
   c.insert = function (k) {
     return function (p) {
-      return function (m) {
+      return function (l) {
         return function (n) {
           return function (q) {
             return function (w) {
-              return e.unsafeInsert(g.reflectSymbol(m)(n))(q)(w);
+              return e.unsafeInsert(g.reflectSymbol(l)(n))(q)(w);
             };
           };
         };
@@ -11430,7 +11430,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Control.Category"],
-      m = a["Control.Monad.Except"],
+      l = a["Control.Monad.Except"],
       n = a["Control.Monad.Except.Trans"],
       q = a["Control.Semigroupoid"],
       w = a["Data.Bifunctor"],
@@ -11440,17 +11440,17 @@ var PS = {};
       r = a["Data.Identity"],
       x = a["Data.List.Types"],
       t = a["Data.Maybe"],
-      C = a["Data.Semigroup"],
+      D = a["Data.Semigroup"],
       y = a["Data.Symbol"],
       u = a["Data.TraversableWithIndex"],
-      B = a["Effect.Exception"],
+      E = a["Effect.Exception"],
       F = a["Effect.Uncurried"],
       K = a["Effect.Unsafe"],
       H = a.Foreign,
       I = a["Foreign.Index"],
       L = a["Record.Builder"],
       M = a["Type.Data.RowList"],
-      R = function R(G) {
+      Q = function Q(G) {
     this.getFields = G;
   },
       A = function A(G) {
@@ -11459,40 +11459,40 @@ var PS = {};
 
   a = new A(H.readString);
 
-  var D = new A(g.pure(n.applicativeExceptT(r.monadIdentity))),
-      N = new R(function (G) {
-    return function (Q) {
+  var B = new A(g.pure(n.applicativeExceptT(r.monadIdentity))),
+      N = new Q(function (G) {
+    return function (R) {
       return g.pure(n.applicativeExceptT(r.monadIdentity))(p.identity(L.categoryBuilder));
     };
   }),
       z = function () {
     var G = w.lmap(b.bifunctorEither)(function () {
       var v = g.pure(x.applicativeNonEmptyList);
-      return function (na) {
-        return v(H.ForeignError.create(B.message(na)));
+      return function (oa) {
+        return v(H.ForeignError.create(E.message(oa)));
       };
     }()),
-        Q = F.runEffectFn1(e._parseJSON);
+        R = F.runEffectFn1(e._parseJSON);
     return function (v) {
-      return n.ExceptT(r.Identity(G(K.unsafePerformEffect(B["try"](Q(v))))));
+      return n.ExceptT(r.Identity(G(K.unsafePerformEffect(E["try"](R(v))))));
     };
   }(),
       O = function O(G) {
-    return function (Q) {
+    return function (R) {
       return function (v) {
-        if (Q instanceof b.Left && v instanceof b.Right) return new b.Left(Q.value0);
-        if (Q instanceof b.Left && v instanceof b.Left) return new b.Left(C.append(G)(Q.value0)(v.value0));
-        if (Q instanceof b.Right && v instanceof b.Left) return new b.Left(v.value0);
-        if (Q instanceof b.Right && v instanceof b.Right) return new b.Right(Q.value0(v.value0));
-        throw Error("Failed pattern match at Simple.JSON (line 234, column 1 - line 234, column 90): " + [Q.constructor.name, v.constructor.name]);
+        if (R instanceof b.Left && v instanceof b.Right) return new b.Left(R.value0);
+        if (R instanceof b.Left && v instanceof b.Left) return new b.Left(D.append(G)(R.value0)(v.value0));
+        if (R instanceof b.Right && v instanceof b.Left) return new b.Left(v.value0);
+        if (R instanceof b.Right && v instanceof b.Right) return new b.Right(R.value0(v.value0));
+        throw Error("Failed pattern match at Simple.JSON (line 234, column 1 - line 234, column 90): " + [R.constructor.name, v.constructor.name]);
       };
     };
   },
       W = function W(G) {
-    return function (Q) {
+    return function (R) {
       return function (v) {
-        return function (na) {
-          return n.ExceptT(f.apply(Q.Apply0())(d.map(Q.Apply0().Functor0())(O(G))(n.runExceptT(v)))(n.runExceptT(na)));
+        return function (oa) {
+          return n.ExceptT(f.apply(R.Apply0())(d.map(R.Apply0().Functor0())(O(G))(n.runExceptT(v)))(n.runExceptT(oa)));
         };
       };
     };
@@ -11512,14 +11512,14 @@ var PS = {};
     return G.readImpl;
   };
 
-  c.readForeign = D;
+  c.readForeign = B;
   c.readString = a;
 
   c.readArray = function (G) {
     return new A(function () {
-      return k.composeKleisliFlipped(n.bindExceptT(r.monadIdentity))(u.traverseWithIndex(u.traversableWithIndexArray)(n.applicativeExceptT(r.monadIdentity))(function (Q) {
+      return k.composeKleisliFlipped(n.bindExceptT(r.monadIdentity))(u.traverseWithIndex(u.traversableWithIndexArray)(n.applicativeExceptT(r.monadIdentity))(function (R) {
         return function (v) {
-          return m.withExcept(d.map(x.functorNonEmptyList)(H.ErrorAtIndex.create(Q)))((0, G.readImpl)(v));
+          return l.withExcept(d.map(x.functorNonEmptyList)(H.ErrorAtIndex.create(R)))((0, G.readImpl)(v));
         };
       }))(H.readArray);
     }());
@@ -11527,33 +11527,33 @@ var PS = {};
 
   c.readMaybe = function (G) {
     return new A(function () {
-      return function (Q) {
+      return function (R) {
         return function (v) {
-          return H.isNull(v) || H.isUndefined(v) ? g.pure(n.applicativeExceptT(r.monadIdentity))(t.Nothing.value) : d.map(n.functorExceptT(r.functorIdentity))(t.Just.create)(Q(v));
+          return H.isNull(v) || H.isUndefined(v) ? g.pure(n.applicativeExceptT(r.monadIdentity))(t.Nothing.value) : d.map(n.functorExceptT(r.functorIdentity))(t.Just.create)(R(v));
         };
       }(G.readImpl);
     }());
   };
 
   c.readRecord = function (G) {
-    return function (Q) {
+    return function (R) {
       return new A(function (v) {
-        return d.map(n.functorExceptT(r.functorIdentity))(h.flip(L.build)({}))((0, Q.getFields)(M.RLProxy.value)(v));
+        return d.map(n.functorExceptT(r.functorIdentity))(h.flip(L.build)({}))((0, R.getFields)(M.RLProxy.value)(v));
       });
     };
   };
 
   c.readFieldsCons = function (G) {
-    return function (Q) {
+    return function (R) {
       return function (v) {
-        return function (na) {
+        return function (oa) {
           return function (ma) {
-            return new R(function (Aa) {
+            return new Q(function (Aa) {
               return function (za) {
                 var da = (0, v.getFields)(M.RLProxy.value)(za),
                     ja = y.reflectSymbol(G)(y.SProxy.value),
-                    va = m.withExcept(d.map(x.functorNonEmptyList)(H.ErrorAtProperty.create(ja)));
-                za = k.bind(n.bindExceptT(r.monadIdentity))(va(k.bindFlipped(n.bindExceptT(r.monadIdentity))(Q.readImpl)(I.readProp(ja)(za))))(function (P) {
+                    wa = l.withExcept(d.map(x.functorNonEmptyList)(H.ErrorAtProperty.create(ja)));
+                za = k.bind(n.bindExceptT(r.monadIdentity))(wa(k.bindFlipped(n.bindExceptT(r.monadIdentity))(R.readImpl)(I.readProp(ja)(za))))(function (P) {
                   return g.pure(n.applicativeExceptT(r.monadIdentity))(L.insert()()(G)(y.SProxy.value)(P));
                 });
                 return W(x.semigroupNonEmptyList)(r.applicativeIdentity)(d.map(n.functorExceptT(r.functorIdentity))(q.compose(L.semigroupoidBuilder))(za))(da);
@@ -11577,7 +11577,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad.Error.Class"],
       p = a["Control.Monad.Except.Trans"],
-      m = a["Data.Bounded"],
+      l = a["Data.Bounded"],
       n = a["Data.Enum"],
       q = a["Data.Eq"],
       w = a["Data.Functor"],
@@ -11587,392 +11587,392 @@ var PS = {};
       r = a["Data.Generic.Rep.Eq"],
       x = a["Data.Generic.Rep.Ord"],
       t = a["Data.Generic.Rep.Show"],
-      C = a["Data.Identity"],
+      D = a["Data.Identity"],
       y = a["Data.List.Types"],
       u = a["Data.Ord"],
-      B = a["Data.Show"],
+      E = a["Data.Show"],
       F = a["Data.Symbol"],
       K = a.Foreign,
       H = a["Simple.JSON"],
       I = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       L = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       M = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
-  }(),
-      R = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      A = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      D = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      N = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      z = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      O = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      W = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      G = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Q = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
+  }(),
+      A = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      B = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      N = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      z = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      O = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      W = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      G = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      R = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
   }(),
       v = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
-  }(),
-      na = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      ma = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      Aa = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      za = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      da = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      ja = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      va = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      P = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      fa = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
-  }(),
-      Ba = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       oa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
+  }(),
+      ma = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      Aa = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      za = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      da = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      ja = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      wa = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      P = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      fa = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      Ba = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
+  }(),
+      pa = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
   }(),
       qa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       sa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Ca = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Ga = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      U = function () {
-    function l() {}
+      V = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       la = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       aa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       J = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Z = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ua = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Da = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Fa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      Ka = function () {
-    function l() {}
+      La = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       S = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      E = function () {
-    function l() {}
+      C = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       X = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ka = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ca = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ia = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ra = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ta = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       ya = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Ha = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      Ja = function () {
-    function l() {}
+      Ka = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Ea = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      Ma = function () {
-    function l() {}
+      Na = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Qa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Wa = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Za = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
+  }(),
+      bb = function () {
+    function m() {}
+
+    m.value = new m();
+    return m;
   }(),
       cb = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
-  }(),
-      db = function () {
-    function l() {}
-
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
       Ra = function () {
-    function l() {}
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      eb = function () {
-    function l() {}
+      db = function () {
+    function m() {}
 
-    l.value = new l();
-    return l;
+    m.value = new m();
+    return m;
   }(),
-      hb = function hb(l) {
-    this.enumReadForeignImpl = l;
+      hb = function hb(m) {
+    this.enumReadForeignImpl = m;
   },
-      Ua = new b.Generic(function (l) {
-    if (l instanceof I) return new b.Inl(b.NoArguments.value);
-    if (l instanceof L) return new b.Inr(new b.Inl(b.NoArguments.value));
-    if (l instanceof M) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
-    if (l instanceof R) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
-    if (l instanceof A) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
-    if (l instanceof D) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
-    if (l instanceof N) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
-    if (l instanceof z) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
-    if (l instanceof O) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
-    if (l instanceof W) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
-    if (l instanceof G) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
-    if (l instanceof Q) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
-    if (l instanceof v) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
-    if (l instanceof na) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value)))))))))))));
-    throw Error("Failed pattern match at DataCite.Types.Common (line 155, column 1 - line 155, column 76): " + [l.constructor.name]);
-  }, function (l) {
-    if (l instanceof b.Inl) return I.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inl) return L.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inl) return M.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inl) return R.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inl) return A.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inl) return D.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return N.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return z.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return O.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return W.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return G.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Q.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return v.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return na.value;
-    throw Error("Failed pattern match at DataCite.Types.Common (line 155, column 1 - line 155, column 76): " + [l.constructor.name]);
+      Ua = new b.Generic(function (m) {
+    if (m instanceof I) return new b.Inl(b.NoArguments.value);
+    if (m instanceof L) return new b.Inr(new b.Inl(b.NoArguments.value));
+    if (m instanceof M) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
+    if (m instanceof Q) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
+    if (m instanceof A) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
+    if (m instanceof B) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
+    if (m instanceof N) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
+    if (m instanceof z) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
+    if (m instanceof O) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
+    if (m instanceof W) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
+    if (m instanceof G) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
+    if (m instanceof R) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
+    if (m instanceof v) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
+    if (m instanceof oa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value)))))))))))));
+    throw Error("Failed pattern match at DataCite.Types.Common (line 155, column 1 - line 155, column 76): " + [m.constructor.name]);
+  }, function (m) {
+    if (m instanceof b.Inl) return I.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inl) return L.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inl) return M.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inl) return Q.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inl) return A.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inl) return B.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return N.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return z.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return O.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return W.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return G.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return R.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return v.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return oa.value;
+    throw Error("Failed pattern match at DataCite.Types.Common (line 155, column 1 - line 155, column 76): " + [m.constructor.name]);
   }),
-      lb = new B.Show(t.genericShow(Ua)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
+      mb = new E.Show(t.genericShow(Ua)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "Audiovisual";
   })))(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "Dataset";
@@ -12001,62 +12001,62 @@ var PS = {};
   })))(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "Other";
   }))))))))))))))))),
-      Va = new b.Generic(function (l) {
-    if (l instanceof ma) return new b.Inl(b.NoArguments.value);
-    if (l instanceof Aa) return new b.Inr(new b.Inl(b.NoArguments.value));
-    if (l instanceof za) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
-    if (l instanceof da) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
-    if (l instanceof ja) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
-    if (l instanceof va) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
-    if (l instanceof P) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
-    if (l instanceof fa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
-    if (l instanceof Ba) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
-    if (l instanceof oa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
-    if (l instanceof qa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
-    if (l instanceof sa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
-    if (l instanceof Ca) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
-    if (l instanceof Ga) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))));
-    if (l instanceof U) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))));
-    if (l instanceof la) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))));
-    if (l instanceof aa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))));
-    if (l instanceof J) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))));
-    if (l instanceof Z) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))));
-    if (l instanceof ua) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))));
-    if (l instanceof Da) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))))));
-    if (l instanceof Fa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))))));
-    if (l instanceof Ka) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))))))));
-    if (l instanceof S) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))))))));
-    if (l instanceof E) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value))))))))))))))))))))))));
-    throw Error("Failed pattern match at DataCite.Types.Common (line 112, column 1 - line 112, column 62): " + [l.constructor.name]);
-  }, function (l) {
-    if (l instanceof b.Inl) return ma.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inl) return Aa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inl) return za.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inl) return da.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inl) return ja.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inl) return va.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return P.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return fa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ba.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return oa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return qa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return sa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ca.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ga.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return U.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return la.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return aa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return J.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Z.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return ua.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Da.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Fa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ka.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return S.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return E.value;
-    throw Error("Failed pattern match at DataCite.Types.Common (line 112, column 1 - line 112, column 62): " + [l.constructor.name]);
+      Va = new b.Generic(function (m) {
+    if (m instanceof ma) return new b.Inl(b.NoArguments.value);
+    if (m instanceof Aa) return new b.Inr(new b.Inl(b.NoArguments.value));
+    if (m instanceof za) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
+    if (m instanceof da) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
+    if (m instanceof ja) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
+    if (m instanceof wa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
+    if (m instanceof P) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
+    if (m instanceof fa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
+    if (m instanceof Ba) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
+    if (m instanceof pa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
+    if (m instanceof qa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
+    if (m instanceof sa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
+    if (m instanceof Ca) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
+    if (m instanceof Ga) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))));
+    if (m instanceof V) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))));
+    if (m instanceof la) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))));
+    if (m instanceof aa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))));
+    if (m instanceof J) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))));
+    if (m instanceof Z) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))));
+    if (m instanceof ua) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))));
+    if (m instanceof Da) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))))));
+    if (m instanceof Fa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))))));
+    if (m instanceof La) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))))))))));
+    if (m instanceof S) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))))))))))));
+    if (m instanceof C) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value))))))))))))))))))))))));
+    throw Error("Failed pattern match at DataCite.Types.Common (line 112, column 1 - line 112, column 62): " + [m.constructor.name]);
+  }, function (m) {
+    if (m instanceof b.Inl) return ma.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inl) return Aa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inl) return za.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inl) return da.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inl) return ja.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inl) return wa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return P.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return fa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ba.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return pa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return qa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return sa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ca.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ga.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return V.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return la.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return aa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return J.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Z.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return ua.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Da.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Fa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return La.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return S.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return C.value;
+    throw Error("Failed pattern match at DataCite.Types.Common (line 112, column 1 - line 112, column 62): " + [m.constructor.name]);
   }),
-      qb = new B.Show(t.genericShow(Va)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
+      rb = new E.Show(t.genericShow(Va)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "IsCitedBy";
   })))(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "Cites";
@@ -12107,49 +12107,49 @@ var PS = {};
   })))(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
     return "IsSourceOf";
   })))))))))))))))))))))))))))),
-      Pa = new b.Generic(function (l) {
-    if (l instanceof X) return new b.Inl(b.NoArguments.value);
-    if (l instanceof ka) return new b.Inr(new b.Inl(b.NoArguments.value));
-    if (l instanceof ca) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
-    if (l instanceof ia) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
-    if (l instanceof ra) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
-    if (l instanceof ta) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
-    if (l instanceof ya) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
-    if (l instanceof Ha) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
-    if (l instanceof Ja) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
-    if (l instanceof Ea) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
-    if (l instanceof Ma) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
-    if (l instanceof Qa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
-    if (l instanceof Wa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
-    if (l instanceof Za) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))));
-    if (l instanceof cb) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))));
-    if (l instanceof db) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))));
-    if (l instanceof Ra) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))));
-    if (l instanceof eb) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value)))))))))))))))));
-    throw Error("Failed pattern match at DataCite.Types.Common (line 46, column 1 - line 46, column 66): " + [l.constructor.name]);
-  }, function (l) {
-    if (l instanceof b.Inl) return X.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inl) return ka.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inl) return ca.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inl) return ia.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inl) return ra.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inl) return ta.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return ya.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ha.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ja.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ea.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ma.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Qa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Wa.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Za.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return cb.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return db.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ra.value;
-    if (l instanceof b.Inr && l.value0 instanceof b.Inr && l.value0.value0 instanceof b.Inr && l.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && l.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return eb.value;
-    throw Error("Failed pattern match at DataCite.Types.Common (line 46, column 1 - line 46, column 66): " + [l.constructor.name]);
+      Pa = new b.Generic(function (m) {
+    if (m instanceof X) return new b.Inl(b.NoArguments.value);
+    if (m instanceof ka) return new b.Inr(new b.Inl(b.NoArguments.value));
+    if (m instanceof ca) return new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)));
+    if (m instanceof ia) return new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))));
+    if (m instanceof ra) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))));
+    if (m instanceof ta) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))));
+    if (m instanceof ya) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))));
+    if (m instanceof Ha) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))));
+    if (m instanceof Ka) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))));
+    if (m instanceof Ea) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))));
+    if (m instanceof Na) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))));
+    if (m instanceof Qa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))));
+    if (m instanceof Wa) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))));
+    if (m instanceof Za) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))));
+    if (m instanceof bb) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))));
+    if (m instanceof cb) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value))))))))))))))));
+    if (m instanceof Ra) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inl(b.NoArguments.value)))))))))))))))));
+    if (m instanceof db) return new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(new b.Inr(b.NoArguments.value)))))))))))))))));
+    throw Error("Failed pattern match at DataCite.Types.Common (line 46, column 1 - line 46, column 66): " + [m.constructor.name]);
+  }, function (m) {
+    if (m instanceof b.Inl) return X.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inl) return ka.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inl) return ca.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inl) return ia.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inl) return ra.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inl) return ta.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return ya.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ha.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ka.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ea.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Na.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Qa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Wa.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Za.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return bb.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return cb.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inl) return Ra.value;
+    if (m instanceof b.Inr && m.value0 instanceof b.Inr && m.value0.value0 instanceof b.Inr && m.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr && m.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0.value0 instanceof b.Inr) return db.value;
+    throw Error("Failed pattern match at DataCite.Types.Common (line 46, column 1 - line 46, column 66): " + [m.constructor.name]);
   }),
-      rb = new B.Show(function (l) {
-    return l instanceof ka ? "arXiv" : l instanceof ca ? "bibcode" : t.genericShow(Pa)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
+      sb = new E.Show(function (m) {
+    return m instanceof ka ? "arXiv" : m instanceof ca ? "bibcode" : t.genericShow(Pa)(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
       return "ARK";
     })))(t.genericShowSum(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
       return "ArXiv";
@@ -12185,112 +12185,112 @@ var PS = {};
       return "URL";
     })))(t.genericShowConstructor(t.genericShowArgsNoArguments)(new F.IsSymbol(function () {
       return "URN";
-    }))))))))))))))))))))(l);
+    }))))))))))))))))))))(m);
   }),
-      sb = new q.Eq(r.genericEq(Ua)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments)))))))))))))))),
-      mb = new u.Ord(function () {
-    return sb;
-  }, function (l) {
-    return function (Sa) {
-      return x.genericCompare(Ua)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments)))))))))))))))(l)(Sa);
-    };
-  }),
-      tb = new q.Eq(r.genericEq(Va)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments))))))))))))))))))))))))))),
+      tb = new q.Eq(r.genericEq(Ua)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments)))))))))))))))),
       nb = new u.Ord(function () {
     return tb;
-  }, function (l) {
+  }, function (m) {
     return function (Sa) {
-      return x.genericCompare(Va)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments))))))))))))))))))))))))))(l)(Sa);
+      return x.genericCompare(Ua)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments)))))))))))))))(m)(Sa);
     };
   }),
-      ub = new q.Eq(r.genericEq(Pa)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments)))))))))))))))))))),
-      Ta = new u.Ord(function () {
+      ub = new q.Eq(r.genericEq(Va)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments))))))))))))))))))))))))))),
+      ob = new u.Ord(function () {
     return ub;
-  }, function (l) {
+  }, function (m) {
     return function (Sa) {
-      return x.genericCompare(Pa)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments)))))))))))))))))))(l)(Sa);
+      return x.genericCompare(Va)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments))))))))))))))))))))))))))(m)(Sa);
     };
   }),
-      vb = new n.Enum(function () {
-    return mb;
+      vb = new q.Eq(r.genericEq(Pa)(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqSum(r.genericEqConstructor(r.genericEqNoArguments))(r.genericEqConstructor(r.genericEqNoArguments)))))))))))))))))))),
+      Ta = new u.Ord(function () {
+    return vb;
+  }, function (m) {
+    return function (Sa) {
+      return x.genericCompare(Pa)(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdSum(x.genericOrdConstructor(x.genericOrdNoArguments))(x.genericOrdConstructor(x.genericOrdNoArguments)))))))))))))))))))(m)(Sa);
+    };
+  }),
+      pb = new n.Enum(function () {
+    return nb;
   }, d.genericPred(Ua)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments)))), d.genericSucc(Ua)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))),
       wb = new n.Enum(function () {
-    return nb;
+    return ob;
   }, d.genericPred(Va)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments)))), d.genericSucc(Va)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))),
-      Na = function Na(l) {
+      Oa = function Oa(m) {
     return function (Sa) {
-      return new hb(function (Ya) {
-        return e.alt(p.altExceptT(y.semigroupNonEmptyList)(C.monadIdentity))(w.map(p.functorExceptT(C.functorIdentity))(b.Inl.create)((0, l.enumReadForeignImpl)(Ya)))(w.map(p.functorExceptT(C.functorIdentity))(b.Inr.create)((0, Sa.enumReadForeignImpl)(Ya)));
+      return new hb(function (Xa) {
+        return e.alt(p.altExceptT(y.semigroupNonEmptyList)(D.monadIdentity))(w.map(p.functorExceptT(D.functorIdentity))(b.Inl.create)((0, m.enumReadForeignImpl)(Xa)))(w.map(p.functorExceptT(D.functorIdentity))(b.Inr.create)((0, Sa.enumReadForeignImpl)(Xa)));
       });
     };
   },
       ib = new n.Enum(function () {
     return Ta;
   }, d.genericPred(Pa)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments)))), d.genericSucc(Pa)(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumSum(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericTopConstructor(h.genericTopNoArguments))(d.genericEnumConstructor(d.genericEnumNoArguments))(h.genericBottomConstructor(h.genericBottomNoArguments)))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))))),
-      La = function La(l) {
+      Ma = function Ma(m) {
     return new hb(function (Sa) {
-      var Ya = F.reflectSymbol(l)(F.SProxy.value);
-      return f.bind(p.bindExceptT(C.monadIdentity))(H.readImpl(H.readString)(Sa))(function (jb) {
-        return jb === Ya ? g.pure(p.applicativeExceptT(C.monadIdentity))(b.NoArguments.value) : k.throwError(p.monadThrowExceptT(C.monadIdentity))(g.pure(y.applicativeNonEmptyList)(K.ForeignError.create("Enum string " + (jb + (" did not match expected string " + Ya)))));
+      var Xa = F.reflectSymbol(m)(F.SProxy.value);
+      return f.bind(p.bindExceptT(D.monadIdentity))(H.readImpl(H.readString)(Sa))(function (jb) {
+        return jb === Xa ? g.pure(p.applicativeExceptT(D.monadIdentity))(b.NoArguments.value) : k.throwError(p.monadThrowExceptT(D.monadIdentity))(g.pure(y.applicativeNonEmptyList)(K.ForeignError.create("Enum string " + (jb + (" did not match expected string " + Xa)))));
       });
     });
   },
-      fb = new H.ReadForeign(function (l) {
+      eb = new H.ReadForeign(function (m) {
     return function (Sa) {
-      return function (Ya) {
-        return w.map(p.functorExceptT(C.functorIdentity))(b.to(l))((0, Sa.enumReadForeignImpl)(Ya));
+      return function (Xa) {
+        return w.map(p.functorExceptT(D.functorIdentity))(b.to(m))((0, Sa.enumReadForeignImpl)(Xa));
       };
     };
-  }(Pa)(Na(La(new F.IsSymbol(function () {
+  }(Pa)(Oa(Ma(new F.IsSymbol(function () {
     return "ARK";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "ArXiv";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "Bibcode";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "DOI";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "EAN13";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "EISSN";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "Handle";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "IGSN";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "ISBN";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "ISSN";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "ISTC";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "LISSN";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "LSID";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "PMID";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "PURL";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "UPC";
-  })))(Na(La(new F.IsSymbol(function () {
+  })))(Oa(Ma(new F.IsSymbol(function () {
     return "URL";
-  })))(La(new F.IsSymbol(function () {
+  })))(Ma(new F.IsSymbol(function () {
     return "URN";
   }))))))))))))))))))))),
-      gb = new m.Bounded(function () {
-    return mb;
-  }, h.genericBottom(Ua)(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))), h.genericTop(Ua)(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopConstructor(h.genericTopNoArguments)))))))))))))))),
-      xb = new m.Bounded(function () {
+      gb = new l.Bounded(function () {
     return nb;
+  }, h.genericBottom(Ua)(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))), h.genericTop(Ua)(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopConstructor(h.genericTopNoArguments)))))))))))))))),
+      xb = new l.Bounded(function () {
+    return ob;
   }, h.genericBottom(Va)(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))), h.genericTop(Va)(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopConstructor(h.genericTopNoArguments))))))))))))))))))))))))))),
-      ob = new m.Bounded(function () {
+      qb = new l.Bounded(function () {
     return Ta;
   }, h.genericBottom(Pa)(h.genericBottomSum(h.genericBottomConstructor(h.genericBottomNoArguments))), h.genericTop(Pa)(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopSum(h.genericTopConstructor(h.genericTopNoArguments)))))))))))))))))))),
       yb = new n.BoundedEnum(function () {
     return gb;
   }, function () {
-    return vb;
+    return pb;
   }, d.genericCardinality(Ua)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))), d.genericFromEnum(Ua)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))), d.genericToEnum(Ua)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments)))))))))))))))),
       kb = new n.BoundedEnum(function () {
     return xb;
@@ -12298,7 +12298,7 @@ var PS = {};
     return wb;
   }, d.genericCardinality(Va)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments)))))))))))))))))))))))))), d.genericFromEnum(Va)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments)))))))))))))))))))))))))), d.genericToEnum(Va)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))))))))))))))),
       zb = new n.BoundedEnum(function () {
-    return ob;
+    return qb;
   }, function () {
     return ib;
   }, d.genericCardinality(Pa)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))))))), d.genericFromEnum(Pa)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))))))), d.genericToEnum(Pa)(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumSum(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))(d.genericBoundedEnumConstructor(d.genericBoundedEnumNoArguments))))))))))))))))))));
@@ -12311,31 +12311,31 @@ var PS = {};
   c.EISSN = ta;
   c.Handle = ya;
   c.IGSN = Ha;
-  c.ISBN = Ja;
+  c.ISBN = Ka;
   c.ISSN = Ea;
-  c.ISTC = Ma;
+  c.ISTC = Na;
   c.LISSN = Qa;
   c.LSID = Wa;
   c.PMID = Za;
-  c.PURL = cb;
-  c.UPC = db;
+  c.PURL = bb;
+  c.UPC = cb;
   c.URL = Ra;
-  c.URN = eb;
+  c.URN = db;
   c.IsCitedBy = ma;
   c.Cites = Aa;
   c.IsSupplementTo = za;
   c.IsSupplementedBy = da;
   c.IsContinuedBy = ja;
-  c.Continues = va;
+  c.Continues = wa;
   c.IsNewVersionOf = P;
   c.IsPreviousVersionOf = fa;
   c.IsPartOf = Ba;
-  c.HasPart = oa;
+  c.HasPart = pa;
   c.IsReferencedBy = qa;
   c.References = sa;
   c.IsDocumentedBy = Ca;
   c.Documents = Ga;
-  c.IsCompiledBy = U;
+  c.IsCompiledBy = V;
   c.Compiles = la;
   c.IsVariantFormOf = aa;
   c.IsOriginalFormOf = J;
@@ -12343,37 +12343,37 @@ var PS = {};
   c.HasMetadata = ua;
   c.IsMetadataFor = Da;
   c.Reviews = Fa;
-  c.IsReviewedBy = Ka;
+  c.IsReviewedBy = La;
   c.IsDerivedFrom = S;
-  c.IsSourceOf = E;
+  c.IsSourceOf = C;
   c.Audiovisual = I;
   c.Dataset = L;
   c.Event = M;
-  c.Image = R;
+  c.Image = Q;
   c.InteractiveResource = A;
-  c.Model = D;
+  c.Model = B;
   c.PhysicalObject = N;
   c.ResourceCollection = z;
   c.Service = O;
   c.Software = W;
   c.Sound = G;
-  c.Text = Q;
+  c.Text = R;
   c.Workflow = v;
-  c.Other = na;
+  c.Other = oa;
 
-  c.altIdToId = function (l) {
+  c.altIdToId = function (m) {
     return {
-      identifier: l.alternateIdentifier,
-      identifierType: l.alternateIdentifierType
+      identifier: m.alternateIdentifier,
+      identifierType: m.alternateIdentifierType
     };
   };
 
-  c.showIdentifierType = rb;
+  c.showIdentifierType = sb;
   c.boundedEnumIdentifierType = zb;
-  c.identifierTypeReadForeign = fb;
-  c.showRelationType = qb;
+  c.identifierTypeReadForeign = eb;
+  c.showRelationType = rb;
   c.boundedEnumRelationType = kb;
-  c.showResourceTypeGeneral = lb;
+  c.showResourceTypeGeneral = mb;
   c.boundedEnumResourceTypeGeneral = yb;
 })(PS);
 
@@ -12399,7 +12399,7 @@ var PS = {};
       f = a["Control.Monad"],
       k = a["Control.Monad.Error.Class"],
       p = a["Control.Monad.Except"],
-      m = a["Control.Monad.Except.Trans"],
+      l = a["Control.Monad.Except.Trans"],
       n = a["Control.Monad.Writer"],
       q = a["Control.Monad.Writer.Class"],
       w = a["Control.Monad.Writer.Trans"],
@@ -12409,19 +12409,19 @@ var PS = {};
       r = a["Data.Either"],
       x = a["Data.Either.Extra"],
       t = a["Data.Foldable"],
-      C = a["Data.Functor"],
+      D = a["Data.Functor"],
       y = a["Data.Identity"],
       u = a["Data.Lazy"],
-      B = a["Data.List.NonEmpty"],
+      E = a["Data.List.NonEmpty"],
       F = a["Data.List.Types"],
       K = a["Data.Maybe"],
       H = a["Data.Monoid"],
       I = a["Data.Newtype"],
       L = a["Data.String.NonEmpty.Internal"],
       M = a["Data.Symbol"],
-      R = a["Data.Traversable"],
+      Q = a["Data.Traversable"],
       A = a["Data.Tuple"],
-      D = a["Data.Unfoldable"],
+      B = a["Data.Unfoldable"],
       N = a["DataCite.JSON.Util"],
       z = a["DataCite.Types.Common"],
       O = a.Foreign,
@@ -12429,7 +12429,7 @@ var PS = {};
       G = a["Simple.JSON"];
   a = a["Type.Data.Row"];
 
-  var Q = new I.Newtype(function (X) {
+  var R = new I.Newtype(function (X) {
     return X;
   }, function (X) {
     return X;
@@ -12439,16 +12439,16 @@ var PS = {};
   }, function (X) {
     return X;
   }),
-      na = w.monadTellWriterT(H.monoidArray)(y.monadIdentity),
+      oa = w.monadTellWriterT(H.monoidArray)(y.monadIdentity),
       ma = w.monadWriterT(H.monoidArray)(y.monadIdentity),
-      Aa = m.monadThrowExceptT(ma),
-      za = m.monadTellExceptT(na),
-      da = m.bindExceptT(ma),
-      ja = m.applicativeExceptT(ma),
-      va = function va(X) {
+      Aa = l.monadThrowExceptT(ma),
+      za = l.monadTellExceptT(oa),
+      da = l.bindExceptT(ma),
+      ja = l.applicativeExceptT(ma),
+      wa = function wa(X) {
     return function (ka) {
-      var ca = n.runWriter(I.unwrap(Q)(m.runExceptT(I.unwrap(v)(ka))));
-      if (ca.value0 instanceof r.Left) return g.discard(g.discardUnit)(da)(q.tell(za)(B.toUnfoldable(D.unfoldableArray)(ca.value0.value0)))(function () {
+      var ca = n.runWriter(I.unwrap(R)(l.runExceptT(I.unwrap(v)(ka))));
+      if (ca.value0 instanceof r.Left) return g.discard(g.discardUnit)(da)(q.tell(za)(E.toUnfoldable(B.unfoldableArray)(ca.value0.value0)))(function () {
         return e.pure(ja)(X);
       });
       if (ca.value0 instanceof r.Right) return ka;
@@ -12467,12 +12467,12 @@ var PS = {};
   },
       Ba = function Ba(X) {
     var ka = fa(X),
-        ca = I.unwrap(m.newtypeExceptT);
+        ca = I.unwrap(l.newtypeExceptT);
     return function (ia) {
-      return m.ExceptT(ka(ca(ia)));
+      return l.ExceptT(ka(ca(ia)));
     };
   },
-      oa = function oa(X) {
+      pa = function pa(X) {
     var ka = Ba(ma),
         ca = G["read'"](X);
     return function (ia) {
@@ -12480,7 +12480,7 @@ var PS = {};
     };
   },
       qa = function qa(X) {
-    return va("")(oa(G.readString)(X));
+    return wa("")(pa(G.readString)(X));
   },
       sa = function sa(X) {
     return function (ka) {
@@ -12495,8 +12495,8 @@ var PS = {};
       Ca = function Ca(X) {
     return function (ka) {
       return g.bind(da)(sa(X)(ka.alternateIdentifier))(function (ca) {
-        var ia = oa(z.identifierTypeReadForeign)(ka.alternateIdentifierType);
-        return g.bind(da)(va(z.Handle.value)(ia))(function (ra) {
+        var ia = pa(z.identifierTypeReadForeign)(ka.alternateIdentifierType);
+        return g.bind(da)(wa(z.Handle.value)(ia))(function (ra) {
           return e.pure(ja)(z.altIdToId({
             alternateIdentifier: ca,
             alternateIdentifierType: ra
@@ -12512,11 +12512,11 @@ var PS = {};
       };
     };
   },
-      U = function U(X) {
+      V = function V(X) {
     return function (ka) {
       return g.bind(da)(sa(X)(ka.identifier))(function (ca) {
-        var ia = oa(z.identifierTypeReadForeign)(ka.identifierType);
-        return g.bind(da)(va(z.Handle.value)(ia))(function (ra) {
+        var ia = pa(z.identifierTypeReadForeign)(ka.identifierType);
+        return g.bind(da)(wa(z.Handle.value)(ia))(function (ra) {
           return e.pure(ja)({
             identifier: ca,
             identifierType: ra
@@ -12528,7 +12528,7 @@ var PS = {};
       la = function la(X) {
     return function (ka) {
       return function (ca) {
-        return U(ka)(ca);
+        return V(ka)(ca);
       };
     };
   },
@@ -12542,13 +12542,13 @@ var PS = {};
     return function (ka) {
       return function (ca) {
         return g.bind(da)(aa(ca))(function (ia) {
-          var ra = C.map(C.functorArray)(function () {
+          var ra = D.map(D.functorArray)(function () {
             var ta = G["read'"](X);
             return function (ya) {
               return p.runExcept(ta(ya));
             };
           }())(ia);
-          return g.discard(g.discardUnit)(da)(t.traverse_(ja)(t.foldableArray)(q.tell(za))(C.map(C.functorArray)(B.toUnfoldable(D.unfoldableArray))(x.catLefts(f.monadArray)(b.plusArray)(ra))))(function () {
+          return g.discard(g.discardUnit)(da)(t.traverse_(ja)(t.foldableArray)(q.tell(za))(D.map(D.functorArray)(E.toUnfoldable(B.unfoldableArray))(x.catLefts(f.monadArray)(b.plusArray)(ra))))(function () {
             var ta = x.catRights(f.monadArray)(b.plusArray)(ra);
             ta = h.fromArray(ta);
             if (ta instanceof K.Just) return e.pure(ja)(ta.value0);
@@ -12563,17 +12563,17 @@ var PS = {};
     return function (ka) {
       return function (ca) {
         return g.bind(da)(aa(ca))(function (ia) {
-          ia = C.map(C.functorArray)(function () {
-            var ya = I.unwrap(Q),
+          ia = D.map(D.functorArray)(function () {
+            var ya = I.unwrap(R),
                 Ha = I.unwrap(v),
-                Ja = ka(X);
+                Ka = ka(X);
             return function (Ea) {
-              return n.runWriter(ya(m.runExceptT(Ha(Ja(Ea)))));
+              return n.runWriter(ya(l.runExceptT(Ha(Ka(Ea)))));
             };
           }())(ia);
-          var ra = C.map(C.functorArray)(A.fst)(ia),
-              ta = C.map(C.functorArray)(A.snd)(ia);
-          return g.discard(g.discardUnit)(da)(t.traverse_(ja)(t.foldableArray)(q.tell(za))(C.map(C.functorArray)(B.toUnfoldable(D.unfoldableArray))(x.catLefts(f.monadArray)(b.plusArray)(ra))))(function () {
+          var ra = D.map(D.functorArray)(A.fst)(ia),
+              ta = D.map(D.functorArray)(A.snd)(ia);
+          return g.discard(g.discardUnit)(da)(t.traverse_(ja)(t.foldableArray)(q.tell(za))(D.map(D.functorArray)(E.toUnfoldable(B.unfoldableArray))(x.catLefts(f.monadArray)(b.plusArray)(ra))))(function () {
             return g.discard(g.discardUnit)(da)(t.traverse_(ja)(t.foldableArray)(q.tell(za))(ta))(function () {
               var ya = x.catRights(f.monadArray)(b.plusArray)(ra);
               ya = h.fromArray(ya);
@@ -12609,7 +12609,7 @@ var PS = {};
       });
     };
   },
-      Ka = a.RProxy.value,
+      La = a.RProxy.value,
       S = function S(X) {
     return function (ka) {
       return u.defer(function (ca) {
@@ -12617,31 +12617,31 @@ var PS = {};
       });
     };
   },
-      E = function E(X) {
+      C = function C(X) {
     var ka = N.tryPrettyJson(X),
         ca = S(ka),
         ia = function ia(ta) {
-      return P(ta.type) && P(ta.identifier) && P(ta.identifierType) ? e.pure(ja)(K.Nothing.value) : g.bind(da)(oa(G.readString)(ta.type))(function (ya) {
+      return P(ta.type) && P(ta.identifier) && P(ta.identifierType) ? e.pure(ja)(K.Nothing.value) : g.bind(da)(pa(G.readString)(ta.type))(function (ya) {
         var Ha = L.fromString(ya);
-        return g.bind(da)(U(ca("container"))(ta))(function (Ja) {
+        return g.bind(da)(V(ca("container"))(ta))(function (Ka) {
           return e.pure(ja)(K.Just.create({
             type: Ha,
-            identifier: Ja.identifier,
-            identifierType: Ja.identifierType
+            identifier: Ka.identifier,
+            identifierType: Ka.identifierType
           }));
         });
       });
     },
         ra = function ra(ta) {
-      return R.traverse(d.traversableNonEmptyArray)(ja)(function (ya) {
+      return Q.traverse(d.traversableNonEmptyArray)(ja)(function (ya) {
         return g.bind(da)(sa(ca("Creator name"))(ya.name))(function (Ha) {
-          return g.bind(da)(R.traverse(R.traversableArray)(ja)(sa(ca("Creator affiliations")))(ya.affiliation))(function (Ja) {
+          return g.bind(da)(Q.traverse(Q.traversableArray)(ja)(sa(ca("Creator affiliations")))(ya.affiliation))(function (Ka) {
             return e.pure(ja)({
               name: Ha,
               nameType: g.bind(K.bindMaybe)(ya.nameType)(L.fromString),
               givenName: g.bind(K.bindMaybe)(ya.givenName)(L.fromString),
               familyName: g.bind(K.bindMaybe)(ya.familyName)(L.fromString),
-              affiliation: Ja
+              affiliation: Ka
             });
           });
         });
@@ -12693,11 +12693,11 @@ var PS = {};
     }))(G.readForeign)(G.readFieldsNil)()())()())()())()()))(G.readFieldsNil)()()))(X))(function (ta) {
       return g.bind(da)(sa(ca("data.id"))(ta.data.id))(function (ya) {
         return g.bind(da)(sa(ca("data.type"))(ta.data.type))(function (Ha) {
-          return g.bind(da)(sa(ca("data.attributes.doi"))(ta.data.attributes.doi))(function (Ja) {
+          return g.bind(da)(sa(ca("data.attributes.doi"))(ta.data.attributes.doi))(function (Ka) {
             return g.bind(da)(sa(ca("data.attributes.prefix"))(ta.data.attributes.prefix))(function (Ea) {
-              return g.bind(da)(sa(ca("data.attributes.suffix"))(ta.data.attributes.suffix))(function (Ma) {
-                return g.bind(da)(R.traverse(R.traversableArray)(ja)(la(Ka)(ca("data.attributes.identifiers")))(ta.data.attributes.identifiers))(function (Qa) {
-                  return g.bind(da)(R.traverse(R.traversableArray)(ja)(Ga(Ka)(ca("data.attributes.alternateIdentifiers")))(ta.data.attributes.alternateIdentifiers))(function (Wa) {
+              return g.bind(da)(sa(ca("data.attributes.suffix"))(ta.data.attributes.suffix))(function (Na) {
+                return g.bind(da)(Q.traverse(Q.traversableArray)(ja)(la(La)(ca("data.attributes.identifiers")))(ta.data.attributes.identifiers))(function (Qa) {
+                  return g.bind(da)(Q.traverse(Q.traversableArray)(ja)(Ga(La)(ca("data.attributes.alternateIdentifiers")))(ta.data.attributes.alternateIdentifiers))(function (Wa) {
                     return g.bind(da)(J(G.readRecord()(G.readFieldsCons(new M.IsSymbol(function () {
                       return "affiliation";
                     }))(G.readArray(G.readForeign))(G.readFieldsCons(new M.IsSymbol(function () {
@@ -12709,24 +12709,24 @@ var PS = {};
                     }))(G.readForeign)(G.readFieldsCons(new M.IsSymbol(function () {
                       return "nameType";
                     }))(G.readMaybe(G.readString))(G.readFieldsNil)()())()())()())()())()()))(ca("data.attributes.creators"))(ta.data.attributes.creators))(function (Za) {
-                      return g.bind(da)(ra(Za))(function (cb) {
-                        return g.bind(da)(Z(ca("data.attributes.titles"))(Fa)(ta.data.attributes.titles))(function (db) {
+                      return g.bind(da)(ra(Za))(function (bb) {
+                        return g.bind(da)(Z(ca("data.attributes.titles"))(Fa)(ta.data.attributes.titles))(function (cb) {
                           return g.bind(da)(sa(ca("data.attributes.publisher"))(ta.data.attributes.publisher))(function (Ra) {
-                            return g.bind(da)(ia(ta.data.attributes.container))(function (eb) {
+                            return g.bind(da)(ia(ta.data.attributes.container))(function (db) {
                               return e.pure(ja)({
                                 data: {
                                   id: ya,
                                   type: Ha,
                                   attributes: {
-                                    doi: Ja,
+                                    doi: Ka,
                                     prefix: Ea,
-                                    suffix: Ma,
+                                    suffix: Na,
                                     identifiers: Qa,
                                     alternateIdentifiers: Wa,
-                                    creators: cb,
-                                    titles: db,
+                                    creators: bb,
+                                    titles: cb,
                                     publisher: Ra,
-                                    container: eb
+                                    container: db
                                   },
                                   relationships: ta.data.relationships
                                 }
@@ -12747,7 +12747,7 @@ var PS = {};
   };
 
   c.readRecordJSON = function (X) {
-    return m.runExceptT(I.unwrap(v)(E(N.preParse(X))));
+    return l.runExceptT(I.unwrap(v)(C(N.preParse(X))));
   };
 })(PS);
 
@@ -12882,7 +12882,7 @@ var PS = {};
   a = f.mjUiClass(e.versioning);
   var k = f.mjUiClass(e.url),
       p = f.mjUiClass(e.titleList),
-      m = f.mjUiClass(e.title),
+      l = f.mjUiClass(e.title),
       n = f.mjUiClass(e.sustainability),
       q = f.mjUiClass(e.superOrg),
       w = f.mjUiClass(g.sideBarTab),
@@ -12892,42 +12892,42 @@ var PS = {};
       r = f.mjUiClass(g.sideBarCol),
       x = f.mjUiClass(g.sideBar),
       t = f.mjUiClass(e.resourceTypeGen),
-      C = f.mjUiClass(e.resourceTypeDescr),
+      D = f.mjUiClass(e.resourceTypeDescr),
       y = f.mjUiClass(e.resourceType),
       u = f.mjUiClass(e.resourceMDSource),
-      B = f.mjUiClass(e.resourceId),
+      E = f.mjUiClass(e.resourceId),
       F = f.mjUiClass(e.relatedIdsHeader),
       K = f.mjUiClass(e.relatedIds),
       H = f.mjUiClass(e.relatedIdList),
       I = f.mjUiClass(e.relatedId),
       L = f.mjUiClass(e.relType),
       M = f.mjUiClass(e.record),
-      R = f.mjUiClass(g.recPreview),
+      Q = f.mjUiClass(g.recPreview),
       A = f.mjUiClass(g.recFlexBox),
-      D = f.mjUiClass(g.recEditor),
+      B = f.mjUiClass(g.recEditor),
       N = f.mjUiClass(e.pubyear),
       z = f.mjUiClass(e.productsHeader),
       O = f.mjUiClass(e.products),
       W = f.mjUiClass(e.productList),
       G = f.mjUiClass(e.product),
-      Q = f.mjUiClass(g.prodPreview),
+      R = f.mjUiClass(g.prodPreview),
       v = f.mjUiClass(g.previewButtons),
-      na = f.mjUiClass(e.policyType),
+      oa = f.mjUiClass(e.policyType),
       ma = f.mjUiClass(e.policy),
       Aa = f.mjUiClass(g.page),
       za = f.mjUiClass(e.missionStatement),
       da = f.mjUiClass(e.location),
       ja = f.mjUiClass(g.locPreview),
-      va = f.mjUiClass(e.institutionType),
+      wa = f.mjUiClass(e.institutionType),
       P = f.mjUiClass(e.institutionPolicy),
       fa = f.mjUiClass(e.institutionPolicies),
       Ba = f.mjUiClass(e.institutionName),
-      oa = f.mjUiClass(e.institutionId),
+      pa = f.mjUiClass(e.institutionId),
       qa = f.mjUiClass(e.institutionContact),
       sa = f.mjUiClass(e.identifier),
       Ca = f.mjUiClass(e.idType),
       Ga = f.mjUiClass(e.id),
-      U = f.mjUiClass(e.fundingStatement),
+      V = f.mjUiClass(e.fundingStatement),
       la = f.mjUiClass(e.formatList),
       aa = f.mjUiClass(e.format),
       J = f.mjUiClass(g.downloadBtn),
@@ -12935,27 +12935,27 @@ var PS = {};
       ua = f.mjUiClass(g.date),
       Da = f.mjUiClass(e.creatorList),
       Fa = f.mjUiClass(e.creator),
-      Ka = f.mjUiClass(e.contactType),
+      La = f.mjUiClass(e.contactType),
       S = f.mjUiClass(e.contactEmail),
-      E = f.mjUiClass(g.clipBtn),
+      C = f.mjUiClass(g.clipBtn),
       X = f.mjUiClass(e.basicMetadata);
   e = f.mjUiClass(e.applies);
   g = f.mjUiClass(g.addItem);
   c.page = Aa;
   c.date = ua;
   c.recFlexBox = A;
-  c.recPreview = R;
-  c.recEditor = D;
+  c.recPreview = Q;
+  c.recEditor = B;
   c.sideBar = x;
   c.sideBarNav = b;
   c.sideBarTab = w;
   c.sideBarGrid = d;
   c.sideBarMenu = h;
   c.sideBarCol = r;
-  c.prodPreview = Q;
+  c.prodPreview = R;
   c.locPreview = ja;
   c.downloadBtn = J;
-  c.clipBtn = E;
+  c.clipBtn = C;
   c.previewButtons = v;
   c.addItem = g;
   c.deleteItem = Z;
@@ -12967,7 +12967,7 @@ var PS = {};
   c.location = da;
   c.sustainability = n;
   c.missionStatement = za;
-  c.fundingStatement = U;
+  c.fundingStatement = V;
   c.identifier = sa;
   c.id = Ga;
   c.idType = Ca;
@@ -12980,23 +12980,23 @@ var PS = {};
   c.creator = Fa;
   c.creatorList = Da;
   c.pubyear = N;
-  c.title = m;
+  c.title = l;
   c.titleList = p;
-  c.resourceId = B;
+  c.resourceId = E;
   c.resourceType = y;
   c.resourceTypeGen = t;
-  c.resourceTypeDescr = C;
+  c.resourceTypeDescr = D;
   c.resourceMDSource = u;
   c.institutionName = Ba;
-  c.institutionId = oa;
-  c.institutionType = va;
+  c.institutionId = pa;
+  c.institutionType = wa;
   c.institutionContact = qa;
   c.contactEmail = S;
-  c.contactType = Ka;
+  c.contactType = La;
   c.institutionPolicy = P;
   c.institutionPolicies = fa;
   c.policy = ma;
-  c.policyType = na;
+  c.policyType = oa;
   c.applies = e;
   c.superOrg = q;
   c.versioning = a;
@@ -13032,8 +13032,8 @@ var PS = {};
 
   a = function () {
     var p = g.map(g.functorArray)(k);
-    return function (m) {
-      return f.cList(p(m));
+    return function (l) {
+      return f.cList(p(l));
     };
   }();
 
@@ -13054,7 +13054,7 @@ var PS = {};
   f.mjWebClass(e.url);
   var k = f.mjWebClass(e.title),
       p = f.mjWebClass(e.sustainability),
-      m = f.mjWebClass(e.superOrg),
+      l = f.mjWebClass(e.superOrg),
       n = f.mjWebClass(e.resourceTypeGen),
       q = f.mjWebClass(e.resourceTypeDescr),
       w = f.mjWebClass(e.resourceType),
@@ -13064,33 +13064,33 @@ var PS = {};
       r = f.mjWebClass(e.relatedId),
       x = f.mjWebClass(e.relType),
       t = f.mjWebClass(e.recordId),
-      C = f.mjWebClass(e.record),
+      D = f.mjWebClass(e.record),
       y = f.mjWebClass(e.pubyear),
       u = f.mjWebClass(e.productsHeader),
-      B = f.mjWebClass(e.productList),
+      E = f.mjWebClass(e.productList),
       F = f.mjWebClass(g.productGroup),
       K = f.mjWebClass(g.productCitation),
       H = f.mjWebClass(e.product),
       I = f.mjWebClass(e.policyType),
       L = f.mjWebClass(e.policy),
       M = f.cList([e.url, e.missionStatement]),
-      R = f.mjWebClass(e.institutionType),
+      Q = f.mjWebClass(e.institutionType),
       A = f.mjWebClass(e.institutionPolicy),
-      D = f.mjWebClass(e.institutionPolicies),
+      B = f.mjWebClass(e.institutionPolicies),
       N = f.mjWebClass(e.institutionName),
       z = f.mjWebClass(e.institutionId),
       O = f.mjWebClass(e.institutionContact),
       W = f.mjWebClass(e.identifier),
       G = f.cList([e.url, g.idUrl]),
-      Q = f.mjWebClass(e.idType),
+      R = f.mjWebClass(e.idType),
       v = f.cList([e.url, e.fundingStatement]),
-      na = f.mjWebClass(e.formatList),
+      oa = f.mjWebClass(e.formatList),
       ma = f.mjWebClass(e.format),
       Aa = f.mjWebClass(g.errorDisplayBox),
       za = f.mjWebClass(g.errorDisplay),
       da = f.mjWebClass(e.creatorList),
       ja = f.mjWebClass(e.creator),
-      va = f.mjWebClass(e.contactType),
+      wa = f.mjWebClass(e.contactType),
       P = f.mjWebClass(e.contactEmail);
   e = f.mjWebClass(e.basicMetadata);
   g = f.mjWebClass(g.appliesInfo);
@@ -13100,16 +13100,16 @@ var PS = {};
   c.idUrl = G;
   c.errorDisplayBox = Aa;
   c.errorDisplay = za;
-  c.record = C;
+  c.record = D;
   c.recordId = t;
   c.product = H;
-  c.productList = B;
+  c.productList = E;
   c.productsHeader = u;
   c.sustainability = p;
   c.missionStatement = M;
   c.fundingStatement = v;
   c.identifier = W;
-  c.idType = Q;
+  c.idType = R;
   c.relatedId = r;
   c.relType = x;
   c.relatedIdList = d;
@@ -13125,18 +13125,18 @@ var PS = {};
   c.resourceTypeDescr = q;
   c.institutionName = N;
   c.institutionId = z;
-  c.institutionType = R;
+  c.institutionType = Q;
   c.institutionContact = O;
   c.contactEmail = P;
-  c.contactType = va;
+  c.contactType = wa;
   c.institutionPolicy = A;
-  c.institutionPolicies = D;
+  c.institutionPolicies = B;
   c.policy = L;
   c.policyType = I;
-  c.superOrg = m;
+  c.superOrg = l;
   c.versioning = a;
   c.format = ma;
-  c.formatList = na;
+  c.formatList = oa;
 })(PS);
 
 (function (a) {
@@ -13180,7 +13180,7 @@ var PS = {};
       f = a["Data.Eq"],
       k = a["Data.Generic.Rep"],
       p = a["Data.Generic.Rep.Bounded"],
-      m = a["Data.Generic.Rep.Enum"],
+      l = a["Data.Generic.Rep.Enum"],
       n = a["Data.Generic.Rep.Eq"],
       q = a["Data.Generic.Rep.Ord"],
       w = a["Data.Generic.Rep.Show"],
@@ -13205,7 +13205,7 @@ var PS = {};
     P.value = new P();
     return P;
   }(),
-      C = function () {
+      D = function () {
     function P() {}
 
     P.value = new P();
@@ -13223,7 +13223,7 @@ var PS = {};
     P.value = new P();
     return P;
   }(),
-      B = function () {
+      E = function () {
     function P() {}
 
     P.value = new P();
@@ -13283,7 +13283,7 @@ var PS = {};
     P.value = new P();
     return P;
   }(),
-      R = new h.Show(function (P) {
+      Q = new h.Show(function (P) {
     if (P instanceof H) return "commercial";
     if (P instanceof I) return "non-profit";
     if (P instanceof L) return "governmental";
@@ -13292,30 +13292,30 @@ var PS = {};
       A = new h.Show(function (P) {
     return "dataCustodian";
   }),
-      D = new k.Generic(function (P) {
+      B = new k.Generic(function (P) {
     if (P instanceof r) return new k.Inl(k.NoArguments.value);
     if (P instanceof x) return new k.Inr(new k.Inl(k.NoArguments.value));
     if (P instanceof t) return new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value)));
-    if (P instanceof C) return new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value))));
+    if (P instanceof D) return new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value))));
     if (P instanceof y) return new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value)))));
     if (P instanceof u) return new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value))))));
-    if (P instanceof B) return new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value)))))));
+    if (P instanceof E) return new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inl(k.NoArguments.value)))))));
     if (P instanceof F) return new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(new k.Inr(k.NoArguments.value)))))));
     throw Error("Failed pattern match at Metajelo.Types (line 172, column 1 - line 172, column 58): " + [P.constructor.name]);
   }, function (P) {
     if (P instanceof k.Inl) return r.value;
     if (P instanceof k.Inr && P.value0 instanceof k.Inl) return x.value;
     if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inl) return t.value;
-    if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inl) return C.value;
+    if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inl) return D.value;
     if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0 instanceof k.Inl) return y.value;
     if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0 instanceof k.Inl) return u.value;
-    if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0.value0 instanceof k.Inl) return B.value;
+    if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0.value0 instanceof k.Inl) return E.value;
     if (P instanceof k.Inr && P.value0 instanceof k.Inr && P.value0.value0 instanceof k.Inr && P.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0 instanceof k.Inr && P.value0.value0.value0.value0.value0.value0 instanceof k.Inr) return F.value;
     throw Error("Failed pattern match at Metajelo.Types (line 172, column 1 - line 172, column 58): " + [P.constructor.name]);
   });
 
   h = new h.Show(function (P) {
-    return P instanceof F ? "Terms of Use" : w.genericShow(D)(w.genericShowSum(w.genericShowConstructor(w.genericShowArgsNoArguments)(new d.IsSymbol(function () {
+    return P instanceof F ? "Terms of Use" : w.genericShow(B)(w.genericShowSum(w.genericShowConstructor(w.genericShowArgsNoArguments)(new d.IsSymbol(function () {
       return "Access";
     })))(w.genericShowSum(w.genericShowConstructor(w.genericShowArgsNoArguments)(new d.IsSymbol(function () {
       return "Collection";
@@ -13349,16 +13349,16 @@ var PS = {};
   }, function (P) {
     return M.value;
   }),
-      O = new f.Eq(n.genericEq(D)(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqConstructor(n.genericEqNoArguments)))))))))),
+      O = new f.Eq(n.genericEq(B)(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqConstructor(n.genericEqNoArguments)))))))))),
       W = new b.Ord(function () {
     return O;
   }, function (P) {
     return function (fa) {
-      return q.genericCompare(D)(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdConstructor(q.genericOrdNoArguments)))))))))(P)(fa);
+      return q.genericCompare(B)(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdSum(q.genericOrdConstructor(q.genericOrdNoArguments))(q.genericOrdConstructor(q.genericOrdNoArguments)))))))))(P)(fa);
     };
   }),
       G = new f.Eq(n.genericEq(N)(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqSum(n.genericEqConstructor(n.genericEqNoArguments))(n.genericEqConstructor(n.genericEqNoArguments))))),
-      Q = new b.Ord(function () {
+      R = new b.Ord(function () {
     return G;
   }, function (P) {
     return function (fa) {
@@ -13366,7 +13366,7 @@ var PS = {};
     };
   }),
       v = new f.Eq(n.genericEq(z)(n.genericEqConstructor(n.genericEqNoArguments))),
-      na = new b.Ord(function () {
+      oa = new b.Ord(function () {
     return v;
   }, function (P) {
     return function (fa) {
@@ -13375,43 +13375,43 @@ var PS = {};
   }),
       ma = new g.Enum(function () {
     return W;
-  }, m.genericPred(D)(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments)))), m.genericSucc(D)(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))),
+  }, l.genericPred(B)(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments)))), l.genericSucc(B)(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))),
       Aa = new g.Enum(function () {
-    return Q;
-  }, m.genericPred(N)(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments)))), m.genericSucc(N)(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumSum(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(m.genericEnumConstructor(m.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))),
+    return R;
+  }, l.genericPred(N)(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments)))), l.genericSucc(N)(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumSum(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericTopConstructor(p.genericTopNoArguments))(l.genericEnumConstructor(l.genericEnumNoArguments))(p.genericBottomConstructor(p.genericBottomNoArguments)))(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))))),
       za = new g.Enum(function () {
-    return na;
-  }, m.genericPred(z)(m.genericEnumConstructor(m.genericEnumNoArguments)), m.genericSucc(z)(m.genericEnumConstructor(m.genericEnumNoArguments))),
+    return oa;
+  }, l.genericPred(z)(l.genericEnumConstructor(l.genericEnumNoArguments)), l.genericSucc(z)(l.genericEnumConstructor(l.genericEnumNoArguments))),
       da = new e.Bounded(function () {
     return W;
-  }, p.genericBottom(D)(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))), p.genericTop(D)(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopConstructor(p.genericTopNoArguments))))))))));
+  }, p.genericBottom(B)(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))), p.genericTop(B)(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopSum(p.genericTopConstructor(p.genericTopNoArguments))))))))));
   f = new g.SmallBounded(function () {
     return da;
   });
   var ja = new e.Bounded(function () {
-    return Q;
+    return R;
   }, p.genericBottom(N)(p.genericBottomSum(p.genericBottomConstructor(p.genericBottomNoArguments))), p.genericTop(N)(p.genericTopSum(p.genericTopSum(p.genericTopConstructor(p.genericTopNoArguments))))),
-      va = new e.Bounded(function () {
-    return na;
+      wa = new e.Bounded(function () {
+    return oa;
   }, p.genericBottom(z)(p.genericBottomConstructor(p.genericBottomNoArguments)), p.genericTop(z)(p.genericTopConstructor(p.genericTopNoArguments)));
   e = new g.SmallBounded(function () {
-    return va;
+    return wa;
   });
   p = new g.BoundedEnum(function () {
     return da;
   }, function () {
     return ma;
-  }, m.genericCardinality(D)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))))))))), m.genericFromEnum(D)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))))))))), m.genericToEnum(D)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))))))))));
+  }, l.genericCardinality(B)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))))))))), l.genericFromEnum(B)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))))))))), l.genericToEnum(B)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))))))))));
   n = new g.BoundedEnum(function () {
     return ja;
   }, function () {
     return Aa;
-  }, m.genericCardinality(N)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)))), m.genericFromEnum(N)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)))), m.genericToEnum(N)(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumSum(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments))(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)))));
+  }, l.genericCardinality(N)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)))), l.genericFromEnum(N)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)))), l.genericToEnum(N)(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumSum(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments))(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)))));
   g = new g.BoundedEnum(function () {
-    return va;
+    return wa;
   }, function () {
     return za;
-  }, m.genericCardinality(z)(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)), m.genericFromEnum(z)(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)), m.genericToEnum(z)(m.genericBoundedEnumConstructor(m.genericBoundedEnumNoArguments)));
+  }, l.genericCardinality(z)(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)), l.genericFromEnum(z)(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)), l.genericToEnum(z)(l.genericBoundedEnumConstructor(l.genericBoundedEnumNoArguments)));
   c.DataCustodian = M;
   c.Commercial = H;
   c.NonProfit = I;
@@ -13421,12 +13421,12 @@ var PS = {};
   c.Access = r;
   c.Collection = x;
   c.Data = t;
-  c.Metadata = C;
+  c.Metadata = D;
   c.Preservation = y;
   c.Submission = u;
-  c.Quality = B;
+  c.Quality = E;
   c.TermsOfUse = F;
-  c.showInstitutionType = R;
+  c.showInstitutionType = Q;
   c.boundedEnumInstitutionType = n;
   c.showInstitutionContactType = A;
   c.boundedEnumInstitutionContactType = g;
@@ -13535,7 +13535,7 @@ var PS = {};
       p = a["Unsafe.Coerce"].unsafeCoerce;
   a = a["Web.Internal.FFI"].unsafeReadProtoTagged("Document");
 
-  var m = function () {
+  var l = function () {
     var n = g.map(k.functorEffect)(f.toMaybe);
     return function (q) {
       return n(e._documentElement(q));
@@ -13544,7 +13544,7 @@ var PS = {};
 
   c.fromNode = a;
   c.toNonElementParentNode = p;
-  c.documentElement = m;
+  c.documentElement = l;
 
   c.getElementsByTagNameNS = function (n) {
     return e._getElementsByTagNameNS(f.toNullable(n));
@@ -13597,12 +13597,12 @@ var PS = {};
       f = a["Data.Nullable"],
       k = a.Effect,
       p = a["Unsafe.Coerce"],
-      m = p.unsafeCoerce;
+      l = p.unsafeCoerce;
   p = p.unsafeCoerce;
   a = a["Web.Internal.FFI"].unsafeReadProtoTagged("Element");
   c.fromNode = a;
   c.toNode = p;
-  c.toParentNode = m;
+  c.toParentNode = l;
 
   c.prefix = function (n) {
     return f.toMaybe(e._prefix(n));
@@ -13647,11 +13647,11 @@ var PS = {};
       k = a.Effect;
 
   c.item = function (p) {
-    var m = g.map(k.functorEffect)(f.toMaybe),
+    var l = g.map(k.functorEffect)(f.toMaybe),
         n = e._item(p);
 
     return function (q) {
-      return m(n(q));
+      return l(n(q));
     };
   };
 
@@ -13703,8 +13703,8 @@ var PS = {};
 
   a = function () {
     var p = g.map(k.functorEffect)(f.toMaybe);
-    return function (m) {
-      return p(e._ownerDocument(m));
+    return function (l) {
+      return p(e._ownerDocument(l));
     };
   }();
 
@@ -13725,7 +13725,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Data.Array"],
       p = a["Data.Either"],
-      m = a["Data.Functor"],
+      l = a["Data.Functor"],
       n = a["Data.Maybe"],
       q = a.Effect,
       w = a["Web.DOM.Document"],
@@ -13733,26 +13733,26 @@ var PS = {};
       h = a["Web.DOM.HTMLCollection"],
       d = a["Web.DOM.Node"],
       r = function r(t) {
-    return function (C) {
-      if (t instanceof n.Nothing) return new p.Right(C);
+    return function (D) {
+      if (t instanceof n.Nothing) return new p.Right(D);
       if (t instanceof n.Just) return new p.Left(t.value0);
       throw Error("Failed pattern match at Web.DOM.DOMParser (line 73, column 30 - line 75, column 21): " + [t.constructor.name]);
     };
   },
       x = function x(t) {
     return function () {
-      var C = f.join(q.bindEffect)(m.map(q.functorEffect)(h.toArray)(w.getElementsByTagName("parsererror")(t)))();
-      C = k.head(C);
-      C = m.map(n.functorMaybe)(b.toNode)(C);
-      if (C instanceof n.Nothing) C = g.pure(q.applicativeEffect)(n.Nothing.value);else if (C instanceof n.Just) C = m.map(q.functorEffect)(n.Just.create)(d.textContent(C.value0));else throw Error("Failed pattern match at Web.DOM.DOMParser (line 65, column 23 - line 67, column 45): " + [C.constructor.name]);
-      return C();
+      var D = f.join(q.bindEffect)(l.map(q.functorEffect)(h.toArray)(w.getElementsByTagName("parsererror")(t)))();
+      D = k.head(D);
+      D = l.map(n.functorMaybe)(b.toNode)(D);
+      if (D instanceof n.Nothing) D = g.pure(q.applicativeEffect)(n.Nothing.value);else if (D instanceof n.Just) D = l.map(q.functorEffect)(n.Just.create)(d.textContent(D.value0));else throw Error("Failed pattern match at Web.DOM.DOMParser (line 65, column 23 - line 67, column 45): " + [D.constructor.name]);
+      return D();
     };
   };
 
   c.parseXMLFromString = function (t) {
-    return function (C) {
+    return function (D) {
       return function () {
-        var y = e.parseFromString("application/xml")(t)(C)(),
+        var y = e.parseFromString("application/xml")(t)(D)(),
             u = x(y)();
         return r(u)(y);
       };
@@ -13868,14 +13868,14 @@ var PS = {};
     n.value = new n();
     return n;
   }(),
-      m = new g.Eq(function (n) {
+      l = new g.Eq(function (n) {
     return function (q) {
       return n === q;
     };
   });
 
   c.res2SnapType = function (n) {
-    return g.eq(m)(n)(e.unordered_node_snapshot_type) ? new f.Just(k.value) : g.eq(m)(n)(e.ordered_node_snapshot_type) ? new f.Just(p.value) : f.Nothing.value;
+    return g.eq(l)(n)(e.unordered_node_snapshot_type) ? new f.Just(k.value) : g.eq(l)(n)(e.ordered_node_snapshot_type) ? new f.Just(p.value) : f.Nothing.value;
   };
 
   c.number_type = e.number_type;
@@ -13894,7 +13894,7 @@ var PS = {};
       f = a["Data.Array"],
       k = a["Data.Functor"],
       p = a["Data.Int"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Data.Monoid"],
       q = a["Data.Natural"],
       w = a["Data.Nullable"],
@@ -13904,34 +13904,34 @@ var PS = {};
       r = a["Web.DOM.Document.XPath.ResultType"],
       x = a["Web.DOM.Element"],
       t = a["Web.DOM.Node"],
-      C = function () {
-    var u = k.map(h.functorEffect)(function (B) {
-      return q.intToNat(p.round(B));
+      D = function () {
+    var u = k.map(h.functorEffect)(function (E) {
+      return q.intToNat(p.round(E));
     });
-    return function (B) {
-      return u(e.snapshotLengthInternal(B));
+    return function (E) {
+      return u(e.snapshotLengthInternal(E));
     };
   }(),
       y = function y(u) {
-    return function (B) {
-      return k.map(h.functorEffect)(w.toMaybe)(e.snapshotItemInternal(u)(p.toNumber(q.natToInt(B))));
+    return function (E) {
+      return k.map(h.functorEffect)(w.toMaybe)(e.snapshotItemInternal(u)(p.toNumber(q.natToInt(E))));
     };
   };
 
   a = function () {
     var u = k.map(h.functorEffect)(w.toMaybe);
-    return function (B) {
-      return u(e.singleNodeValueInternal(B));
+    return function (E) {
+      return u(e.singleNodeValueInternal(E));
     };
   }();
 
   c.evaluate = function (u) {
-    return function (B) {
+    return function (E) {
       return function (F) {
         return function (K) {
           return function (H) {
             return function (I) {
-              return e.evaluateInternal(u)(B)(w.toNullable(F))(K)(w.toNullable(H))(I);
+              return e.evaluateInternal(u)(E)(w.toNullable(F))(K)(w.toNullable(H))(I);
             };
           };
         };
@@ -13940,12 +13940,12 @@ var PS = {};
   };
 
   c.evaluateNumber = function (u) {
-    return function (B) {
+    return function (E) {
       return function (F) {
         return function (K) {
           return function (H) {
             return function () {
-              var I = e.evaluateInternal(u)(B)(w.toNullable(F))(r.number_type)(w.toNullable(K))(H)();
+              var I = e.evaluateInternal(u)(E)(w.toNullable(F))(r.number_type)(w.toNullable(K))(H)();
               return e.numberValue(I)();
             };
           };
@@ -13955,12 +13955,12 @@ var PS = {};
   };
 
   c.evaluateString = function (u) {
-    return function (B) {
+    return function (E) {
       return function (F) {
         return function (K) {
           return function (H) {
             return function () {
-              var I = e.evaluateInternal(u)(B)(w.toNullable(F))(r.string_type)(w.toNullable(K))(H)();
+              var I = e.evaluateInternal(u)(E)(w.toNullable(F))(r.string_type)(w.toNullable(K))(H)();
               return e.stringValue(I)();
             };
           };
@@ -13970,12 +13970,12 @@ var PS = {};
   };
 
   c.evaluateBoolean = function (u) {
-    return function (B) {
+    return function (E) {
       return function (F) {
         return function (K) {
           return function (H) {
             return function () {
-              var I = e.evaluateInternal(u)(B)(w.toNullable(F))(r.boolean_type)(w.toNullable(K))(H)();
+              var I = e.evaluateInternal(u)(E)(w.toNullable(F))(r.boolean_type)(w.toNullable(K))(H)();
               return e.booleanValue(I)();
             };
           };
@@ -13987,35 +13987,35 @@ var PS = {};
   c.singleNodeValue = a;
 
   c.snapshot = function (u) {
-    var B = r.res2SnapType(e.resultType(u)),
+    var E = r.res2SnapType(e.resultType(u)),
         F = y(u);
-    B = k.map(m.functorMaybe)(function (K) {
+    E = k.map(l.functorMaybe)(function (K) {
       return function () {
-        var H = C(u)();
+        var H = D(u)();
         H = q.natToInt(H);
         H = k.map(k.functorArray)(q.intToNat)(f.range(0)(H - 1 | 0));
         H = b.sequence(b.traversableArray)(h.applicativeEffect)(k.map(k.functorArray)(F)(H))();
         return f.catMaybes(H);
       };
-    })(B);
-    if (B instanceof m.Nothing) return g.pure(h.applicativeEffect)(n.mempty(n.monoidArray));
-    if (B instanceof m.Just) return B.value0;
-    throw Error("Failed pattern match at Web.DOM.Document.XPath (line 117, column 18 - line 119, column 24): " + [B.constructor.name]);
+    })(E);
+    if (E instanceof l.Nothing) return g.pure(h.applicativeEffect)(n.mempty(n.monoidArray));
+    if (E instanceof l.Just) return E.value0;
+    throw Error("Failed pattern match at Web.DOM.Document.XPath (line 117, column 18 - line 119, column 24): " + [E.constructor.name]);
   };
 
   c.lookupNamespaceURI = function (u) {
-    return function (B) {
-      return w.toMaybe(e.lookupNamespaceURIInternal(u)(B));
+    return function (E) {
+      return w.toMaybe(e.lookupNamespaceURIInternal(u)(E));
     };
   };
 
   c.defaultNSResolver = function (u) {
-    return function (B) {
+    return function (E) {
       var F = function F(K) {
         return function () {
           var H = d.documentElement(K)();
-          if (H instanceof m.Nothing) return u;
-          if (H instanceof m.Just) return x.toNode(H.value0);
+          if (H instanceof l.Nothing) return u;
+          if (H instanceof l.Just) return x.toNode(H.value0);
           throw Error("Failed pattern match at Web.DOM.Document.XPath (line 170, column 14 - line 172, column 40): " + [H.constructor.name]);
         };
       };
@@ -14023,18 +14023,18 @@ var PS = {};
       return function () {
         var K = t.ownerDocument(u)(),
             H = function () {
-          if (K instanceof m.Nothing) {
+          if (K instanceof l.Nothing) {
             var I = d.fromNode(u);
-            if (I instanceof m.Nothing) return u;
-            if (I instanceof m.Just) return F(I.value0)();
+            if (I instanceof l.Nothing) return u;
+            if (I instanceof l.Just) return F(I.value0)();
             throw Error("Failed pattern match at Web.DOM.Document.XPath (line 161, column 16 - line 163, column 57): " + [I.constructor.name]);
           }
 
-          if (K instanceof m.Just) return F(K.value0)();
+          if (K instanceof l.Just) return F(K.value0)();
           throw Error("Failed pattern match at Web.DOM.Document.XPath (line 160, column 19 - line 164, column 35): " + [K.constructor.name]);
         }();
 
-        return e.createNSResolver(H)(B);
+        return e.createNSResolver(H)(E);
       };
     };
   };
@@ -14050,7 +14050,7 @@ var PS = {};
       f = a["Data.Array.NonEmpty"],
       k = a["Data.Array.NonEmpty.Internal"],
       p = a["Data.Either"],
-      m = a["Data.Foldable"],
+      l = a["Data.Foldable"],
       n = a["Data.Functor"],
       q = a["Data.Maybe"],
       w = a["Data.String.Common"],
@@ -14060,10 +14060,10 @@ var PS = {};
       r = a.Effect,
       x = a["Effect.Exception"],
       t = a["Web.DOM.DOMParser"],
-      C = a["Web.DOM.Document"],
+      D = a["Web.DOM.Document"],
       y = a["Web.DOM.Document.XPath"],
       u = a["Web.DOM.Document.XPath.ResultType"],
-      B = a["Web.DOM.Element"],
+      E = a["Web.DOM.Element"],
       F = a["Web.DOM.HTMLCollection"],
       K = d.pathAppendNSx(d.stringXPath)(d.root(d.stringXPath))("record");
   a = d.pathAppendNSx(d.stringXPath)(K)("relatedIdentifier");
@@ -14074,30 +14074,30 @@ var PS = {};
     return function (W) {
       return {
         any: function any(G) {
-          return function (Q) {
+          return function (R) {
             return function (v) {
-              return y.evaluate(Q)(G)(W)(v)(q.Nothing.value)(O);
+              return y.evaluate(R)(G)(W)(v)(q.Nothing.value)(O);
             };
           };
         },
         num: function num(G) {
-          return function (Q) {
-            return y.evaluateNumber(Q)(G)(W)(q.Nothing.value)(O);
+          return function (R) {
+            return y.evaluateNumber(R)(G)(W)(q.Nothing.value)(O);
           };
         },
         str: function str(G) {
-          return function (Q) {
-            return y.evaluateString(Q)(G)(W)(q.Nothing.value)(O);
+          return function (R) {
+            return y.evaluateString(R)(G)(W)(q.Nothing.value)(O);
           };
         },
         bool: function bool(G) {
-          return function (Q) {
-            return y.evaluateBoolean(Q)(G)(W)(q.Nothing.value)(O);
+          return function (R) {
+            return y.evaluateBoolean(R)(G)(W)(q.Nothing.value)(O);
           };
         },
         nodeMay: function nodeMay(G) {
-          return function (Q) {
-            return g.bind(r.bindEffect)(y.evaluate(Q)(G)(W)(u.any_unordered_node_type)(q.Nothing.value)(O))(y.singleNodeValue);
+          return function (R) {
+            return g.bind(r.bindEffect)(y.evaluate(R)(G)(W)(u.any_unordered_node_type)(q.Nothing.value)(O))(y.singleNodeValue);
           };
         }
       };
@@ -14107,48 +14107,48 @@ var PS = {};
       M = function M(O) {
     var W = function W(G) {
       return function () {
-        var Q = C.getElementsByTagNameNS(new q.Just(G))("record")(O)();
-        return F.item(0)(Q)();
+        var R = D.getElementsByTagNameNS(new q.Just(G))("record")(O)();
+        return F.item(0)(R)();
       };
     };
 
     return function () {
-      var G = C.getElementsByTagName("record")(O)();
+      var G = D.getElementsByTagName("record")(O)();
       G = F.item(0)(G)();
-      if (G instanceof q.Nothing) G = h.sequence(k.traversableNonEmptyArray)(r.applicativeEffect)(n.map(k.functorNonEmptyArray)(W)(L))(), G = g.join(q.bindMaybe)(m.find(k.foldableNonEmptyArray)(q.isJust)(G));else if (G instanceof q.Just) G = new q.Just(G.value0);else throw Error("Failed pattern match at Metajelo.XPaths (line 277, column 16 - line 281, column 38): " + [G.constructor.name]);
-      return n.map(q.functorMaybe)(B.toNode)(G);
+      if (G instanceof q.Nothing) G = h.sequence(k.traversableNonEmptyArray)(r.applicativeEffect)(n.map(k.functorNonEmptyArray)(W)(L))(), G = g.join(q.bindMaybe)(l.find(k.foldableNonEmptyArray)(q.isJust)(G));else if (G instanceof q.Just) G = new q.Just(G.value0);else throw Error("Failed pattern match at Metajelo.XPaths (line 277, column 16 - line 281, column 38): " + [G.constructor.name]);
+      return n.map(q.functorMaybe)(E.toNode)(G);
     };
   },
-      R = d.pathAppendNSx(d.stringXPath)(K)("lastModified"),
+      Q = d.pathAppendNSx(d.stringXPath)(K)("lastModified"),
       A = d.pathAppendNSx(d.stringXPath)(K)("identifier"),
-      D = d.pathAppend(d.stringXPath)(A)(d.at(d.stringXPath)("identifierType")),
+      B = d.pathAppend(d.stringXPath)(A)(d.at(d.stringXPath)("identifierType")),
       N = function N(O) {
     var W = function W(G) {
       return q.fromMaybe("http://ourdomain.cornell.edu/reuse/v.01")(G);
     };
 
     if (O instanceof q.Nothing) return e.pure(r.applicativeEffect)("http://ourdomain.cornell.edu/reuse/v.01");
-    if (O instanceof q.Just) return n.map(r.functorEffect)(W)(B.getAttribute("xmlns")(O.value0));
+    if (O instanceof q.Just) return n.map(r.functorEffect)(W)(E.getAttribute("xmlns")(O.value0));
     throw Error("Failed pattern match at Metajelo.XPaths (line 185, column 3 - line 187, column 59): " + [O.constructor.name]);
   },
       z = function z(O) {
     return function (W) {
-      var G = function G(Q) {
+      var G = function G(R) {
         return function (v) {
-          return function (na) {
-            na = y.lookupNamespaceURI(Q)(na);
-            if (na instanceof q.Nothing) return v;
-            if (na instanceof q.Just) return na.value0;
-            throw Error("Failed pattern match at Metajelo.XPaths (line 202, column 39 - line 204, column 20): " + [na.constructor.name]);
+          return function (oa) {
+            oa = y.lookupNamespaceURI(R)(oa);
+            if (oa instanceof q.Nothing) return v;
+            if (oa instanceof q.Just) return oa.value0;
+            throw Error("Failed pattern match at Metajelo.XPaths (line 202, column 39 - line 204, column 20): " + [oa.constructor.name]);
           };
         };
       };
 
       return function () {
-        var Q = y.defaultNSResolver(O)(W)(),
-            v = B.fromNode(O);
+        var R = y.defaultNSResolver(O)(W)(),
+            v = E.fromNode(O);
         v = N(v)();
-        return y.customNSResolver(G(Q)(v));
+        return y.customNSResolver(G(R)(v));
       };
     };
   };
@@ -14189,10 +14189,10 @@ var PS = {};
   c.instContactTypeAT = "institutionContactType";
   c.polTypeAT = "policyType";
   c.appliesToProdAT = "appliesToProduct";
-  c.idTypeRootAP = D;
+  c.idTypeRootAP = B;
   c.idRootP = A;
   c.dateRootP = d;
-  c.lastModRootP = R;
+  c.lastModRootP = Q;
   c.relIdRootP = a;
   c.sProdRootP = H;
 
@@ -14203,23 +14203,23 @@ var PS = {};
       if (W instanceof p.Left) W = x["throw"]("XML parsing error: " + W.value0)();else if (W instanceof p.Right) W = W.value0;else throw Error("Failed pattern match at Metajelo.XPaths (line 245, column 13 - line 247, column 26): " + [W.constructor.name]);
       var G = M(W)();
       if (G instanceof q.Nothing) G = x["throw"]("Could not find <record> node!")();else if (G instanceof q.Just) G = G.value0;else throw Error("Failed pattern match at Metajelo.XPaths (line 249, column 14 - line 251, column 23): " + [G.constructor.name]);
-      var Q = B.fromNode(G);
-      if (Q instanceof q.Nothing) Q = x["throw"]("<record> node could not be cast to an element!")();else if (Q instanceof q.Just) Q = Q.value0;else throw Error("Failed pattern match at Metajelo.XPaths (line 252, column 14 - line 254, column 23): " + [Q.constructor.name]);
-      var v = N(new q.Just(Q))(),
-          na = z(G)(W)();
-      na = I(W)(new q.Just(na));
+      var R = E.fromNode(G);
+      if (R instanceof q.Nothing) R = x["throw"]("<record> node could not be cast to an element!")();else if (R instanceof q.Just) R = R.value0;else throw Error("Failed pattern match at Metajelo.XPaths (line 252, column 14 - line 254, column 23): " + [R.constructor.name]);
+      var v = N(new q.Just(R))(),
+          oa = z(G)(W)();
+      oa = I(W)(new q.Just(oa));
       return {
         doc: W,
         ns: v,
         recNode: G,
-        recElem: Q,
-        xeval: na,
+        recElem: R,
+        xeval: oa,
         xevalRoot: {
-          any: na.any(G),
-          num: na.num(G),
-          str: na.str(G),
-          bool: na.bool(G),
-          nodeMay: na.nodeMay(G)
+          any: oa.any(G),
+          num: oa.num(G),
+          str: oa.str(G),
+          bool: oa.bool(G),
+          nodeMay: oa.nodeMay(G)
         }
       };
     };
@@ -14229,10 +14229,10 @@ var PS = {};
     return function (W) {
       return function (G) {
         return function () {
-          var Q = O.xeval.nodeMay(W)(G)();
-          if (Q instanceof q.Just) return Q.value0;
-          if (Q instanceof q.Nothing) return x["throw"]("Couldn't find required node at: " + G)();
-          throw Error("Failed pattern match at Metajelo.XPaths (line 294, column 3 - line 296, column 40): " + [Q.constructor.name]);
+          var R = O.xeval.nodeMay(W)(G)();
+          if (R instanceof q.Just) return R.value0;
+          if (R instanceof q.Nothing) return x["throw"]("Couldn't find required node at: " + G)();
+          throw Error("Failed pattern match at Metajelo.XPaths (line 294, column 3 - line 296, column 40): " + [R.constructor.name]);
         };
       };
     };
@@ -14271,7 +14271,7 @@ var PS = {};
       f = a["Control.Applicative"],
       k = a["Control.Apply"],
       p = a["Control.Bind"],
-      m = a["Control.Monad"],
+      l = a["Control.Monad"],
       n = a["Control.Monad.Rec.Class"],
       q = a["Control.Plus"],
       w = a["Data.Bifunctor"],
@@ -14317,16 +14317,16 @@ var PS = {};
       });
     };
   },
-      C = new k.Apply(function () {
+      D = new k.Apply(function () {
     return x;
   }, function (H) {
     return function (I) {
       return function (L) {
         return p.bind(h.bindEither)(H(L))(function (M) {
-          return p.bind(h.bindEither)(I(M.suffix))(function (R) {
+          return p.bind(h.bindEither)(I(M.suffix))(function (Q) {
             return f.pure(h.applicativeEither)({
-              result: M.result(R.result),
-              suffix: R.suffix
+              result: M.result(Q.result),
+              suffix: Q.suffix
             });
           });
         });
@@ -14334,7 +14334,7 @@ var PS = {};
     };
   }),
       y = new p.Bind(function () {
-    return C;
+    return D;
   }, function (H) {
     return function (I) {
       return function (L) {
@@ -14345,7 +14345,7 @@ var PS = {};
     };
   }),
       u = new f.Applicative(function () {
-    return C;
+    return D;
   }, function (H) {
     return function (I) {
       return new h.Right({
@@ -14354,14 +14354,14 @@ var PS = {};
       });
     };
   }),
-      B = new m.Monad(function () {
+      E = new l.Monad(function () {
     return u;
   }, function () {
     return y;
   });
 
   k = new n.MonadRec(function () {
-    return B;
+    return E;
   }, function (H) {
     return function (I) {
       var L = function L(M) {
@@ -14377,8 +14377,8 @@ var PS = {};
       };
 
       return function (M) {
-        return n.tailRecM(n.monadRecEither)(function (R) {
-          return d.map(h.functorEither)(L)(H(R.state)(R.str));
+        return n.tailRecM(n.monadRecEither)(function (Q) {
+          return d.map(h.functorEither)(L)(H(Q.state)(Q.str));
         })({
           state: I,
           str: M
@@ -14443,7 +14443,7 @@ var PS = {};
 
   c.showParseError = a;
   c.functorParser = x;
-  c.applyParser = C;
+  c.applyParser = D;
   c.applicativeParser = u;
   c.altParser = F;
   c.alternativeParser = e;
@@ -14460,13 +14460,13 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Data.Functor"],
-      m = a["Data.NonEmpty"],
+      l = a["Data.NonEmpty"],
       n = a["Data.Unit"],
       q = a["Text.Parsing.StringParser"],
       w = a["Data.List"].manyRec(q.monadRecParser)(q.alternativeParser),
       b = function b(h) {
     return function (d) {
-      return new m.NonEmpty(h, d);
+      return new l.NonEmpty(h, d);
     };
   };
 
@@ -14508,7 +14508,7 @@ var PS = {};
       f = a["Data.Char"],
       k = a["Data.Either"],
       p = a["Data.Enum"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Data.Show"],
       q = a["Data.String.CodePoints"],
       w = a["Data.Unit"],
@@ -14517,35 +14517,35 @@ var PS = {};
       d = function () {
     var x = function () {
       var t = p.fromEnum(q.boundedEnumCodePoint);
-      return function (C) {
-        return f.fromCharCode(t(C));
+      return function (D) {
+        return f.fromCharCode(t(D));
       };
     }();
 
     return function (t) {
-      var C = q.codePointAt(t.pos)(t.str);
+      var D = q.codePointAt(t.pos)(t.str);
 
-      if (C instanceof m.Just) {
-        var y = x(C.value0);
-        if (y instanceof m.Just) return new k.Right({
+      if (D instanceof l.Just) {
+        var y = x(D.value0);
+        if (y instanceof l.Just) return new k.Right({
           result: y.value0,
           suffix: {
             str: t.str,
             pos: t.pos + 1 | 0
           }
         });
-        if (y instanceof m.Nothing) return new k.Left({
+        if (y instanceof l.Nothing) return new k.Left({
           pos: t.pos,
-          error: b.ParseError.create("CodePoint " + (n.show(q.showCodePoint)(C.value0) + " is not a character"))
+          error: b.ParseError.create("CodePoint " + (n.show(q.showCodePoint)(D.value0) + " is not a character"))
         });
         throw Error("Failed pattern match at Text.Parsing.StringParser.CodePoints (line 53, column 16 - line 55, column 100): " + [y.constructor.name]);
       }
 
-      if (C instanceof m.Nothing) return new k.Left({
+      if (D instanceof l.Nothing) return new k.Left({
         pos: t.pos,
         error: new b.ParseError("Unexpected EOF")
       });
-      throw Error("Failed pattern match at Text.Parsing.StringParser.CodePoints (line 52, column 3 - line 56, column 64): " + [C.constructor.name]);
+      throw Error("Failed pattern match at Text.Parsing.StringParser.CodePoints (line 52, column 3 - line 56, column 64): " + [D.constructor.name]);
     };
   }(),
       r = function r(x) {
@@ -14582,7 +14582,7 @@ var PS = {};
       f = a["Control.Apply"],
       k = a["Control.Bind"],
       p = a["Data.Char"],
-      m = a["Data.Foldable"],
+      l = a["Data.Foldable"],
       n = a["Data.Functor"],
       q = a["Data.List.Types"],
       w = a["Data.Maybe"],
@@ -14592,23 +14592,23 @@ var PS = {};
       r = a["Data.Unit"],
       x = a["Text.Parsing.StringParser"],
       t = a["Text.Parsing.StringParser.CodePoints"],
-      C = a["Text.Parsing.StringParser.Combinators"],
+      D = a["Text.Parsing.StringParser.Combinators"],
       y = function (fa) {
     var Ba = w.fromJust();
-    return function (oa) {
-      return Ba(p.fromCharCode(oa));
+    return function (pa) {
+      return Ba(p.fromCharCode(pa));
     };
   }(),
       u = function u(fa) {
     return n.map(x.functorParser)(function () {
-      var Ba = m.fold(q.foldableNonEmptyList)(b.monoidString),
-          oa = n.map(q.functorNonEmptyList)(h.singleton);
+      var Ba = l.fold(q.foldableNonEmptyList)(b.monoidString),
+          pa = n.map(q.functorNonEmptyList)(h.singleton);
       return function (qa) {
-        return Ba(oa(qa));
+        return Ba(pa(qa));
       };
-    }())(C.many1(t.satisfy(fa)));
+    }())(D.many1(t.satisfy(fa)));
   },
-      B = function B(fa) {
+      E = function E(fa) {
     return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(fa))(function () {
       return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(F(fa)))(function () {
         return g.pure(x.applicativeParser)(r.unit);
@@ -14616,7 +14616,7 @@ var PS = {};
     });
   },
       F = function F(fa) {
-    return e.alt(x.altParser)(B(fa))(g.pure(x.applicativeParser)(r.unit));
+    return e.alt(x.altParser)(E(fa))(g.pure(x.applicativeParser)(r.unit));
   },
       K = function K(fa) {
     return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t.satisfy(fa)))(function () {
@@ -14634,40 +14634,40 @@ var PS = {};
 
   var L = t.satisfy(a),
       M = K(a),
-      R = function R(fa) {
+      Q = function Q(fa) {
     return function (Ba) {
-      return function (oa) {
-        return oa >= fa && oa <= Ba;
+      return function (pa) {
+        return pa >= fa && pa <= Ba;
       };
     };
   };
 
-  a = R(y(33))(y(126));
+  a = Q(y(33))(y(126));
 
   var A = t.satisfy(a),
-      D = function D(fa) {
+      B = function B(fa) {
     return function (Ba) {
       return h.contains(d.Pattern(h.singleton(Ba)))(fa);
     };
   },
       N = function N(fa) {
-    return R(y(1))(y(8))(fa) || R(y(14))(y(31))(fa) || D("\x0B\f\x7F")(fa);
+    return Q(y(1))(y(8))(fa) || Q(y(14))(y(31))(fa) || B("\x0B\f\x7F")(fa);
   },
       z = function z(fa) {
-    return R(y(33))(y(39))(fa) || R(y(42))(y(91))(fa) || R(y(93))(y(126))(fa) || N(fa);
+    return Q(y(33))(y(39))(fa) || Q(y(42))(y(91))(fa) || Q(y(93))(y(126))(fa) || N(fa);
   },
       O = function O(fa) {
-    return R(y(33))(y(90))(fa) || R(y(94))(y(126))(fa) || N(fa);
+    return Q(y(33))(y(90))(fa) || Q(y(94))(y(126))(fa) || N(fa);
   },
       W = t.satisfy(N),
       G = t["char"]("\r"),
-      Q = n["void"](x.functorParser)(f.applySecond(x.applyParser)(G)(I)),
+      R = n["void"](x.functorParser)(f.applySecond(x.applyParser)(G)(I)),
       v = function () {
-    var fa = B(f.applySecond(x.applyParser)(Q)(M)),
-        Ba = f.applySecond(x.applyParser)(M)(C.optional(f.applySecond(x.applyParser)(Q)(M)));
+    var fa = E(f.applySecond(x.applyParser)(R)(M)),
+        Ba = f.applySecond(x.applyParser)(M)(D.optional(f.applySecond(x.applyParser)(R)(M)));
     return e.alt(x.altParser)(Ba)(fa);
   }(),
-      na = function () {
+      oa = function () {
     var fa = k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]("\\")))(function () {
       return e.alt(x.altParser)(e.alt(x.altParser)(e.alt(x.altParser)(e.alt(x.altParser)(e.alt(x.altParser)(A)(L))(I))(G))(W))(H);
     });
@@ -14676,12 +14676,12 @@ var PS = {};
     });
   }(),
       ma = e.alt(x.altParser)(u(function (fa) {
-    return D(h.singleton(y(33)))(fa) || R(y(35))(y(91))(fa) || R(y(93))(y(126))(fa) || N(fa);
-  }))(na),
+    return B(h.singleton(y(33)))(fa) || Q(y(35))(y(91))(fa) || Q(y(93))(y(126))(fa) || N(fa);
+  }))(oa),
       Aa = function () {
     var fa = k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]('"')))(function () {
-      return k.bind(x.bindParser)(C.many(f.applySecond(x.applyParser)(C.optional(v))(ma)))(function (Ba) {
-        return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(C.optional(v)))(function () {
+      return k.bind(x.bindParser)(D.many(f.applySecond(x.applyParser)(D.optional(v))(ma)))(function (Ba) {
+        return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(D.optional(v)))(function () {
           return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]('"')))(function () {
             return g.pure(x.applicativeParser)(Ba);
           });
@@ -14689,11 +14689,11 @@ var PS = {};
       });
     });
     return n.map(x.functorParser)(function (Ba) {
-      return '"' + (m.fold(q.foldableList)(b.monoidString)(Ba) + '"');
+      return '"' + (l.fold(q.foldableList)(b.monoidString)(Ba) + '"');
     })(fa);
   }(),
       za = k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]("(")))(function () {
-    return k.discard(k.discardUnit)(x.bindParser)(F(e.alt(x.altParser)(e.alt(x.altParser)(e.alt(x.altParser)(K(z))(n["void"](x.functorParser)(na)))(za))(v)))(function () {
+    return k.discard(k.discardUnit)(x.bindParser)(F(e.alt(x.altParser)(e.alt(x.altParser)(e.alt(x.altParser)(K(z))(n["void"](x.functorParser)(oa)))(za))(v)))(function () {
       return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"](")")))(function () {
         return g.pure(x.applicativeParser)(r.unit);
       });
@@ -14701,13 +14701,13 @@ var PS = {};
   }),
       da = F(e.alt(x.altParser)(za)(v));
 
-  a = k.discard(k.discardUnit)(x.bindParser)(C.optional(da))(function () {
+  a = k.discard(k.discardUnit)(x.bindParser)(D.optional(da))(function () {
     return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]("[")))(function () {
-      return k.bind(x.bindParser)(C.many(f.applySecond(x.applyParser)(C.optional(v))(u(O))))(function (fa) {
-        return k.discard(k.discardUnit)(x.bindParser)(C.optional(v))(function () {
+      return k.bind(x.bindParser)(D.many(f.applySecond(x.applyParser)(D.optional(v))(u(O))))(function (fa) {
+        return k.discard(k.discardUnit)(x.bindParser)(D.optional(v))(function () {
           return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(t["char"]("]")))(function () {
-            return k.discard(k.discardUnit)(x.bindParser)(C.optional(da))(function () {
-              return g.pure(x.applicativeParser)("[" + (m.fold(q.foldableList)(b.monoidString)(fa) + "]"));
+            return k.discard(k.discardUnit)(x.bindParser)(D.optional(da))(function () {
+              return g.pure(x.applicativeParser)("[" + (l.fold(q.foldableList)(b.monoidString)(fa) + "]"));
             });
           });
         });
@@ -14717,23 +14717,23 @@ var PS = {};
 
   var ja = function () {
     return u(function (fa) {
-      return "0" <= fa && "9" >= fa || "a" <= fa && "z" >= fa || "A" <= fa && "Z" >= fa || D("!#$%&'*+/=?^_`{|}~-")(fa);
+      return "0" <= fa && "9" >= fa || "a" <= fa && "z" >= fa || "A" <= fa && "Z" >= fa || B("!#$%&'*+/=?^_`{|}~-")(fa);
     });
   }(),
-      va = function () {
-    var fa = k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(C.optional(da)))(function () {
+      wa = function () {
+    var fa = k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(D.optional(da)))(function () {
       return k.bind(x.bindParser)(e.alt(x.altParser)(ja)(Aa))(function (Ba) {
-        return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(C.optional(da)))(function () {
+        return k.discard(k.discardUnit)(x.bindParser)(n["void"](x.functorParser)(D.optional(da)))(function () {
           return g.pure(x.applicativeParser)(Ba);
         });
       });
     });
-    fa = C.sepBy1(fa)(t["char"]("."));
-    return n.map(x.functorParser)(m.intercalate(q.foldableNonEmptyList)(b.monoidString)("."))(fa);
+    fa = D.sepBy1(fa)(t["char"]("."));
+    return n.map(x.functorParser)(l.intercalate(q.foldableNonEmptyList)(b.monoidString)("."))(fa);
   }(),
-      P = e.alt(x.altParser)(va)(a);
+      P = e.alt(x.altParser)(wa)(a);
 
-  a = k.bind(x.bindParser)(va)(function (fa) {
+  a = k.bind(x.bindParser)(wa)(function (fa) {
     return k.bind(x.bindParser)(t["char"]("@"))(function () {
       return k.bind(x.bindParser)(P)(function (Ba) {
         return k.bind(x.bindParser)(t.eof)(function () {
@@ -14762,10 +14762,10 @@ var PS = {};
       p = a["Text.Parsing.StringParser"];
 
   a = function () {
-    var m = e.lmap(g.bifunctorEither)(f.show(p.showParseError));
+    var l = e.lmap(g.bifunctorEither)(f.show(p.showParseError));
     return function (n) {
       n = p.runParser(k.addrSpec)(n);
-      return m(n);
+      return l(n);
     };
   }();
 
@@ -14797,12 +14797,12 @@ var PS = {};
       g = a["Data.Either"],
       f = a["Data.Maybe"],
       k = a["Data.String.NonEmpty.Internal"],
-      p = function p(m) {
+      p = function p(l) {
     return function (n) {
       var q = "SUCCESS" === n ? !0 : !1;
 
       if (q) {
-        n = k.fromString(m);
+        n = k.fromString(l);
         if (n instanceof f.Just) return new g.Right(n.value0);
         if (n instanceof f.Nothing) return new g.Left("Empty URL");
         throw Error("Failed pattern match at Text.URL.Validate (line 54, column 11 - line 56, column 32): " + [n.constructor.name]);
@@ -14813,18 +14813,18 @@ var PS = {};
     };
   };
 
-  c.parsePublicURL = function (m) {
-    var n = e._validateURL(!0)(m);
+  c.parsePublicURL = function (l) {
+    var n = e._validateURL(!0)(l);
 
-    return p(m)(n);
+    return p(l)(n);
   };
 
-  c.urlToNEString = function (m) {
-    return m;
+  c.urlToNEString = function (l) {
+    return l;
   };
 
-  c.urlToString = function (m) {
-    return k.toString(m);
+  c.urlToString = function (l) {
+    return k.toString(l);
   };
 })(PS);
 
@@ -14850,7 +14850,7 @@ var PS = {};
       f = a["Control.Bind"],
       k = a["Control.Monad"],
       p = a["Control.Plus"],
-      m = a["Data.Array"],
+      l = a["Data.Array"],
       n = a["Data.Array.NonEmpty"],
       q = a["Data.Bounded"],
       w = a["Data.DateTime"],
@@ -14860,36 +14860,36 @@ var PS = {};
       r = a["Data.Int"],
       x = a["Data.JSDate"],
       t = a["Data.Maybe"],
-      C = a["Data.Natural"],
+      D = a["Data.Natural"],
       y = a["Data.String.CodePoints"],
       u = a["Data.String.CodeUnits"],
-      B = a["Data.String.NonEmpty.Internal"],
+      E = a["Data.String.NonEmpty.Internal"],
       F = a["Data.String.Utils"],
       K = a["Data.Traversable"],
       H = a["Data.XPath"],
       I = a["DataCite.Types.Common"],
       L = a.Effect,
       M = a["Effect.Exception"],
-      R = a.Global,
+      Q = a.Global,
       A = a["Metajelo.Types"],
-      D = a["Metajelo.XPaths"],
+      B = a["Metajelo.XPaths"],
       N = a["Text.Email.Validate"],
       z = a["Text.URL.Validate"],
       O = a["Web.DOM.Document.XPath"],
       W = a["Web.DOM.Document.XPath.ResultType"],
       G = a["Web.DOM.Element"],
-      Q = a["Web.DOM.Node"],
+      R = a["Web.DOM.Node"],
       v = a["Web.DOM.NodeList"],
-      na = function na(S) {
+      oa = function oa(S) {
     return "Audiovisual" === S ? e.pure(b.applicativeEither)(I.Audiovisual.value) : "Dataset" === S ? e.pure(b.applicativeEither)(I.Dataset.value) : "Event" === S ? e.pure(b.applicativeEither)(I.Event.value) : "Image" === S ? e.pure(b.applicativeEither)(I.Image.value) : "InteractiveResource" === S ? e.pure(b.applicativeEither)(I.InteractiveResource.value) : "Model" === S ? e.pure(b.applicativeEither)(I.Model.value) : "PhysicalObject" === S ? e.pure(b.applicativeEither)(I.PhysicalObject.value) : "ResourceCollection" === S ? e.pure(b.applicativeEither)(I.ResourceCollection.value) : "Service" === S ? e.pure(b.applicativeEither)(I.Service.value) : "Software" === S ? e.pure(b.applicativeEither)(I.Software.value) : "Sound" === S ? e.pure(b.applicativeEither)(I.Sound.value) : "Text" === S ? e.pure(b.applicativeEither)(I.Text.value) : "Workflow" === S ? e.pure(b.applicativeEither)(I.Workflow.value) : "Other" === S ? e.pure(b.applicativeEither)(I.Other.value) : b.Left.create("Unknown ResourceTypeGeneral: '" + (S + "'"));
   },
       ma = function ma(S) {
-    return function (E) {
+    return function (C) {
       return function () {
-        var X = D.unsafeSingleNodeValue(S)(E)(H.xx(H.stringXPath)(D.resTypeP))(),
+        var X = B.unsafeSingleNodeValue(S)(C)(H.xx(H.stringXPath)(B.resTypeP))(),
             ka = S.xeval.str(X)(".")();
-        X = S.xeval.str(X)(H.at(H.stringXPath)(D.resTypeGenAT))();
-        X = D.rightOrThrow(na(X))();
+        X = S.xeval.str(X)(H.at(H.stringXPath)(B.resTypeGenAT))();
+        X = B.rightOrThrow(oa(X))();
         return {
           description: ka,
           generalType: X
@@ -14904,20 +14904,20 @@ var PS = {};
     return "Access" === S ? e.pure(b.applicativeEither)(new t.Just(A.Access.value)) : "Collection" === S ? e.pure(b.applicativeEither)(new t.Just(A.Collection.value)) : "Data" === S ? e.pure(b.applicativeEither)(new t.Just(A.Data.value)) : "Metadata" === S ? e.pure(b.applicativeEither)(new t.Just(A.Metadata.value)) : "Preservation" === S ? e.pure(b.applicativeEither)(new t.Just(A.Preservation.value)) : "Submission" === S ? e.pure(b.applicativeEither)(new t.Just(A.Submission.value)) : "Quality" === S ? e.pure(b.applicativeEither)(new t.Just(A.Quality.value)) : "Terms of Use" === S ? e.pure(b.applicativeEither)(new t.Just(A.TermsOfUse.value)) : "" === S ? e.pure(b.applicativeEither)(t.Nothing.value) : b.Left.create("Unknown PolicyType: '" + (S + "'"));
   },
       da = function da(S) {
-    return function (E) {
+    return function (C) {
       return function (X) {
         return function () {
-          var ka = S.xeval.any(X)(H.xx(H.stringXPath)(E))(W.ordered_node_snapshot_type)();
+          var ka = S.xeval.any(X)(H.xx(H.stringXPath)(C))(W.ordered_node_snapshot_type)();
           ka = O.snapshot(ka)();
           ka = K.traverse(K.traversableArray)(L.applicativeEffect)(function (ca) {
             return S.xeval.str(ca)(".");
           })(ka)();
           ka = d.map(d.functorArray)(function (ca) {
-            return D.readNonEmptyString(E)(ca);
+            return B.readNonEmptyString(C)(ca);
           })(ka);
           h.catLefts(k.monadArray)(p.plusArray)(ka);
           ka = h.catRights(k.monadArray)(p.plusArray)(ka);
-          return D.readNonEmptyArray(E + "s")(ka);
+          return B.readNonEmptyArray(C + "s")(ka);
         };
       };
     };
@@ -14925,29 +14925,29 @@ var PS = {};
       ja = function ja(S) {
     return "commercial" === S ? e.pure(b.applicativeEither)(A.Commercial.value) : "non-profit" === S ? e.pure(b.applicativeEither)(A.NonProfit.value) : "governmental" === S ? e.pure(b.applicativeEither)(A.Governmental.value) : b.Left.create("Unknown InstitutionType: '" + (S + "'"));
   },
-      va = function va(S) {
+      wa = function wa(S) {
     return "dataCustodian" === S ? e.pure(b.applicativeEither)(new t.Just(A.DataCustodian.value)) : "" === S ? e.pure(b.applicativeEither)(t.Nothing.value) : b.Left.create("Unknown InstitutionContactType: '" + (S + "'"));
   },
       P = function P(S) {
     return "ARK" === S ? e.pure(b.applicativeEither)(I.ARK.value) : "arXiv" === S ? e.pure(b.applicativeEither)(I.ArXiv.value) : "bibcode" === S ? e.pure(b.applicativeEither)(I.Bibcode.value) : "DOI" === S ? e.pure(b.applicativeEither)(I.DOI.value) : "EAN13" === S ? e.pure(b.applicativeEither)(I.EAN13.value) : "EISSN" === S ? e.pure(b.applicativeEither)(I.EISSN.value) : "Handle" === S ? e.pure(b.applicativeEither)(I.Handle.value) : "IGSN" === S ? e.pure(b.applicativeEither)(I.IGSN.value) : "ISBN" === S ? e.pure(b.applicativeEither)(I.ISBN.value) : "ISSN" === S ? e.pure(b.applicativeEither)(I.ISSN.value) : "ISTC" === S ? e.pure(b.applicativeEither)(I.ISTC.value) : "LISSN" === S ? e.pure(b.applicativeEither)(I.LISSN.value) : "LSID" === S ? e.pure(b.applicativeEither)(I.LSID.value) : "PMID" === S ? e.pure(b.applicativeEither)(I.PMID.value) : "PURL" === S ? e.pure(b.applicativeEither)(I.PURL.value) : "UPC" === S ? e.pure(b.applicativeEither)(I.UPC.value) : "URL" === S ? e.pure(b.applicativeEither)(I.URL.value) : "URN" === S ? e.pure(b.applicativeEither)(I.URN.value) : b.Left.create("Unknown IdentifierType: '" + (S + "'"));
   },
       fa = function fa(S) {
-    return function (E) {
+    return function (C) {
       var X = function X(ca) {
         return function () {
-          var ia = S.xeval.str(ca)(H.at(H.stringXPath)(D.idTypeAT))();
-          return D.rightOrThrow(P(ia))();
+          var ia = S.xeval.str(ca)(H.at(H.stringXPath)(B.idTypeAT))();
+          return B.rightOrThrow(P(ia))();
         };
       },
           ka = function ka(ca) {
         return function () {
           var ia = S.xeval.str(ca)(".")();
-          return D.rightOrThrow(D.readNonEmptyString("InstitutionID")(ia))();
+          return B.rightOrThrow(B.readNonEmptyString("InstitutionID")(ia))();
         };
       };
 
       return function () {
-        var ca = D.unsafeSingleNodeValue(S)(E)(H.xx(H.stringXPath)(D.instIdP))(),
+        var ca = B.unsafeSingleNodeValue(S)(C)(H.xx(H.stringXPath)(B.instIdP))(),
             ia = ka(ca)();
         ca = X(ca)();
         return {
@@ -14958,29 +14958,29 @@ var PS = {};
     };
   },
       Ba = function Ba(S) {
-    var E = function E(ia) {
+    var C = function C(ia) {
       return function () {
-        var ra = S.xeval.str(ia)(H.at(H.stringXPath)(D.relTypeAT))();
-        return D.rightOrThrow(Aa(ra))();
+        var ra = S.xeval.str(ia)(H.at(H.stringXPath)(B.relTypeAT))();
+        return B.rightOrThrow(Aa(ra))();
       };
     },
         X = function X(ia) {
       return function () {
-        var ra = S.xeval.str(ia)(H.at(H.stringXPath)(D.relIdTypeAT))();
-        return D.rightOrThrow(P(ra))();
+        var ra = S.xeval.str(ia)(H.at(H.stringXPath)(B.relIdTypeAT))();
+        return B.rightOrThrow(P(ra))();
       };
     },
         ka = function ka(ia) {
       return function () {
         var ra = S.xeval.str(ia)(".")();
-        return D.rightOrThrow(D.readNonEmptyString("RelatedIdentifier")(ra))();
+        return B.rightOrThrow(B.readNonEmptyString("RelatedIdentifier")(ra))();
       };
     },
         ca = function ca(ia) {
       return function () {
         var ra = ka(ia)(),
             ta = X(ia)(),
-            ya = E(ia)();
+            ya = C(ia)();
         return {
           identifier: ra,
           identifierType: ta,
@@ -14990,7 +14990,7 @@ var PS = {};
     };
 
     return function () {
-      var ia = S.xevalRoot.any(D.relIdRootP)(W.ordered_node_snapshot_type)();
+      var ia = S.xevalRoot.any(B.relIdRootP)(W.ordered_node_snapshot_type)();
       ia = O.snapshot(ia)();
       ia = K.sequence(K.traversableArray)(L.applicativeEffect)(d.map(d.functorArray)(ca)(ia))();
       ia = n.fromArray(ia);
@@ -14999,18 +14999,18 @@ var PS = {};
       throw Error("Failed pattern match at Metajelo.XPaths.Read (line 112, column 3 - line 114, column 67): " + [ia.constructor.name]);
     };
   },
-      oa = function oa(S) {
-    return function (E) {
+      pa = function pa(S) {
+    return function (C) {
       var X = function X(ia) {
         return function () {
-          var ra = S.xeval.str(ia)(H.at(H.stringXPath)(D.resIdTypeAT))();
-          return D.rightOrThrow(P(ra))();
+          var ra = S.xeval.str(ia)(H.at(H.stringXPath)(B.resIdTypeAT))();
+          return B.rightOrThrow(P(ra))();
         };
       },
           ka = function ka(ia) {
         return function () {
           var ra = S.xeval.str(ia)(".")();
-          return D.rightOrThrow(D.readNonEmptyString("ResourceID")(ra))();
+          return B.rightOrThrow(B.readNonEmptyString("ResourceID")(ra))();
         };
       },
           ca = function ca(ia) {
@@ -15018,10 +15018,10 @@ var PS = {};
           return K.sequence(K.traversableMaybe)(L.applicativeEffect)(f.bind(t.bindMaybe)(ia)(function (ta) {
             return f.bind(t.bindMaybe)(ra)(function (ya) {
               return e.pure(t.applicativeMaybe)(g.lift2(L.applyEffect)(function (Ha) {
-                return function (Ja) {
+                return function (Ka) {
                   return {
                     identifier: Ha,
-                    identifierType: Ja
+                    identifierType: Ka
                   };
                 };
               })(ta)(ya));
@@ -15031,7 +15031,7 @@ var PS = {};
       };
 
       return function () {
-        var ia = S.xeval.nodeMay(E)(H.xx(H.stringXPath)(D.resIdP))(),
+        var ia = S.xeval.nodeMay(C)(H.xx(H.stringXPath)(B.resIdP))(),
             ra = d.map(t.functorMaybe)(ka)(ia);
         ia = d.map(t.functorMaybe)(X)(ia);
         return ca(ra)(ia)();
@@ -15040,27 +15040,27 @@ var PS = {};
   },
       qa = function qa(S) {
     return function () {
-      var E = S.xevalRoot.str(D.idRootP)();
-      E = D.rightOrThrow(D.readNonEmptyString("Identifier")(E))();
-      var X = S.xevalRoot.str(D.idTypeRootAP)();
-      X = D.rightOrThrow(P(X))();
+      var C = S.xevalRoot.str(B.idRootP)();
+      C = B.rightOrThrow(B.readNonEmptyString("Identifier")(C))();
+      var X = S.xevalRoot.str(B.idTypeRootAP)();
+      X = B.rightOrThrow(P(X))();
       return {
-        identifier: E,
+        identifier: C,
         identifierType: X
       };
     };
   },
       sa = function sa(S) {
-    return function (E) {
+    return function (C) {
       var X = function X(ka) {
         return function () {
           var ca = S.xeval.str(ka)(".")();
-          return D.rightOrThrow(D.readNonEmptyString("Format")(ca))();
+          return B.rightOrThrow(B.readNonEmptyString("Format")(ca))();
         };
       };
 
       return function () {
-        var ka = S.xeval.any(E)(H.pathAppendNSx(H.stringXPath)(H.xx(H.stringXPath)(D.formatCP))(D.formatP))(W.ordered_node_snapshot_type)();
+        var ka = S.xeval.any(C)(H.pathAppendNSx(H.stringXPath)(H.xx(H.stringXPath)(B.formatCP))(B.formatP))(W.ordered_node_snapshot_type)();
         ka = O.snapshot(ka)();
         return K.traverse(K.traversableArray)(L.applicativeEffect)(X)(ka)();
       };
@@ -15072,25 +15072,25 @@ var PS = {};
       Ga = function Ga(S) {
     return "" === S ? e.pure(b.applicativeEither)(t.Nothing.value) : d.map(b.functorEither)(t.Just.create)(Ca(S));
   },
-      U = function U(S) {
-    return function (E) {
-      var X = H.pathAppendNSx(H.stringXPath)(H.xx(H.stringXPath)(D.instPolicyCP))(D.instPolicyP),
+      V = function V(S) {
+    return function (C) {
+      var X = H.pathAppendNSx(H.stringXPath)(H.xx(H.stringXPath)(B.instPolicyCP))(B.instPolicyP),
           ka = function ka(ca) {
         return function () {
-          var ia = Q.childNodes(ca)();
+          var ia = R.childNodes(ca)();
           ia = v.toArray(ia)();
-          ia = m.head(m.filter(function (Ea) {
-            return !F.startsWith("#")(Q.nodeName(Ea));
+          ia = l.head(l.filter(function (Ea) {
+            return !F.startsWith("#")(R.nodeName(Ea));
           })(ia));
-          if (ia instanceof t.Just) var ra = ia.value0;else if (ia instanceof t.Nothing) ra = M["throw"]("Couldn't find child node of " + Q.nodeName(ca))();else throw Error("Failed pattern match at Metajelo.XPaths.Read (line 394, column 30 - line 396, column 80): " + [ia.constructor.name]);
+          if (ia instanceof t.Just) var ra = ia.value0;else if (ia instanceof t.Nothing) ra = M["throw"]("Couldn't find child node of " + R.nodeName(ca))();else throw Error("Failed pattern match at Metajelo.XPaths.Read (line 394, column 30 - line 396, column 80): " + [ia.constructor.name]);
           var ta = S.xeval.str(ra)(".")(),
-              ya = D.rightOrThrow(D.readNonEmptyString("Policy")(ta))();
+              ya = B.rightOrThrow(B.readNonEmptyString("Policy")(ta))();
 
           ia = function () {
             var Ea = d.map(t.functorMaybe)(G.localName)(G.fromNode(ra));
-            if (Ea instanceof t.Just && Ea.value0 === D.freeTextPolicyP) return new A.FreeTextPolicy(ya);
+            if (Ea instanceof t.Just && Ea.value0 === B.freeTextPolicyP) return new A.FreeTextPolicy(ya);
 
-            if (Ea instanceof t.Just && Ea.value0 === D.refPolicyP) {
+            if (Ea instanceof t.Just && Ea.value0 === B.refPolicyP) {
               Ea = z.parsePublicURL(ta);
               if (Ea instanceof b.Left) return M["throw"]("In refPolicy URL parsing: " + Ea.value0)();
               if (Ea instanceof b.Right) return new A.RefPolicy(Ea.value0);
@@ -15098,24 +15098,24 @@ var PS = {};
             }
 
             if (Ea instanceof t.Just) return M["throw"]("invalid element '" + (Ea.value0 + "' as child of institutionPolicy"))();
-            if (Ea instanceof t.Nothing) return M["throw"]("unable to convert policy child Node with name '" + (Q.nodeName(ra) + "' to an Element"))();
+            if (Ea instanceof t.Nothing) return M["throw"]("unable to convert policy child Node with name '" + (R.nodeName(ra) + "' to an Element"))();
             throw Error("Failed pattern match at Metajelo.XPaths.Read (line 399, column 17 - line 407, column 56): " + [Ea.constructor.name]);
           }();
 
-          var Ha = S.xeval.str(ca)(H.at(H.stringXPath)(D.polTypeAT))();
-          Ha = D.rightOrThrow(za(Ha))();
-          var Ja = S.xeval.str(ca)(H.at(H.stringXPath)(D.appliesToProdAT))();
-          Ja = D.rightOrThrow(Ga(Ja))();
+          var Ha = S.xeval.str(ca)(H.at(H.stringXPath)(B.polTypeAT))();
+          Ha = B.rightOrThrow(za(Ha))();
+          var Ka = S.xeval.str(ca)(H.at(H.stringXPath)(B.appliesToProdAT))();
+          Ka = B.rightOrThrow(Ga(Ka))();
           return {
             policy: ia,
             policyType: Ha,
-            appliesToProduct: Ja
+            appliesToProduct: Ka
           };
         };
       };
 
       return function () {
-        var ca = S.xeval.any(E)(X)(W.ordered_node_snapshot_type)();
+        var ca = S.xeval.any(C)(X)(W.ordered_node_snapshot_type)();
         ca = O.snapshot(ca)();
         ca = K.sequence(K.traversableArray)(L.applicativeEffect)(d.map(d.functorArray)(ka)(ca))();
         ca = n.fromArray(ca);
@@ -15126,20 +15126,20 @@ var PS = {};
     };
   },
       la = function la(S) {
-    return function (E) {
+    return function (C) {
       var X = function X(ca) {
         return function () {
-          var ia = S.xeval.str(ca)(H.xx(H.stringXPath)(D.pubYearP))();
-          ia = D.rightOrThrow(D.readNonEmptyString("PubYear")(ia))();
-          return C.intToNat(r.round(R.readInt(10)(B.toString(ia))));
+          var ia = S.xeval.str(ca)(H.xx(H.stringXPath)(B.pubYearP))();
+          ia = B.rightOrThrow(B.readNonEmptyString("PubYear")(ia))();
+          return D.intToNat(r.round(Q.readInt(10)(E.toString(ia))));
         };
       },
-          ka = H.xx(H.stringXPath)(D.basicMetaP);
+          ka = H.xx(H.stringXPath)(B.basicMetaP);
 
       return function () {
-        var ca = D.unsafeSingleNodeValue(S)(E)(ka)(),
-            ia = f.bindFlipped(L.bindEffect)(D.rightOrThrow)(da(S)(D.titleP)(ca))(),
-            ra = f.bindFlipped(L.bindEffect)(D.rightOrThrow)(da(S)(D.creatorP)(ca))();
+        var ca = B.unsafeSingleNodeValue(S)(C)(ka)(),
+            ia = f.bindFlipped(L.bindEffect)(B.rightOrThrow)(da(S)(B.titleP)(ca))(),
+            ra = f.bindFlipped(L.bindEffect)(B.rightOrThrow)(da(S)(B.creatorP)(ca))();
         ca = X(ca)();
         return {
           titles: ia,
@@ -15150,33 +15150,33 @@ var PS = {};
     };
   },
       aa = function aa(S) {
-    var E = B.toString(S);
+    var C = E.toString(S);
     return function () {
-      var X = u.stripSuffix("Z")(E);
-      if (X instanceof t.Just) X = 10 >= y.length(X.value0) ? X.value0 + "T00:00:00.000Z" : E;else if (X instanceof t.Nothing) X = E;else throw Error("Failed pattern match at Metajelo.XPaths.Read (line 98, column 24 - line 100, column 23): " + [X.constructor.name]);
+      var X = u.stripSuffix("Z")(C);
+      if (X instanceof t.Just) X = 10 >= y.length(X.value0) ? X.value0 + "T00:00:00.000Z" : C;else if (X instanceof t.Nothing) X = C;else throw Error("Failed pattern match at Metajelo.XPaths.Read (line 98, column 24 - line 100, column 23): " + [X.constructor.name]);
       X = x.parse(X)();
       return t.fromMaybe(q.bottom(w.boundedDateTime))(x.toDateTime(X));
     };
   },
       J = function J(S) {
     return function () {
-      var E = S.xevalRoot.str(D.dateRootP)();
-      E = D.rightOrThrow(D.readNonEmptyString("Date")(E))();
-      return aa(E)();
+      var C = S.xevalRoot.str(B.dateRootP)();
+      C = B.rightOrThrow(B.readNonEmptyString("Date")(C))();
+      return aa(C)();
     };
   },
       Z = function Z(S) {
     return function () {
-      var E = S.xevalRoot.str(D.lastModRootP)();
-      E = D.rightOrThrow(D.readNonEmptyString("ModDate")(E))();
-      return aa(E)();
+      var C = S.xevalRoot.str(B.lastModRootP)();
+      C = B.rightOrThrow(B.readNonEmptyString("ModDate")(C))();
+      return aa(C)();
     };
   },
       ua = function ua(S) {
-    return function (E) {
+    return function (C) {
       return function (X) {
         return function () {
-          var ka = S.xeval.str(X)(E)();
+          var ka = S.xeval.str(X)(C)();
           ka = z.parsePublicURL(ka);
           if (ka instanceof b.Left) return M["throw"](ka.value0)();
           if (ka instanceof b.Right) return ka.value0;
@@ -15186,16 +15186,16 @@ var PS = {};
     };
   },
       Da = function Da(S) {
-    return function (E) {
+    return function (C) {
       var X = function X(ra) {
         return function () {
           var ta = ra();
-          return D.rightOrThrow(D.readNonEmptyString("SuperOrg")(ta))();
+          return B.rightOrThrow(B.readNonEmptyString("SuperOrg")(ta))();
         };
       },
           ka = function ka(ra) {
         return function () {
-          var ta = S.xeval.nodeMay(ra)(H.xx(H.stringXPath)(D.superOrgNameP))();
+          var ta = S.xeval.nodeMay(ra)(H.xx(H.stringXPath)(B.superOrgNameP))();
           return K.traverse(K.traversableMaybe)(L.applicativeEffect)(function (ya) {
             return X(S.xeval.str(ya)("."));
           })(ta)();
@@ -15203,9 +15203,9 @@ var PS = {};
       },
           ca = function ca(ra) {
         return function () {
-          var ta = D.unsafeSingleNodeValue(S)(ra)(H.xx(H.stringXPath)(D.instSustainP))(),
-              ya = ua(S)(H.xx(H.stringXPath)(D.missionUrlP))(ta)();
-          ta = ua(S)(H.xx(H.stringXPath)(D.fundingUrlP))(ta)();
+          var ta = B.unsafeSingleNodeValue(S)(ra)(H.xx(H.stringXPath)(B.instSustainP))(),
+              ya = ua(S)(H.xx(H.stringXPath)(B.missionUrlP))(ta)();
+          ta = ua(S)(H.xx(H.stringXPath)(B.fundingUrlP))(ta)();
           return {
             missionStatementURL: ya,
             fundingStatementURL: ta
@@ -15213,11 +15213,11 @@ var PS = {};
         };
       },
           ia = function ia(ra) {
-        var ta = H.xx(H.stringXPath)(D.instContactP);
+        var ta = H.xx(H.stringXPath)(B.instContactP);
         return function () {
-          var ya = D.unsafeSingleNodeValue(S)(ra)(ta)(),
-              Ha = S.xeval.str(ya)(H.at(H.stringXPath)(D.instContactTypeAT))();
-          Ha = D.rightOrThrow(va(Ha))();
+          var ya = B.unsafeSingleNodeValue(S)(ra)(ta)(),
+              Ha = S.xeval.str(ya)(H.at(H.stringXPath)(B.instContactTypeAT))();
+          Ha = B.rightOrThrow(wa(Ha))();
           ya = S.xeval.str(ya)(".")();
           ya = N.validate(ya);
           if (ya instanceof b.Left) ya = M["throw"]("Error in validating email address for InstitutionContact: " + ya.value0)();else if (ya instanceof b.Right) ya = ya.value0;else throw Error("Failed pattern match at Metajelo.XPaths.Read (line 345, column 23 - line 349, column 28): " + [ya.constructor.name]);
@@ -15229,26 +15229,26 @@ var PS = {};
       };
 
       return function () {
-        var ra = D.unsafeSingleNodeValue(S)(E)(H.xx(H.stringXPath)(D.locP))(),
+        var ra = B.unsafeSingleNodeValue(S)(C)(H.xx(H.stringXPath)(B.locP))(),
             ta = fa(S)(ra)(),
-            ya = f.join(L.bindEffect)(d.mapFlipped(L.functorEffect)(S.xeval.str(ra)(H.xx(H.stringXPath)(D.instNameP)))(function (Wa) {
-          return D.rightOrThrow(D.readNonEmptyString("Institution Name")(Wa));
+            ya = f.join(L.bindEffect)(d.mapFlipped(L.functorEffect)(S.xeval.str(ra)(H.xx(H.stringXPath)(B.instNameP)))(function (Wa) {
+          return B.rightOrThrow(B.readNonEmptyString("Institution Name")(Wa));
         }))(),
-            Ha = S.xeval.str(ra)(H.xx(H.stringXPath)(D.instTypeP))();
-        Ha = D.rightOrThrow(ja(Ha))();
-        var Ja = ka(ra)(),
+            Ha = S.xeval.str(ra)(H.xx(H.stringXPath)(B.instTypeP))();
+        Ha = B.rightOrThrow(ja(Ha))();
+        var Ka = ka(ra)(),
             Ea = ia(ra)(),
-            Ma = ca(ra)(),
-            Qa = U(S)(ra)();
-        ra = S.xeval.str(ra)(H.xx(H.stringXPath)(D.versioningP))();
-        ra = D.rightOrThrow(Ca(ra))();
+            Na = ca(ra)(),
+            Qa = V(S)(ra)();
+        ra = S.xeval.str(ra)(H.xx(H.stringXPath)(B.versioningP))();
+        ra = B.rightOrThrow(Ca(ra))();
         return {
           institutionID: ta,
           institutionName: ya,
           institutionType: Ha,
-          superOrganizationName: Ja,
+          superOrganizationName: Ka,
           institutionContact: Ea,
-          institutionSustainability: Ma,
+          institutionSustainability: Na,
           institutionPolicies: Qa,
           versioning: ra
         };
@@ -15256,11 +15256,11 @@ var PS = {};
     };
   },
       Fa = function Fa(S) {
-    return function (E) {
+    return function (C) {
       var X = function X(ca) {
         return function () {
-          var ia = S.xeval.str(ca)(H.at(H.stringXPath)(D.relTypeAT))();
-          return D.rightOrThrow(Aa(ia))();
+          var ia = S.xeval.str(ca)(H.at(H.stringXPath)(B.relTypeAT))();
+          return B.rightOrThrow(Aa(ia))();
         };
       },
           ka = function ka(ca) {
@@ -15281,18 +15281,18 @@ var PS = {};
       };
 
       return function () {
-        var ca = S.xeval.nodeMay(E)(H.xx(H.stringXPath)(D.resMetaSourceP))(),
+        var ca = S.xeval.nodeMay(C)(H.xx(H.stringXPath)(B.resMetaSourceP))(),
             ia = d.map(t.functorMaybe)(ua(S)("."))(ca);
         ca = d.map(t.functorMaybe)(X)(ca);
         return ka(ia)(ca)();
       };
     };
   },
-      Ka = function Ka(S) {
-    var E = function E(X) {
+      La = function La(S) {
+    var C = function C(X) {
       return function () {
         var ka = la(S)(X)(),
-            ca = oa(S)(X)(),
+            ca = pa(S)(X)(),
             ia = ma(S)(X)(),
             ra = sa(S)(X)(),
             ta = Fa(S)(X)(),
@@ -15309,9 +15309,9 @@ var PS = {};
     };
 
     return function () {
-      var X = S.xevalRoot.any(D.sProdRootP)(W.ordered_node_snapshot_type)();
+      var X = S.xevalRoot.any(B.sProdRootP)(W.ordered_node_snapshot_type)();
       X = O.snapshot(X)();
-      X = K.sequence(K.traversableArray)(L.applicativeEffect)(d.map(d.functorArray)(E)(X))();
+      X = K.sequence(K.traversableArray)(L.applicativeEffect)(d.map(d.functorArray)(C)(X))();
       X = n.fromArray(X);
       if (X instanceof t.Just) return X.value0;
       if (X instanceof t.Nothing) return M["throw"]("At least one SupplementaryProduct is required!")();
@@ -15321,13 +15321,13 @@ var PS = {};
 
   c.readRecord = function (S) {
     return function () {
-      var E = qa(S)(),
+      var C = qa(S)(),
           X = J(S)(),
           ka = Z(S)(),
           ca = Ba(S)(),
-          ia = Ka(S)();
+          ia = La(S)();
       return {
-        identifier: E,
+        identifier: C,
         date: X,
         lastModified: ka,
         relatedIdentifiers: ca,
@@ -15339,9 +15339,9 @@ var PS = {};
   c.readIdentifierType = P;
   c.parseDate = aa;
   c.readRelationType = Aa;
-  c.readResourceTypeGeneral = na;
+  c.readResourceTypeGeneral = oa;
   c.readInstitutionType = ja;
-  c.readInstitutionContactType = va;
+  c.readInstitutionContactType = wa;
   c.readPolicyType = za;
   c.readBoolean = Ca;
 })(PS);
@@ -15385,7 +15385,7 @@ var PS = {};
       f = a["Data.Foldable"],
       k = a["Data.Functor"],
       p = a["Data.JSDate"],
-      m = a["Data.Maybe"],
+      l = a["Data.Maybe"],
       n = a["Data.Natural"],
       q = a["Data.Show"],
       w = a["Data.Traversable"],
@@ -15395,20 +15395,20 @@ var PS = {};
       r = a.Effect,
       x = a["Metajelo.Types"],
       t = a["Metajelo.XPaths"],
-      C = a["Nonbili.DOM"],
+      D = a["Nonbili.DOM"],
       y = a["Text.Email.Parser"],
       u = a["Text.URL.Validate"],
-      B = a["Web.DOM.Document"],
+      E = a["Web.DOM.Document"],
       F = a["Web.DOM.Element"],
       K = a["Web.DOM.Node"],
-      H = function H(U) {
+      H = function H(V) {
     return function (la) {
       return function (aa) {
         return function (J) {
           var Z = F.fromNode(aa);
           return function () {
-            w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(Z)(function (ua) {
-              return F.setAttribute(U)(q.show(d.showIdentifierType)(J))(ua);
+            w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(Z)(function (ua) {
+              return F.setAttribute(V)(q.show(d.showIdentifierType)(J))(ua);
             }))();
             return b.unit;
           };
@@ -15417,85 +15417,85 @@ var PS = {};
     };
   },
       I = a["Data.String.NonEmpty.Internal"].toString,
-      L = function L(U) {
+      L = function L(V) {
     return function (la) {
       return function (aa) {
         return function (J) {
           return function () {
             K.setTextContent(I(J.identifier))(aa)();
-            return H(U)(la)(aa)(J.identifierType)();
+            return H(V)(la)(aa)(J.identifierType)();
           };
         };
       };
     };
   },
-      M = function M(U) {
+      M = function M(V) {
     return function (la) {
       return function () {
-        var aa = t.unsafeSingleNodeValue(U)(U.recNode)(h.xx(h.stringXPath)(t.idP))();
-        return L(t.idTypeAT)(U)(aa)(la)();
+        var aa = t.unsafeSingleNodeValue(V)(V.recNode)(h.xx(h.stringXPath)(t.idP))();
+        return L(t.idTypeAT)(V)(aa)(la)();
       };
     };
   },
-      R = function R(U) {
+      Q = function Q(V) {
     return function (la) {
       return function () {
-        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.map(m.functorMaybe)(K.setTextContent(I(U)))(la))();
+        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.map(l.functorMaybe)(K.setTextContent(I(V)))(la))();
         return b.unit;
       };
     };
   },
-      A = function A(U) {
+      A = function A(V) {
     return function () {
-      var la = p.toISOString(p.fromDateTime(U))();
+      var la = p.toISOString(p.fromDateTime(V))();
       return t.rightOrThrow(t.readNonEmptyString("(generic date)")(la))();
     };
   },
-      D = function D(U) {
+      B = function B(V) {
     return function (la) {
       return function () {
         var aa = A(la)(),
-            J = U.xevalRoot.nodeMay(t.dateRootP)();
-        return R(aa)(J)();
+            J = V.xevalRoot.nodeMay(t.dateRootP)();
+        return Q(aa)(J)();
       };
     };
   },
-      N = function N(U) {
+      N = function N(V) {
     return function (la) {
       return function () {
         var aa = A(la)(),
-            J = U.xevalRoot.nodeMay(t.lastModRootP)();
-        return R(aa)(J)();
+            J = V.xevalRoot.nodeMay(t.lastModRootP)();
+        return Q(aa)(J)();
       };
     };
   },
-      z = function z(U) {
+      z = function z(V) {
     return function (la) {
-      var aa = F.prefix(U.recElem);
+      var aa = F.prefix(V.recElem);
       return function () {
-        if (aa instanceof m.Just) var J = aa.value0 + ":";else if (aa instanceof m.Nothing) J = "";else throw Error("Failed pattern match at Metajelo.XPaths.Write (line 250, column 20 - line 252, column 18): " + [aa.constructor.name]);
+        if (aa instanceof l.Just) var J = aa.value0 + ":";else if (aa instanceof l.Nothing) J = "";else throw Error("Failed pattern match at Metajelo.XPaths.Write (line 250, column 20 - line 252, column 18): " + [aa.constructor.name]);
         J += la;
-        return B.createElementNS(new m.Just(U.ns))(J)(U.doc)();
+        return E.createElementNS(new l.Just(V.ns))(J)(V.doc)();
       };
     };
   },
-      O = function O(U) {
+      O = function O(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = z(U)(aa)();
+          var J = z(V)(aa)();
           K.appendChild(F.toNode(J))(la)();
           return J;
         };
       };
     };
   },
-      W = function W(U) {
+      W = function W(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = O(U)(la)(t.instContactP)();
-          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(aa.contactType)(function (Z) {
+          var J = O(V)(la)(t.instContactP)();
+          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(aa.contactType)(function (Z) {
             return F.setAttribute(t.instContactTypeAT)(q.show(x.showInstitutionContactType)(Z))(J);
           }))();
           return K.setTextContent(y.toString(aa.emailAddress))(F.toNode(J))();
@@ -15503,21 +15503,21 @@ var PS = {};
       };
     };
   },
-      G = function G(U) {
+      G = function G(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.instIdP))();
-          return L(t.idTypeAT)(U)(J)(aa)();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.instIdP))();
+          return L(t.idTypeAT)(V)(J)(aa)();
         };
       };
     };
   },
-      Q = function Q(U) {
+      R = function R(V) {
     return function (la) {
       return f.for_(r.applicativeEffect)(g.foldableNonEmptyArray)(la)(function (aa) {
         return function () {
-          var J = O(U)(U.recNode)(t.relIdP)(),
+          var J = O(V)(V.recNode)(t.relIdP)(),
               Z = F.toNode(J);
           K.setTextContent(I(aa.identifier))(Z)();
           F.setAttribute(t.relIdTypeAT)(q.show(d.showIdentifierType)(aa.identifierType))(J)();
@@ -15526,207 +15526,207 @@ var PS = {};
       });
     };
   },
-      v = function v(U) {
+      v = function v(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.resIdP))();
-          return L(t.resIdTypeAT)(U)(J)(aa)();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.resIdP))();
+          return L(t.resIdTypeAT)(V)(J)(aa)();
         };
       };
     };
   },
-      na = function na(U) {
+      oa = function oa(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = O(U)(la)(t.resMetaSourceP)();
+          var J = O(V)(la)(t.resMetaSourceP)();
           K.setTextContent(u.urlToString(aa.url))(F.toNode(J))();
           return F.setAttribute(t.relTypeAT)(q.show(d.showRelationType)(aa.relationType))(J)();
         };
       };
     };
   },
-      ma = function ma(U) {
+      ma = function ma(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = O(U)(la)(t.resTypeP)();
+          var J = O(V)(la)(t.resTypeP)();
           K.setTextContent(aa.description)(F.toNode(J))();
           return F.setAttribute(t.resTypeGenAT)(q.show(d.showResourceTypeGeneral)(aa.generalType))(J)();
         };
       };
     };
   },
-      Aa = function Aa(U) {
+      Aa = function Aa(V) {
     return function (la) {
       return function (aa) {
         return function (J) {
           return function () {
-            var Z = k.map(r.functorEffect)(F.toNode)(O(la)(aa)(U))();
+            var Z = k.map(r.functorEffect)(F.toNode)(O(la)(aa)(V))();
             return K.setTextContent(J)(Z)();
           };
         };
       };
     };
   },
-      za = function za(U) {
+      za = function za(V) {
     return function (la) {
       return function (aa) {
         return function (J) {
-          return Aa(U)(la)(aa)(I(J));
+          return Aa(V)(la)(aa)(I(J));
         };
       };
     };
   },
-      da = function da(U) {
+      da = function da(V) {
     return function (la) {
       return function (aa) {
         return f.for_(r.applicativeEffect)(g.foldableNonEmptyArray)(aa)(function (J) {
-          return za(t.creatorP)(U)(la)(J);
+          return za(t.creatorP)(V)(la)(J);
         });
       };
     };
   },
-      ja = function ja(U) {
+      ja = function ja(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.formatCP))();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.formatCP))();
           return f.for_(r.applicativeEffect)(f.foldableArray)(aa)(function (Z) {
-            return za(t.formatP)(U)(J)(Z);
+            return za(t.formatP)(V)(J)(Z);
           })();
         };
       };
     };
   },
-      va = function va(U) {
+      wa = function wa(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = O(U)(la)(t.instPolicyP)(),
+          var J = O(V)(la)(t.instPolicyP)(),
               Z = F.toNode(J);
-          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(aa.policyType)(function (ua) {
+          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(aa.policyType)(function (ua) {
             return F.setAttribute(t.polTypeAT)(q.show(x.showPolicyType)(ua))(J);
           }))();
-          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(aa.appliesToProduct)(function (ua) {
+          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(aa.appliesToProduct)(function (ua) {
             return F.setAttribute(t.appliesToProdAT)(q.show(q.showBoolean)(ua))(J);
           }))();
-          if (aa.policy instanceof x.FreeTextPolicy) return za(t.freeTextPolicyP)(U)(Z)(aa.policy.value0)();
-          if (aa.policy instanceof x.RefPolicy) return za(t.refPolicyP)(U)(Z)(u.urlToNEString(aa.policy.value0))();
+          if (aa.policy instanceof x.FreeTextPolicy) return za(t.freeTextPolicyP)(V)(Z)(aa.policy.value0)();
+          if (aa.policy instanceof x.RefPolicy) return za(t.refPolicyP)(V)(Z)(u.urlToNEString(aa.policy.value0))();
           throw Error("Failed pattern match at Metajelo.XPaths.Write (line 217, column 3 - line 220, column 27): " + [aa.policy.constructor.name]);
         };
       };
     };
   },
-      P = function P(U) {
+      P = function P(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.instPolicyCP))();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.instPolicyCP))();
           return f.for_(r.applicativeEffect)(g.foldableNonEmptyArray)(aa)(function (Z) {
-            return va(U)(J)(Z);
+            return wa(V)(J)(Z);
           })();
         };
       };
     };
   },
-      fa = function fa(U) {
+      fa = function fa(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.instSustainP))();
-          za(t.missionUrlP)(U)(J)(u.urlToNEString(aa.missionStatementURL))();
-          return za(t.fundingUrlP)(U)(J)(u.urlToNEString(aa.fundingStatementURL))();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.instSustainP))();
+          za(t.missionUrlP)(V)(J)(u.urlToNEString(aa.missionStatementURL))();
+          return za(t.fundingUrlP)(V)(J)(u.urlToNEString(aa.fundingStatementURL))();
         };
       };
     };
   },
-      Ba = function Ba(U) {
+      Ba = function Ba(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = O(U)(la)(t.locP)(),
+          var J = O(V)(la)(t.locP)(),
               Z = F.toNode(J);
-          G(U)(Z)(aa.institutionID)();
-          za(t.instNameP)(U)(Z)(aa.institutionName)();
-          Aa(t.instTypeP)(U)(Z)(q.show(x.showInstitutionType)(aa.institutionType))();
-          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(aa.superOrganizationName)(function (ua) {
-            return za(t.superOrgNameP)(U)(Z)(ua);
+          G(V)(Z)(aa.institutionID)();
+          za(t.instNameP)(V)(Z)(aa.institutionName)();
+          Aa(t.instTypeP)(V)(Z)(q.show(x.showInstitutionType)(aa.institutionType))();
+          w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(aa.superOrganizationName)(function (ua) {
+            return za(t.superOrgNameP)(V)(Z)(ua);
           }))();
-          W(U)(Z)(aa.institutionContact)();
-          fa(U)(Z)(aa.institutionSustainability)();
-          P(U)(Z)(aa.institutionPolicies)();
-          return Aa(t.versioningP)(U)(Z)(q.show(q.showBoolean)(aa.versioning))();
+          W(V)(Z)(aa.institutionContact)();
+          fa(V)(Z)(aa.institutionSustainability)();
+          P(V)(Z)(aa.institutionPolicies)();
+          return Aa(t.versioningP)(V)(Z)(q.show(q.showBoolean)(aa.versioning))();
         };
       };
     };
   },
-      oa = function oa(U) {
+      pa = function pa(V) {
     return function (la) {
       return function (aa) {
         return f.for_(r.applicativeEffect)(g.foldableNonEmptyArray)(aa)(function (J) {
-          return za(t.titleP)(U)(la)(J);
+          return za(t.titleP)(V)(la)(J);
         });
       };
     };
   },
-      qa = function qa(U) {
+      qa = function qa(V) {
     return function (la) {
       return function (aa) {
         return function () {
-          var J = k.map(r.functorEffect)(F.toNode)(O(U)(la)(t.basicMetaP))();
-          oa(U)(J)(aa.titles)();
-          da(U)(J)(aa.creators)();
-          J = k.map(r.functorEffect)(F.toNode)(O(U)(J)(t.pubYearP))();
+          var J = k.map(r.functorEffect)(F.toNode)(O(V)(la)(t.basicMetaP))();
+          pa(V)(J)(aa.titles)();
+          da(V)(J)(aa.creators)();
+          J = k.map(r.functorEffect)(F.toNode)(O(V)(J)(t.pubYearP))();
           return K.setTextContent(q.show(n.showNatural)(aa.publicationYear))(J)();
         };
       };
     };
   },
-      sa = function sa(U) {
+      sa = function sa(V) {
     return function (la) {
       return function () {
-        var aa = t.unsafeSingleNodeValue(U)(U.recNode)(h.xx(h.stringXPath)(t.sProdCP))(),
-            J = k.map(r.functorEffect)(F.toNode)(O(U)(aa)(t.sProdP))();
-        qa(U)(J)(la.basicMetadata)();
-        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(la.resourceID)(function (Z) {
-          return v(U)(J)(Z);
+        var aa = t.unsafeSingleNodeValue(V)(V.recNode)(h.xx(h.stringXPath)(t.sProdCP))(),
+            J = k.map(r.functorEffect)(F.toNode)(O(V)(aa)(t.sProdP))();
+        qa(V)(J)(la.basicMetadata)();
+        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(la.resourceID)(function (Z) {
+          return v(V)(J)(Z);
         }))();
-        ma(U)(J)(la.resourceType)();
-        ja(U)(J)(la.format)();
-        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(m.functorMaybe)(la.resourceMetadataSource)(function (Z) {
-          return na(U)(J)(Z);
+        ma(V)(J)(la.resourceType)();
+        ja(V)(J)(la.format)();
+        w.sequence(w.traversableMaybe)(r.applicativeEffect)(k.mapFlipped(l.functorMaybe)(la.resourceMetadataSource)(function (Z) {
+          return oa(V)(J)(Z);
         }))();
-        return Ba(U)(J)(la.location)();
+        return Ba(V)(J)(la.location)();
       };
     };
   },
-      Ca = function Ca(U) {
+      Ca = function Ca(V) {
     return function (la) {
       return f.for_(r.applicativeEffect)(g.foldableNonEmptyArray)(la)(function (aa) {
-        return sa(U)(aa);
+        return sa(V)(aa);
       });
     };
   },
-      Ga = function Ga(U) {
+      Ga = function Ga(V) {
     return function (la) {
       return function () {
-        M(U)(la.identifier)();
-        D(U)(la.date)();
-        N(U)(la.lastModified)();
-        Q(U)(la.relatedIdentifiers)();
-        return Ca(U)(la.supplementaryProducts)();
+        M(V)(la.identifier)();
+        B(V)(la.date)();
+        N(V)(la.lastModified)();
+        R(V)(la.relatedIdentifiers)();
+        return Ca(V)(la.supplementaryProducts)();
       };
     };
   };
 
-  c.recordToString = function (U) {
+  c.recordToString = function (V) {
     return function () {
       var la = t.getDefaultParseEnv('<?xml version="1.0" encoding="UTF-8"?>\n<record xmlns:re3="http://www.re3data.org/schema/2-2"\n xmlns:datacite="http://datacite.org/schema/kernel-4"\n xmlns="http://ourdomain.cornell.edu/reuse/v.01"\n xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n xsi:schemaLocation="http://ourdomain.cornell.edu/reuse/v.01 file:/Users/clagoze/Downloads/metajelo-master/schema/xsd/reproMetadata0.7.xsd">\n    <identifier></identifier>\n    <date></date>\n    <lastModified></lastModified>\n    <supplementaryProducts>\n    </supplementaryProducts>\n</record>\n')();
-      Ga(la)(U)();
-      la = B.documentElement(la.doc)();
-      return m.maybe(e.pure(r.applicativeEffect)(""))(C.outerHTML)(la)();
+      Ga(la)(V)();
+      la = E.documentElement(la.doc)();
+      return l.maybe(e.pure(r.applicativeEffect)(""))(D.outerHTML)(la)();
     };
   };
 
@@ -15752,8 +15752,8 @@ var PS = {};
   a = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
-          return e.unsafeGet(g.reflectSymbol(k)(p))(m);
+        return function (l) {
+          return e.unsafeGet(g.reflectSymbol(k)(p))(l);
         };
       };
     };
@@ -15811,9 +15811,9 @@ var PS = {};
   a = a["Web.Internal.FFI"].unsafeReadProtoTagged("HTMLInputElement");
 
   var p = function () {
-    var m = g.map(k.functorEffect)(f.toMaybe);
+    var l = g.map(k.functorEffect)(f.toMaybe);
     return function (n) {
-      return m(e._files(n));
+      return l(e._files(n));
     };
   }();
 
@@ -15832,7 +15832,7 @@ var PS = {};
       f = a["Concur.Core.Props"],
       k = a["Concur.Core.Types"],
       p = a["Concur.React.DOM"],
-      m = a["Concur.React.Props"],
+      l = a["Concur.React.Props"],
       n = a["Control.Alt"],
       q = a["Control.Applicative"],
       w = a["Control.Apply"],
@@ -15842,42 +15842,42 @@ var PS = {};
       r = a["Data.Array"],
       x = a["Data.Array.NonEmpty"],
       t = a["Data.Bifunctor"],
-      C = a["Data.Bounded"],
+      D = a["Data.Bounded"],
       y = a["Data.Either"],
       u = a["Data.Enum"],
-      B = a["Data.Eq"],
+      E = a["Data.Eq"],
       F = a["Data.Foldable"],
       K = a["Data.Functor"],
       H = a["Data.Generic.Rep"],
       I = a["Data.Generic.Rep.Bounded"],
       L = a["Data.Generic.Rep.Enum"],
       M = a["Data.Generic.Rep.Eq"],
-      R = a["Data.Generic.Rep.Ord"],
+      Q = a["Data.Generic.Rep.Ord"],
       A = a["Data.Generic.Rep.Show"],
-      D = a["Data.Int"],
+      B = a["Data.Int"],
       N = a["Data.Maybe"],
       z = a["Data.Monoid"],
       O = a["Data.Natural"],
       W = a["Data.Ord"],
       G = a["Data.Profunctor.Strong"],
-      Q = a["Data.Semigroup"],
+      R = a["Data.Semigroup"],
       v = a["Data.Show"],
-      na = a["Data.String.Common"],
+      oa = a["Data.String.Common"],
       ma = a["Data.String.NonEmpty.Internal"],
       Aa = a["Data.Symbol"],
       za = a["Data.Traversable"],
       da = a["Data.Tuple"],
       ja = a["Data.Unfoldable1"],
-      va = a["Data.Unit"],
+      wa = a["Data.Unit"],
       P = a["DataCite.Types.Common"],
       fa = a.Effect,
       Ba = a["Effect.Class"],
-      oa = a["Effect.Exception"],
+      pa = a["Effect.Exception"],
       qa = a["Effect.Now"],
       sa = a["Effect.Unsafe"],
       Ca = a["Foreign.Object"],
       Ga = a.Global,
-      U = a["Metajelo.CSS.UI.ClassProps"],
+      V = a["Metajelo.CSS.UI.ClassProps"],
       la = a["Metajelo.SchemaInfo"],
       aa = a["Metajelo.Types"],
       J = a["Metajelo.XPaths.Read"],
@@ -15885,9 +15885,9 @@ var PS = {};
       ua = a["React.SyntheticEvent"],
       Da = a["Text.Email.Parser"],
       Fa = a["Text.Email.Validate"],
-      Ka = a["Text.URL.Validate"],
+      La = a["Text.URL.Validate"],
       S = a["Web.DOM.Document"],
-      E = a["Web.DOM.Element"],
+      C = a["Web.DOM.Element"],
       X = a["Web.DOM.HTMLCollection"],
       ka = a["Web.DOM.NonElementParentNode"],
       ca = a["Web.DOM.ParentNode"],
@@ -15901,7 +15901,7 @@ var PS = {};
     Y.value = new Y();
     return Y;
   }(),
-      Ja = function () {
+      Ka = function () {
     function Y() {}
 
     Y.value = new Y();
@@ -15918,7 +15918,7 @@ var PS = {};
 
     return Y;
   }(),
-      Ma = function () {
+      Na = function () {
     function Y(ba) {
       this.value0 = ba;
     }
@@ -15940,15 +15940,15 @@ var PS = {};
     return ra.toDocument(Y);
   },
       Za = function Za(Y) {
-    if (Y instanceof Ea || Y instanceof Ma) return Y.value0;
+    if (Y instanceof Ea || Y instanceof Na) return Y.value0;
     throw Error("Failed pattern match at Metajelo.FormUtil (line 376, column 1 - line 376, column 34): " + [Y.constructor.name]);
   },
-      cb = function cb(Y) {
-    return p.input(g.widgetLiftWidget)([m.defaultValue(Y), K.map(f.functorProps)(m.unsafeTargetValue)(m.onChange)]);
+      bb = function bb(Y) {
+    return p.input(g.widgetLiftWidget)([l.defaultValue(Y), K.map(f.functorProps)(l.unsafeTargetValue)(l.onChange)]);
   },
-      db = function db(Y) {
+      cb = function cb(Y) {
     return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(Y)(function (ba) {
-      return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(ma.fromString(na.trim(ba)));
+      return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(ma.fromString(oa.trim(ba)));
     });
   },
       Ra = function Ra(Y) {
@@ -15959,12 +15959,12 @@ var PS = {};
       throw Error("Failed pattern match at Metajelo.FormUtil (line 90, column 21 - line 92, column 16): " + [ba.constructor.name]);
     };
   },
-      eb = function eb(Y) {
+      db = function db(Y) {
     var ba = Y ? "Hide Descriptions" : "Show Descriptions";
-    return p.div_(k.widgetShiftMap)([])(K.voidRight(k.widgetFunctor)(!Y)(p.button_(k.widgetShiftMap)([m.onClick])(p.text(g.widgetLiftWidget)(ba))));
+    return p.div_(k.widgetShiftMap)([])(K.voidRight(k.widgetFunctor)(!Y)(p.button_(k.widgetShiftMap)([l.onClick])(p.text(g.widgetLiftWidget)(ba))));
   },
       hb = function hb(Y) {
-    return e.step(Y)(b.bind(k.widgetBind)(eb(Y))(function (ba) {
+    return e.step(Y)(b.bind(k.widgetBind)(db(Y))(function (ba) {
       return q.pure(k.widgetApplicative)(hb(ba));
     }));
   },
@@ -15972,48 +15972,48 @@ var PS = {};
     return function (ba) {
       return function (T) {
         return function () {
-          var V = Wa();
-          V = S.toNonElementParentNode(V);
-          V = ka.getElementById(Y)(V)();
-          if (V instanceof N.Just) return V = E.toParentNode(V.value0), V = ca.children(V)(), V = X.toArray(V)(), V = r.filter(function (ea) {
-            return E.tagName(ea) === ba;
-          })(V), V = r.catMaybes(K.map(K.functorArray)(ta.fromElement)(V)), F.for_(fa.applicativeEffect)(F.foldableArray)(V)(ta.setValue(T))();
-          if (V instanceof N.Nothing) return va.unit;
-          throw Error("Failed pattern match at Metajelo.FormUtil (line 506, column 3 - line 519, column 25): " + [V.constructor.name]);
+          var U = Wa();
+          U = S.toNonElementParentNode(U);
+          U = ka.getElementById(Y)(U)();
+          if (U instanceof N.Just) return U = C.toParentNode(U.value0), U = ca.children(U)(), U = X.toArray(U)(), U = r.filter(function (ha) {
+            return C.tagName(ha) === ba;
+          })(U), U = r.catMaybes(K.map(K.functorArray)(ta.fromElement)(U)), F.for_(fa.applicativeEffect)(F.foldableArray)(U)(ta.setValue(T))();
+          if (U instanceof N.Nothing) return wa.unit;
+          throw Error("Failed pattern match at Metajelo.FormUtil (line 506, column 3 - line 519, column 25): " + [U.constructor.name]);
         };
       };
     };
   },
-      lb = function lb(Y) {
+      mb = function mb(Y) {
     return function (ba) {
       return ba < Y ? [] : r.range(Y)(ba);
     };
   },
       Va = function Va(Y) {
-    return "FreeTextPolicy" === Y ? q.pure(y.applicativeEither)(Ha.value) : "RefPolicy" === Y ? q.pure(y.applicativeEither)(Ja.value) : y.Left.create("Unknown Policy: '" + (Y + "'"));
+    return "FreeTextPolicy" === Y ? q.pure(y.applicativeEither)(Ha.value) : "RefPolicy" === Y ? q.pure(y.applicativeEither)(Ka.value) : y.Left.create("Unknown Policy: '" + (Y + "'"));
   },
-      qb = Ca.unions(F.foldableArray)([la.descrAttrMap, la.descrCTypMap, la.descrEleMap, la.descrSTypMap]),
+      rb = Ca.unions(F.foldableArray)([la.descrAttrMap, la.descrCTypMap, la.descrEleMap, la.descrSTypMap]),
       Pa = function Pa(Y) {
     return function (ba) {
       return F.fold(F.foldableMaybe)(z.monoidString)(K.map(N.functorMaybe)(v.show(Y))(ba));
     };
   },
-      rb = new Qa(function (Y) {
+      sb = new Qa(function (Y) {
     return N.fromJust()(y.hush(J.readResourceTypeGeneral(Y)));
   }, v.show(P.showResourceTypeGeneral), v.show(P.showResourceTypeGeneral)),
-      sb = new Qa(function (Y) {
+      tb = new Qa(function (Y) {
     return N.fromJust()(y.hush(J.readRelationType(Y)));
   }, v.show(P.showRelationType), v.show(P.showRelationType)),
-      mb = new Qa(function (Y) {
+      nb = new Qa(function (Y) {
     return N.fromJust()(y.hush(J.readInstitutionType(Y)));
   }, v.show(aa.showInstitutionType), v.show(aa.showInstitutionType)),
-      tb = new Qa(function (Y) {
+      ub = new Qa(function (Y) {
     return N.fromJust()(y.hush(J.readIdentifierType(Y)));
   }, v.show(P.showIdentifierType), v.show(P.showIdentifierType)),
-      nb = function nb(Y) {
+      ob = function ob(Y) {
     return Y instanceof Ea ? !0 : !1;
   },
-      ub = function ub(Y) {
+      vb = function vb(Y) {
     return function () {
       var ba = Wa();
       ba = S.toNonElementParentNode(ba);
@@ -16025,14 +16025,14 @@ var PS = {};
   },
       Ta = new H.Generic(function (Y) {
     if (Y instanceof Ha) return new H.Inl(H.NoArguments.value);
-    if (Y instanceof Ja) return new H.Inr(H.NoArguments.value);
+    if (Y instanceof Ka) return new H.Inr(H.NoArguments.value);
     throw Error("Failed pattern match at Metajelo.FormUtil (line 318, column 1 - line 318, column 58): " + [Y.constructor.name]);
   }, function (Y) {
     if (Y instanceof H.Inl) return Ha.value;
-    if (Y instanceof H.Inr) return Ja.value;
+    if (Y instanceof H.Inr) return Ka.value;
     throw Error("Failed pattern match at Metajelo.FormUtil (line 318, column 1 - line 318, column 58): " + [Y.constructor.name]);
   }),
-      vb = new v.Show(A.genericShow(Ta)(A.genericShowSum(A.genericShowConstructor(A.genericShowArgsNoArguments)(new Aa.IsSymbol(function () {
+      pb = new v.Show(A.genericShow(Ta)(A.genericShowSum(A.genericShowConstructor(A.genericShowArgsNoArguments)(new Aa.IsSymbol(function () {
     return "FreeTextPolicy";
   })))(A.genericShowConstructor(A.genericShowArgsNoArguments)(new Aa.IsSymbol(function () {
     return "RefPolicy";
@@ -16042,11 +16042,11 @@ var PS = {};
     return function (ba) {
       return Y(y.hush(Va(ba)));
     };
-  }(), v.show(vb), v.show(vb)),
-      Na = new K.Functor(function (Y) {
+  }(), v.show(pb), v.show(pb)),
+      Oa = new K.Functor(function (Y) {
     return function (ba) {
       if (ba instanceof Ea) return Ea.create(K.map(N.functorMaybe)(Y)(ba.value0));
-      if (ba instanceof Ma) return Ma.create(K.map(N.functorMaybe)(Y)(ba.value0));
+      if (ba instanceof Na) return Na.create(K.map(N.functorMaybe)(Y)(ba.value0));
       throw Error("Failed pattern match at Metajelo.FormUtil (line 363, column 1 - line 365, column 48): " + [Y.constructor.name, ba.constructor.name]);
     };
   }),
@@ -16054,54 +16054,54 @@ var PS = {};
     return function (ba) {
       return function (T) {
         return e.step(T)(function () {
-          var V = N.isJust(T) ? !0 : !1;
-          return b.bind(k.widgetBind)(p.select(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.value(N.maybe("")(ba.toOptionValue)(T)), K.map(f.functorProps)(function () {
-            var ea = ba.fromOptionValue;
-            return function (ha) {
-              return ea(m.unsafeTargetValue(ha));
+          var U = N.isJust(T) ? !0 : !1;
+          return b.bind(k.widgetBind)(p.select(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.value(N.maybe("")(ba.toOptionValue)(T)), K.map(f.functorProps)(function () {
+            var ha = ba.fromOptionValue;
+            return function (ea) {
+              return ha(l.unsafeTargetValue(ea));
             };
-          }())(m.onChange)])(r.cons(p.option(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.disabled(V)])([p.text(g.widgetLiftWidget)("Select ...")]))(K.mapFlipped(K.functorArray)(u.upFromIncluding(Y.Enum1())(ja.unfoldable1Array)(C.bottom(Y.Bounded0())))(function (ea) {
-            return p.option(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.value((0, ba.toOptionValue)(ea))])([p.text(g.widgetLiftWidget)((0, ba.toOptionLabel)(ea))]);
-          }))))(function (ea) {
-            return q.pure(k.widgetApplicative)(ib(Y)(ba)(new N.Just(ea)));
+          }())(l.onChange)])(r.cons(p.option(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.disabled(U)])([p.text(g.widgetLiftWidget)("Select ...")]))(K.mapFlipped(K.functorArray)(u.upFromIncluding(Y.Enum1())(ja.unfoldable1Array)(D.bottom(Y.Bounded0())))(function (ha) {
+            return p.option(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.value((0, ba.toOptionValue)(ha))])([p.text(g.widgetLiftWidget)((0, ba.toOptionLabel)(ha))]);
+          }))))(function (ha) {
+            return q.pure(k.widgetApplicative)(ib(Y)(ba)(new N.Just(ha)));
           });
         }());
       };
     };
   },
-      La = function La(Y) {
+      Ma = function Ma(Y) {
     return function (ba) {
       return function (T) {
-        return function (V) {
-          return function (ea) {
-            return F.fold(Y)(T)(K.map(ba)(V)(ea));
+        return function (U) {
+          return function (ha) {
+            return F.fold(Y)(T)(K.map(ba)(U)(ha));
           };
         };
       };
     };
   },
-      fb = function fb(Y) {
-    Y = La(F.foldableMaybe)(N.functorMaybe)(z.monoidString)(ma.toString)(Y);
-    Y = e.debounce(z.monoidArray)(1E3)(Y)(cb);
-    return db(Y);
+      eb = function eb(Y) {
+    Y = Ma(F.foldableMaybe)(N.functorMaybe)(z.monoidString)(ma.toString)(Y);
+    Y = e.debounce(z.monoidArray)(1E3)(Y)(bb);
+    return cb(Y);
   },
       gb = function gb(Y) {
     return N.maybe(z.mempty(k.widgetMonoid(z.monoidArray)))(function (ba) {
-      return p.div(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.style({
+      return p.div(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.style({
         color: "red"
       })])([p.text(g.widgetLiftWidget)(v.show(Y)(ba))]);
     });
   },
-      xb = new B.Eq(M.genericEq(Ta)(M.genericEqSum(M.genericEqConstructor(M.genericEqNoArguments))(M.genericEqConstructor(M.genericEqNoArguments)))),
-      ob = new W.Ord(function () {
+      xb = new E.Eq(M.genericEq(Ta)(M.genericEqSum(M.genericEqConstructor(M.genericEqNoArguments))(M.genericEqConstructor(M.genericEqNoArguments)))),
+      qb = new W.Ord(function () {
     return xb;
   }, function (Y) {
     return function (ba) {
-      return R.genericCompare(Ta)(R.genericOrdSum(R.genericOrdConstructor(R.genericOrdNoArguments))(R.genericOrdConstructor(R.genericOrdNoArguments)))(Y)(ba);
+      return Q.genericCompare(Ta)(Q.genericOrdSum(Q.genericOrdConstructor(Q.genericOrdNoArguments))(Q.genericOrdConstructor(Q.genericOrdNoArguments)))(Y)(ba);
     };
   }),
       yb = new u.Enum(function () {
-    return ob;
+    return qb;
   }, L.genericPred(Ta)(L.genericEnumSum(L.genericEnumConstructor(L.genericEnumNoArguments))(I.genericTopConstructor(I.genericTopNoArguments))(L.genericEnumConstructor(L.genericEnumNoArguments))(I.genericBottomConstructor(I.genericBottomNoArguments))), L.genericSucc(Ta)(L.genericEnumSum(L.genericEnumConstructor(L.genericEnumNoArguments))(I.genericTopConstructor(I.genericTopNoArguments))(L.genericEnumConstructor(L.genericEnumNoArguments))(I.genericBottomConstructor(I.genericBottomNoArguments)))),
       kb = function kb(Y) {
     return function (ba) {
@@ -16111,7 +16111,7 @@ var PS = {};
       zb = new Qa(function (Y) {
     return y.hush(J.readBoolean(Y));
   }, kb(v.showBoolean), Pa(v.showBoolean)),
-      l = new Qa(function () {
+      m = new Qa(function () {
     var Y = b.join(N.bindMaybe);
     return function (ba) {
       return Y(y.hush(J.readInstitutionContactType(ba)));
@@ -16123,16 +16123,16 @@ var PS = {};
       return Y(y.hush(J.readPolicyType(ba)));
     };
   }(), kb(aa.showPolicyType), Pa(aa.showPolicyType)),
-      Ya = function Ya(Y) {
-    return K.voidRight(k.widgetFunctor)(!Y)(p.input(g.widgetLiftWidget)([m._type("checkbox"), m.checked(Y), m.onChange]));
+      Xa = function Xa(Y) {
+    return K.voidRight(k.widgetFunctor)(!Y)(p.input(g.widgetLiftWidget)([l._type("checkbox"), l.checked(Y), l.onChange]));
   },
       jb = function jb(Y) {
-    return e.step(Y)(b.bind(k.widgetBind)(Ya(Y))(function (ba) {
+    return e.step(Y)(b.bind(k.widgetBind)(Xa(Y))(function (ba) {
       return q.pure(k.widgetApplicative)(jb(ba));
     }));
   },
-      Cb = new C.Bounded(function () {
-    return ob;
+      Cb = new D.Bounded(function () {
+    return qb;
   }, I.genericBottom(Ta)(I.genericBottomSum(I.genericBottomConstructor(I.genericBottomNoArguments))), I.genericTop(Ta)(I.genericTopSum(I.genericTopConstructor(I.genericTopNoArguments)))),
       Db = new u.BoundedEnum(function () {
     return Cb;
@@ -16140,11 +16140,11 @@ var PS = {};
     return yb;
   }, L.genericCardinality(Ta)(L.genericBoundedEnumSum(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments))(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments))), L.genericFromEnum(Ta)(L.genericBoundedEnumSum(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments))(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments))), L.genericToEnum(Ta)(L.genericBoundedEnumSum(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments))(L.genericBoundedEnumConstructor(L.genericBoundedEnumNoArguments)))),
       Eb = new w.Apply(function () {
-    return Na;
+    return Oa;
   }, function (Y) {
     return function (ba) {
-      if (Y instanceof Ea && ba instanceof Ea || Y instanceof Ea && ba instanceof Ma || Y instanceof Ma && ba instanceof Ea) return Ea.create(w.apply(N.applyMaybe)(Y.value0)(ba.value0));
-      if (Y instanceof Ma && ba instanceof Ma) return Ma.create(w.apply(N.applyMaybe)(Y.value0)(ba.value0));
+      if (Y instanceof Ea && ba instanceof Ea || Y instanceof Ea && ba instanceof Na || Y instanceof Na && ba instanceof Ea) return Ea.create(w.apply(N.applyMaybe)(Y.value0)(ba.value0));
+      if (Y instanceof Na && ba instanceof Na) return Na.create(w.apply(N.applyMaybe)(Y.value0)(ba.value0));
       throw Error("Failed pattern match at Metajelo.FormUtil (line 366, column 1 - line 370, column 63): " + [Y.constructor.name, ba.constructor.name]);
     };
   }),
@@ -16156,58 +16156,58 @@ var PS = {};
       Bb = function Bb(Y) {
     return function (ba) {
       var T = da.snd(ba),
-          V = da.fst(ba),
-          ea = new Ea(N.Nothing.value);
+          U = da.fst(ba),
+          ha = new Ea(N.Nothing.value);
 
       ba = function () {
-        var xa = W.max(W.ordInt)(0)(V - r.length(T) | 0);
-        return Q.append(Q.semigroupArray)(K.map(K.functorArray)(q.pure(Fb))(T))(K.mapFlipped(K.functorArray)(lb(1)(xa))(function (Ia) {
-          return ea;
+        var xa = W.max(W.ordInt)(0)(U - r.length(T) | 0);
+        return R.append(R.semigroupArray)(K.map(K.functorArray)(q.pure(Fb))(T))(K.mapFlipped(K.functorArray)(mb(1)(xa))(function (Ia) {
+          return ha;
         }));
       }();
 
-      var ha = function ha(xa) {
-        return e.step(xa)(b.bind(k.widgetBind)(K.voidRight(k.widgetFunctor)(Ma.create(Za(xa)))(p.button(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.onClick, U.deleteItem])([p.text(g.widgetLiftWidget)("Delete")])))(function (Ia) {
-          return q.pure(k.widgetApplicative)(ha(Ia));
+      var ea = function ea(xa) {
+        return e.step(xa)(b.bind(k.widgetBind)(K.voidRight(k.widgetFunctor)(Na.create(Za(xa)))(p.button(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.onClick, V.deleteItem])([p.text(g.widgetLiftWidget)("Delete")])))(function (Ia) {
+          return q.pure(k.widgetApplicative)(ea(Ia));
         }));
       },
-          pa = function pa(xa) {
+          na = function na(xa) {
         return p.li_(h.shiftMapCofree(z.monoidArray))([])(b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(Y(Za(xa)))(function (Ia) {
-          return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(ha(new Ea(Ia)))(function (Oa) {
-            return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(Oa);
+          return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(ea(new Ea(Ia)))(function (Ja) {
+            return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(Ja);
           });
         }));
       },
-          wa = function wa(xa) {
-        if (xa instanceof Ma) return e.step(new Ma(N.Nothing.value))(z.mempty(k.widgetMonoid(z.monoidArray)));
-        if (xa instanceof Ea) return pa(xa);
+          va = function va(xa) {
+        if (xa instanceof Na) return e.step(new Na(N.Nothing.value))(z.mempty(k.widgetMonoid(z.monoidArray)));
+        if (xa instanceof Ea) return na(xa);
         throw Error("Failed pattern match at Metajelo.FormUtil (line 397, column 23 - line 399, column 35): " + [xa.constructor.name]);
       };
 
       return p.div_(h.shiftMapCofree(z.monoidArray))([])(b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(function (xa) {
         return function (Ia) {
-          return e.loopS(z.monoidArray)(new da.Tuple(xa, Ia))(function (Oa) {
+          return e.loopS(z.monoidArray)(new da.Tuple(xa, Ia))(function (Ja) {
             return p.ul_(h.shiftMapCofree(z.monoidArray))([])(function () {
-              da.fst(Oa);
-              var Xa = da.snd(Oa);
-              return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(za.traverse(za.traversableArray)(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(wa)(Xa))(function (ab) {
-                return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(e.step(0)(K.voidRight(k.widgetFunctor)(q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(1))(p.button(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([m.onClick, U.addItem])([p.text(g.widgetLiftWidget)("Add item")]))))(function ($a) {
-                  var bb = r.filter(nb)(ab),
-                      pb = r.length(bb) + $a | 0;
-                  $a = K.mapFlipped(K.functorArray)(lb(1)($a))(function (Ab) {
-                    return ea;
+              da.fst(Ja);
+              var Ya = da.snd(Ja);
+              return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(za.traverse(za.traversableArray)(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(va)(Ya))(function ($a) {
+                return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(e.step(0)(K.voidRight(k.widgetFunctor)(q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(1))(p.button(k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([l.onClick, V.addItem])([p.text(g.widgetLiftWidget)("Add item")]))))(function (ab) {
+                  var fb = r.filter(ob)($a),
+                      lb = r.length(fb) + ab | 0;
+                  ab = K.mapFlipped(K.functorArray)(mb(1)(ab))(function (Ab) {
+                    return ha;
                   });
-                  return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(da.Tuple.create(pb)(Q.append(Q.semigroupArray)(bb)($a)));
+                  return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(da.Tuple.create(lb)(R.append(R.semigroupArray)(fb)(ab)));
                 });
               });
             }());
           });
         };
-      }(V)(ba))(function (xa) {
+      }(U)(ba))(function (xa) {
         return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(G.second(G.strongFn)(function () {
           var Ia = K.map(K.functorArray)(Za);
-          return function (Oa) {
-            return r.catMaybes(Ia(Oa));
+          return function (Ja) {
+            return r.catMaybes(Ia(Ja));
           };
         }())(xa));
       }));
@@ -16215,33 +16215,33 @@ var PS = {};
   };
 
   c.menuSignal = ib;
-  c.textInput = fb;
+  c.textInput = eb;
 
   c.dateInput = function (Y) {
-    var ba = sa.unsafePerformEffect(function (ea) {
+    var ba = sa.unsafePerformEffect(function (ha) {
       return function () {
-        var ha = qa.nowDateTime();
-        ha = N.fromMaybe(ha)(y.hush(ea));
-        ha = oa["try"](Z.dateTimeToStr(ha))();
-        return t.lmap(y.bifunctorEither)(v.show(oa.showError))(ha);
+        var ea = qa.nowDateTime();
+        ea = N.fromMaybe(ea)(y.hush(ha));
+        ea = pa["try"](Z.dateTimeToStr(ea))();
+        return t.lmap(y.bifunctorEither)(v.show(pa.showError))(ea);
       };
     }(Y));
     Y = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)));
     var T = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
-    if (ba instanceof y.Left) var V = "";else if (ba instanceof y.Right) V = ma.toString(ba.value0);else throw Error("Failed pattern match at Metajelo.FormUtil (line 170, column 31 - line 172, column 34): " + [ba.constructor.name]);
-    return Y(T(V))(function (ea) {
-      var ha = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
-          pa = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
-      if (ba instanceof y.Left) var wa = ba.value0;else if (ba instanceof y.Right) wa = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 173, column 21 - line 175, column 18): " + [ba.constructor.name]);
-      return ha(pa(wa))(function (xa) {
-        return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(p.div_(h.shiftMapCofree(z.monoidArray))([m._id("mjUI_dateInput")])(fb(ma.fromString(ea))))(function (Ia) {
-          return b.discard(b.discardUnit)(h.bindCofree(k.widgetAlternative(z.monoidArray)))(q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(sa.unsafePerformEffect(Ua("mjUI_dateInput")("INPUT")(ea))))(function () {
+    if (ba instanceof y.Left) var U = "";else if (ba instanceof y.Right) U = ma.toString(ba.value0);else throw Error("Failed pattern match at Metajelo.FormUtil (line 170, column 31 - line 172, column 34): " + [ba.constructor.name]);
+    return Y(T(U))(function (ha) {
+      var ea = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
+          na = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
+      if (ba instanceof y.Left) var va = ba.value0;else if (ba instanceof y.Right) va = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 173, column 21 - line 175, column 18): " + [ba.constructor.name]);
+      return ea(na(va))(function (xa) {
+        return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(p.div_(h.shiftMapCofree(z.monoidArray))([l._id("mjUI_dateInput")])(eb(ma.fromString(ha))))(function (Ia) {
+          return b.discard(b.discardUnit)(h.bindCofree(k.widgetAlternative(z.monoidArray)))(q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(sa.unsafePerformEffect(Ua("mjUI_dateInput")("INPUT")(ha))))(function () {
             return b.discard(b.discardUnit)(h.bindCofree(k.widgetAlternative(z.monoidArray)))(e.display(function () {
               if (ba instanceof y.Right) return z.mempty(k.widgetMonoid(z.monoidArray));
               if (ba instanceof y.Left) return gb(v.showString)(new N.Just(ba.value0));
               throw Error("Failed pattern match at Metajelo.FormUtil (line 179, column 13 - line 181, column 40): " + [ba.constructor.name]);
             }()))(function () {
-              if (Ia instanceof N.Just) return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(sa.unsafePerformEffect(K.map(fa.functorEffect)(t.lmap(y.bifunctorEither)(v.show(oa.showError)))(oa["try"](J.parseDate(Ia.value0)))));
+              if (Ia instanceof N.Just) return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(sa.unsafePerformEffect(K.map(fa.functorEffect)(t.lmap(y.bifunctorEither)(v.show(pa.showError)))(pa["try"](J.parseDate(Ia.value0)))));
               if (Ia instanceof N.Nothing) return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(new y.Left("no date input"));
               throw Error("Failed pattern match at Metajelo.FormUtil (line 182, column 3 - line 185, column 43): " + [Ia.constructor.name]);
             });
@@ -16258,30 +16258,30 @@ var PS = {};
         return ba(O.natToInt(T));
       };
     }()))(ma.fromString);
-    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(fb(Y))(function (ba) {
+    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(eb(Y))(function (ba) {
       return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(K.map(N.functorMaybe)(function () {
         var T = Ga.readInt(10);
-        return function (V) {
-          return O.intToNat(D.round(T(ma.toString(V))));
+        return function (U) {
+          return O.intToNat(B.round(T(ma.toString(U))));
         };
       }())(ba));
     });
   };
 
   c.urlInput = function (Y) {
-    if (Y instanceof y.Left) var ba = "";else if (Y instanceof y.Right) ba = ma.toString(Ka.urlToNEString(Y.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 218, column 15 - line 220, column 48): " + [Y.constructor.name]);
+    if (Y instanceof y.Left) var ba = "";else if (Y instanceof y.Right) ba = ma.toString(La.urlToNEString(Y.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 218, column 15 - line 220, column 48): " + [Y.constructor.name]);
     if (Y instanceof y.Left) var T = Y.value0;else if (Y instanceof y.Right) T = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 214, column 15 - line 216, column 20): " + [Y.constructor.name]);
-    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(fb(ma.fromString(ba)))(function (V) {
-      var ea = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
-          ha = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
-      if (V instanceof N.Nothing) V = new y.Left(T);else if (V instanceof N.Just) V = Ka.parsePublicURL(ma.toString(V.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 205, column 19 - line 207, column 46): " + [V.constructor.name]);
-      return ea(ha(V))(function (pa) {
+    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(eb(ma.fromString(ba)))(function (U) {
+      var ha = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
+          ea = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
+      if (U instanceof N.Nothing) U = new y.Left(T);else if (U instanceof N.Just) U = La.parsePublicURL(ma.toString(U.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 205, column 19 - line 207, column 46): " + [U.constructor.name]);
+      return ha(ea(U))(function (na) {
         return b.discard(b.discardUnit)(h.bindCofree(k.widgetAlternative(z.monoidArray)))(e.display(function () {
-          if (pa instanceof y.Right) return z.mempty(k.widgetMonoid(z.monoidArray));
-          if (pa instanceof y.Left) return gb(v.showString)(new N.Just(pa.value0));
-          throw Error("Failed pattern match at Metajelo.FormUtil (line 208, column 13 - line 210, column 40): " + [pa.constructor.name]);
+          if (na instanceof y.Right) return z.mempty(k.widgetMonoid(z.monoidArray));
+          if (na instanceof y.Left) return gb(v.showString)(new N.Just(na.value0));
+          throw Error("Failed pattern match at Metajelo.FormUtil (line 208, column 13 - line 210, column 40): " + [na.constructor.name]);
         }()))(function () {
-          return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(pa);
+          return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(na);
         });
       });
     });
@@ -16290,17 +16290,17 @@ var PS = {};
   c.emailInput = function (Y) {
     if (Y instanceof y.Left) var ba = "";else if (Y instanceof y.Right) ba = Da.toString(Y.value0);else throw Error("Failed pattern match at Metajelo.FormUtil (line 238, column 15 - line 240, column 33): " + [Y.constructor.name]);
     if (Y instanceof y.Left) var T = Y.value0;else if (Y instanceof y.Right) T = "";else throw Error("Failed pattern match at Metajelo.FormUtil (line 234, column 15 - line 236, column 20): " + [Y.constructor.name]);
-    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(fb(ma.fromString(ba)))(function (V) {
-      var ea = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
-          ha = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
-      if (V instanceof N.Nothing) V = new y.Left(T);else if (V instanceof N.Just) V = Fa.validate(ma.toString(V.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 225, column 21 - line 227, column 43): " + [V.constructor.name]);
-      return ea(ha(V))(function (pa) {
+    return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(eb(ma.fromString(ba)))(function (U) {
+      var ha = b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray))),
+          ea = q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)));
+      if (U instanceof N.Nothing) U = new y.Left(T);else if (U instanceof N.Just) U = Fa.validate(ma.toString(U.value0));else throw Error("Failed pattern match at Metajelo.FormUtil (line 225, column 21 - line 227, column 43): " + [U.constructor.name]);
+      return ha(ea(U))(function (na) {
         return b.discard(b.discardUnit)(h.bindCofree(k.widgetAlternative(z.monoidArray)))(e.display(function () {
-          if (pa instanceof y.Right) return z.mempty(k.widgetMonoid(z.monoidArray));
-          if (pa instanceof y.Left) return gb(v.showString)(new N.Just(pa.value0));
-          throw Error("Failed pattern match at Metajelo.FormUtil (line 228, column 13 - line 230, column 40): " + [pa.constructor.name]);
+          if (na instanceof y.Right) return z.mempty(k.widgetMonoid(z.monoidArray));
+          if (na instanceof y.Left) return gb(v.showString)(new N.Just(na.value0));
+          throw Error("Failed pattern match at Metajelo.FormUtil (line 228, column 13 - line 230, column 40): " + [na.constructor.name]);
         }()))(function () {
-          return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(pa);
+          return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(na);
         });
       });
     });
@@ -16311,9 +16311,9 @@ var PS = {};
 
   c.mkDesc = function (Y) {
     return function (ba) {
-      var T = Ra(Y)(qb),
-          V = n.alt(k.widgetAlt(z.monoidArray))(p.text(g.widgetLiftWidget)(T))(p["code'"](k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([p.text(g.widgetLiftWidget)(" ")]));
-      return ba && !na["null"](T) ? V : z.mempty(k.widgetMonoid(z.monoidArray));
+      var T = Ra(Y)(rb),
+          U = n.alt(k.widgetAlt(z.monoidArray))(p.text(g.widgetLiftWidget)(T))(p["code'"](k.widgetMultiAlternative(z.monoidArray))(k.widgetShiftMap)([p.text(g.widgetLiftWidget)(" ")]));
+      return ba && !oa["null"](T) ? U : z.mempty(k.widgetMonoid(z.monoidArray));
     };
   };
 
@@ -16323,19 +16323,19 @@ var PS = {};
     return function (ba) {
       if (Y instanceof Ha) {
         var T = K.mapFlipped(y.functorEither);
-        ba = ma.fromString(na.trim(ba));
+        ba = ma.fromString(oa.trim(ba));
         if (ba instanceof N.Just) ba = new y.Right(ba.value0);else if (ba instanceof N.Nothing) ba = new y.Left("Empty string when NonEmptyString expected.");else throw Error("Failed pattern match at Metajelo.FormUtil (line 438, column 22 - line 440, column 63): " + [ba.constructor.name]);
         return T(ba)(aa.FreeTextPolicy.create);
       }
 
-      if (Y instanceof Ja) return K.mapFlipped(y.functorEither)(Ka.parsePublicURL(ba))(aa.RefPolicy.create);
+      if (Y instanceof Ka) return K.mapFlipped(y.functorEither)(La.parsePublicURL(ba))(aa.RefPolicy.create);
       throw Error("Failed pattern match at Metajelo.FormUtil (line 348, column 25 - line 350, column 52): " + [Y.constructor.name]);
     };
   };
 
   c.polPolTypeIs = function (Y) {
     if (Y instanceof aa.FreeTextPolicy) return Ha.value;
-    if (Y instanceof aa.RefPolicy) return Ja.value;
+    if (Y instanceof aa.RefPolicy) return Ka.value;
     throw Error("Failed pattern match at Metajelo.FormUtil (line 353, column 18 - line 355, column 29): " + [Y.constructor.name]);
   };
 
@@ -16343,7 +16343,7 @@ var PS = {};
 
   c.nonEmptyArrayView = function (Y) {
     return function (ba) {
-      return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(Bb(Y)(G.second(G.strongFn)(La(F.foldableMaybe)(N.functorMaybe)(z.monoidArray)(x.toArray))(ba)))(function (T) {
+      return b.bind(h.bindCofree(k.widgetAlternative(z.monoidArray)))(Bb(Y)(G.second(G.strongFn)(Ma(F.foldableMaybe)(N.functorMaybe)(z.monoidArray)(x.toArray))(ba)))(function (T) {
         return q.pure(h.applicativeCofree(k.widgetAlternative(z.monoidArray)))(G.second(G.strongFn)(x.fromArray)(T));
       });
     };
@@ -16360,22 +16360,22 @@ var PS = {};
   };
 
   c.evTargetElem = function (Y) {
-    return K.map(fa.functorEffect)(E.fromNode)(ua.target(Y));
+    return K.map(fa.functorEffect)(C.fromNode)(ua.target(Y));
   };
 
   c.getInputTextLE = function (Y) {
     return function (ba) {
-      return Ba.liftEffect(Y)(ub(ba));
+      return Ba.liftEffect(Y)(vb(ba));
     };
   };
 
   c.isOptionMaybeBoolean = zb;
-  c.isOptionIdentifierType = tb;
-  c.isOptionInstitutionType = mb;
-  c.isOptionMaybeInstitutionContactType = l;
+  c.isOptionIdentifierType = ub;
+  c.isOptionInstitutionType = nb;
+  c.isOptionMaybeInstitutionContactType = m;
   c.isOptionMaybePolicyType = Sa;
-  c.isOptionRelationType = sb;
-  c.isOptionResourceTypeGeneral = rb;
+  c.isOptionRelationType = tb;
+  c.isOptionResourceTypeGeneral = sb;
   c.boundedEnumPolPolType = Db;
   c.isOptionPolPolType = wb;
 })(PS);
@@ -16389,7 +16389,7 @@ var PS = {};
       f = a["Concur.React.DOM"],
       k = a["Concur.React.Props"],
       p = a["Control.Alt"],
-      m = a["Control.Bind"],
+      l = a["Control.Bind"],
       n = a["Control.Category"],
       q = a["Data.Array"],
       w = a["Data.Array.NonEmpty"],
@@ -16399,25 +16399,25 @@ var PS = {};
       r = a["Data.HeytingAlgebra"],
       x = a["Data.Maybe"],
       t = a["Data.Monoid"],
-      C = a["Data.Natural"],
+      D = a["Data.Natural"],
       y = a["Data.Profunctor.Strong"],
       u = a["Data.Semigroup"],
-      B = a["Data.Show"],
+      E = a["Data.Show"],
       F = a["Data.String.CodePoints"],
       K = a["Data.String.NonEmpty.Internal"],
       H = a["Data.String.Utils"],
       I = a["Data.Unfoldable"],
       L = a["Data.Unfoldable1"],
       M = a["DataCite.Types.Common"],
-      R = a["Foreign.Object"],
+      Q = a["Foreign.Object"],
       A = a["Metajelo.CSS.Common.ClassNames"],
-      D = a["Metajelo.CSS.Web.ClassNamesPrivate"],
+      B = a["Metajelo.CSS.Web.ClassNamesPrivate"],
       N = a["Metajelo.CSS.Web.ClassProps"],
       z = a["Metajelo.CSS.Web.Util"],
       O = a["Metajelo.Types"],
       W = a["Text.Email.Parser"],
       G = a["Text.URL.Validate"],
-      Q = function () {
+      R = function () {
     var J = d.map(d.functorArray)(F.singleton);
     return function (Z) {
       return J(F.toCodePointArray(Z));
@@ -16429,9 +16429,9 @@ var PS = {};
       return Z(K.toString(ua));
     };
   },
-      na = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)(" ")]),
+      oa = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)(" ")]),
       ma = function () {
-    var J = h.intercalate(h.foldableArray)(t.monoidArray)([na]),
+    var J = h.intercalate(h.foldableArray)(t.monoidArray)([oa]),
         Z = d.map(d.functorArray)(L.singleton(L.unfoldable1Array));
     return function (ua) {
       return J(Z(ua));
@@ -16442,15 +16442,15 @@ var PS = {};
       var ua = function () {
         if (Z instanceof x.Nothing) return {
           text: "May apply to product (unverified)",
-          cls: D.appliesMaybe
+          cls: B.appliesMaybe
         };
         if (Z instanceof x.Just && Z.value0) return {
           text: "Applies to product",
-          cls: D.appliesYes
+          cls: B.appliesYes
         };
         if (Z instanceof x.Just && !Z.value0) return {
           text: "Does not apply to product",
-          cls: D.appliesNo
+          cls: B.appliesNo
         };
         throw Error("Failed pattern match at Metajelo.View (line 272, column 10 - line 275, column 75): " + [Z.constructor.name]);
       }();
@@ -16459,7 +16459,7 @@ var PS = {};
         return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.appliesInfo])([f.text(e.widgetLiftWidget)(Da)]);
       }(ua.text)]);
     }(J.appliesToProduct), h.foldMap(h.foldableMaybe)(g.widgetMonoid(t.monoidArray))(function (Z) {
-      return f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.policyType])([f.text(e.widgetLiftWidget)(B.show(O.showPolicyType)(Z))]), f.text(e.widgetLiftWidget)(" Policy:")]);
+      return f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.policyType])([f.text(e.widgetLiftWidget)(E.show(O.showPolicyType)(Z))]), f.text(e.widgetLiftWidget)(" Policy:")]);
     })(J.policyType), function (Z) {
       var ua = f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.policy]),
           Da = L.singleton(L.unfoldable1Array);
@@ -16480,17 +16480,17 @@ var PS = {};
       return function (ua) {
         return function (Da) {
           return function (Fa) {
-            var Ka = R.fromFoldableWith(J)(u.append(Da)),
+            var La = Q.fromFoldableWith(J)(u.append(Da)),
                 S = d.map(Z)(y.fanout(n.categoryFn)(y.strongFn)(Fa)(L.singleton(ua)));
-            return function (E) {
-              return Ka(S(E));
+            return function (C) {
+              return La(S(C));
             };
           };
         };
       };
     };
   },
-      va = function va(J) {
+      wa = function wa(J) {
     return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.basicMetadata, N.creatorList])(d.mapFlipped(d.functorArray)(w.toArray(J))(function (Z) {
       return f.span_(g.widgetShiftMap)([N.creator])(v(e.widgetLiftWidget)(Z));
     }));
@@ -16498,7 +16498,7 @@ var PS = {};
       P = function P(J) {
     var Z = W.toString(J.emailAddress),
         ua = f.text(e.widgetLiftWidget);
-    if (J.contactType instanceof x.Nothing) J = ".";else if (J.contactType instanceof x.Just) J = " (" + (B.show(O.showInstitutionContactType)(J.contactType.value0) + ").");else throw Error("Failed pattern match at Metajelo.View (line 199, column 24 - line 201, column 41): " + [J.contactType.constructor.name]);
+    if (J.contactType instanceof x.Nothing) J = ".";else if (J.contactType instanceof x.Just) J = " (" + (E.show(O.showInstitutionContactType)(J.contactType.value0) + ").");else throw Error("Failed pattern match at Metajelo.View (line 199, column 24 - line 201, column 41): " + [J.contactType.constructor.name]);
     ua = ua(J);
     return f.span_(g.widgetShiftMap)([N.institutionContact])(p.alt(g.widgetAlt(t.monoidArray))(p.alt(g.widgetAlt(t.monoidArray))(f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)("Institution Contact: ")]))(f.a(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.contactEmail, k.href("mailto:" + Z)])([f.text(e.widgetLiftWidget)(Z)])))(f.span_(g.widgetShiftMap)([N.contactType])(ua)));
   },
@@ -16508,7 +16508,7 @@ var PS = {};
       return f.span_(g.widgetShiftMap)([N.format])(v(e.widgetLiftWidget)(Z));
     })));
   },
-      oa = function oa(J) {
+      pa = function pa(J) {
     return f.span_(g.widgetShiftMap)([])(h.intercalate(h.foldableArray)(g.widgetMonoid(t.monoidArray))(fa)(d.mapFlipped(d.functorArray)(w.toArray(J))(function (Z) {
       return f.span_(g.widgetShiftMap)([N.title])(v(e.widgetLiftWidget)(Z));
     })));
@@ -16543,15 +16543,15 @@ var PS = {};
     throw Error("Failed pattern match at Metajelo.View (line 221, column 1 - line 221, column 47): " + [J.constructor.name]);
   },
       Ca = function Ca(J) {
-    return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.identifier])([f.span_(g.widgetShiftMap)([N.idType])(f.text(e.widgetLiftWidget)(B.show(M.showIdentifierType)(J.identifierType))), f.span_(g.widgetShiftMap)([N.idUrl])(sa(J))]);
+    return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.identifier])([f.span_(g.widgetShiftMap)([N.idType])(f.text(e.widgetLiftWidget)(E.show(M.showIdentifierType)(J.identifierType))), f.span_(g.widgetShiftMap)([N.idUrl])(sa(J))]);
   },
       Ga = function Ga(J) {
-    return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedId])([f.span_(g.widgetShiftMap)([N.relType])(f.text(e.widgetLiftWidget)(B.show(M.showRelationType)(J.relationType))), na, Ca({
+    return f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedId])([f.span_(g.widgetShiftMap)([N.relType])(f.text(e.widgetLiftWidget)(E.show(M.showRelationType)(J.relationType))), oa, Ca({
       identifier: J.identifier,
       identifierType: J.identifierType
     })]);
   },
-      U = function U(J) {
+      V = function V(J) {
     return function (Z) {
       return function (ua) {
         if (Z) return J;
@@ -16559,7 +16559,7 @@ var PS = {};
         if (h.any(h.foldableArray)(r.heytingAlgebraBoolean)(function (Fa) {
           return H.endsWith(Fa)(J);
         })([";", ".", ","])) {
-          var Da = Q(J);
+          var Da = R(J);
           return H.fromCharArray(da(t.monoidString)(Da)) + ua;
         }
 
@@ -16569,8 +16569,8 @@ var PS = {};
   },
       la = function la(J) {
     var Z = za(J),
-        ua = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)("("), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.institutionId])([Ca(J.institutionID)]), f.text(e.widgetLiftWidget)("; "), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.institutionType])([f.text(e.widgetLiftWidget)(B.show(O.showInstitutionType)(J.institutionType))]), f.text(e.widgetLiftWidget)(U(")")(x.isNothing(J.superOrganizationName))(","))]);
-    if (J.superOrganizationName instanceof x.Nothing) var Da = t.mempty(g.widgetMonoid(t.monoidArray));else if (J.superOrganizationName instanceof x.Just) Da = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)("a member of "), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.superOrg])([f.text(e.widgetLiftWidget)(U(K.toString(J.superOrganizationName.value0))(!1)("."))])]);else throw Error("Failed pattern match at Metajelo.View (line 161, column 7 - line 167, column 10): " + [J.superOrganizationName.constructor.name]);
+        ua = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)("("), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.institutionId])([Ca(J.institutionID)]), f.text(e.widgetLiftWidget)("; "), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.institutionType])([f.text(e.widgetLiftWidget)(E.show(O.showInstitutionType)(J.institutionType))]), f.text(e.widgetLiftWidget)(V(")")(x.isNothing(J.superOrganizationName))(","))]);
+    if (J.superOrganizationName instanceof x.Nothing) var Da = t.mempty(g.widgetMonoid(t.monoidArray));else if (J.superOrganizationName instanceof x.Just) Da = f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([f.text(e.widgetLiftWidget)("a member of "), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.superOrg])([f.text(e.widgetLiftWidget)(V(K.toString(J.superOrganizationName.value0))(!1)("."))])]);else throw Error("Failed pattern match at Metajelo.View (line 161, column 7 - line 167, column 10): " + [J.superOrganizationName.constructor.name]);
     return ma([Z, ua, Da, P(J.institutionContact), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.sustainability])([f.a(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.missionStatement, k.href(G.urlToString(J.institutionSustainability.missionStatementURL))])([f.text(e.widgetLiftWidget)("Mission Statement")]), f.text(e.widgetLiftWidget)("; "), f.a(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.fundingStatement, k.href(G.urlToString(J.institutionSustainability.fundingStatementURL))])([f.text(e.widgetLiftWidget)("Funding Statement")]), f.text(e.widgetLiftWidget)(".")]), f.ul(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.institutionPolicies])(d.map(d.functorArray)(function (Fa) {
       return f["li'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([Aa(Fa)]);
     })(w.toArray(J.institutionPolicies))), function (Fa) {
@@ -16583,7 +16583,7 @@ var PS = {};
   },
       aa = function aa(J) {
     if (J.resourceID instanceof x.Just) var Z = f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.resourceId])([Ca(J.resourceID.value0), f.text(e.widgetLiftWidget)(".")]);else if (J.resourceID instanceof x.Nothing) Z = t.mempty(g.widgetMonoid(t.monoidArray));else throw Error("Failed pattern match at Metajelo.View (line 127, column 17 - line 129, column 24): " + [J.resourceID.constructor.name]);
-    var ua = [va(J.basicMetadata.creators), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.basicMetadata, N.pubyear])([f.text(e.widgetLiftWidget)(B.show(B.showInt)(C.natToInt(J.basicMetadata.publicationYear)))]), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.basicMetadata, N.title])([oa(J.basicMetadata.titles), f.text(e.widgetLiftWidget)(U("")(x.isNothing(J.resourceID))(","))])];
+    var ua = [wa(J.basicMetadata.creators), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.basicMetadata, N.pubyear])([f.text(e.widgetLiftWidget)(E.show(E.showInt)(D.natToInt(J.basicMetadata.publicationYear)))]), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.basicMetadata, N.title])([pa(J.basicMetadata.titles), f.text(e.widgetLiftWidget)(V("")(x.isNothing(J.resourceID))(","))])];
     Z = u.append(u.semigroupArray)(ua)([f["span'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([za(J.location), f.text(e.widgetLiftWidget)(".")]), Z]);
     return f.div(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.product])(ma(u.append(u.semigroupArray)([f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.productCitation])([f["cite'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)(ma(Z))])])(u.append(u.semigroupArray)([Ba(J.format)])(la(J.location)))));
   };
@@ -16592,26 +16592,26 @@ var PS = {};
 
   c.mkRecordWidget = function (J) {
     var Z = function () {
-      var Fa = d.map(b.functorNonEmptyArray)(function (Ka) {
-        return f.li(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedId])([Ka]);
+      var Fa = d.map(b.functorNonEmptyArray)(function (La) {
+        return f.li(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedId])([La]);
       })(d.map(b.functorNonEmptyArray)(Ga)(J.relatedIdentifiers));
       return f.ul(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedIdList])(w.toArray(Fa));
     }(),
         ua = ja(b.foldableNonEmptyArray)(b.functorNonEmptyArray)(b.unfoldable1NonEmptyArray)(b.semigroupNonEmptyArray)(function (Fa) {
-      return B.show(M.showResourceTypeGeneral)(Fa.resourceType.generalType) + (": " + Fa.resourceType.description);
+      return E.show(M.showResourceTypeGeneral)(Fa.resourceType.generalType) + (": " + Fa.resourceType.description);
     })(J.supplementaryProducts),
         Da = function Da(Fa) {
-      Fa = m.join(m.bindArray)(I.fromMaybe(I.unfoldableArray)(d.map(x.functorMaybe)(w.toArray)(R.lookup(Fa)(ua))));
-      var Ka = f.span_(g.widgetShiftMap)([N.resourceType])(h.fold(h.foldableMaybe)(g.widgetMonoid(t.monoidArray))(d.mapFlipped(x.functorMaybe)(q.head(Fa))(function (S) {
-        return p.alt(g.widgetAlt(t.monoidArray))(p.alt(g.widgetAlt(t.monoidArray))(f.span_(g.widgetShiftMap)([N.resourceTypeGen])(f.text(e.widgetLiftWidget)(B.show(M.showResourceTypeGeneral)(S.resourceType.generalType))))(f.span_(g.widgetShiftMap)([N.resourceTypeDescr])(f.text(e.widgetLiftWidget)(S.resourceType.description))))(f["br'"](e.widgetLiftWidget));
+      Fa = l.join(l.bindArray)(I.fromMaybe(I.unfoldableArray)(d.map(x.functorMaybe)(w.toArray)(Q.lookup(Fa)(ua))));
+      var La = f.span_(g.widgetShiftMap)([N.resourceType])(h.fold(h.foldableMaybe)(g.widgetMonoid(t.monoidArray))(d.mapFlipped(x.functorMaybe)(q.head(Fa))(function (S) {
+        return p.alt(g.widgetAlt(t.monoidArray))(p.alt(g.widgetAlt(t.monoidArray))(f.span_(g.widgetShiftMap)([N.resourceTypeGen])(f.text(e.widgetLiftWidget)(E.show(M.showResourceTypeGeneral)(S.resourceType.generalType))))(f.span_(g.widgetShiftMap)([N.resourceTypeDescr])(f.text(e.widgetLiftWidget)(S.resourceType.description))))(f["br'"](e.widgetLiftWidget));
       })));
-      return f["div'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)(q.cons(Ka)(d.map(d.functorArray)(aa)(Fa)));
+      return f["div'"](g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)(q.cons(La)(d.map(d.functorArray)(aa)(Fa)));
     };
 
-    B.show(M.showIdentifierType)(J.identifier.identifierType);
+    E.show(M.showIdentifierType)(J.identifier.identifierType);
     return f.div(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.record])([f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.productsHeader])([f.span_(g.widgetShiftMap)([N.recordId])(Ca(J.identifier))]), f.ul(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.productList])(d.map(d.functorArray)(function (Fa) {
       return f.li_(g.widgetShiftMap)([N.productGroup])(Da(Fa));
-    })(R.keys(ua))), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedIdsHeader])([]), Z]);
+    })(Q.keys(ua))), f.span(g.widgetMultiAlternative(t.monoidArray))(g.widgetShiftMap)([N.relatedIdsHeader])([]), Z]);
   };
 
   c.mkSupplementaryProductWidget = aa;
@@ -16683,8 +16683,8 @@ var PS = {};
   c.get = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
-          return g.unsafeGet(e.reflectSymbol(f)(p))(m);
+        return function (l) {
+          return g.unsafeGet(e.reflectSymbol(f)(p))(l);
         };
       };
     };
@@ -16693,10 +16693,10 @@ var PS = {};
   c.insert = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
+        return function (l) {
           return function (n) {
             return function (q) {
-              return g.unsafeSet(e.reflectSymbol(f)(m))(n)(q);
+              return g.unsafeSet(e.reflectSymbol(f)(l))(n)(q);
             };
           };
         };
@@ -16707,9 +16707,9 @@ var PS = {};
   c["delete"] = function (f) {
     return function (k) {
       return function (p) {
-        return function (m) {
+        return function (l) {
           return function (n) {
-            return g.unsafeDelete(e.reflectSymbol(f)(m))(n);
+            return g.unsafeDelete(e.reflectSymbol(f)(l))(n);
           };
         };
       };
@@ -16725,15 +16725,15 @@ var PS = {};
       g = a["Data.Monoid"],
       f = a["Data.Symbol"],
       k = a["Type.Data.RowList"],
-      p = function p(m) {
-    this.keysImpl = m;
+      p = function p(l) {
+    this.keysImpl = l;
   };
 
-  a = new p(function (m) {
+  a = new p(function (l) {
     return g.mempty(e.monoidList);
   });
 
-  c.keys = function (m) {
+  c.keys = function (l) {
     return function (n) {
       return function (q) {
         return (0, n.keysImpl)(k.RLProxy.value);
@@ -16743,11 +16743,11 @@ var PS = {};
 
   c.nilKeys = a;
 
-  c.consKeys = function (m) {
+  c.consKeys = function (l) {
     return function (n) {
       return new p(function (q) {
         q = (0, n.keysImpl)(k.RLProxy.value);
-        var w = f.reflectSymbol(m)(f.SProxy.value);
+        var w = f.reflectSymbol(l)(f.SProxy.value);
         return new e.Cons(w, q);
       });
     };
@@ -16763,7 +16763,7 @@ var PS = {};
       f = a["Control.Monad.State.Trans"],
       k = a["Data.Array"],
       p = a["Data.Function.Uncurried"],
-      m = a["Data.Identity"],
+      l = a["Data.Identity"],
       n = a["Data.List.Types"],
       q = a["Data.Maybe"],
       w = a["Data.Symbol"],
@@ -16772,24 +16772,24 @@ var PS = {};
       d = a["Record.Extra"],
       r = a["Type.Data.Row"],
       x = function () {
-    function D() {}
+    function B() {}
 
-    D.value = new D();
-    return D;
+    B.value = new B();
+    return B;
   }(),
-      t = function t(D) {
-    this.getAllOption = D;
+      t = function t(B) {
+    this.getAllOption = B;
   },
-      C = function C(D) {
-    this["getAll'"] = D;
+      D = function D(B) {
+    this["getAll'"] = B;
   },
-      y = function y(D) {
-    this.fromRecordOption = D;
+      y = function y(B) {
+    this.fromRecordOption = B;
   },
-      u = function u(D) {
-    this["fromRecord'"] = D;
+      u = function u(B) {
+    this["fromRecord'"] = B;
   },
-      B = function B(D) {
+      E = function E(B) {
     return function (N) {
       return function (z) {
         z = k.fromFoldable(n.foldableList)(d.keys()(z)(r.RProxy.value));
@@ -16798,25 +16798,25 @@ var PS = {};
     };
   };
 
-  a = new t(function (D) {
+  a = new t(function (B) {
     return function (N) {
       return new q.Just({});
     };
   });
 
   var F = b.empty,
-      K = new y(function (D) {
+      K = new y(function (B) {
     return function (N) {
       return F;
     };
   }),
-      H = function H(D) {
+      H = function H(B) {
     return function (N) {
       return function (z) {
         return function (O) {
-          var W = w.reflectSymbol(D)(w.SProxy.value),
-              G = b.alter(function (Q) {
-            return N(Q);
+          var W = w.reflectSymbol(B)(w.SProxy.value),
+              G = b.alter(function (R) {
+            return N(R);
           })(W)(O);
           O = N(b.lookup(W)(O));
           return {
@@ -16827,12 +16827,12 @@ var PS = {};
       };
     };
   },
-      I = function I(D) {
+      I = function I(B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            return H(D)(function (G) {
+            return H(B)(function (G) {
               return q.Nothing.value;
             })(O)(W).option;
           };
@@ -16840,23 +16840,23 @@ var PS = {};
       };
     };
   },
-      L = function L(D) {
+      L = function L(B) {
     return function (N) {
       return function (z) {
         return function (O) {
-          return H(D)(function (W) {
+          return H(B)(function (W) {
             return W;
           })(z)(O).value;
         };
       };
     };
   },
-      M = function M(D) {
+      M = function M(B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            return H(D)(function (G) {
+            return H(B)(function (G) {
               return new q.Just(O);
             })(z)(W).option;
           };
@@ -16864,12 +16864,12 @@ var PS = {};
       };
     };
   },
-      R = function R(D) {
+      Q = function Q(B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            if (O instanceof q.Just) return M(D)()(z)(O.value0)(W);
+            if (O instanceof q.Just) return M(B)()(z)(O.value0)(W);
             if (O instanceof q.Nothing) return W;
             throw Error("Failed pattern match at Option (line 1408, column 25 - line 1410, column 28): " + [O.constructor.name]);
           };
@@ -16877,13 +16877,13 @@ var PS = {};
       };
     };
   },
-      A = function A(D) {
+      A = function A(B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
             return function (G) {
-              return H(D)(function (Q) {
+              return H(B)(function (R) {
                 return new q.Just(W);
               })(O)(G).option;
             };
@@ -16893,35 +16893,35 @@ var PS = {};
     };
   };
 
-  c.fromRecord = function (D) {
-    return D["fromRecord'"];
+  c.fromRecord = function (B) {
+    return B["fromRecord'"];
   };
 
   c.empty = F;
   c.get = L;
 
-  c.getAll = function (D) {
-    return D["getAll'"];
+  c.getAll = function (B) {
+    return B["getAll'"];
   };
 
-  c.getSubset = function (D) {
+  c.getSubset = function (B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            return (0, O["getAll'"])(B()()(z)(W));
+            return (0, O["getAll'"])(E()()(z)(W));
           };
         };
       };
     };
   };
 
-  c.getWithDefault = function (D) {
+  c.getWithDefault = function (B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            W = L(D)()(O)(W);
+            W = L(B)()(O)(W);
             if (W instanceof q.Just) return W.value0;
             if (W instanceof q.Nothing) return z;
             throw Error("Failed pattern match at Option (line 1257, column 39 - line 1259, column 32): " + [W.constructor.name]);
@@ -16931,38 +16931,38 @@ var PS = {};
     };
   };
 
-  c.maySetOptState = function (D) {
+  c.maySetOptState = function (B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
-            return g.put(f.monadStateStateT(m.monadIdentity))(R(D)()(z)(O)(W));
+            return g.put(f.monadStateStateT(l.monadIdentity))(Q(B)()(z)(O)(W));
           };
         };
       };
     };
   };
 
-  c.fromRecordAny = function (D) {
+  c.fromRecordAny = function (B) {
     return function (N) {
-      return new u((0, D.fromRecordOption)(x.value));
+      return new u((0, B.fromRecordOption)(x.value));
     };
   };
 
   c.fromRecordOptionNil = K;
 
-  c.fromRecordOptionCons = function (D) {
+  c.fromRecordOptionCons = function (B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
             return function (G) {
-              return new y(function (Q) {
+              return new y(function (R) {
                 return function (v) {
-                  var na = h["delete"](D)()()(w.SProxy.value)(v);
-                  na = (0, N.fromRecordOption)(x.value)(na);
-                  v = h.get(D)()(w.SProxy.value)(v);
-                  return A(D)()()(w.SProxy.value)(v)(na);
+                  var oa = h["delete"](B)()()(w.SProxy.value)(v);
+                  oa = (0, N.fromRecordOption)(x.value)(oa);
+                  v = h.get(B)()(w.SProxy.value)(v);
+                  return A(B)()()(w.SProxy.value)(v)(oa);
                 };
               });
             };
@@ -16972,34 +16972,34 @@ var PS = {};
     };
   };
 
-  c.getAllAny = function (D) {
+  c.getAllAny = function (B) {
     return function (N) {
-      return new C((0, N.getAllOption)(x.value));
+      return new D((0, N.getAllOption)(x.value));
     };
   };
 
   c.getAllOptionNil = a;
 
-  c.getAllOptionCons = function (D) {
+  c.getAllOptionCons = function (B) {
     return function (N) {
       return function (z) {
         return function (O) {
           return function (W) {
             return function (G) {
-              return new t(function (Q) {
+              return new t(function (R) {
                 return function (v) {
-                  var na = I(D)()()(w.SProxy.value)(v);
-                  na = (0, G.getAllOption)(x.value)(na);
-                  v = L(D)()(w.SProxy.value)(v);
+                  var oa = I(B)()()(w.SProxy.value)(v);
+                  oa = (0, G.getAllOption)(x.value)(oa);
+                  v = L(B)()(w.SProxy.value)(v);
 
-                  if (na instanceof q.Just) {
-                    if (v instanceof q.Just) return new q.Just(h.insert(D)()()(w.SProxy.value)(v.value0)(na.value0));
+                  if (oa instanceof q.Just) {
+                    if (v instanceof q.Just) return new q.Just(h.insert(B)()()(w.SProxy.value)(v.value0)(oa.value0));
                     if (v instanceof q.Nothing) return q.Nothing.value;
                     throw Error("Failed pattern match at Option (line 567, column 31 - line 569, column 47): " + [v.constructor.name]);
                   }
 
-                  if (na instanceof q.Nothing) return q.Nothing.value;
-                  throw Error("Failed pattern match at Option (line 566, column 27 - line 570, column 45): " + [na.constructor.name]);
+                  if (oa instanceof q.Nothing) return q.Nothing.value;
+                  throw Error("Failed pattern match at Option (line 566, column 27 - line 570, column 45): " + [oa.constructor.name]);
                 };
               });
             };
@@ -17112,7 +17112,7 @@ var PS = {};
       f = a["Data.List.Types"],
       k = a["Data.Monoid"],
       p = a["Data.Show"],
-      m = a["Effect.Aff"],
+      l = a["Effect.Aff"],
       n = a["Effect.Exception"],
       q = a.Foreign,
       w = a["Web.Event.EventTarget"],
@@ -17122,15 +17122,15 @@ var PS = {};
   a = function (d) {
     return function (r) {
       return function (x) {
-        return m.makeAff(function (t) {
-          var C = function C(y) {
+        return l.makeAff(function (t) {
+          var D = function D(y) {
             return t(g.Right.create(y));
           };
 
           return function () {
             var y = b.fileReader(),
                 u = b.toEventTarget(y),
-                B = w.eventListener(function (K) {
+                E = w.eventListener(function (K) {
               return t(g.Left.create(n.error("error")));
             })(),
                 F = w.eventListener(function (K) {
@@ -17138,13 +17138,13 @@ var PS = {};
                 var H = b.result(y)();
                 return g.either(function (I) {
                   return t(g.Left.create(n.error(p.show(f.showNonEmptyList(q.showForeignError))(I))));
-                })(C)(e.runExcept(d(H)))();
+                })(D)(e.runExcept(d(H)))();
               };
             })();
-            w.addEventListener(h.error)(B)(!1)(u)();
+            w.addEventListener(h.error)(E)(!1)(u)();
             w.addEventListener(h.load)(F)(!1)(u)();
             r(x)(y)();
-            return k.mempty(m.monoidCanceler);
+            return k.mempty(l.monoidCanceler);
           };
         });
       };
@@ -17189,7 +17189,7 @@ var PS = {};
       f = a["Concur.Core.FRP"],
       k = a["Concur.Core.LiftWidget"],
       p = a["Concur.Core.Props"],
-      m = a["Concur.Core.Types"],
+      l = a["Concur.Core.Types"],
       n = a["Concur.React.DOM"],
       q = a["Concur.React.Props"],
       w = a["Concur.React.Run"],
@@ -17199,42 +17199,42 @@ var PS = {};
       r = a["Control.Cofree"],
       x = a["Control.Monad.Except.Trans"],
       t = a["Control.Monad.Maybe.Trans"],
-      C = a["Control.Monad.State"],
+      D = a["Control.Monad.State"],
       y = a["Control.Monad.State.Class"],
       u = a["Control.Monad.State.Trans"],
-      B = a["Data.Array"],
+      E = a["Data.Array"],
       F = a["Data.Array.NonEmpty"],
       K = a["Data.Array.NonEmpty.Internal"],
       H = a["Data.Bifunctor"],
       I = a["Data.Either"],
       L = a["Data.Enum"],
       M = a["Data.Foldable"],
-      R = a["Data.Functor"],
+      Q = a["Data.Functor"],
       A = a["Data.Identity"],
-      D = a["Data.Maybe"],
+      B = a["Data.Maybe"],
       N = a["Data.Maybe.First"],
       z = a["Data.Monoid"],
       O = a["Data.Semigroup"],
       W = a["Data.Show"],
       G = a["Data.String.Common"],
-      Q = a["Data.String.NonEmpty.Internal"],
+      R = a["Data.String.NonEmpty.Internal"],
       v = a["Data.Symbol"],
-      na = a["Data.Traversable"],
+      oa = a["Data.Traversable"],
       ma = a["Data.Tuple"],
       Aa = a["Data.UUID"],
       za = a["Data.Unit"],
       da = a["Data.Void"],
       ja = a["DataCite.JSON.Decode.Simple"],
-      va = a["DataCite.Types.Common"],
+      wa = a["DataCite.Types.Common"],
       P = a.Effect,
       fa = a["Effect.Aff.Class"],
       Ba = a["Effect.Class"],
-      oa = a["Effect.Class.Console"],
+      pa = a["Effect.Class.Console"],
       qa = a["Effect.Exception"],
       sa = a["Effect.Now"],
       Ca = a["Effect.Unsafe"],
       Ga = a.Global,
-      U = a["Metajelo.CSS.UI.ClassProps"],
+      V = a["Metajelo.CSS.UI.ClassProps"],
       la = a["Metajelo.CSS.UI.Util"],
       aa = a["Metajelo.CSS.Web.ClassProps"],
       J = a["Metajelo.FormUtil"],
@@ -17242,9 +17242,9 @@ var PS = {};
       ua = a["Metajelo.View"],
       Da = a["Metajelo.XPaths"],
       Fa = a["Metajelo.XPaths.Read"],
-      Ka = a["Metajelo.XPaths.Write"],
+      La = a["Metajelo.XPaths.Write"],
       S = a["Nonbili.DOM"],
-      E = a.Option,
+      C = a.Option,
       X = a["Record.Extra"],
       ka = a["Text.URL.Validate"],
       ca = a["Web.DOM.Document"],
@@ -17253,19 +17253,19 @@ var PS = {};
       ta = a["Web.File.FileList"],
       ya = a["Web.File.FileReader.Aff"],
       Ha = a["Web.HTML"],
-      Ja = a["Web.HTML.HTMLDocument"],
+      Ka = a["Web.HTML.HTMLDocument"],
       Ea = a["Web.HTML.HTMLElement"],
-      Ma = a["Web.HTML.HTMLInputElement"],
+      Na = a["Web.HTML.HTMLInputElement"],
       Qa = a["Web.HTML.Window"],
       Wa = function Wa(T) {
-    return function (V) {
-      return function (ea) {
-        return function (ha) {
-          return function (pa) {
-            return R.mapFlipped(D.functorMaybe)(E.get(T)(V)(ea)(ha))(function (wa) {
-              return C.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    return function (U) {
+      return function (ha) {
+        return function (ea) {
+          return function (na) {
+            return Q.mapFlipped(B.functorMaybe)(C.get(T)(U)(ha)(ea))(function (va) {
+              return D.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "descs_on";
-              }))()(v.SProxy.value)(new D.Just(pa))))(wa);
+              }))()(v.SProxy.value)(new B.Just(na))))(va);
             });
           };
         };
@@ -17273,65 +17273,65 @@ var PS = {};
     };
   },
       Za = function Za(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.title])(J.textInput(T));
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.title])(J.textInput(T));
+  },
+      bb = function bb(T) {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.titleList])(J.nonEmptyArrayView(Za)(T));
   },
       cb = function cb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.titleList])(J.nonEmptyArrayView(Za)(T));
-  },
-      db = function db(T) {
     return function () {
-      var V = Ha.window();
-      V = Qa.document(V)();
-      V = Ja.toDocument(V);
-      V = ca.createElement("a")(V)();
-      ia.setAttribute("download")("metajelo.xml")(V)();
-      ia.setAttribute("href")("data:text/plain;charset=utf-8," + T)(V)();
-      V = Ea.fromElement(V);
-      if (V instanceof D.Just) V = Ea.click(V.value0);else if (V instanceof D.Nothing) V = oa.log(Ba.monadEffectEffect)("Couldn't create HTMLElement to click with encoded string" + T);else throw Error("Failed pattern match at Metajelo.UI (line 126, column 26 - line 130, column 18): " + [V.constructor.name]);
-      return V;
+      var U = Ha.window();
+      U = Qa.document(U)();
+      U = Ka.toDocument(U);
+      U = ca.createElement("a")(U)();
+      ia.setAttribute("download")("metajelo.xml")(U)();
+      ia.setAttribute("href")("data:text/plain;charset=utf-8," + T)(U)();
+      U = Ea.fromElement(U);
+      if (U instanceof B.Just) U = Ea.click(U.value0);else if (U instanceof B.Nothing) U = pa.log(Ba.monadEffectEffect)("Couldn't create HTMLElement to click with encoded string" + T);else throw Error("Failed pattern match at Metajelo.UI (line 126, column 26 - line 130, column 18): " + [U.constructor.name]);
+      return U;
     };
   },
       Ra = function Ra(T) {
-    return function (V) {
-      return E.getWithDefault(T)()(E.empty);
+    return function (U) {
+      return C.getWithDefault(T)()(C.empty);
     };
   },
-      eb = function eb(T) {
-    var V = Q.fromString("urn:uuid:"),
-        ea = E.get(new v.IsSymbol(function () {
+      db = function db(T) {
+    var U = R.fromString("urn:uuid:"),
+        ha = C.get(new v.IsSymbol(function () {
       return "identifier";
     }))()(v.SProxy.value)(T);
-    return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(function () {
-      if (ea instanceof D.Just) return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(new D.Just(ea.value0));
-      if (ea instanceof D.Nothing) return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(J.runEffectInit(Aa.emptyUUID)(Aa.genUUID))(function (ha) {
-        return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(d.bind(D.bindMaybe)(V)(function (pa) {
-          return d.bind(D.bindMaybe)(Q.fromString(Aa.toString(ha)))(function (wa) {
-            return b.pure(D.applicativeMaybe)(O.append(Q.semigroupNonEmptyString)(pa)(wa));
+    return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(function () {
+      if (ha instanceof B.Just) return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(new B.Just(ha.value0));
+      if (ha instanceof B.Nothing) return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(J.runEffectInit(Aa.emptyUUID)(Aa.genUUID))(function (ea) {
+        return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(d.bind(B.bindMaybe)(U)(function (na) {
+          return d.bind(B.bindMaybe)(R.fromString(Aa.toString(ea)))(function (va) {
+            return b.pure(B.applicativeMaybe)(O.append(R.semigroupNonEmptyString)(na)(va));
           });
         }));
       });
-      throw Error("Failed pattern match at Metajelo.UI (line 678, column 15 - line 685, column 30): " + [ea.constructor.name]);
-    }())(function (ha) {
-      return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      throw Error("Failed pattern match at Metajelo.UI (line 706, column 15 - line 713, column 30): " + [ha.constructor.name]);
+    }())(function (ea) {
+      return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
         return "identifier";
-      }))()(v.SProxy.value)(ha)))(function () {
-        return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(ea)))(function () {
+        return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
           return "identifierType";
-        }))()(v.SProxy.value)(new D.Just(va.URN.value)));
+        }))()(v.SProxy.value)(new B.Just(wa.URN.value)));
       }))(T));
     });
   },
       hb = function hb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.format])(J.textInput(T));
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.format])(J.textInput(T));
   },
       Ua = function Ua(T) {
-    return function (V) {
-      return n.div_(r.shiftMapCofree(z.monoidArray))([U.formatList])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("formatEle")(T)))(function () {
-        return J.arrayView(hb)(V);
+    return function (U) {
+      return n.div_(r.shiftMapCofree(z.monoidArray))([V.formatList])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("formatEle")(T)))(function () {
+        return J.arrayView(hb)(U);
       }));
     };
   },
-      lb = function lb(T) {
+      mb = function mb(T) {
     return function () {
       return {
         lastModified: sa.nowDateTime(),
@@ -17343,474 +17343,474 @@ var PS = {};
     };
   },
       Va = function Va(T) {
-    var V = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    var U = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "fundingStatementURL";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "missionStatementURL";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T),
-        ea = new I.Right(T.missionStatementURL),
-        ha = new I.Right(T.fundingStatementURL);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T),
+        ha = new I.Right(T.missionStatementURL),
+        ea = new I.Right(T.fundingStatementURL);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
       return "missionUrl_Ei";
-    }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
         return "fundingUrl_Ei";
-      }))()(v.SProxy.value)(new D.Just(ha))))(function () {
-        return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(new B.Just(ea))))(function () {
+        return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
           return "descs_on";
-        }))()(v.SProxy.value)(new D.Just(!0)));
+        }))()(v.SProxy.value)(new B.Just(!0)));
       });
-    }))(V);
+    }))(U);
   },
-      qb = function qb(T) {
-    var V = new I.Right(T.url);
-    T = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
+      rb = function rb(T) {
+    var U = new I.Right(T.url);
+    T = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "relationType";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "url";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
       return "url_Ei";
-    }))()(v.SProxy.value)(new D.Just(V))))(function () {
-      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))()(v.SProxy.value)(new B.Just(U))))(function () {
+      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
         return "descs_on";
-      }))()(v.SProxy.value)(new D.Just(!0)));
+      }))()(v.SProxy.value)(new B.Just(!0)));
     }))(T);
   },
       Pa = function Pa(T) {
-    if (T.policy instanceof Z.FreeTextPolicy) var V = new D.Just(T.policy.value0);else if (T.policy instanceof Z.RefPolicy) V = Q.fromString(ka.urlToString(T.policy.value0));else throw Error("Failed pattern match at Metajelo.UI (line 404, column 20 - line 406, column 54): " + [T.policy.constructor.name]);
-    var ea = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    if (T.policy instanceof Z.FreeTextPolicy) var U = new B.Just(T.policy.value0);else if (T.policy instanceof Z.RefPolicy) U = R.fromString(ka.urlToString(T.policy.value0));else throw Error("Failed pattern match at Metajelo.UI (line 431, column 20 - line 433, column 54): " + [T.policy.constructor.name]);
+    var ha = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "appliesToProduct";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "policy";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
       return "policyType";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())())(T);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())())(T);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
       return "policy_str";
-    }))()(v.SProxy.value)(V)))(function () {
-      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    }))()(v.SProxy.value)(U)))(function () {
+      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
         return "polPolType";
-      }))()(v.SProxy.value)(D.Just.create(J.polPolTypeIs(T.policy)))))(function () {
-        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(B.Just.create(J.polPolTypeIs(T.policy)))))(function () {
+        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
           return "policy_ei";
-        }))()(v.SProxy.value)(D.Just.create(new I.Right(T.policy)))))(function () {
-          return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(B.Just.create(new I.Right(T.policy)))))(function () {
+          return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "descs_on";
-          }))()(v.SProxy.value)(new D.Just(!0)));
-        });
-      });
-    }))(ea);
-  },
-      rb = function rb(T) {
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-      return "email_Ei";
-    }))()(v.SProxy.value)(D.Just.create(new I.Right(T.emailAddress)))))(function () {
-      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-        return "descs_on";
-      }))()(v.SProxy.value)(new D.Just(!0)));
-    }))(E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "contactType";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "emailAddress";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T));
-  },
-      sb = function sb(T) {
-    var V = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionContact";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionID";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionName";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionPolicies";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionSustainability";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "institutionType";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "superOrganizationName";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "versioning";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())()()()())()()()())()()()())())(T),
-        ea = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifier";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifierType";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T.institutionID),
-        ha = rb(T.institutionContact),
-        pa = Va(T.institutionSustainability),
-        wa = R.map(K.functorNonEmptyArray)(Pa)(T.institutionPolicies),
-        xa = F.length(T.institutionPolicies);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-      return "institutionID_opt";
-    }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-        return "_numPolicies";
-      }))()(v.SProxy.value)(new D.Just(xa))))(function () {
-        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-          return "iSustain_opt";
-        }))()(v.SProxy.value)(new D.Just(pa))))(function () {
-          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-            return "institutionContact_opt";
-          }))()(v.SProxy.value)(new D.Just(ha))))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-              return "institutionPolicies_opt";
-            }))()(v.SProxy.value)(new D.Just(wa))))(function () {
-              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-                return "descs_on";
-              }))()(v.SProxy.value)(new D.Just(!0)));
-            });
-          });
-        });
-      });
-    }))(V);
-  },
-      mb = function mb(T) {
-    var V = F.length(T.titles),
-        ea = F.length(T.creators);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-      return "_numTitles";
-    }))()(v.SProxy.value)(new D.Just(V))))(function () {
-      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-        return "_numCreators";
-      }))()(v.SProxy.value)(new D.Just(ea)));
-    }))(E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "creators";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "publicationYear";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "titles";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())())(T));
-  },
-      tb = function tb(T) {
-    var V = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "basicMetadata";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "format";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "location";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "resourceID";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "resourceMetadataSource";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "resourceType";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())()()()())())(T),
-        ea = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "description";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "generalType";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T.resourceType),
-        ha = R.map(D.functorMaybe)(E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifier";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifierType";
-    }))(E.fromRecordOptionNil)()()()())()()()())()))(T.resourceID),
-        pa = R.map(D.functorMaybe)(qb)(T.resourceMetadataSource),
-        wa = sb(T.location),
-        xa = mb(T.basicMetadata),
-        Ia = B.length(T.format);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-      return "basicMetadata_opt";
-    }))()(v.SProxy.value)(new D.Just(xa))))(function () {
-      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-        return "resourceID_opt";
-      }))()(v.SProxy.value)(ha)))(function () {
-        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-          return "resourceType_opt";
-        }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-            return "_numFormats";
-          }))()(v.SProxy.value)(new D.Just(Ia))))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-              return "resMdsOpts_opt";
-            }))()(v.SProxy.value)(pa)))(function () {
-              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-                return "locationOpts_opt";
-              }))()(v.SProxy.value)(new D.Just(wa))))(function () {
-                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-                  return "descs_on";
-                }))()(v.SProxy.value)(new D.Just(!0)));
-              });
-            });
-          });
-        });
-      });
-    }))(V);
-  },
-      nb = function nb(T) {
-    var V = R.map(K.functorNonEmptyArray)(tb)(T.supplementaryProducts),
-        ea = R.map(K.functorNonEmptyArray)(E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifier";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifierType";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "relationType";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())()))(T.relatedIdentifiers),
-        ha = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "date";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifier";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "lastModified";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "relatedIdentifiers";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "supplementaryProducts";
-    }))(E.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())())(T),
-        pa = E.fromRecord(E.fromRecordAny(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifier";
-    }))(E.fromRecordOptionCons(new v.IsSymbol(function () {
-      return "identifierType";
-    }))(E.fromRecordOptionNil)()()()())()()()())())(T.identifier),
-        wa = F.length(T.supplementaryProducts),
-        xa = F.length(T.relatedIdentifiers);
-    return C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-      return "identifier_opt";
-    }))()(v.SProxy.value)(new D.Just(pa))))(function () {
-      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-        return "date_Ei";
-      }))()(v.SProxy.value)(D.Just.create(new I.Right(T.date)))))(function () {
-        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-          return "_numRelIds";
-        }))()(v.SProxy.value)(new D.Just(xa))))(function () {
-          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-            return "relId_opts";
-          }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-              return "_numSupProds";
-            }))()(v.SProxy.value)(new D.Just(wa))))(function () {
-              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-                return "supProd_opts";
-              }))()(v.SProxy.value)(new D.Just(V))))(function () {
-                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
-                  return "descs_on";
-                }))()(v.SProxy.value)(new D.Just(!0)));
-              });
-            });
-          });
+          }))()(v.SProxy.value)(new B.Just(!0)));
         });
       });
     }))(ha);
   },
-      ub = function () {
-    var T = H.lmap(I.bifunctorEither)(function (ea) {
+      sb = function sb(T) {
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+      return "email_Ei";
+    }))()(v.SProxy.value)(B.Just.create(new I.Right(T.emailAddress)))))(function () {
+      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "descs_on";
+      }))()(v.SProxy.value)(new B.Just(!0)));
+    }))(C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "contactType";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "emailAddress";
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T));
+  },
+      tb = function tb(T) {
+    var U = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionContact";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionID";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionName";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionPolicies";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionSustainability";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "institutionType";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "superOrganizationName";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "versioning";
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())()()()())()()()())()()()())())(T),
+        ha = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifier";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifierType";
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T.institutionID),
+        ea = sb(T.institutionContact),
+        na = Va(T.institutionSustainability),
+        va = Q.map(K.functorNonEmptyArray)(Pa)(T.institutionPolicies),
+        xa = F.length(T.institutionPolicies);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+      return "institutionID_opt";
+    }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "_numPolicies";
+      }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+          return "iSustain_opt";
+        }))()(v.SProxy.value)(new B.Just(na))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+            return "institutionContact_opt";
+          }))()(v.SProxy.value)(new B.Just(ea))))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+              return "institutionPolicies_opt";
+            }))()(v.SProxy.value)(new B.Just(va))))(function () {
+              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+                return "descs_on";
+              }))()(v.SProxy.value)(new B.Just(!0)));
+            });
+          });
+        });
+      });
+    }))(U);
+  },
+      nb = function nb(T) {
+    var U = F.length(T.titles),
+        ha = F.length(T.creators);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+      return "_numTitles";
+    }))()(v.SProxy.value)(new B.Just(U))))(function () {
+      return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "_numCreators";
+      }))()(v.SProxy.value)(new B.Just(ha)));
+    }))(C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "creators";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "publicationYear";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "titles";
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())())(T));
+  },
+      ub = function ub(T) {
+    var U = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "basicMetadata";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "format";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "location";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "resourceID";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "resourceMetadataSource";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "resourceType";
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())()()()())())(T),
+        ha = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "description";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "generalType";
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T.resourceType),
+        ea = Q.map(B.functorMaybe)(C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifier";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifierType";
+    }))(C.fromRecordOptionNil)()()()())()()()())()))(T.resourceID),
+        na = Q.map(B.functorMaybe)(rb)(T.resourceMetadataSource),
+        va = tb(T.location),
+        xa = nb(T.basicMetadata),
+        Ia = E.length(T.format);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+      return "basicMetadata_opt";
+    }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "resourceID_opt";
+      }))()(v.SProxy.value)(ea)))(function () {
+        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+          return "resourceType_opt";
+        }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+            return "_numFormats";
+          }))()(v.SProxy.value)(new B.Just(Ia))))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+              return "resMdsOpts_opt";
+            }))()(v.SProxy.value)(na)))(function () {
+              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+                return "locationOpts_opt";
+              }))()(v.SProxy.value)(new B.Just(va))))(function () {
+                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+                  return "descs_on";
+                }))()(v.SProxy.value)(new B.Just(!0)));
+              });
+            });
+          });
+        });
+      });
+    }))(U);
+  },
+      ob = function ob(T) {
+    var U = Q.map(K.functorNonEmptyArray)(ub)(T.supplementaryProducts),
+        ha = Q.map(K.functorNonEmptyArray)(C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifier";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifierType";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "relationType";
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())()))(T.relatedIdentifiers),
+        ea = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "date";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifier";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "lastModified";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "relatedIdentifiers";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "supplementaryProducts";
+    }))(C.fromRecordOptionNil)()()()())()()()())()()()())()()()())()()()())())(T),
+        na = C.fromRecord(C.fromRecordAny(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifier";
+    }))(C.fromRecordOptionCons(new v.IsSymbol(function () {
+      return "identifierType";
+    }))(C.fromRecordOptionNil)()()()())()()()())())(T.identifier),
+        va = F.length(T.supplementaryProducts),
+        xa = F.length(T.relatedIdentifiers);
+    return D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+      return "identifier_opt";
+    }))()(v.SProxy.value)(new B.Just(na))))(function () {
+      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "date_Ei";
+      }))()(v.SProxy.value)(B.Just.create(new I.Right(T.date)))))(function () {
+        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+          return "_numRelIds";
+        }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+            return "relId_opts";
+          }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+              return "_numSupProds";
+            }))()(v.SProxy.value)(new B.Just(va))))(function () {
+              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+                return "supProd_opts";
+              }))()(v.SProxy.value)(new B.Just(U))))(function () {
+                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+                  return "descs_on";
+                }))()(v.SProxy.value)(new B.Just(!0)));
+              });
+            });
+          });
+        });
+      });
+    }))(ea);
+  },
+      vb = function () {
+    var T = H.lmap(I.bifunctorEither)(function (ha) {
       return qa.error("Error reading XML - please make sure it is well-formed.");
     }),
-        V = d.bind(m.widgetBind)(n.input(k.widgetLiftWidget)([q._type("file"), R.map(p.functorProps)(J.evTargetElem)(q.onChange)]))(function (ea) {
-      return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(t.runMaybeT(d.bind(t.bindMaybeT(P.monadEffect))(ea)(function (ha) {
-        return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(b.pure(P.applicativeEffect)(Ma.fromElement(ha))))(function (pa) {
-          return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(Ma.files(pa)))(function (wa) {
-            return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(b.pure(P.applicativeEffect)(ta.item(0)(wa))))(function (xa) {
+        U = d.bind(l.widgetBind)(n.input(k.widgetLiftWidget)([q._type("file"), Q.map(p.functorProps)(J.evTargetElem)(q.onChange)]))(function (ha) {
+      return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(t.runMaybeT(d.bind(t.bindMaybeT(P.monadEffect))(ha)(function (ea) {
+        return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(b.pure(P.applicativeEffect)(Na.fromElement(ea))))(function (na) {
+          return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(Na.files(na)))(function (va) {
+            return d.bind(t.bindMaybeT(P.monadEffect))(t.MaybeT(b.pure(P.applicativeEffect)(ta.item(0)(va))))(function (xa) {
               return b.pure(t.applicativeMaybeT(P.monadEffect))(ra.toBlob(xa));
             });
           });
         });
-      }))))(function (ha) {
-        if (ha instanceof D.Nothing) return V;
-        if (ha instanceof D.Just) return d.bind(m.widgetBind)(fa.liftAff(m.widgetMonadAff(z.monoidArray))(ya.readAsText(ha.value0)))(function (pa) {
-          return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(x.runExceptT(d.bind(x.bindExceptT(P.monadEffect))(x.ExceptT(R.map(P.functorEffect)(T)(qa["try"](Da.getDefaultParseEnv(pa)))))(function (wa) {
-            return x.ExceptT(qa["try"](Fa.readRecord(wa)));
-          }))))(function (wa) {
-            if (wa instanceof I.Right) return b.pure(m.widgetApplicative)(wa.value0);
+      }))))(function (ea) {
+        if (ea instanceof B.Nothing) return U;
+        if (ea instanceof B.Just) return d.bind(l.widgetBind)(fa.liftAff(l.widgetMonadAff(z.monoidArray))(ya.readAsText(ea.value0)))(function (na) {
+          return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(x.runExceptT(d.bind(x.bindExceptT(P.monadEffect))(x.ExceptT(Q.map(P.functorEffect)(T)(qa["try"](Da.getDefaultParseEnv(na)))))(function (va) {
+            return x.ExceptT(qa["try"](Fa.readRecord(va)));
+          }))))(function (va) {
+            if (va instanceof I.Right) return b.pure(l.widgetApplicative)(va.value0);
 
-            if (wa instanceof I.Left) {
-              var xa = wa.value0;
-              wa = n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([]);
-              var Ia = V,
-                  Oa = n.div_(m.widgetShiftMap)([aa.errorDisplayBox]),
-                  Xa = n.div_(m.widgetShiftMap)([]),
-                  ab = n.span(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([aa.errorDisplay]),
-                  $a = n.text(k.widgetLiftWidget);
+            if (va instanceof I.Left) {
+              var xa = va.value0;
+              va = n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([]);
+              var Ia = U,
+                  Ja = n.div_(l.widgetShiftMap)([aa.errorDisplayBox]),
+                  Ya = n.div_(l.widgetShiftMap)([]),
+                  $a = n.span(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([aa.errorDisplay]),
+                  ab = n.text(k.widgetLiftWidget);
               xa = "Couldn't decode MetajeloXML: " + W.show(qa.showError)(xa);
-              return wa([Ia, Oa(Xa(ab([$a(xa)])))]);
+              return va([Ia, Ja(Ya($a([ab(xa)])))]);
             }
 
-            throw Error("Failed pattern match at Metajelo.UI (line 154, column 11 - line 156, column 37): " + [wa.constructor.name]);
+            throw Error("Failed pattern match at Metajelo.UI (line 155, column 11 - line 157, column 37): " + [va.constructor.name]);
           });
         });
-        throw Error("Failed pattern match at Metajelo.UI (line 147, column 7 - line 156, column 37): " + [ha.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.UI (line 148, column 7 - line 157, column 37): " + [ea.constructor.name]);
       });
     });
-    return f.loopW(E.empty)(function (ea) {
-      return n.div_(m.widgetShiftMap)([])(d.bind(m.widgetBind)(V)(function (ha) {
-        return b.pure(m.widgetApplicative)(nb(ha));
+    return f.loopW(C.empty)(function (ha) {
+      return n.div_(l.widgetShiftMap)([])(d.bind(l.widgetBind)(U)(function (ea) {
+        return b.pure(l.widgetApplicative)(ob(ea));
       }));
     });
   }(),
       Ta = function Ta(T) {
-    var V = n.div_(m.widgetShiftMap)([aa.errorDisplayBox])(n.div_(m.widgetShiftMap)([])(n.span(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([aa.errorDisplay])([n.text(k.widgetLiftWidget)("Couldn't encode XML, please copy to clipboard instead.")]))),
-        ea = function ea(ha) {
-      return function (pa) {
-        var wa = function wa(xa) {
-          return f.step(xa)(d.bind(m.widgetBind)(n.button_(m.widgetShiftMap)([U.downloadBtn, q.onClick, q.disabled(G["null"](xa))])(n.text(k.widgetLiftWidget)("Download")))(function () {
-            return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(ha))(function () {
-              return b.pure(m.widgetApplicative)(wa(xa));
+    var U = n.div_(l.widgetShiftMap)([aa.errorDisplayBox])(n.div_(l.widgetShiftMap)([])(n.span(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([aa.errorDisplay])([n.text(k.widgetLiftWidget)("Couldn't encode XML, please copy to clipboard instead.")]))),
+        ha = function ha(ea) {
+      return function (na) {
+        var va = function va(xa) {
+          return f.step(xa)(d.bind(l.widgetBind)(n.button_(l.widgetShiftMap)([V.downloadBtn, q.onClick, q.disabled(G["null"](xa))])(n.text(k.widgetLiftWidget)("Download")))(function () {
+            return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(ea))(function () {
+              return b.pure(l.widgetApplicative)(va(xa));
             });
           }));
         };
 
-        return f.dyn(wa(pa));
+        return f.dyn(va(na));
       };
     };
 
-    return n.div_(m.widgetShiftMap)([])(function () {
-      var ha = Ga.encodeURIComponent(T);
-      return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(db(D.fromMaybe("")(ha))))(function (pa) {
-        return D.maybe(V)(ea(pa))(ha);
+    return n.div_(l.widgetShiftMap)([])(function () {
+      var ea = Ga.encodeURIComponent(T);
+      return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(cb(B.fromMaybe("")(ea))))(function (na) {
+        return B.maybe(U)(ha(na))(ea);
       });
     }());
   },
-      vb = function () {
+      pb = function () {
     var T = la.mjUiClassPfx + "dataCiteDOI_Input",
-        V = function V(ha) {
-      var pa = n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([]),
-          wa = ea,
-          xa = n.div_(m.widgetShiftMap)([aa.errorDisplayBox]),
-          Ia = n.div_(m.widgetShiftMap)([]),
-          Oa = n.span(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([aa.errorDisplay]),
-          Xa = n.text(k.widgetLiftWidget);
-      ha = "In DataCite retrieval: " + W.show(qa.showError)(ha);
-      return pa([wa, xa(Ia(Oa([Xa(ha)])))]);
+        U = function U(ea) {
+      var na = n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([]),
+          va = ha,
+          xa = n.div_(l.widgetShiftMap)([aa.errorDisplayBox]),
+          Ia = n.div_(l.widgetShiftMap)([]),
+          Ja = n.span(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([aa.errorDisplay]),
+          Ya = n.text(k.widgetLiftWidget);
+      ea = "In DataCite retrieval: " + W.show(qa.showError)(ea);
+      return na([va, xa(Ia(Ja([Ya(ea)])))]);
     },
-        ea = n.div_(m.widgetShiftMap)([])(d.discard(d.discardUnit)(m.widgetBind)(R["void"](m.widgetFunctor)(n.button_(m.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Retrieve DataCite Record"))))(function () {
-      return d.bind(m.widgetBind)(n.span(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([])([n.input(k.widgetLiftWidget)([q._id(T), q.placeholder("Input DOI here")]), h.applyFirst(m.widgetApply)(J.getInputTextLE(m.widgetMonadEff(z.monoidArray))(T))(n.button_(m.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Retrieve"))), R.voidRight(m.widgetFunctor)(D.Nothing.value)(n.button_(m.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Cancel")))]))(function (ha) {
-        if (ha instanceof D.Nothing) return ea;
+        ha = n.div_(l.widgetShiftMap)([])(d.discard(d.discardUnit)(l.widgetBind)(Q["void"](l.widgetFunctor)(n.button_(l.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Retrieve DataCite Record"))))(function () {
+      return d.bind(l.widgetBind)(n.span(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([])([n.input(k.widgetLiftWidget)([q._id(T), q.placeholder("Input DOI here")]), h.applyFirst(l.widgetApply)(J.getInputTextLE(l.widgetMonadEff(z.monoidArray))(T))(n.button_(l.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Retrieve"))), Q.voidRight(l.widgetFunctor)(B.Nothing.value)(n.button_(l.widgetShiftMap)([q.onClick])(n.text(k.widgetLiftWidget)("Cancel")))]))(function (ea) {
+        if (ea instanceof B.Nothing) return ha;
 
-        if (ha instanceof D.Just) {
-          ha = ka.parsePublicURL("https://api.datacite.org/dois/" + ha.value0);
-          if (ha instanceof I.Left) return V(qa.error(ha.value0));
-          if (ha instanceof I.Right) return d.bind(m.widgetBind)(fa.liftAff(m.widgetMonadAff(z.monoidArray))(e.get(g.string)(ka.urlToString(ha.value0))))(function (pa) {
-            if (pa instanceof I.Left) pa = V(qa.error("GET /api response failed to decode: " + e.printError(pa.value0)));else if (pa instanceof I.Right) pa = b.pure(m.widgetApplicative)(D.Just.create(ja.readRecordJSON(pa.value0.body)));else throw Error("Failed pattern match at Metajelo.UI (line 191, column 27 - line 194, column 67): " + [pa.constructor.name]);
-            return pa;
+        if (ea instanceof B.Just) {
+          ea = ka.parsePublicURL("https://api.datacite.org/dois/" + ea.value0);
+          if (ea instanceof I.Left) return U(qa.error(ea.value0));
+          if (ea instanceof I.Right) return d.bind(l.widgetBind)(fa.liftAff(l.widgetMonadAff(z.monoidArray))(e.get(g.string)(ka.urlToString(ea.value0))))(function (na) {
+            if (na instanceof I.Left) na = U(qa.error("GET /api response failed to decode: " + e.printError(na.value0)));else if (na instanceof I.Right) na = b.pure(l.widgetApplicative)(B.Just.create(ja.readRecordJSON(na.value0.body)));else throw Error("Failed pattern match at Metajelo.UI (line 192, column 27 - line 195, column 67): " + [na.constructor.name]);
+            return na;
           });
-          throw Error("Failed pattern match at Metajelo.UI (line 184, column 21 - line 188, column 32): " + [ha.constructor.name]);
+          throw Error("Failed pattern match at Metajelo.UI (line 185, column 21 - line 189, column 32): " + [ea.constructor.name]);
         }
 
-        throw Error("Failed pattern match at Metajelo.UI (line 182, column 7 - line 188, column 32): " + [ha.constructor.name]);
+        throw Error("Failed pattern match at Metajelo.UI (line 183, column 7 - line 189, column 32): " + [ea.constructor.name]);
       });
     }));
 
-    return f.loopW(D.Nothing.value)(function (ha) {
-      return n.div_(m.widgetShiftMap)([])(ea);
+    return f.loopW(B.Nothing.value)(function (ea) {
+      return n.div_(l.widgetShiftMap)([])(ha);
     });
   }(),
       wb = function wb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.creator])(J.textInput(T));
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.creator])(J.textInput(T));
   },
-      Na = function Na(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.creatorList])(J.nonEmptyArrayView(wb)(T));
+      Oa = function Oa(T) {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.creatorList])(J.nonEmptyArrayView(wb)(T));
   },
       ib = function ib(T) {
-    return function (V) {
-      var ea = R.map(R.functorArray)(function (wa) {
-        return wa.tab;
+    return function (U) {
+      var ha = Q.map(Q.functorArray)(function (va) {
+        return va.tab;
       })(T),
-          ha = R.map(R.functorArray)(function (wa) {
-        return wa.page;
+          ea = Q.map(Q.functorArray)(function (va) {
+        return va.page;
       })(T),
-          pa = n["div'"](m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([n.text(k.widgetLiftWidget)("No pages to show!")]);
-      return d.bind(m.widgetBind)(function (wa) {
+          na = n["div'"](l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([n.text(k.widgetLiftWidget)("No pages to show!")]);
+      return d.bind(l.widgetBind)(function (va) {
         return function (xa) {
           return function (Ia) {
-            return n.div(wa)(xa)([U.sideBarGrid])([n.div(wa)(xa)([U.sideBarMenu])([n.div(wa)(xa)([U.sideBarCol])(Ia)])]);
+            return n.div(va)(xa)([V.sideBarGrid])([n.div(va)(xa)([V.sideBarMenu])([n.div(va)(xa)([V.sideBarCol])(Ia)])]);
           };
         };
-      }(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([n.nav(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([U.sideBarNav])(function (wa) {
-        return R.map(R.functorArray)(function (xa) {
-          return d.discard(d.discardUnit)(m.widgetBind)(R["void"](m.widgetFunctor)(n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([q.onClick, U.sideBarTab])([R.map(m.widgetFunctor)(da.absurd)(ma.snd(xa))])))(function () {
-            return b.pure(m.widgetApplicative)(ma.fst(xa));
+      }(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([n.nav(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([V.sideBarNav])(function (va) {
+        return Q.map(Q.functorArray)(function (xa) {
+          return d.discard(d.discardUnit)(l.widgetBind)(Q["void"](l.widgetFunctor)(n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([q.onClick, V.sideBarTab])([Q.map(l.widgetFunctor)(da.absurd)(ma.snd(xa))])))(function () {
+            return b.pure(l.widgetApplicative)(ma.fst(xa));
           });
-        })(B.zip(B.range(0)(B.length(wa)))(wa));
-      }(ea)), R.voidRight(m.widgetFunctor)(V)(function (wa) {
-        return D.fromMaybe(pa)(B.index(ha)(wa));
-      }(V))]))(function (wa) {
-        return ib(T)(wa);
+        })(E.zip(E.range(0)(E.length(va)))(va));
+      }(ha)), Q.voidRight(l.widgetFunctor)(U)(function (va) {
+        return B.fromMaybe(na)(E.index(ea)(va));
+      }(U))]))(function (va) {
+        return ib(T)(va);
       });
     };
   },
-      La = function La(T) {
-    var V = function V(ea) {
-      return f.step(ea)(d.bind(m.widgetBind)(n.button_(m.widgetShiftMap)([U.clipBtn, q.onClick, q.disabled(G["null"](ea))])(n.text(k.widgetLiftWidget)("Copy to Clipboard")))(function () {
-        return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(S.copyToClipboard(ea)))(function () {
-          return b.pure(m.widgetApplicative)(V(ea));
+      Ma = function Ma(T) {
+    var U = function U(ha) {
+      return f.step(ha)(d.bind(l.widgetBind)(n.button_(l.widgetShiftMap)([V.clipBtn, q.onClick, q.disabled(G["null"](ha))])(n.text(k.widgetLiftWidget)("Copy to Clipboard")))(function () {
+        return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(S.copyToClipboard(ha)))(function () {
+          return b.pure(l.widgetApplicative)(U(ha));
         });
       }));
     };
 
-    return f.dyn(V(T));
+    return f.dyn(U(T));
   },
-      fb = function fb(T) {
-    var V = function V(ea) {
-      return D.maybe(b.pure(P.applicativeEffect)(""))(Ka.recordToString)(ea);
+      eb = function eb(T) {
+    var U = function U(ha) {
+      return B.maybe(b.pure(P.applicativeEffect)(""))(La.recordToString)(ha);
     };
 
-    return d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(na.sequence(na.traversableMaybe)(P.applicativeEffect)(R.map(D.functorMaybe)(lb)(T))))(function (ea) {
-      return n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([U.recPreview])([d.bind(m.widgetBind)(Ba.liftEffect(m.widgetMonadEff(z.monoidArray))(V(ea)))(function (ha) {
-        return n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([U.previewButtons])([Ta(ha), La(ha)]);
-      }), n["br'"](k.widgetLiftWidget), M.fold(M.foldableMaybe)(m.widgetMonoid(z.monoidArray))(R.map(D.functorMaybe)(ua.mkRecordWidget)(ea))]);
+    return d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(oa.sequence(oa.traversableMaybe)(P.applicativeEffect)(Q.map(B.functorMaybe)(mb)(T))))(function (ha) {
+      return n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([V.recPreview])([d.bind(l.widgetBind)(Ba.liftEffect(l.widgetMonadEff(z.monoidArray))(U(ha)))(function (ea) {
+        return n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([V.previewButtons])([Ta(ea), Ma(ea)]);
+      }), n["br'"](k.widgetLiftWidget), M.fold(M.foldableMaybe)(l.widgetMonoid(z.monoidArray))(Q.map(B.functorMaybe)(ua.mkRecordWidget)(ha))]);
     });
   },
       gb = function gb(T) {
-    return function (V) {
-      return function (ea) {
-        ea = {
+    return function (U) {
+      return function (ha) {
+        ha = {
           tab: n.text(k.widgetLiftWidget)("Preview"),
-          page: fb(T)
+          page: eb(T)
         };
-        var ha = {
+        var ea = {
           tab: n.text(k.widgetLiftWidget)("DataCite Retrieval"),
           page: n.text(k.widgetLiftWidget)("TODO")
         };
-        return ib([ea, ha])(0);
+        return ib([ha, ea])(0);
       };
     };
   },
       xb = function xb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.sustainability])(d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.span_(r.shiftMapCofree(z.monoidArray))([U.missionStatement])(J.urlInput(E.getWithDefault(new v.IsSymbol(function () {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.sustainability])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.span_(r.shiftMapCofree(z.monoidArray))([V.missionStatement])(J.urlInput(C.getWithDefault(new v.IsSymbol(function () {
       return "missionUrl_Ei";
-    }))()(new I.Left(""))(v.SProxy.value)(T))))(function (V) {
-      var ea = I.hush(V);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.span_(r.shiftMapCofree(z.monoidArray))([U.fundingStatement])(J.urlInput(E.getWithDefault(new v.IsSymbol(function () {
+    }))()(new I.Left(""))(v.SProxy.value)(T))))(function (U) {
+      var ha = I.hush(U);
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.span_(r.shiftMapCofree(z.monoidArray))([V.fundingStatement])(J.urlInput(C.getWithDefault(new v.IsSymbol(function () {
         return "fundingUrl_Ei";
-      }))()(new I.Left(""))(v.SProxy.value)(T))))(function (ha) {
-        var pa = I.hush(ha);
-        return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      }))()(new I.Left(""))(v.SProxy.value)(T))))(function (ea) {
+        var na = I.hush(ea);
+        return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
           return "missionUrl_Ei";
-        }))()(v.SProxy.value)(new D.Just(V))))(function () {
-          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(new B.Just(U))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "missionStatementURL";
-          }))()(v.SProxy.value)(ea)))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(ha)))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "fundingUrl_Ei";
-            }))()(v.SProxy.value)(new D.Just(ha))))(function () {
-              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(new B.Just(ea))))(function () {
+              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "fundingStatementURL";
-              }))()(v.SProxy.value)(pa));
+              }))()(v.SProxy.value)(na));
             });
           });
         }))(T));
       });
     }));
   },
-      ob = function ob(T) {
-    return function (V) {
-      return n.div_(r.shiftMapCofree(z.monoidArray))([U.resourceType])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("resourceTypeEle")(T)))(function () {
-        return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("resourceTypeSTyp")(T)))(function () {
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.resourceTypeGen])(J.menuSignal(va.boundedEnumResourceTypeGeneral)(J.isOptionResourceTypeGeneral)(E.get(new v.IsSymbol(function () {
+      qb = function qb(T) {
+    return function (U) {
+      return n.div_(r.shiftMapCofree(z.monoidArray))([V.resourceType])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("resourceTypeEle")(T)))(function () {
+        return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("resourceTypeSTyp")(T)))(function () {
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.resourceTypeGen])(J.menuSignal(wa.boundedEnumResourceTypeGeneral)(J.isOptionResourceTypeGeneral)(C.get(new v.IsSymbol(function () {
             return "generalType";
-          }))()(v.SProxy.value)(V)))))(function (ea) {
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.resourceTypeDescr])(J.textInput(d.join(D.bindMaybe)(R.map(D.functorMaybe)(Q.fromString)(E.get(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(U)))))(function (ha) {
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.resourceTypeDescr])(J.textInput(d.join(B.bindMaybe)(Q.map(B.functorMaybe)(R.fromString)(C.get(new v.IsSymbol(function () {
               return "description";
-            }))()(v.SProxy.value)(V)))))))(function (ha) {
-              return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(U)))))))(function (ea) {
+              return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "description";
-              }))()(v.SProxy.value)(R.map(D.functorMaybe)(Q.toString)(ha))))(function () {
-                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+              }))()(v.SProxy.value)(Q.map(B.functorMaybe)(R.toString)(ea))))(function () {
+                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                   return "generalType";
-                }))()(v.SProxy.value)(ea));
-              }))(V));
+                }))()(v.SProxy.value)(ha));
+              }))(U));
             });
           });
         });
@@ -17818,28 +17818,28 @@ var PS = {};
     };
   },
       yb = function yb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.resourceMDSource])(function () {
-      var V = E.getWithDefault(new v.IsSymbol(function () {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.resourceMDSource])(function () {
+      var U = C.getWithDefault(new v.IsSymbol(function () {
         return "descs_on";
       }))()(!0)(v.SProxy.value)(T);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.url])(J.urlInput(E.getWithDefault(new v.IsSymbol(function () {
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.url])(J.urlInput(C.getWithDefault(new v.IsSymbol(function () {
         return "url_Ei";
-      }))()(new I.Left(""))(v.SProxy.value)(T)))))(function (ea) {
-        var ha = I.hush(ea);
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.relType])(n.span_(r.shiftMapCofree(z.monoidArray))([])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("relationTypeSTyp")(V)))(function () {
-          return J.menuSignal(va.boundedEnumRelationType)(J.isOptionRelationType)(E.get(new v.IsSymbol(function () {
+      }))()(new I.Left(""))(v.SProxy.value)(T)))))(function (ha) {
+        var ea = I.hush(ha);
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.relType])(n.span_(r.shiftMapCofree(z.monoidArray))([])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("relationTypeSTyp")(U)))(function () {
+          return J.menuSignal(wa.boundedEnumRelationType)(J.isOptionRelationType)(C.get(new v.IsSymbol(function () {
             return "relationType";
           }))()(v.SProxy.value)(T));
-        }))))(function (pa) {
-          return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+        }))))(function (na) {
+          return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "url_Ei";
-          }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "url";
-            }))()(v.SProxy.value)(ha)))(function () {
-              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(ea)))(function () {
+              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "relationType";
-              }))()(v.SProxy.value)(pa));
+              }))()(v.SProxy.value)(na));
             });
           }))(T));
         });
@@ -17847,85 +17847,85 @@ var PS = {};
     }());
   },
       kb = function kb(T) {
-    var V = D.fromMaybe(E.empty)(T);
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.relatedId])(d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.id])(J.textInput(E.get(new v.IsSymbol(function () {
+    var U = B.fromMaybe(C.empty)(T);
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.relatedId])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.id])(J.textInput(C.get(new v.IsSymbol(function () {
       return "identifier";
-    }))()(v.SProxy.value)(V)))))(function (ea) {
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.idType])(J.menuSignal(va.boundedEnumIdentifierType)(J.isOptionIdentifierType)(E.get(new v.IsSymbol(function () {
+    }))()(v.SProxy.value)(U)))))(function (ha) {
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.idType])(J.menuSignal(wa.boundedEnumIdentifierType)(J.isOptionIdentifierType)(C.get(new v.IsSymbol(function () {
         return "identifierType";
-      }))()(v.SProxy.value)(V)))))(function (ha) {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.relType])(J.menuSignal(va.boundedEnumRelationType)(J.isOptionRelationType)(E.get(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(U)))))(function (ea) {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.relType])(J.menuSignal(wa.boundedEnumRelationType)(J.isOptionRelationType)(C.get(new v.IsSymbol(function () {
           return "relationType";
-        }))()(v.SProxy.value)(V)))))(function (pa) {
-          return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(D.Just.create(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(U)))))(function (na) {
+          return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(B.Just.create(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "identifier";
-          }))()(v.SProxy.value)(ea)))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(ha)))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "identifierType";
-            }))()(v.SProxy.value)(ha)))(function () {
-              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(ea)))(function () {
+              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "relationType";
-              }))()(v.SProxy.value)(pa));
+              }))()(v.SProxy.value)(na));
             });
-          }))(V)));
+          }))(U)));
         });
       });
     }));
   },
       zb = function zb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.relatedIds])(n.span_(r.shiftMapCofree(z.monoidArray))([U.relatedIdsHeader])(n.div_(r.shiftMapCofree(z.monoidArray))([U.relatedIdList])(J.nonEmptyArrayView(kb)(T))));
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.relatedIds])(n.span_(r.shiftMapCofree(z.monoidArray))([V.relatedIdsHeader])(n.div_(r.shiftMapCofree(z.monoidArray))([V.relatedIdList])(J.nonEmptyArrayView(kb)(T))));
   },
-      l = function l(T) {
-    var V = D.fromMaybe(E.empty)(T);
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.institutionPolicy])(function () {
-      var ea = E.getWithDefault(new v.IsSymbol(function () {
+      m = function m(T) {
+    var U = B.fromMaybe(C.empty)(T);
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.institutionPolicy])(function () {
+      var ha = C.getWithDefault(new v.IsSymbol(function () {
         return "descs_on";
-      }))()(!0)(v.SProxy.value)(V);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.policy])(J.menuSignal(J.boundedEnumPolPolType)(J.isOptionPolPolType)(D.Just.create(E.getWithDefault(new v.IsSymbol(function () {
+      }))()(!0)(v.SProxy.value)(U);
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.policy])(J.menuSignal(J.boundedEnumPolPolType)(J.isOptionPolPolType)(B.Just.create(C.getWithDefault(new v.IsSymbol(function () {
         return "polPolType";
-      }))()(J.FreeTextPolicy.value)(v.SProxy.value)(V))))))(function (ha) {
-        var pa = D.fromMaybe(J.FreeTextPolicy.value)(ha);
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.policy])(J.textInput(E.get(new v.IsSymbol(function () {
+      }))()(J.FreeTextPolicy.value)(v.SProxy.value)(U))))))(function (ea) {
+        var na = B.fromMaybe(J.FreeTextPolicy.value)(ea);
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.policy])(J.textInput(C.get(new v.IsSymbol(function () {
           return "policy_str";
-        }))()(v.SProxy.value)(V)))))(function (wa) {
-          var xa = J.checkPolicy(pa)(D.maybe("")(Q.toString)(wa));
-          return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(function () {
-            if (xa instanceof I.Right) return z.mempty(m.widgetMonoid(z.monoidArray));
-            if (xa instanceof I.Left) return J.errorDisplay(W.showString)(new D.Just(xa.value0));
-            throw Error("Failed pattern match at Metajelo.UI (line 816, column 13 - line 818, column 40): " + [xa.constructor.name]);
+        }))()(v.SProxy.value)(U)))))(function (va) {
+          var xa = J.checkPolicy(na)(B.maybe("")(R.toString)(va));
+          return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(function () {
+            if (xa instanceof I.Right) return z.mempty(l.widgetMonoid(z.monoidArray));
+            if (xa instanceof I.Left) return J.errorDisplay(W.showString)(new B.Just(xa.value0));
+            throw Error("Failed pattern match at Metajelo.UI (line 844, column 13 - line 846, column 40): " + [xa.constructor.name]);
           }()))(function () {
             var Ia = I.hush(xa);
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.policyType])(n.span_(r.shiftMapCofree(z.monoidArray))([])(J.menuSignal(L.boundedEnumMaybe(Z.smallBoundedPolicyType)(Z.boundedEnumPolicyType))(J.isOptionMaybePolicyType)(E.get(new v.IsSymbol(function () {
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.policyType])(n.span_(r.shiftMapCofree(z.monoidArray))([])(J.menuSignal(L.boundedEnumMaybe(Z.smallBoundedPolicyType)(Z.boundedEnumPolicyType))(J.isOptionMaybePolicyType)(C.get(new v.IsSymbol(function () {
               return "policyType";
-            }))()(v.SProxy.value)(V)))))(function (Oa) {
-              return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.applies])(n.span_(r.shiftMapCofree(z.monoidArray))([])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("appliesToProductAttr")(ea)))(function () {
-                return J.menuSignal(L.boundedEnumMaybe(L.smallBoundedBoolean)(L.boundedEnumBoolean))(J.isOptionMaybeBoolean)(E.get(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(U)))))(function (Ja) {
+              return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.applies])(n.span_(r.shiftMapCofree(z.monoidArray))([])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("appliesToProductAttr")(ha)))(function () {
+                return J.menuSignal(L.boundedEnumMaybe(L.smallBoundedBoolean)(L.boundedEnumBoolean))(J.isOptionMaybeBoolean)(C.get(new v.IsSymbol(function () {
                   return "appliesToProduct";
-                }))()(v.SProxy.value)(V));
-              }))))(function (Xa) {
-                return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(D.Just.create(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(U));
+              }))))(function (Ya) {
+                return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(B.Just.create(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                   return "polPolType";
-                }))()(v.SProxy.value)(new D.Just(pa))))(function () {
-                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(new B.Just(na))))(function () {
+                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                     return "policy_str";
-                  }))()(v.SProxy.value)(wa)))(function () {
-                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                  }))()(v.SProxy.value)(va)))(function () {
+                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                       return "policy_ei";
-                    }))()(v.SProxy.value)(new D.Just(xa))))(function () {
-                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                    }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                         return "policy";
                       }))()(v.SProxy.value)(Ia)))(function () {
-                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                           return "policyType";
-                        }))()(v.SProxy.value)(Oa)))(function () {
-                          return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                        }))()(v.SProxy.value)(Ja)))(function () {
+                          return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                             return "appliesToProduct";
-                          }))()(v.SProxy.value)(Xa));
+                          }))()(v.SProxy.value)(Ya));
                         });
                       });
                     });
                   });
-                }))(V)));
+                }))(U)));
               });
             });
           });
@@ -17934,176 +17934,176 @@ var PS = {};
     }());
   },
       Sa = function Sa(T) {
-    return function (V) {
-      var ea = R.mapFlipped(D.functorMaybe)(ma.snd(V))(function (ha) {
-        return R.mapFlipped(K.functorNonEmptyArray)(ha)(function (pa) {
-          return C.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    return function (U) {
+      var ha = Q.mapFlipped(B.functorMaybe)(ma.snd(U))(function (ea) {
+        return Q.mapFlipped(K.functorNonEmptyArray)(ea)(function (na) {
+          return D.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "descs_on";
-          }))()(v.SProxy.value)(new D.Just(T))))(pa);
+          }))()(v.SProxy.value)(new B.Just(T))))(na);
         });
       });
-      return n.div_(r.shiftMapCofree(z.monoidArray))([U.institutionPolicies])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("institutionPoliciesEle")(T)))(function () {
-        return J.nonEmptyArrayView(l)(new ma.Tuple(ma.fst(V), ea));
+      return n.div_(r.shiftMapCofree(z.monoidArray))([V.institutionPolicies])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("institutionPoliciesEle")(T)))(function () {
+        return J.nonEmptyArrayView(m)(new ma.Tuple(ma.fst(U), ha));
       }));
     };
   },
-      Ya = function Ya(T) {
-    return function (V) {
-      return n.div_(r.shiftMapCofree(z.monoidArray))([U.identifier])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("identifierTypeSTyp")(T)))(function () {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.id])(J.textInput(E.get(new v.IsSymbol(function () {
+      Xa = function Xa(T) {
+    return function (U) {
+      return n.div_(r.shiftMapCofree(z.monoidArray))([V.identifier])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("identifierTypeSTyp")(T)))(function () {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.id])(J.textInput(C.get(new v.IsSymbol(function () {
           return "identifier";
-        }))()(v.SProxy.value)(V)))))(function (ea) {
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.idType])(J.menuSignal(va.boundedEnumIdentifierType)(J.isOptionIdentifierType)(E.get(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(U)))))(function (ha) {
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.idType])(J.menuSignal(wa.boundedEnumIdentifierType)(J.isOptionIdentifierType)(C.get(new v.IsSymbol(function () {
             return "identifierType";
-          }))()(v.SProxy.value)(V)))))(function (ha) {
-            return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(U)))))(function (ea) {
+            return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "identifier";
-            }))()(v.SProxy.value)(ea)))(function () {
-              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(ha)))(function () {
+              return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "identifierType";
-              }))()(v.SProxy.value)(ha));
-            }))(V));
+              }))()(v.SProxy.value)(ea));
+            }))(U));
           });
         });
       }));
     };
   },
       jb = function jb(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.institutionContact])(d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.contactEmail])(J.emailInput(E.getWithDefault(new v.IsSymbol(function () {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.institutionContact])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.contactEmail])(J.emailInput(C.getWithDefault(new v.IsSymbol(function () {
       return "email_Ei";
-    }))()(new I.Left(""))(v.SProxy.value)(T)))))(function (V) {
-      var ea = I.hush(V);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.contactType])(J.menuSignal(L.boundedEnumMaybe(Z.smallBoundedInstitutionContactType)(Z.boundedEnumInstitutionContactType))(J.isOptionMaybeInstitutionContactType)(E.get(new v.IsSymbol(function () {
+    }))()(new I.Left(""))(v.SProxy.value)(T)))))(function (U) {
+      var ha = I.hush(U);
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.contactType])(J.menuSignal(L.boundedEnumMaybe(Z.smallBoundedInstitutionContactType)(Z.boundedEnumInstitutionContactType))(J.isOptionMaybeInstitutionContactType)(C.get(new v.IsSymbol(function () {
         return "contactType";
-      }))()(v.SProxy.value)(T)))))(function (ha) {
-        return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(T)))))(function (ea) {
+        return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
           return "email_Ei";
-        }))()(v.SProxy.value)(new D.Just(V))))(function () {
-          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(new B.Just(U))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "emailAddress";
-          }))()(v.SProxy.value)(ea)))(function () {
-            return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(ha)))(function () {
+            return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "contactType";
-            }))()(v.SProxy.value)(ha));
+            }))()(v.SProxy.value)(ea));
           });
         }))(T));
       });
     }));
   },
       Cb = function Cb(T) {
-    var V = D.fromMaybe(E.empty)(T);
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.location])(function () {
-      var ea = E.getWithDefault(new v.IsSymbol(function () {
+    var U = B.fromMaybe(C.empty)(T);
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.location])(function () {
+      var ha = C.getWithDefault(new v.IsSymbol(function () {
         return "descs_on";
-      }))()(!0)(v.SProxy.value)(V);
-      return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("locationEle")(ea)))(function () {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.institutionId])(Ya(ea)(Ra(new v.IsSymbol(function () {
+      }))()(!0)(v.SProxy.value)(U);
+      return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("locationEle")(ha)))(function () {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.institutionId])(Xa(ha)(Ra(new v.IsSymbol(function () {
           return "institutionID_opt";
-        }))()(v.SProxy.value)(V)))))(function (ha) {
-          var pa = E.getAll(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(U)))))(function (ea) {
+          var na = C.getAll(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "identifier";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "identifierType";
-          }))()()()()(E.getAllOptionNil))))(ha);
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.institutionName])(J.textInput(E.get(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionNil))))(ea);
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.institutionName])(J.textInput(C.get(new v.IsSymbol(function () {
             return "institutionName";
-          }))()(v.SProxy.value)(V)))))(function (wa) {
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.institutionType])(J.menuSignal(Z.boundedEnumInstitutionType)(J.isOptionInstitutionType)(E.get(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(U)))))(function (va) {
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.institutionType])(J.menuSignal(Z.boundedEnumInstitutionType)(J.isOptionInstitutionType)(C.get(new v.IsSymbol(function () {
               return "institutionType";
-            }))()(v.SProxy.value)(V)))))(function (xa) {
-              return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(n["br'"](k.widgetLiftWidget)))(function () {
-                return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.superOrg])(J.textInput(d.join(D.bindMaybe)(E.get(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(U)))))(function (xa) {
+              return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(n["br'"](k.widgetLiftWidget)))(function () {
+                return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.superOrg])(J.textInput(d.join(B.bindMaybe)(C.get(new v.IsSymbol(function () {
                   return "superOrganizationName";
-                }))()(v.SProxy.value)(V))))))(function (Ia) {
-                  return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(jb(Ra(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(U))))))(function (Ia) {
+                  return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(jb(Ra(new v.IsSymbol(function () {
                     return "institutionContact_opt";
-                  }))()(v.SProxy.value)(V)))(function (Oa) {
-                    var Xa = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+                  }))()(v.SProxy.value)(U)))(function (Ja) {
+                    var Ya = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                       return "contactType";
                     }))(X.consKeys(new v.IsSymbol(function () {
                       return "emailAddress";
-                    }))(X.nilKeys)))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))(X.nilKeys)))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "contactType";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "emailAddress";
-                    }))()()()()(E.getAllOptionNil))))(Oa);
-                    return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(xb(Ra(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionNil))))(Ja);
+                    return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(xb(Ra(new v.IsSymbol(function () {
                       return "iSustain_opt";
-                    }))()(v.SProxy.value)(V)))(function (ab) {
-                      var $a = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+                    }))()(v.SProxy.value)(U)))(function ($a) {
+                      var ab = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                         return "fundingStatementURL";
                       }))(X.consKeys(new v.IsSymbol(function () {
                         return "missionStatementURL";
-                      }))(X.nilKeys)))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                      }))(X.nilKeys)))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                         return "fundingStatementURL";
-                      }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                      }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                         return "missionStatementURL";
-                      }))()()()()(E.getAllOptionNil))))(ab);
-                      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Sa(ea)(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+                      }))()()()()(C.getAllOptionNil))))($a);
+                      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Sa(ha)(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
                         return "_numPolicies";
-                      }))()(1)(v.SProxy.value)(V), E.get(new v.IsSymbol(function () {
+                      }))()(1)(v.SProxy.value)(U), C.get(new v.IsSymbol(function () {
                         return "institutionPolicies_opt";
-                      }))()(v.SProxy.value)(V))))(function (bb) {
-                        var pb = ma.fst(bb),
-                            Ab = ma.snd(bb),
-                            Gb = d.join(D.bindMaybe)(R.map(D.functorMaybe)(na.sequence(K.traversableNonEmptyArray)(D.applicativeMaybe))(R.map(D.functorMaybe)(R.map(K.functorNonEmptyArray)(E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+                      }))()(v.SProxy.value)(U))))(function (fb) {
+                        var lb = ma.fst(fb),
+                            Ab = ma.snd(fb),
+                            Gb = d.join(B.bindMaybe)(Q.map(B.functorMaybe)(oa.sequence(K.traversableNonEmptyArray)(B.applicativeMaybe))(Q.map(B.functorMaybe)(Q.map(K.functorNonEmptyArray)(C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                           return "appliesToProduct";
                         }))(X.consKeys(new v.IsSymbol(function () {
                           return "policy";
                         }))(X.consKeys(new v.IsSymbol(function () {
                           return "policyType";
-                        }))(X.nilKeys))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                        }))(X.nilKeys))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                           return "appliesToProduct";
-                        }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                        }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                           return "policy";
-                        }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                        }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                           return "policyType";
-                        }))()()()()(E.getAllOptionNil)))))))(Ab)));
-                        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.versioning])(J.checkBoxS(E.getWithDefault(new v.IsSymbol(function () {
+                        }))()()()()(C.getAllOptionNil)))))))(Ab)));
+                        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.versioning])(J.checkBoxS(C.getWithDefault(new v.IsSymbol(function () {
                           return "versioning";
-                        }))()(!1)(v.SProxy.value)(V)))))(function (Hb) {
-                          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                        }))()(!1)(v.SProxy.value)(U)))))(function (Hb) {
+                          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                             return "institutionID_opt";
-                          }))()(v.SProxy.value)(new D.Just(ha))))(function () {
-                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                          }))()(v.SProxy.value)(new B.Just(ea))))(function () {
+                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                               return "institutionID";
-                            }))()(v.SProxy.value)(pa)))(function () {
-                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                            }))()(v.SProxy.value)(na)))(function () {
+                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                 return "institutionName";
-                              }))()(v.SProxy.value)(wa)))(function () {
-                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                              }))()(v.SProxy.value)(va)))(function () {
+                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                   return "institutionType";
                                 }))()(v.SProxy.value)(xa)))(function () {
-                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                     return "superOrganizationName";
-                                  }))()(v.SProxy.value)(new D.Just(Ia))))(function () {
-                                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                  }))()(v.SProxy.value)(new B.Just(Ia))))(function () {
+                                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                       return "institutionContact_opt";
-                                    }))()(v.SProxy.value)(new D.Just(Oa))))(function () {
-                                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                    }))()(v.SProxy.value)(new B.Just(Ja))))(function () {
+                                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                         return "institutionContact";
-                                      }))()(v.SProxy.value)(Xa)))(function () {
-                                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                      }))()(v.SProxy.value)(Ya)))(function () {
+                                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                           return "iSustain_opt";
-                                        }))()(v.SProxy.value)(new D.Just(ab))))(function () {
-                                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                        }))()(v.SProxy.value)(new B.Just($a))))(function () {
+                                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                             return "institutionSustainability";
-                                          }))()(v.SProxy.value)($a)))(function () {
-                                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                          }))()(v.SProxy.value)(ab)))(function () {
+                                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                               return "_numPolicies";
-                                            }))()(v.SProxy.value)(new D.Just(pb))))(function () {
-                                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                            }))()(v.SProxy.value)(new B.Just(lb))))(function () {
+                                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                                 return "institutionPolicies_opt";
                                               }))()(v.SProxy.value)(Ab)))(function () {
-                                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                                   return "institutionPolicies";
                                                 }))()(v.SProxy.value)(Gb)))(function () {
-                                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                                     return "versioning";
-                                                  }))()(v.SProxy.value)(new D.Just(Hb))))(function () {
-                                                    return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                                  }))()(v.SProxy.value)(new B.Just(Hb))))(function () {
+                                                    return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                                       return "descs_on";
-                                                    }))()(v.SProxy.value)(new D.Just(ea)));
+                                                    }))()(v.SProxy.value)(new B.Just(ha)));
                                                   });
                                                 });
                                               });
@@ -18116,8 +18116,8 @@ var PS = {};
                                 });
                               });
                             });
-                          }))(V)))(function (Ib) {
-                            return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(new D.Just(Ib));
+                          }))(U)))(function (Ib) {
+                            return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(new B.Just(Ib));
                           });
                         });
                       });
@@ -18132,36 +18132,36 @@ var PS = {};
     }());
   },
       Db = function Db(T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.basicMetadata])(d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(cb(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.basicMetadata])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(bb(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
       return "_numTitles";
-    }))()(1)(v.SProxy.value)(T), E.get(new v.IsSymbol(function () {
+    }))()(1)(v.SProxy.value)(T), C.get(new v.IsSymbol(function () {
       return "titles";
-    }))()(v.SProxy.value)(T))))(function (V) {
-      var ea = ma.fst(V),
-          ha = ma.snd(V);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Na(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+    }))()(v.SProxy.value)(T))))(function (U) {
+      var ha = ma.fst(U),
+          ea = ma.snd(U);
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Oa(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
         return "_numCreators";
-      }))()(1)(v.SProxy.value)(T), E.get(new v.IsSymbol(function () {
+      }))()(1)(v.SProxy.value)(T), C.get(new v.IsSymbol(function () {
         return "creators";
-      }))()(v.SProxy.value)(T))))(function (pa) {
-        var wa = ma.fst(pa),
-            xa = ma.snd(pa);
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([U.pubyear])(J.natInput(E.get(new v.IsSymbol(function () {
+      }))()(v.SProxy.value)(T))))(function (na) {
+        var va = ma.fst(na),
+            xa = ma.snd(na);
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([])(n.span_(r.shiftMapCofree(z.monoidArray))([V.pubyear])(J.natInput(C.get(new v.IsSymbol(function () {
           return "publicationYear";
         }))()(v.SProxy.value)(T)))))(function (Ia) {
-          return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "titles";
-          }))()(v.SProxy.value)(ha)))(function () {
-            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(ea)))(function () {
+            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
               return "_numTitles";
-            }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "creators";
               }))()(v.SProxy.value)(xa)))(function () {
-                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                   return "_numCreators";
-                }))()(v.SProxy.value)(new D.Just(wa))))(function () {
-                  return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(new B.Just(va))))(function () {
+                  return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                     return "publicationYear";
                   }))()(v.SProxy.value)(Ia));
                 });
@@ -18173,71 +18173,71 @@ var PS = {};
     }));
   },
       Eb = function Eb(T) {
-    var V = D.fromMaybe(E.empty)(T);
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.product])(function () {
-      var ea = E.getWithDefault(new v.IsSymbol(function () {
+    var U = B.fromMaybe(C.empty)(T);
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.product])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(pb)(function (ha) {
+      var ea = C.getWithDefault(new v.IsSymbol(function () {
         return "descs_on";
-      }))()(!0)(v.SProxy.value)(V);
-      return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("supplementaryProductEle")(ea)))(function () {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Db(Ra(new v.IsSymbol(function () {
+      }))()(!0)(v.SProxy.value)(U);
+      return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("supplementaryProductEle")(ea)))(function () {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Db(Ra(new v.IsSymbol(function () {
           return "basicMetadata_opt";
-        }))()(v.SProxy.value)(V)))(function (ha) {
-          var pa = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(U)))(function (na) {
+          var va = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
             return "creators";
           }))(X.consKeys(new v.IsSymbol(function () {
             return "publicationYear";
           }))(X.consKeys(new v.IsSymbol(function () {
             return "titles";
-          }))(X.nilKeys))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))(X.nilKeys))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "creators";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "publicationYear";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "titles";
-          }))()()()()(E.getAllOptionNil)))))(ha);
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.resourceId])(Ya(ea)(Ra(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionNil)))))(na);
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.resourceId])(Xa(ea)(Ra(new v.IsSymbol(function () {
             return "resourceID_opt";
-          }))()(v.SProxy.value)(V))))(function (wa) {
-            var xa = E.getAll(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()(v.SProxy.value)(U))))(function (xa) {
+            var Ia = C.getAll(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
               return "identifier";
-            }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+            }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
               return "identifierType";
-            }))()()()()(E.getAllOptionNil))))(wa);
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(ob(ea)(Ra(new v.IsSymbol(function () {
+            }))()()()()(C.getAllOptionNil))))(xa);
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(qb(ea)(Ra(new v.IsSymbol(function () {
               return "resourceType_opt";
-            }))()(v.SProxy.value)(V)))(function (Ia) {
-              var Oa = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+            }))()(v.SProxy.value)(U)))(function (Ja) {
+              var Ya = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                 return "description";
               }))(X.consKeys(new v.IsSymbol(function () {
                 return "generalType";
-              }))(X.nilKeys)))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+              }))(X.nilKeys)))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                 return "description";
-              }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+              }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                 return "generalType";
-              }))()()()()(E.getAllOptionNil))))(Ia);
-              return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Ua(ea)(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+              }))()()()()(C.getAllOptionNil))))(Ja);
+              return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Ua(ea)(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
                 return "_numFormats";
-              }))()(0)(v.SProxy.value)(V), E.getWithDefault(new v.IsSymbol(function () {
+              }))()(0)(v.SProxy.value)(U), C.getWithDefault(new v.IsSymbol(function () {
                 return "format";
-              }))()([])(v.SProxy.value)(V))))(function (Xa) {
-                var ab = ma.fst(Xa),
-                    $a = ma.snd(Xa);
-                return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(yb(D.fromMaybe(E.empty)(Wa(new v.IsSymbol(function () {
+              }))()([])(v.SProxy.value)(U))))(function ($a) {
+                var ab = ma.fst($a),
+                    fb = ma.snd($a);
+                return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(yb(B.fromMaybe(C.empty)(Wa(new v.IsSymbol(function () {
                   return "resMdsOpts_opt";
-                }))()(v.SProxy.value)(V)(ea))))(function (bb) {
-                  var pb = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(U)(ea))))(function (lb) {
+                  var Ab = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                     return "relationType";
                   }))(X.consKeys(new v.IsSymbol(function () {
                     return "url";
-                  }))(X.nilKeys)))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                  }))(X.nilKeys)))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                     return "relationType";
-                  }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                  }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                     return "url";
-                  }))()()()()(E.getAllOptionNil))))(bb);
-                  return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Cb(Wa(new v.IsSymbol(function () {
+                  }))()()()()(C.getAllOptionNil))))(lb);
+                  return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Cb(Wa(new v.IsSymbol(function () {
                     return "locationOpts_opt";
-                  }))()(v.SProxy.value)(V)(ea)))(function (Ab) {
-                    var Gb = d.join(D.bindMaybe)(R.map(D.functorMaybe)(E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+                  }))()(v.SProxy.value)(U)(ea)))(function (Gb) {
+                    var Hb = d.join(B.bindMaybe)(Q.map(B.functorMaybe)(C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                       return "institutionContact";
                     }))(X.consKeys(new v.IsSymbol(function () {
                       return "institutionID";
@@ -18253,62 +18253,62 @@ var PS = {};
                       return "superOrganizationName";
                     }))(X.consKeys(new v.IsSymbol(function () {
                       return "versioning";
-                    }))(X.nilKeys)))))))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))(X.nilKeys)))))))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionContact";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionID";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionName";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionPolicies";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionSustainability";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "institutionType";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "superOrganizationName";
-                    }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                       return "versioning";
-                    }))()()()()(E.getAllOptionNil)))))))))))(Ab));
-                    return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                    }))()()()()(C.getAllOptionNil)))))))))))(Gb));
+                    return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                       return "basicMetadata_opt";
-                    }))()(v.SProxy.value)(new D.Just(ha))))(function () {
-                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                    }))()(v.SProxy.value)(new B.Just(na))))(function () {
+                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                         return "basicMetadata";
-                      }))()(v.SProxy.value)(pa)))(function () {
-                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                      }))()(v.SProxy.value)(va)))(function () {
+                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                           return "resourceID_opt";
-                        }))()(v.SProxy.value)(new D.Just(wa))))(function () {
-                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                        }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                             return "resourceID";
-                          }))()(v.SProxy.value)(new D.Just(xa))))(function () {
-                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                          }))()(v.SProxy.value)(new B.Just(Ia))))(function () {
+                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                               return "resourceType_opt";
-                            }))()(v.SProxy.value)(new D.Just(Ia))))(function () {
-                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                            }))()(v.SProxy.value)(new B.Just(Ja))))(function () {
+                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                 return "resourceType";
-                              }))()(v.SProxy.value)(Oa)))(function () {
-                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                              }))()(v.SProxy.value)(Ya)))(function () {
+                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                   return "_numFormats";
-                                }))()(v.SProxy.value)(new D.Just(ab))))(function () {
-                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                }))()(v.SProxy.value)(new B.Just(ab))))(function () {
+                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                     return "format";
-                                  }))()(v.SProxy.value)(new D.Just($a))))(function () {
-                                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                  }))()(v.SProxy.value)(new B.Just(fb))))(function () {
+                                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                       return "resMdsOpts_opt";
-                                    }))()(v.SProxy.value)(new D.Just(bb))))(function () {
-                                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                    }))()(v.SProxy.value)(new B.Just(lb))))(function () {
+                                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                         return "resourceMetadataSource";
-                                      }))()(v.SProxy.value)(new D.Just(pb))))(function () {
-                                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                      }))()(v.SProxy.value)(new B.Just(Ab))))(function () {
+                                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                           return "locationOpts_opt";
-                                        }))()(v.SProxy.value)(Ab)))(function () {
-                                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                        }))()(v.SProxy.value)(Gb)))(function () {
+                                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                             return "location";
-                                          }))()(v.SProxy.value)(Gb)))(function () {
-                                            return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                          }))()(v.SProxy.value)(Hb)))(function () {
+                                            return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                               return "descs_on";
-                                            }))()(v.SProxy.value)(new D.Just(ea)));
+                                            }))()(v.SProxy.value)(new B.Just(ea)));
                                           });
                                         });
                                       });
@@ -18320,8 +18320,8 @@ var PS = {};
                           });
                         });
                       });
-                    }))(V)))(function (Hb) {
-                      return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(new D.Just(Hb));
+                    }))(U)))(function (Ib) {
+                      return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(new B.Just(Ib));
                     });
                   });
                 });
@@ -18330,67 +18330,67 @@ var PS = {};
           });
         });
       });
-    }());
+    }));
   },
       Fb = function Fb(T) {
-    return function (V) {
-      var ea = R.mapFlipped(D.functorMaybe)(ma.snd(V))(function (ha) {
-        return R.mapFlipped(K.functorNonEmptyArray)(ha)(function (pa) {
-          return C.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+    return function (U) {
+      var ha = Q.mapFlipped(B.functorMaybe)(ma.snd(U))(function (ea) {
+        return Q.mapFlipped(K.functorNonEmptyArray)(ea)(function (na) {
+          return D.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
             return "descs_on";
-          }))()(v.SProxy.value)(new D.Just(T))))(pa);
+          }))()(v.SProxy.value)(new B.Just(T))))(na);
         });
       });
-      return n.div_(r.shiftMapCofree(z.monoidArray))([U.products])(n.span_(r.shiftMapCofree(z.monoidArray))([U.productsHeader])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("supplementaryProductsEle")(T)))(function () {
-        return n.div_(r.shiftMapCofree(z.monoidArray))([U.productList])(J.nonEmptyArrayView(Eb)(new ma.Tuple(ma.fst(V), ea)));
+      return n.div_(r.shiftMapCofree(z.monoidArray))([V.products])(n.span_(r.shiftMapCofree(z.monoidArray))([V.productsHeader])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("supplementaryProductsEle")(T)))(function () {
+        return n.div_(r.shiftMapCofree(z.monoidArray))([V.productList])(J.nonEmptyArrayView(Eb)(new ma.Tuple(ma.fst(U), ha)));
       })));
     };
   },
       Bb = function Bb(T) {
-    var V = E.getWithDefault(new v.IsSymbol(function () {
+    var U = C.getWithDefault(new v.IsSymbol(function () {
       return "descs_on";
     }))()(!0)(v.SProxy.value)(T);
-    return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("recordEle")(V)))(function () {
-      return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("recordTypeCTyp")(V)))(function () {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(eb(Ra(new v.IsSymbol(function () {
+    return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("recordEle")(U)))(function () {
+      return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("recordTypeCTyp")(U)))(function () {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(db(Ra(new v.IsSymbol(function () {
           return "identifier_opt";
-        }))()(v.SProxy.value)(T)))(function (ea) {
-          var ha = E.getAll(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+        }))()(v.SProxy.value)(T)))(function (ha) {
+          var ea = C.getAll(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "identifier";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "identifierType";
-          }))()()()()(E.getAllOptionNil))))(ea);
-          E.getWithDefault(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionNil))))(ha);
+          C.getWithDefault(new v.IsSymbol(function () {
             return "date_Ei";
           }))()(new I.Left(""))(v.SProxy.value)(T);
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.date])(d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("dateEle")(V)))(function () {
-            return J.dateInput(E.getWithDefault(new v.IsSymbol(function () {
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.date])(d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(f.display(J.mkDesc("dateEle")(U)))(function () {
+            return J.dateInput(C.getWithDefault(new v.IsSymbol(function () {
               return "date_Ei";
             }))()(new I.Left(""))(v.SProxy.value)(T));
-          })))(function (pa) {
-            var wa = I.hush(pa);
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(zb(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+          })))(function (na) {
+            var va = I.hush(na);
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(zb(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
               return "_numRelIds";
-            }))()(0)(v.SProxy.value)(T), E.get(new v.IsSymbol(function () {
+            }))()(0)(v.SProxy.value)(T), C.get(new v.IsSymbol(function () {
               return "relId_opts";
             }))()(v.SProxy.value)(T))))(function (xa) {
               var Ia = ma.fst(xa),
-                  Oa = ma.snd(xa),
-                  Xa = d.join(D.bindMaybe)(R.map(D.functorMaybe)(na.sequence(K.traversableNonEmptyArray)(D.applicativeMaybe))(R.map(D.functorMaybe)(R.map(K.functorNonEmptyArray)(E.getAll(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                  Ja = ma.snd(xa),
+                  Ya = d.join(B.bindMaybe)(Q.map(B.functorMaybe)(oa.sequence(K.traversableNonEmptyArray)(B.applicativeMaybe))(Q.map(B.functorMaybe)(Q.map(K.functorNonEmptyArray)(C.getAll(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                 return "identifier";
-              }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+              }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                 return "identifierType";
-              }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+              }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                 return "relationType";
-              }))()()()()(E.getAllOptionNil)))))))(Oa)));
-              return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Fb(V)(new ma.Tuple(E.getWithDefault(new v.IsSymbol(function () {
+              }))()()()()(C.getAllOptionNil)))))))(Ja)));
+              return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Fb(U)(new ma.Tuple(C.getWithDefault(new v.IsSymbol(function () {
                 return "_numSupProds";
-              }))()(0)(v.SProxy.value)(T), E.get(new v.IsSymbol(function () {
+              }))()(0)(v.SProxy.value)(T), C.get(new v.IsSymbol(function () {
                 return "supProd_opts";
-              }))()(v.SProxy.value)(T))))(function (ab) {
-                var $a = ma.fst(ab),
-                    bb = ma.snd(ab),
-                    pb = d.join(D.bindMaybe)(R.map(D.functorMaybe)(na.sequence(K.traversableNonEmptyArray)(D.applicativeMaybe))(R.map(D.functorMaybe)(R.map(K.functorNonEmptyArray)(E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+              }))()(v.SProxy.value)(T))))(function ($a) {
+                var ab = ma.fst($a),
+                    fb = ma.snd($a),
+                    lb = d.join(B.bindMaybe)(Q.map(B.functorMaybe)(oa.sequence(K.traversableNonEmptyArray)(B.applicativeMaybe))(Q.map(B.functorMaybe)(Q.map(K.functorNonEmptyArray)(C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
                   return "basicMetadata";
                 }))(X.consKeys(new v.IsSymbol(function () {
                   return "format";
@@ -18402,52 +18402,52 @@ var PS = {};
                   return "resourceMetadataSource";
                 }))(X.consKeys(new v.IsSymbol(function () {
                   return "resourceType";
-                }))(X.nilKeys)))))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))(X.nilKeys)))))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "basicMetadata";
-                }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "format";
-                }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "location";
-                }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "resourceID";
-                }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "resourceMetadataSource";
-                }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
                   return "resourceType";
-                }))()()()()(E.getAllOptionNil))))))))))(bb)));
-                return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                }))()()()()(C.getAllOptionNil))))))))))(fb)));
+                return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                   return "identifier_opt";
-                }))()(v.SProxy.value)(new D.Just(ea))))(function () {
-                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                }))()(v.SProxy.value)(new B.Just(ha))))(function () {
+                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                     return "identifier";
-                  }))()(v.SProxy.value)(ha)))(function () {
-                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                  }))()(v.SProxy.value)(ea)))(function () {
+                    return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                       return "date_Ei";
-                    }))()(v.SProxy.value)(new D.Just(pa))))(function () {
-                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                    }))()(v.SProxy.value)(new B.Just(na))))(function () {
+                      return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                         return "date";
-                      }))()(v.SProxy.value)(wa)))(function () {
-                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                      }))()(v.SProxy.value)(va)))(function () {
+                        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                           return "_numRelIds";
-                        }))()(v.SProxy.value)(new D.Just(Ia))))(function () {
-                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                        }))()(v.SProxy.value)(new B.Just(Ia))))(function () {
+                          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                             return "relId_opts";
-                          }))()(v.SProxy.value)(Oa)))(function () {
-                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                          }))()(v.SProxy.value)(Ja)))(function () {
+                            return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                               return "relatedIdentifiers";
-                            }))()(v.SProxy.value)(Xa)))(function () {
-                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                            }))()(v.SProxy.value)(Ya)))(function () {
+                              return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                 return "_numSupProds";
-                              }))()(v.SProxy.value)(new D.Just($a))))(function () {
-                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                              }))()(v.SProxy.value)(new B.Just(ab))))(function () {
+                                return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                   return "supProd_opts";
-                                }))()(v.SProxy.value)(bb)))(function () {
-                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                }))()(v.SProxy.value)(fb)))(function () {
+                                  return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                     return "supplementaryProducts";
-                                  }))()(v.SProxy.value)(pb)))(function () {
-                                    return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+                                  }))()(v.SProxy.value)(lb)))(function () {
+                                    return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                                       return "descs_on";
-                                    }))()(v.SProxy.value)(new D.Just(V)));
+                                    }))()(v.SProxy.value)(new B.Just(U)));
                                   });
                                 });
                               });
@@ -18465,14 +18465,14 @@ var PS = {};
       });
     });
   },
-      Y = f.loopS(z.monoidArray)(E.empty)(function (T) {
-    return n.div_(r.shiftMapCofree(z.monoidArray))([U.record])(n.div_(r.shiftMapCofree(z.monoidArray))([U.recFlexBox])(d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.recEditor])(function () {
-      var V = E.getWithDefault(new v.IsSymbol(function () {
+      Y = f.loopS(z.monoidArray)(C.empty)(function (T) {
+    return n.div_(r.shiftMapCofree(z.monoidArray))([V.record])(n.div_(r.shiftMapCofree(z.monoidArray))([V.recFlexBox])(d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.recEditor])(function () {
+      var U = C.getWithDefault(new v.IsSymbol(function () {
         return "descs_on";
       }))()(!0)(v.SProxy.value)(T);
-      return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(J.showDescSig(V))(function (ea) {
-        return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(ub)(function (ha) {
-          var pa = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+      return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(J.showDescSig(U))(function (ha) {
+        return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(vb)(function (ea) {
+          var na = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
             return "date";
           }))(X.consKeys(new v.IsSymbol(function () {
             return "identifier";
@@ -18482,37 +18482,37 @@ var PS = {};
             return "relatedIdentifiers";
           }))(X.consKeys(new v.IsSymbol(function () {
             return "supplementaryProducts";
-          }))(X.nilKeys))))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))(X.nilKeys))))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "date";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "identifier";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "lastModified";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "relatedIdentifiers";
-          }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
             return "supplementaryProducts";
-          }))()()()()(E.getAllOptionNil)))))))(ha);
-          ha = D.isNothing(pa) ? T : ha;
-          return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(Bb(ha))(function (wa) {
-            var xa = E.get(new v.IsSymbol(function () {
+          }))()()()()(C.getAllOptionNil)))))))(ea);
+          ea = B.isNothing(na) ? T : ea;
+          return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(Bb(ea))(function (va) {
+            var xa = C.get(new v.IsSymbol(function () {
               return "lastModified";
-            }))()(v.SProxy.value)(wa),
+            }))()(v.SProxy.value)(va),
                 Ia = Ca.unsafePerformEffect(sa.nowDateTime);
-            return d.bind(r.bindCofree(m.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(O.append(N.semigroupFirst)(xa)(N.First(new D.Just(Ia)))))(function (Oa) {
-              return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(C.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+            return d.bind(r.bindCofree(l.widgetAlternative(z.monoidArray)))(b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(O.append(N.semigroupFirst)(xa)(N.First(new B.Just(Ia)))))(function (Ja) {
+              return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                 return "lastModified";
-              }))()(v.SProxy.value)(Oa)))(function () {
-                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(E.maySetOptState(new v.IsSymbol(function () {
+              }))()(v.SProxy.value)(Ja)))(function () {
+                return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
                   return "descs_on";
-                }))()(v.SProxy.value)(new D.Just(ea)));
-              }))(wa));
+                }))()(v.SProxy.value)(new B.Just(ha)));
+              }))(va));
             });
           });
         });
       });
-    }()))(function (V) {
-      var ea = E.getSubset()()(X.consKeys(new v.IsSymbol(function () {
+    }()))(function (U) {
+      var ha = C.getSubset()()(X.consKeys(new v.IsSymbol(function () {
         return "date";
       }))(X.consKeys(new v.IsSymbol(function () {
         return "identifier";
@@ -18522,23 +18522,23 @@ var PS = {};
         return "relatedIdentifiers";
       }))(X.consKeys(new v.IsSymbol(function () {
         return "supplementaryProducts";
-      }))(X.nilKeys))))))(E.getAllAny()(E.getAllOptionCons(new v.IsSymbol(function () {
+      }))(X.nilKeys))))))(C.getAllAny()(C.getAllOptionCons(new v.IsSymbol(function () {
         return "date";
-      }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+      }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
         return "identifier";
-      }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+      }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
         return "lastModified";
-      }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+      }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
         return "relatedIdentifiers";
-      }))()()()()(E.getAllOptionCons(new v.IsSymbol(function () {
+      }))()()()()(C.getAllOptionCons(new v.IsSymbol(function () {
         return "supplementaryProducts";
-      }))()()()()(E.getAllOptionNil)))))))(V);
-      return d.discard(d.discardUnit)(r.bindCofree(m.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([U.sideBar])(f.display(gb(ea)(za.unit)(0))))(function () {
-        return b.pure(r.applicativeCofree(m.widgetAlternative(z.monoidArray)))(V);
+      }))()()()()(C.getAllOptionNil)))))))(U);
+      return d.discard(d.discardUnit)(r.bindCofree(l.widgetAlternative(z.monoidArray)))(n.div_(r.shiftMapCofree(z.monoidArray))([V.sideBar])(f.display(gb(ha)(za.unit)(0))))(function () {
+        return b.pure(r.applicativeCofree(l.widgetAlternative(z.monoidArray)))(U);
       });
     })));
   }),
-      ba = n["div'"](m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([n.div(m.widgetMultiAlternative(z.monoidArray))(m.widgetShiftMap)([U.page])(b.pure(b.applicativeArray)(f.dyn(Y)))]);
+      ba = n["div'"](l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([n.div(l.widgetMultiAlternative(z.monoidArray))(l.widgetShiftMap)([V.page])(b.pure(b.applicativeArray)(f.dyn(Y)))]);
 
   c.runFormSPA = function (T) {
     return w.runWidgetInDom(T)(ba);
@@ -18547,41 +18547,88 @@ var PS = {};
   c.page = ba;
   c.utf8DataAttr = "data:text/plain;charset=utf-8";
   c.downloadButton = Ta;
-  c.mkDLAnchorAndClicker = db;
-  c.uploadButtonSig = ub;
-  c.dataCiteButtonSig = vb;
-  c.copyButton = La;
-  c.fillMetajeloRecordExtra = nb;
-  c.fillSProdExtra = tb;
-  c.fillBasicMetadataExtra = mb;
-  c.fillLocationRowExtra = sb;
-  c.fillIContactExtra = rb;
+  c.mkDLAnchorAndClicker = cb;
+  c.uploadButtonSig = vb;
+  c.dataCiteButtonSig = pb;
+
+  c.fillWithDataCite = function (T) {
+    return function (U) {
+      var ha = Q.map(K.functorNonEmptyArray)(function (Ja) {
+        return Ja.title;
+      })(U.data.attributes.titles),
+          ea = Q.map(K.functorNonEmptyArray)(function (Ja) {
+        return Ja.name;
+      })(U.data.attributes.creators);
+      U = Ra(new v.IsSymbol(function () {
+        return "basicMetadata_opt";
+      }))()(v.SProxy.value)(T);
+      var na = C.get(new v.IsSymbol(function () {
+        return "creators";
+      }))()(v.SProxy.value)(U),
+          va = B.maybe(ea)(function (Ja) {
+        return O.append(K.semigroupNonEmptyArray)(Ja)(ea);
+      })(na);
+      na = C.get(new v.IsSymbol(function () {
+        return "titles";
+      }))()(v.SProxy.value)(U);
+      na = B.maybe(ha)(function (Ja) {
+        return O.append(K.semigroupNonEmptyArray)(Ja)(ha);
+      })(na);
+      var xa = F.length(na),
+          Ia = F.length(va);
+      U = D.execState(d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "titles";
+      }))()(v.SProxy.value)(new B.Just(na))))(function () {
+        return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+          return "_numTitles";
+        }))()(v.SProxy.value)(new B.Just(xa))))(function () {
+          return d.discard(d.discardUnit)(u.bindStateT(A.monadIdentity))(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+            return "creators";
+          }))()(v.SProxy.value)(new B.Just(va))))(function () {
+            return d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+              return "_numCreators";
+            }))()(v.SProxy.value)(new B.Just(Ia)));
+          });
+        });
+      }))(U);
+      return D.execState(d.bind(u.bindStateT(A.monadIdentity))(y.get(u.monadStateStateT(A.monadIdentity)))(C.maySetOptState(new v.IsSymbol(function () {
+        return "basicMetadata_opt";
+      }))()(v.SProxy.value)(new B.Just(U))))(T);
+    };
+  };
+
+  c.copyButton = Ma;
+  c.fillMetajeloRecordExtra = ob;
+  c.fillSProdExtra = ub;
+  c.fillBasicMetadataExtra = nb;
+  c.fillLocationRowExtra = tb;
+  c.fillIContactExtra = sb;
   c.fillSustainExtra = Va;
   c.fillPolicyExtra = Pa;
-  c.fillResourceMDSExtra = qb;
+  c.fillResourceMDSExtra = rb;
   c.accumulateMetajeloRecord = Y;
-  c.recWidg = fb;
-  c.finalizeRecord = lb;
+  c.recWidg = eb;
+  c.finalizeRecord = mb;
   c.accumulateMetajeloRecUI = Bb;
   c.accumulateSuppProd = Eb;
   c.supProdSigArray = Fb;
   c.accumulateLocation = Cb;
   c.accumulateSustain = xb;
-  c.accumulateIdent = Ya;
-  c.genRecIdent = eb;
+  c.accumulateIdent = Xa;
+  c.genRecIdent = db;
   c.accumulateRelatedIdent = kb;
   c.relIdSigArray = zb;
   c.accumulateBasicMetadata = Db;
-  c.accumulateResType = ob;
+  c.accumulateResType = qb;
   c.formatSignal = hb;
   c.formatSigArray = Ua;
   c.titleSignal = Za;
-  c.titleSigArray = cb;
+  c.titleSigArray = bb;
   c.creatorSignal = wb;
-  c.creatorSigArray = Na;
+  c.creatorSigArray = Oa;
   c.accumulateResMdSource = yb;
   c.accumulateContact = jb;
-  c.accumulatePolicy = l;
+  c.accumulatePolicy = m;
   c.policySigArray = Sa;
   c.getOpt = Ra;
   c.updateDescOn = Wa;
@@ -18602,4 +18649,4 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 // var Metajelo = require("../output/Metajelo"); // For bower
 window.MetajeloUI = MetajeloUI;
 },{"./index.opt.js":"xbCx"}]},{},["Focm"], null)
-//# sourceMappingURL=prod.c8fe6cdb.js.map
+//# sourceMappingURL=prod.65a76236.js.map
