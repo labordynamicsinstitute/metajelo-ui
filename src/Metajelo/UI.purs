@@ -9,7 +9,7 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
-import Control.Apply ((<*))
+import Control.Apply ((*>))
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Monad.State
@@ -169,6 +169,11 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
 
 type DataCiteRetrieval = Maybe (JSONWithErr (Either MultipleErrors Resource))
 
+-- In `dataCiteButtonSig`, it is probably better to do something like
+-- Elm (https://github.com/purescript-concur/purescript-concur-react/blob/master/examples/src/Test/TheElmArchitecture.purs#L32)
+-- rather than relying on `getElementbyId`.
+-- Even better my be reactRef :
+-- https://github.com/purescript-concur/purescript-concur-react/blob/master/src/Concur/React/Widgets.purs#L30
 dataCiteButtonSig :: Signal HTML DataCiteRetrieval
 dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
   where
@@ -179,7 +184,7 @@ dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
       void $ D.button_ [P.onClick] $ D.text "Retrieve DataCite Record"
       doiMay :: Maybe String <- D.span [] [
           D.input [P._id dcDoiInputId, P.placeholder "Input DOI here"]
-        , getInputTextLE dcDoiInputId <* (D.button_ [P.onClick] $ D.text "Retrieve")
+        , (D.button_ [P.onClick] $ D.text "Retrieve") *> getInputTextLE dcDoiInputId
         , Nothing <$ (D.button_ [P.onClick] $ D.text "Cancel")
         ]
       case doiMay of
