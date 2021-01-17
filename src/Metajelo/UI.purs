@@ -4,16 +4,18 @@ module Metajelo.UI where
 import Affjax (Error, Response, get, printError) as AJ
 import Affjax.ResponseFormat (string) as AJ
 import Concur.Core (Widget)
-import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
+import Concur.Core.FRP (Signal, demand', display, dyn, loopS, loopW, step)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Apply ((<*))
+import Control.Comonad (extract)
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Monad.State
 import Control.Monad.Writer (Writer, runWriter)
+import Control.Plus (empty)
 import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
@@ -25,6 +27,7 @@ import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
 import Data.Newtype (unwrap)
+import Data.String (trim)
 import Data.String.Common (null)
 import Data.String.NonEmpty (NonEmptyString, fromString, toString)
 import Data.Symbol (class IsSymbol, SProxy(..))
@@ -48,7 +51,7 @@ import Metajelo.CSS.Web.ClassProps as MWC
 import Metajelo.CSS.UI.Util as MCU
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
                          , checkPolicy, dateInput, emailInput
-                         , errorDisplay, evTargetElem, getInputTextLE, menuSignal
+                         , errorDisplay, evTargetElem, menuSignal
                          , mkDesc, natInput
                          , nonEmptyArrayView, polPolTypeIs, runEffectInit
                          , showDescSig, textInput, urlInput)
@@ -60,7 +63,7 @@ import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
-               , map, pure, show, unit, ($), (<$>), (<>), (>>=))
+               , map, pure, show, unit, ($), (<$>), (<>), (>>=), (<<<))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL, parsePublicURL, urlToString)
 import Web.DOM.Document (createElement) as DOM
@@ -101,7 +104,7 @@ downloadButton mjStr = D.div_ [] $ do
   maybe errorBox (downloadBtn dlClicker) encodedMjStrMay
   where
     downloadBtn :: Effect Unit -> String -> Widget HTML a
-    downloadBtn clicker cstr  = do
+    downloadBtn clicker cstr = do
       dyn $ go cstr
       where
         go str = step str $ do
@@ -170,25 +173,37 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
 type DataCiteRetrieval = Maybe (JSONWithErr (Either MultipleErrors Resource))
 
 dataCiteButtonSig :: Signal HTML DataCiteRetrieval
-dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
+dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] do
+  void $ D.button_ [P.onClick] $ D.text "Retrieve DataCite Record"
+  let doiMay = extract (getDOI Nothing)
+  case doiMay of
+    Nothing -> dataCiteButton
+    Just doi -> case parsePublicURL $ dCiteJsonUrlPfx <> (toString doi) of
+      Left err -> errorBox $ EX.error err
+      Right jsonUrl -> do
+        res <- liftAff $ AJ.get AJ.string $ urlToString jsonUrl
+        processResponse res
   where
     dcDoiInputId = MCU.mjUiClassPfx <> "dataCiteDOI_Input"
-    dCiteJsonUrlPfx = "https://api.datacite.org/dois/"
-    dataCiteButton :: Widget HTML DataCiteRetrieval
-    dataCiteButton = D.div_ [] do
-      void $ D.button_ [P.onClick] $ D.text "Retrieve DataCite Record"
-      doiMay :: Maybe String <- D.span [] [
-          D.input [P._id dcDoiInputId, P.placeholder "Input DOI here"]
-        , getInputTextLE dcDoiInputId <* (D.button_ [P.onClick] $ D.text "Retrieve")
+    doiInputWidget :: Maybe NonEmptyString -> Widget HTML (Maybe NonEmptyString)
+    doiInputWidget txtMay =
+      let txt = maybe "" (trim <<< toString) txtMay
+      in fromString <$> D.input [
+          P.defaultValue txt
+        , P.unsafeTargetValue <$> P.onChange
+        , P.placeholder "Input DOI here"
+        ]
+    doiInput :: CtrlSignal HTML (Maybe NonEmptyString)
+    doiInput iVal = loopW iVal doiInputWidget
+    getDOI :: CtrlSignal HTML (Maybe NonEmptyString)
+    getDOI iVal = D.span_ [] do
+      doiMay <- doiInput iVal
+      loopW Nothing $ \_ -> D.span' [
+          doiMay <$ (D.button_ [P.onClick] $ D.text "Retrieve")
         , Nothing <$ (D.button_ [P.onClick] $ D.text "Cancel")
         ]
-      case doiMay of
-        Nothing -> dataCiteButton
-        Just doi -> case parsePublicURL $ dCiteJsonUrlPfx <> doi of
-          Left err -> errorBox $ EX.error err
-          Right jsonUrl -> do
-            res <- liftAff $ AJ.get AJ.string $ urlToString jsonUrl
-            processResponse res
+
+    dCiteJsonUrlPfx = "https://api.datacite.org/dois/"
     processResponse :: Either AJ.Error (AJ.Response String)
       ->  Widget HTML DataCiteRetrieval
     processResponse res = case res of
@@ -548,18 +563,30 @@ accumulateMetajeloRecUI recOpt = do
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   dataCiteJsonWMay <- dataCiteButtonSig
-  prodOpt <- pure $ case dataCiteJsonWMay of
-    Nothing -> prodOpt0
+  pure $ unsafePerformEffect $ log $ ("dataCiteJsonWMay: " <> if isNothing dataCiteJsonWMay then " is Nothing" else "is Just") -- FIXME DEBUG
+  Tuple prodOpt parseMay <- pure $ case dataCiteJsonWMay of
+    Nothing -> Tuple prodOpt0 Nothing
     Just dataCiteJsonW ->
       let dataCiteJsonTup@(Tuple dCiteEi _) = runWriter $ unwrap dataCiteJsonW
       in case dCiteEi of
-        Right dCite -> fillWithDataCite prodOpt0 dCite
-        Left _ -> prodOpt0
-  -- TODO : add datacite error handling
+        Right dCite -> Tuple (fillWithDataCite prodOpt0 dCite) Nothing
+        Left _ -> Tuple prodOpt0 (Just dataCiteJsonTup)
+  -- TODO : add datacite error handling in tab
+  display $ case parseMay of
+    Nothing -> D.text "No errors detected" -- empty -- TODO
+    Just (Tuple dcRecEi nfErrs) -> D.div [] [
+        case dcRecEi of
+          Right _ -> D.text "No fatal errors" -- empty -- debug
+          Left fatalErrs -> D.text "Fatal errors occurred"
+      --, if A.null nfErrs then empty else D.text "Non fatal errors detected"
+      , if A.null nfErrs then D.text "No Non fatal errors detected" else D.text "Non fatal errors detected" -- FIXME: DEBUG
+      ]
+
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
   basicMdOpt <- accumulateBasicMetadata $
     getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
+  pure $ unsafePerformEffect $ log $ ("titles: " <> (show $ Opt.get (SProxy :: _ "titles") basicMdOpt)) -- FIXME: DEBUG
   let basicMdMay = Opt.getSubset basicMdOpt
   redIdOpt <- D.div_ [MC.resourceId] do
     accumulateIdent descsOn $ getOpt (SProxy :: _ "resourceID_opt") prodOpt

@@ -519,6 +519,7 @@ setChildInputByTag id tag value = do
     Nothing -> pure unit
       --log $ "in setChildByTag, couldn't find element with id " <> id
 
+{-
 getInputText :: String -> Effect (Maybe String)
 getInputText id = do
   doc <- windowDoc
@@ -530,3 +531,9 @@ getInputText id = do
 
 getInputTextLE :: forall m. MonadEffect m => String -> m (Maybe String)
 getInputTextLE id = liftEffect $ getInputText id
+-}
+{- getInputTextLE id = do
+  pure $ unsafePerformEffect $ log $ "getInputTextLE id is " <> id
+  res <- liftEffect $ getInputText id
+  pure $ unsafePerformEffect $ log $ "getInputTextLE res is " <> (show res)
+  pure res -}
