@@ -14,6 +14,7 @@ import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Monad.State
 import Control.Monad.Writer (Writer, runWriter)
+import Control.Plus (empty)
 import Data.Array as A
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
@@ -614,10 +615,19 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     ]
 
 
+{-
+supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
+supProdSigArray descsOn prodsMayOld = D.div [MC.products] [
+    D.span_ [MC.productsHeader] $ display $ mkDesc "supplementaryProductsEle" descsOn
+  , D.div_ [MC.productList]
+      $ nonEmptyArrayView accumulateSuppProd $ Tuple (fst prodsMayOld) prodsMay
+  ]
+-}
+
 supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray descsOn prodsMayOld =
-  D.div_ [MC.products] $ D.span_ [MC.productsHeader] do
-    display $ mkDesc "supplementaryProductsEle" descsOn
+  D.div_ [MC.products] do
+    display $ D.span_ [MC.productsHeader] $ mkDesc "supplementaryProductsEle" descsOn
     D.div_ [MC.productList]
       $ nonEmptyArrayView accumulateSuppProd $ Tuple (fst prodsMayOld) prodsMay
   where
@@ -748,7 +758,8 @@ accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
 
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
 relIdSigArray relIdsMay =
-  D.div_ [MC.relatedIds] $ D.span_ [MC.relatedIdsHeader] do
+  D.div_ [MC.relatedIds] do
+    display $ D.span_ [MC.relatedIdsHeader] empty
     D.div_ [MC.relatedIdList] $
       nonEmptyArrayView accumulateRelatedIdent relIdsMay
 
