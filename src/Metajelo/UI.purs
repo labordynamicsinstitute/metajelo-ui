@@ -107,7 +107,7 @@ downloadButton mjStr = D.div_ [] $ do
       where
         go str = step str $ do
           _ <- D.button_ [MC.downloadBtn, P.onClick, P.disabled $ null str] $
-            D.text "Download"
+            D.text "Download XML"
           _ <- liftEffect clicker
           pure $ go str
     errorBox = D.div_ [MWC.errorDisplayBox] $
@@ -141,7 +141,10 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
   where
     uploadButton :: Widget HTML M.MetajeloRecord
     uploadButton = do
-      targetEleMay <- D.input [P._type "file", evTargetElem <$> P.onChange]
+      targetEleMay <- D.span [] [
+          D.div_ [MC.uploadDescr] empty
+        , D.input [P._type "file", evTargetElem <$> P.onChange]
+        ]
       blobMay <- liftEffect $ runMaybeT do
         targetEle <- MaybeT targetEleMay
         targHtmlEle <- MaybeT $ pure $ HTMLIn.fromElement targetEle
@@ -239,7 +242,7 @@ copyButton cstr = dyn $ go cstr
   where
     go str = step str $ do
       _ <- D.button_ [MC.clipBtn, P.onClick, P.disabled $ null str] $
-        D.text "Copy to Clipboard"
+        D.text "Copy XML to Clipboard"
       _ <- liftEffect $ copyToClipboard str
       pure $ go str
 
@@ -468,6 +471,7 @@ type PartialPols = NonEmptyArray (Opt.Option InstitutionPolicyRowOpts)
 accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
 accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   display $ D.div_ [MC.recordHeader] empty
+  display $ D.div_ [MC.reloadDescr] empty
   D.div_ [MC.recFlexBox] do
     newRec <- D.div_ [MC.recEditor] do
       let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
