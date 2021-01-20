@@ -530,3 +530,8 @@ getInputText id = do
 
 getInputTextLE :: forall m. MonadEffect m => String -> m (Maybe String)
 getInputTextLE id = liftEffect $ getInputText id
+
+tabLink :: forall a. String -> Widget HTML a -> Widget HTML a
+tabLink url linkObj = D.a_ [
+      P.href url, P.target "_blank", P.rel "noopener noreferrer"
+    ] linkObj

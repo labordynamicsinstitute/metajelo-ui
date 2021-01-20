@@ -9,6 +9,7 @@ import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
+import Control.Alt ((<|>))
 import Control.Apply ((*>))
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
@@ -44,7 +45,7 @@ import Effect.Class.Console (log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
-import Foreign (ForeignError, MultipleErrors)
+import Foreign (ForeignError, MultipleErrors, renderForeignError)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
@@ -54,7 +55,7 @@ import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBox
                          , errorDisplay, evTargetElem, getInputTextLE, menuSignal
                          , mkDesc, natInput
                          , nonEmptyArrayView, polPolTypeIs, runEffectInit
-                         , showDescSig, textInput, urlInput)
+                         , showDescSig, tabLink, textInput, urlInput)
 import Metajelo.Types as M
 import Metajelo.View as MV
 import Metajelo.XPaths as MX
@@ -250,12 +251,24 @@ dataCiteErrorWidg doi dcResTupMay = case dcResTupMay of
       fatalErrors = case dCiteEi of
         Left someFErrs -> toUnfoldable someFErrs
         Right _ -> []
-    in empty -- TODO
-  where
-    arrayErrorWidg :: Array ForeignError -> Widget HTML a
-    arrayErrorWidg errs = if A.null errs then empty else D.div [] [
-      -- TODO
+      fErrWidg = arrayErrorWidg [MC.dataCiteFatal] fatalErrors
+      nfErrWidg = arrayErrorWidg [MC.dataCiteNonFatal] nfErrs
+    in D.div [] [
+        D.p_ [] $ (D.text "For more information on this record, see ")
+          <|> (tabLink ("https://search.datacite.org/works/" <> doi)
+            $ D.text "DataCite")
+          <|> D.text " or "
+          <|> (tabLink ("https://dx.doi.org/" <> doi)
+            $ D.text "resolve the DOI")
+          <|> D.text "."
+      , D.br', fErrWidg, nfErrWidg
       ]
+  where
+    arrayErrorWidg :: Array (P.ReactProps a) -> Array ForeignError -> Widget HTML a
+    arrayErrorWidg props errs =
+      if A.null errs then empty
+      else D.div_ props $ D.ul [] $
+        errs <#> (\e -> D.li_ [] $ D.text $ renderForeignError e)
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
