@@ -20,8 +20,10 @@ import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
+import Data.Either.Extra (catLefts)
 import Data.Foldable (fold, foldMap)
 import Data.Functor (void, (<#>), (<$))
+import Data.List.NonEmpty (toUnfoldable)
 import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
@@ -42,7 +44,7 @@ import Effect.Class.Console (log)
 import Effect.Exception as EX
 import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
-import Foreign (MultipleErrors)
+import Foreign (ForeignError, MultipleErrors)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassProps as MWC
@@ -61,7 +63,7 @@ import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
-               , map, pure, show, unit, ($), (<$>), (<>), (>>=))
+               , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL, parsePublicURL, urlToString)
 import Web.DOM.Document (createElement) as DOM
@@ -172,6 +174,8 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
       "Error reading XML - please make sure it is well-formed.")
 
 type DataCiteRetrieval = Maybe (JSONWithErr (Either MultipleErrors Resource))
+type DataCiteRetrievalTupMay =
+  Maybe (Tuple (Either MultipleErrors Resource) (Array ForeignError))
 
 -- In `dataCiteButtonSig`, it is probably better to do something like
 -- Elm (https://github.com/purescript-concur/purescript-concur-react/blob/master/examples/src/Test/TheElmArchitecture.purs#L32)
@@ -236,6 +240,22 @@ fillWithDataCite spOpt dcRes = execState (do
         get >>= Opt.maySetOptState (SProxy :: _ "_numCreators")
           (Just _numCreators)
       ) bMDorig
+
+dataCiteErrorWidg :: forall a. String -> DataCiteRetrievalTupMay
+  -> Widget HTML a
+dataCiteErrorWidg doi dcResTupMay = case dcResTupMay of
+  Nothing -> empty
+  Just dataCiteJsonTup@(Tuple dCiteEi nfErrs) ->
+    let
+      fatalErrors = case dCiteEi of
+        Left someFErrs -> toUnfoldable someFErrs
+        Right _ -> []
+    in empty -- TODO
+  where
+    arrayErrorWidg :: Array ForeignError -> Widget HTML a
+    arrayErrorWidg errs = if A.null errs then empty else D.div [] [
+      -- TODO
+      ]
 
 copyButton :: forall a. String -> Widget HTML a
 copyButton cstr = dyn $ go cstr
@@ -562,13 +582,12 @@ accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   display $ D.div_ [MC.productHeader] empty
   dataCiteJsonWMay <- dataCiteButtonSig
-  prodOpt <- pure $ case dataCiteJsonWMay of
+  let dcTupMay = (runWriter <<< unwrap) <$> dataCiteJsonWMay
+  prodOpt <- pure $ case dcTupMay of
     Nothing -> prodOpt0
-    Just dataCiteJsonW ->
-      let dataCiteJsonTup@(Tuple dCiteEi _) = runWriter $ unwrap dataCiteJsonW
-      in case dCiteEi of
-        Right dCite -> fillWithDataCite prodOpt0 dCite
-        Left _ -> prodOpt0
+    Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
+      Right dCite -> fillWithDataCite prodOpt0 dCite
+      Left _ -> prodOpt0
   -- TODO : add datacite error handling
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
