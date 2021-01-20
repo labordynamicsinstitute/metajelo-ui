@@ -220,9 +220,14 @@ dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
 fillWithDataCite :: Opt.Option SupplementaryProductRowOpts -> Resource
   -> Opt.Option SupplementaryProductRowOpts
 fillWithDataCite spOpt dcRes = execState (do
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") resourceID_opt
     get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt") (Just bMDnew)
   ) spOpt
   where
+    resourceID_opt = Just $ Opt.fromRecord {
+        identifier: dcRes.data.attributes.doi
+      , identifierType: M.DOI
+      }
     bMDorig = getOpt (SProxy :: _ "basicMetadata_opt") spOpt
     titlesOrigMay = Opt.get (SProxy :: _ "titles") bMDorig
     dcTitles = (\t -> t.title) <$> dcRes.data.attributes.titles
