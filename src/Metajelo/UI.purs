@@ -226,7 +226,6 @@ fillWithDataCite spOpt dcRes = execState (do
       (Just dcRes.data.attributes.formats)
     get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt") resourceType_opt
     get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") (Just locNew)
-
   ) spOpt
   where
     resourceID_opt = Just $ Opt.fromRecord {
@@ -349,6 +348,7 @@ type SupplementaryProductExtra r = (
 , _numFormats :: Int
 , resMdsOpts_opt :: Opt.Option ResourceMetadataSourceRowOpts
 , locationOpts_opt :: Opt.Option LocationRowOpts
+, dataCiteParse :: DataCiteRetrievalTupMay
 , descs_on :: Boolean
 | r
 )
@@ -422,8 +422,6 @@ fillLocationRowExtra loc = execState (do
       (Just institutionContact_opt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies_opt")
       (Just iPol_opts)
-    get >>= Opt.maySetOptState (SProxy :: _ "versioning")
-      (Just loc.versioning)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just true)
   ) locOptInit
   where
@@ -628,6 +626,8 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
       Right dCite -> fillWithDataCite prodOpt0 dCite
       Left _ -> prodOpt0
+  let dcTupMaySave =
+        Opt.getWithDefault dcTupMay (SProxy :: _ "dataCiteParse") prodOpt
   -- TODO : add datacite error handling
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
@@ -668,6 +668,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
       (Just resMdMay)
     get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") locOptMay
     get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
+    get >>= Opt.maySetOptState (SProxy :: _ "dataCiteParse") (Just dcTupMaySave)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
   ) prodOpt
   -- TODO: move to sidebar when full preview unavailable
@@ -1011,6 +1012,7 @@ updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
     )
   )
 
+-- TODO convet to CtrlSignal that holds the current tab (Int)
 makeSidebar :: forall a. Maybe M.MetajeloRecord -> Unit -> Int -> Widget HTML a
 makeSidebar recMay dataCite ix = createTabWidget tabPages 0
   where
