@@ -22,10 +22,10 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
 import Data.Either.Extra (catLefts)
-import Data.Foldable (fold, foldMap)
+import Data.Foldable (fold, foldMap, intercalate)
 import Data.Functor (void, (<#>), (<$))
 import Data.List.NonEmpty (toUnfoldable)
-import Data.Maybe (Maybe(..), fromMaybe, isNothing, maybe)
+import Data.Maybe (Maybe(..), fromMaybe, isJust, isNothing, maybe)
 import Data.Maybe.First (First(..))
 import Data.Monoid (mempty)
 import Data.Newtype (unwrap)
@@ -222,11 +222,22 @@ fillWithDataCite :: Opt.Option SupplementaryProductRowOpts -> Resource
 fillWithDataCite spOpt dcRes = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") resourceID_opt
     get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt") (Just bMDnew)
+    get >>= Opt.maySetOptState (SProxy :: _ "format")
+      (Just dcRes.data.attributes.formats)
+    get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt") resourceType_opt
+    get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") (Just locNew)
+
   ) spOpt
   where
     resourceID_opt = Just $ Opt.fromRecord {
         identifier: dcRes.data.attributes.doi
       , identifierType: M.DOI
+      }
+    description = intercalate "\n\n"
+      $ (\d -> d.description) <$> dcRes.data.attributes.descriptions
+    resourceType_opt = Just $ Opt.fromRecord {
+        description: description
+      , generalType: dcRes.data.attributes.types.resourceTypeGeneral
       }
     bMDorig = getOpt (SProxy :: _ "basicMetadata_opt") spOpt
     titlesOrigMay = Opt.get (SProxy :: _ "titles") bMDorig
@@ -245,7 +256,16 @@ fillWithDataCite spOpt dcRes = execState (do
         get >>= Opt.maySetOptState (SProxy :: _ "creators") (Just creatorsNew)
         get >>= Opt.maySetOptState (SProxy :: _ "_numCreators")
           (Just _numCreators)
+        get >>= Opt.maySetOptState (SProxy :: _ "publicationYear")
+          (Just dcRes.data.attributes.publicationYear)
       ) bMDorig
+    locOrig = getOpt (SProxy :: _ "locationOpts_opt") spOpt
+    locNew :: Opt.Option LocationRowOpts
+    locNew = execState (
+      get >>= Opt.maySetOptState (SProxy :: _ "versioning")
+        (Just $ isJust dcRes.data.attributes.version)
+      ) locOrig
+
 
 dataCiteErrorWidg :: forall a. String -> DataCiteRetrievalTupMay
   -> Widget HTML a
@@ -402,6 +422,8 @@ fillLocationRowExtra loc = execState (do
       (Just institutionContact_opt)
     get >>= Opt.maySetOptState (SProxy :: _ "institutionPolicies_opt")
       (Just iPol_opts)
+    get >>= Opt.maySetOptState (SProxy :: _ "versioning")
+      (Just loc.versioning)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just true)
   ) locOptInit
   where
