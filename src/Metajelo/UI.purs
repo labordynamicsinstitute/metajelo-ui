@@ -311,6 +311,7 @@ type MetajeloRecordExtra r = (
 , relId_opts :: PartialRelIds
 , _numSupProds :: Int
 , supProd_opts :: PartialProds
+, tabIx :: Int
 , descs_on :: Boolean
 | r
 )
@@ -531,6 +532,10 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   display $ D.div_ [MC.recordHeader] empty
   display $ D.div_ [MC.reloadDescr] empty
   D.div_ [MC.recFlexBox] do
+    let sProdArr = fromMaybe [] $ NA.toArray
+          <$> (Opt.get (SProxy :: _ "supProd_opts") recOpt')
+    let dcParseTups = A.catMaybes
+          $ (\p -> Opt.get (SProxy :: _ "dataCiteParse") p) <$> sProdArr
     newRec <- D.div_ [MC.recEditor] do
       let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
       descsOn <- showDescSig descsOnInit
@@ -549,8 +554,11 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
         get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
       ) recOpt
     let newRecMay = Opt.getSubset newRec
-    D.div_ [MC.sideBar] $ display $ makeSidebar newRecMay unit 0
-    pure newRec
+    let tabIxPrior = Opt.getWithDefault 0 (SProxy :: _ "tabIx") newRec
+    tabIx <- makeSidebar newRecMay dcParseTups tabIxPrior
+    pure $ execState (
+      get >>= Opt.maySetOptState (SProxy :: _ "tabIx") (Just tabIx)
+    ) newRec
 
 recWidg :: forall a. Maybe M.MetajeloRecord ->  Widget HTML a
 recWidg recMay = do
@@ -1013,8 +1021,12 @@ updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
   )
 
 -- TODO convet to CtrlSignal that holds the current tab (Int)
-makeSidebar :: forall a. Maybe M.MetajeloRecord -> Unit -> Int -> Widget HTML a
-makeSidebar recMay dataCite ix = createTabWidget tabPages 0
+makeSidebar :: forall a.
+     Maybe M.MetajeloRecord
+  -> Array DataCiteRetrievalTupMay
+  -> CtrlSignal HTML Int
+makeSidebar recMay dataCitePArr ix = D.div_ [MC.sideBar]
+  $ createTabSignal tabPages ix
   where
     tabPages = [previewTP, dataCiteTP]
     previewTP = {
@@ -1033,13 +1045,15 @@ type TabPage = {
 , page :: Page
 }
 
-createTabWidget :: forall a. Array TabPage -> Int -> Widget HTML a
+createTabSignal :: Array TabPage -> CtrlSignal HTML Int
+createTabSignal tPages ix0 = loopW ix0 $ createTabWidget tPages
+
+createTabWidget :: Array TabPage -> Int -> Widget HTML Int
 createTabWidget tPages ix0 = do
-  tabSel <- tabPageDiv' [
+  tabPageDiv' [
     D.nav [MC.sideBarNav] $ tabIndexer tabs
   , ix0 <$ pageAt ix0
   ]
-  createTabWidget tPages tabSel
   where
     tabIndexer :: Array Tab -> Array (Widget HTML Int)
     tabIndexer ts = map mkIxedTw $ A.zip (0 `A.(..)` A.length ts) ts
