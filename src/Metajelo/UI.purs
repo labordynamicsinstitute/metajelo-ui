@@ -22,7 +22,7 @@ import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
 import Data.Either (Either(..), hush)
 import Data.Either.Extra (catLefts)
-import Data.Foldable (fold, foldMap, intercalate)
+import Data.Foldable (fold, foldMap, intercalate, oneOf)
 import Data.Functor (void, (<#>), (<$))
 import Data.List.NonEmpty (toUnfoldable)
 import Data.Maybe (Maybe(..), fromMaybe, isJust, isNothing, maybe)
@@ -175,20 +175,23 @@ uploadButtonSig = loopW Opt.empty $ \_ -> D.div_ [] do
       "Error reading XML - please make sure it is well-formed.")
 
 type DataCiteRetrieval = Maybe (JSONWithErr (Either MultipleErrors Resource))
-type DataCiteRetrievalTupMay =
-  Maybe (Tuple (Either MultipleErrors Resource) (Array ForeignError))
+type DataCiteRetrievalTupMay =  Maybe (Tuple (Either MultipleErrors Resource) (Array ForeignError))
+type DataCiteState = {
+    doi :: String
+  , dCiteTupMay :: DataCiteRetrievalTupMay
+}
 
 -- In `dataCiteButtonSig`, it is probably better to do something like
 -- Elm (https://github.com/purescript-concur/purescript-concur-react/blob/master/examples/src/Test/TheElmArchitecture.purs#L32)
 -- rather than relying on `getElementbyId`.
 -- Even better my be reactRef :
 -- https://github.com/purescript-concur/purescript-concur-react/blob/master/src/Concur/React/Widgets.purs#L30
-dataCiteButtonSig :: Signal HTML DataCiteRetrieval
-dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
+dataCiteButtonSig :: Signal HTML (Tuple String DataCiteRetrieval)
+dataCiteButtonSig = loopW (Tuple "" Nothing) $ \_ -> D.div_ [] dataCiteButton
   where
     dcDoiInputId = MCU.mjUiClassPfx <> "dataCiteDOI_Input"
     dCiteJsonUrlPfx = "https://api.datacite.org/dois/"
-    dataCiteButton :: Widget HTML DataCiteRetrieval
+    dataCiteButton :: Widget HTML (Tuple String DataCiteRetrieval)
     dataCiteButton = D.div_ [] do
       void $ D.button_ [P.onClick] $ D.text "Retrieve DataCite Record"
       doiMay :: Maybe String <- D.span [] [
@@ -202,14 +205,14 @@ dataCiteButtonSig = loopW Nothing $ \_ -> D.div_ [] dataCiteButton
           Left err -> errorBox $ EX.error err
           Right jsonUrl -> do
             res <- liftAff $ AJ.get AJ.string $ urlToString jsonUrl
-            processResponse res
-    processResponse :: Either AJ.Error (AJ.Response String)
-      ->  Widget HTML DataCiteRetrieval
-    processResponse res = case res of
+            processResponse doi res
+    processResponse :: String -> Either AJ.Error (AJ.Response String)
+      -> Widget HTML (Tuple String DataCiteRetrieval)
+    processResponse doi res = case res of
       Left err -> errorBox $ EX.error $
         "GET /api response failed to decode: " <> AJ.printError err
-      Right response -> pure $ Just $ readRecordJSON response.body
-    errorBox :: EX.Error -> Widget HTML DataCiteRetrieval
+      Right response -> pure $ Tuple doi (Just $ readRecordJSON response.body)
+    errorBox :: EX.Error -> Widget HTML (Tuple String DataCiteRetrieval)
     errorBox err = D.div [] [
         dataCiteButton
       , D.div_ [MWC.errorDisplayBox] do
@@ -265,11 +268,9 @@ fillWithDataCite spOpt dcRes = execState (do
         (Just $ isJust dcRes.data.attributes.version)
       ) locOrig
 
-
-dataCiteErrorWidg :: forall a. String -> DataCiteRetrievalTupMay
-  -> Widget HTML a
-dataCiteErrorWidg doi dcResTupMay = case dcResTupMay of
-  Nothing -> empty
+dataCiteErrorWidg :: forall a. DataCiteState -> Widget HTML a
+dataCiteErrorWidg dcState = case dcState.dCiteTupMay of
+  Nothing -> D.text "Nothing" -- empty -- FIXME: should be empty (DEBUG)
   Just dataCiteJsonTup@(Tuple dCiteEi nfErrs) ->
     let
       fatalErrors = case dCiteEi of
@@ -279,10 +280,10 @@ dataCiteErrorWidg doi dcResTupMay = case dcResTupMay of
       nfErrWidg = arrayErrorWidg [MC.dataCiteNonFatal] nfErrs
     in D.div [] [
         D.p_ [] $ (D.text "For more information on this record, see ")
-          <|> (tabLink ("https://search.datacite.org/works/" <> doi)
+          <|> (tabLink ("https://search.datacite.org/works/" <> dcState.doi)
             $ D.text "DataCite")
           <|> D.text " or "
-          <|> (tabLink ("https://dx.doi.org/" <> doi)
+          <|> (tabLink ("https://dx.doi.org/" <> dcState.doi)
             $ D.text "resolve the DOI")
           <|> D.text "."
       , D.br', fErrWidg, nfErrWidg
@@ -349,7 +350,7 @@ type SupplementaryProductExtra r = (
 , _numFormats :: Int
 , resMdsOpts_opt :: Opt.Option ResourceMetadataSourceRowOpts
 , locationOpts_opt :: Opt.Option LocationRowOpts
-, dataCiteParse :: DataCiteRetrievalTupMay
+, dataCiteState :: DataCiteState
 , descs_on :: Boolean
 | r
 )
@@ -534,8 +535,9 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   D.div_ [MC.recFlexBox] do
     let sProdArr = fromMaybe [] $ NA.toArray
           <$> (Opt.get (SProxy :: _ "supProd_opts") recOpt')
-    let dcParseTups = A.catMaybes
-          $ (\p -> Opt.get (SProxy :: _ "dataCiteParse") p) <$> sProdArr
+    let dcParseTups = A.catMaybes $
+          (\p -> Opt.get (SProxy :: _ "dataCiteState") p) <$> sProdArr
+    pure $ unsafePerformEffect $ log $ "dcParseTups len is " <> (show $ A.length dcParseTups)
     newRec <- D.div_ [MC.recEditor] do
       let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
       descsOn <- showDescSig descsOnInit
@@ -627,16 +629,15 @@ accumulateMetajeloRecUI recOpt = do
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
   display $ D.div_ [MC.productHeader] empty
-  dataCiteJsonWMay <- dataCiteButtonSig
+  Tuple dCiteDOI dataCiteJsonWMay <- dataCiteButtonSig
   let dcTupMay = (runWriter <<< unwrap) <$> dataCiteJsonWMay
   prodOpt <- pure $ case dcTupMay of
     Nothing -> prodOpt0
     Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
       Right dCite -> fillWithDataCite prodOpt0 dCite
       Left _ -> prodOpt0
-  let dcTupMaySave =
-        Opt.getWithDefault dcTupMay (SProxy :: _ "dataCiteParse") prodOpt
-  -- TODO : add datacite error handling
+  let dcTupState = Opt.getWithDefault {doi: dCiteDOI, dCiteTupMay: dcTupMay}
+        (SProxy :: _ "dataCiteState") prodOpt
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
   basicMdOpt <- accumulateBasicMetadata $
@@ -676,7 +677,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
       (Just resMdMay)
     get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") locOptMay
     get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
-    get >>= Opt.maySetOptState (SProxy :: _ "dataCiteParse") (Just dcTupMaySave)
+    get >>= Opt.maySetOptState (SProxy :: _ "dataCiteState") (Just dcTupState)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
   ) prodOpt
   -- TODO: move to sidebar when full preview unavailable
@@ -1021,9 +1022,9 @@ updateDescOn sprxy anOpt descsOn = ((Opt.get sprxy anOpt)
   )
 
 -- TODO convet to CtrlSignal that holds the current tab (Int)
-makeSidebar :: forall a.
+makeSidebar ::
      Maybe M.MetajeloRecord
-  -> Array DataCiteRetrievalTupMay
+  -> Array DataCiteState
   -> CtrlSignal HTML Int
 makeSidebar recMay dataCitePArr ix = D.div_ [MC.sideBar]
   $ createTabSignal tabPages ix
@@ -1035,7 +1036,7 @@ makeSidebar recMay dataCitePArr ix = D.div_ [MC.sideBar]
       }
     dataCiteTP = {
         tab: D.text "DataCite Retrieval"
-      , page: D.text "TODO"
+      , page: oneOf $ dataCiteErrorWidg <$> dataCitePArr
     }
 
 type Tab = Widget HTML Void
