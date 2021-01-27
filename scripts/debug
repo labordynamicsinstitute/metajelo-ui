@@ -6,7 +6,7 @@ GCC=$(npm bin)/google-closure-compiler
 
 preGccBuildSteps () {
   rimraf prod dist && mkdir prod && ln -sfn ../css prod/css && \
-    spago build && spago bundle-module --main Metajelo.UI --to prod/index.prod.js && \
+    spago build --purs-args "--verbose-errors" && spago bundle-module --main Metajelo.UI --to prod/index.prod.js && \
     cp static/index.* prod/
 }
 
@@ -15,4 +15,3 @@ cp prod/index.prod.js prod/index.opt.js && \
 # "$GCC" --js prod/index.prod.js --js_output_file prod/index.opt.js && \
 cross-env NODE_ENV=development parcel build --public-url ./ prod/index.html --no-minify
 #  parcel build --public-url ./ prod/index.html
-

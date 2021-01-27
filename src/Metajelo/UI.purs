@@ -1,7 +1,7 @@
 module Metajelo.UI where
 
 
-import Affjax (Error, Response, get, printError) as AJ
+import Affjax (Error(..), Response, get, printError) as AJ
 import Affjax.ResponseFormat (string) as AJ
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
@@ -11,6 +11,7 @@ import Concur.React.Props as P
 import Concur.React.Run (runWidgetInDom)
 import Control.Alt ((<|>))
 import Control.Apply ((*>))
+import Control.Monad.Error.Class (try)
 import Control.Monad.Except.Trans (ExceptT(..), runExceptT)
 import Control.Monad.Maybe.Trans (MaybeT(..), runMaybeT)
 import Control.Monad.State
@@ -204,14 +205,16 @@ dataCiteButtonSig = loopW (Tuple "" Nothing) $ \_ -> D.div_ [] dataCiteButton
         Just doi -> case parsePublicURL $ dCiteJsonUrlPfx <> doi of
           Left err -> errorBox $ EX.error err
           Right jsonUrl -> do
-            res <- liftAff $ AJ.get AJ.string $ urlToString jsonUrl
+            res <- liftAff $ try $ AJ.get AJ.string $ urlToString jsonUrl
             processResponse doi res
-    processResponse :: String -> Either AJ.Error (AJ.Response String)
+    processResponse :: String -> Either EX.Error (Either AJ.Error (AJ.Response String))
       -> Widget HTML (Tuple String DataCiteRetrieval)
-    processResponse doi res = case res of
-      Left err -> errorBox $ EX.error $
-        "GET /api response failed to decode: " <> AJ.printError err
-      Right response -> pure $ Tuple doi (Just $ readRecordJSON response.body)
+    processResponse doi resEi =
+      let res = join $ lmap AJ.XHRError resEi
+      in case res of
+        Left err -> errorBox $ EX.error $
+          "GET /api response failed to decode: " <> AJ.printError err
+        Right response -> pure $ Tuple doi (Just $ readRecordJSON response.body)
     errorBox :: EX.Error -> Widget HTML (Tuple String DataCiteRetrieval)
     errorBox err = D.div [] [
         dataCiteButton
@@ -270,7 +273,7 @@ fillWithDataCite spOpt dcRes = execState (do
 
 dataCiteErrorWidg :: forall a. DataCiteState -> Widget HTML a
 dataCiteErrorWidg dcState = case dcState.dCiteTupMay of
-  Nothing -> D.text "Nothing" -- empty -- FIXME: should be empty (DEBUG)
+  Nothing -> empty
   Just dataCiteJsonTup@(Tuple dCiteEi nfErrs) ->
     let
       fatalErrors = case dCiteEi of
@@ -279,7 +282,8 @@ dataCiteErrorWidg dcState = case dcState.dCiteTupMay of
       fErrWidg = arrayErrorWidg [MC.dataCiteFatal] fatalErrors
       nfErrWidg = arrayErrorWidg [MC.dataCiteNonFatal] nfErrs
     in D.div [] [
-        D.p_ [] $ (D.text "For more information on this record, see ")
+        D.p_ [] $ (D.text $ "For more information on the record for "
+            <> dcState.doi <> ", see ")
           <|> (tabLink ("https://search.datacite.org/works/" <> dcState.doi)
             $ D.text "DataCite")
           <|> D.text " or "
@@ -537,7 +541,6 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
           <$> (Opt.get (SProxy :: _ "supProd_opts") recOpt')
     let dcParseTups = A.catMaybes $
           (\p -> Opt.get (SProxy :: _ "dataCiteState") p) <$> sProdArr
-    pure $ unsafePerformEffect $ log $ "dcParseTups len is " <> (show $ A.length dcParseTups)
     newRec <- D.div_ [MC.recEditor] do
       let descsOnInit = Opt.getWithDefault true (SProxy :: _ "descs_on") recOpt'
       descsOn <- showDescSig descsOnInit
@@ -636,8 +639,9 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
       Right dCite -> fillWithDataCite prodOpt0 dCite
       Left _ -> prodOpt0
-  let dcTupState = Opt.getWithDefault {doi: dCiteDOI, dCiteTupMay: dcTupMay}
-        (SProxy :: _ "dataCiteState") prodOpt
+  let dcTupStateDef= {doi: dCiteDOI, dCiteTupMay: dcTupMay}
+  let dcTupState = if isJust dcTupMay then dcTupStateDef
+        else Opt.getWithDefault dcTupStateDef (SProxy :: _ "dataCiteState") prodOpt
   let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
   display $ mkDesc "supplementaryProductEle" descsOn
   basicMdOpt <- accumulateBasicMetadata $
