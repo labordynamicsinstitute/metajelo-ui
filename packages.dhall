@@ -168,7 +168,7 @@ let additions =
           { dependencies =
             [ "effect", "functors", "generics-rep", "naturals", "simple-json" ]
           , repo = "https://github.com/CornellCAC/purescript-datacite.git"
-          , version = "e05fad471107e923c09c78d525144ca1c3cc53f8"
+          , version = "9cdd6e644fcc2b8fe1664d3a89de74f4c6722521"
           }
         , either-extra =
           { dependencies =

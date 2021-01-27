@@ -2,6 +2,7 @@ module Metajelo.UI where
 
 
 import Affjax (Error(..), Response, get, printError) as AJ
+import Affjax.StatusCode as AJ
 import Affjax.ResponseFormat (string) as AJ
 import Concur.Core (Widget)
 import Concur.Core.FRP (Signal, display, dyn, loopS, loopW, step)
@@ -65,7 +66,7 @@ import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
-               , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=))
+               , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=), (>=), (<), (&&))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL, parsePublicURL, urlToString)
 import Web.DOM.Document (createElement) as DOM
@@ -214,7 +215,15 @@ dataCiteButtonSig = loopW (Tuple "" Nothing) $ \_ -> D.div_ [] dataCiteButton
       in case res of
         Left err -> errorBox $ EX.error $
           "GET /api response failed to decode: " <> AJ.printError err
-        Right response -> pure $ Tuple doi (Just $ readRecordJSON response.body)
+        Right response -> do
+          -- TODO: Ideally we won't need the statusIsOK check in subsequent
+          --       releases of affjax, see:
+          --      https://github.com/purescript-contrib/purescript-affjax/issues/34#issuecomment-742140874
+          case statusIsOk response.status of
+            true -> pure $ Tuple doi (Just $ readRecordJSON response.body)
+            false -> do
+              pure $ unsafePerformEffect $ log $ "made it to response.body is not ok" -- FIXME: DEBUG
+              errorBox $ EX.error $ "Body undefined, status is: " <> response.statusText
     errorBox :: EX.Error -> Widget HTML (Tuple String DataCiteRetrieval)
     errorBox err = D.div [] [
         dataCiteButton
@@ -222,6 +231,8 @@ dataCiteButtonSig = loopW (Tuple "" Nothing) $ \_ -> D.div_ [] dataCiteButton
           D.div_ [] $ D.span [MWC.errorDisplay] [D.text $ errorMsg err]
       ]
     errorMsg err = "In DataCite retrieval: " <> (show err)
+    statusIsOk (AJ.StatusCode s) = s >= 200 && s < 400
+
 
 fillWithDataCite :: Opt.Option SupplementaryProductRowOpts -> Resource
   -> Opt.Option SupplementaryProductRowOpts
@@ -1081,3 +1092,11 @@ createTabWidget tPages ix0 = do
           D.div [MC.sideBarCol] els
         ]
       ]
+
+{- foreign import unsafeIsOk :: forall a. a -> Boolean
+
+foreign import unsafeLog :: forall a. a -> Effect Unit
+
+foreign import unsafeIsString :: forall a. a -> Boolean
+
+-}
