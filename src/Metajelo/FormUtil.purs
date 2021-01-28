@@ -11,6 +11,7 @@ import Control.Alternative (empty)
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
+import Data.Array as A
 import Data.Array (catMaybes, filter, length, replicate, (:), (..))
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bifunctor (lmap)
@@ -105,19 +106,24 @@ emptyMeansOptional mayV = case mayV of
 
 -- | A non-formless incantation of menu
 menuSignal :: ∀ opt. BoundedEnum opt => IsOption opt =>
-  CtrlSignal HTML (Maybe opt)
-menuSignal currentOptMay = step currentOptMay do
-  let ranOnce = if (isJust currentOptMay) then true else false
+  Array opt -> CtrlSignal HTML (Maybe opt)
+menuSignal prefOpts currentOptMay = step currentOptMay do
+  let ranOnce = isJust currentOptMay
   newOpt <- D.select [
     P.value $ maybe "" toOptionValue currentOptMay
   , (fromOptionValue <<< P.unsafeTargetValue) <$> P.onChange
   ] (
       (D.option [P.disabled ranOnce] [D.text "Select ..."]) :
-      (upFromIncluding (bottom :: opt) <#> \opt ->
-        D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)])
+      prefOptWidgs <> (upFromIncluding (bottom :: opt) <#> optToWidg)
     )
-  pure $ menuSignal $ Just newOpt
-
+  pure $ menuSignal prefOpts $ Just newOpt
+  where
+    optToWidg :: ∀ a. opt -> Widget HTML a
+    optToWidg opt =
+      D.option [P.value (toOptionValue opt)] [D.text (toOptionLabel opt)]
+    prefOptWidgs = if A.null prefOpts then []
+                   else A.snoc (prefOpts <#> optToWidg)
+                     (D.option [P.disabled true] [D.text "────"])
 
 type CtrlSignal v a = a -> Signal v a
 
