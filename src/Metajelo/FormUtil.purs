@@ -66,7 +66,7 @@ import Text.Email.Validate as EA
 import Text.URL.Validate (URL, parsePublicURL, urlToNEString)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Node)
-import Web.DOM.Document (Document, toNonElementParentNode)
+import Web.DOM.Document (Document, getElementsByClassName, toNonElementParentNode)
 import Web.DOM.Element as Ele
 import Web.DOM.HTMLCollection as HTML
 import Web.HTML.HTMLDocument as HTML
@@ -535,3 +535,9 @@ tabLink :: forall a. String -> Widget HTML a -> Widget HTML a
 tabLink url linkObj = D.a_ [
       P.href url, P.target "_blank", P.rel "noopener noreferrer"
     ] linkObj
+
+getFirstElemByClass :: String -> Effect (Maybe Ele.Element)
+getFirstElemByClass cName = do
+  doc <- windowDoc
+  htmlColl <- getElementsByClassName cName doc
+  HTML.item 0 htmlColl

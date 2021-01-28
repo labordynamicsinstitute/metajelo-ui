@@ -50,11 +50,14 @@ import Effect.Unsafe (unsafePerformEffect)
 import Foreign (ForeignError, MultipleErrors, renderForeignError)
 import Global (encodeURIComponent)
 import Metajelo.CSS.UI.ClassProps as MC
+import Metajelo.CSS.Web.ClassNames as MWCN
 import Metajelo.CSS.Web.ClassProps as MWC
+import Metajelo.CSS.Web.Util (prependWebPfx)
 import Metajelo.CSS.UI.Util as MCU
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
                          , checkPolicy, dateInput, emailInput
-                         , errorDisplay, evTargetElem, getInputTextLE, menuSignal
+                         , errorDisplay, evTargetElem
+                         , getFirstElemByClass, getInputTextLE, menuSignal
                          , mkDesc, natInput
                          , nonEmptyArrayView, polPolTypeIs, runEffectInit
                          , showDescSig, tabLink, textInput, urlInput)
@@ -63,7 +66,7 @@ import Metajelo.View as MV
 import Metajelo.XPaths as MX
 import Metajelo.XPaths.Read as MXR
 import Metajelo.XPaths.Write as MXW
-import Nonbili.DOM (copyToClipboard)
+import Nonbili.DOM (copyToClipboard, innerHTML)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
                , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=), (>=), (<), (&&))
@@ -317,6 +320,21 @@ copyButton cstr = dyn $ go cstr
       _ <- D.button_ [MC.clipBtn, P.onClick, P.disabled $ null str] $
         D.text "Copy XML to Clipboard"
       _ <- liftEffect $ copyToClipboard str
+      pure $ go str
+
+copyHtmlButton :: forall a. String -> Widget HTML a
+copyHtmlButton cstr = dyn $ go cstr
+  where
+    go str = step str $ do
+      _ <- D.button_ [MC.clipBtn, P.onClick, P.disabled $ null str] $
+        D.text "Copy HTML to Clipboard"
+      previewEleMay <- liftEffect $
+        getFirstElemByClass $ prependWebPfx MWCN.record
+      -- TODO: ideally use outerHTML
+      previewStrMay <- liftEffect $ sequence $ innerHTML <$> previewEleMay
+      _ <- liftEffect $ case previewStrMay of
+        Just previewStr -> copyToClipboard previewStr
+        Nothing -> pure unit
       pure $ go str
 
 -- | ViewModel for MetajeloRecord
@@ -583,7 +601,10 @@ recWidg recMay = do
     D.div_ [MC.recPreviewHeader] empty
   , do
       mjStr <- liftEffect $ mjStrEff recMay'
-      D.div [MC.previewButtons] [downloadButton mjStr, copyButton mjStr]
+      D.div [MC.previewButtons] [
+          downloadButton mjStr
+        , copyButton mjStr
+        , copyHtmlButton mjStr]
   , D.br'
   , fold $ MV.mkRecordWidget <$> recMay'
   ]
