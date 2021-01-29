@@ -27,7 +27,6 @@
     "postcss-font-base64": "^1.0.5",
     "postcss-modules": "^3.2.2",
     "pulp": "^15.0.0",
-    "purescript": "^0.13.8",
     "purescript-psa": "^0.8.0",
     "react-devtools": "^4.10.1",
     "rimraf": "^3.0.2"
@@ -36,6 +35,9 @@
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "uuid": "^3.3.2"
+  },
+  "optionalDependencies": {
+    "purescript": "^0.13.8"
   },
   "browserslist": [
     "defaults"
