@@ -69,7 +69,7 @@ import Metajelo.XPaths.Write as MXW
 import Nonbili.DOM (copyToClipboard, innerHTML)
 import Option as Opt
 import Prelude (Unit, bind, discard, join
-               , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=), (>=), (<), (&&))
+               , map, pure, show, unit, (<<<), ($), (<$>), (<>), (>>=), (>=), (<), (&&), ($>), (+), (-))
 import Prim.Row as Prim.Row
 import Text.URL.Validate (URL, parsePublicURL, urlToString)
 import Web.DOM.Document (createElement) as DOM
@@ -91,6 +91,8 @@ runFormSPA divId = runWidgetInDom divId page
 page :: ∀ a. Widget HTML a
 page = do
   D.div' [
+       dyn $ loopW 0 counterWidget, -- FIXME: DEBUG - for perf testing
+       dyn $ textShow Nothing, -- FIXME: DEBUG - for perf testing
        {- let mjStr = "\xD800" in D.div [MC.previewButtons] [
             downloadButton mjStr
           , copyButton mjStr
@@ -1126,3 +1128,20 @@ foreign import unsafeLog :: forall a. a -> Effect Unit
 foreign import unsafeIsString :: forall a. a -> Boolean
 
 -}
+
+-- FIXME: DEBUG for perfTest
+counterWidget :: forall a. Int -> Widget HTML a
+counterWidget count = do
+  n <- D.div'
+        [ D.p' [D.text ("State: " <> show count)]
+        , D.button [P.onClick] [D.text "Increment"] $> count+1
+        , D.button [P.onClick] [D.text "Decrement"] $> count-1
+        ]
+  liftEffect (log ("COUNT IS NOW: " <> show n))
+  counterWidget n
+
+textShow :: CtrlSignal HTML (Maybe NonEmptyString)
+textShow txtIn = do
+  newTxt <- textInput txtIn
+  display $ D.text $ show newTxt
+  pure newTxt
