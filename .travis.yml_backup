@@ -1,3 +1,7 @@
+#
+# # Note - now using github actions instead
+#
+
 language: minimal
 
 services:
