@@ -13,7 +13,7 @@ jobs:
           # nix_path: nixpkgs=channel:nixos-20.09
           nix_path: nixpkgs=https://github.com/NixOS/nixpkgs/archive/0b8799ecaaf0dc6b4c11583a3c96ca5b40fcfdfb.tar.gz # in 20.09, Oct 9 2020
       - name: Build 👷
-        run: nix-shell -p spago nodejs purescript --command 'IMG_VER=0.13.8_r2 ./scripts/dist_build.sh'
+        run: nix-shell -p spago nodejs purescript --command './scripts/dist_build_commands.sh'
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
