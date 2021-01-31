@@ -361,7 +361,8 @@ fillMetajeloRecordExtra mjRec = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just identifier_opt)
     get >>= Opt.maySetOptState (SProxy :: _ "date_Ei") (Just $ Right mjRec.date)
     get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
-    get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") (Just relId_opts)
+    get >>= Opt.maySetOptState (SProxy :: _ "relId_opts")
+      (Just {active: true, relids: relId_opts})
     get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
     get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts")
       (Just {active: true, sprods: supProd_opts})
@@ -559,10 +560,13 @@ fillResourceMDSExtra resMDS = execState (do
     url_Ei = Right resMDS.url
 
 type MayOpt a = Maybe (Opt.Option a)
-type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
+type PartialRelIds = {
+  active :: Boolean
+, relids :: NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
+}
 type PartialProds = {
-    active:: Boolean
-  , sprods:: NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
+  active :: Boolean
+, sprods :: NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
 }
 type PartialPols = NonEmptyArray (Opt.Option InstitutionPolicyRowOpts)
 
@@ -642,7 +646,8 @@ accumulateMetajeloRecUI recOpt = do
     (Opt.get (SProxy :: _ "relId_opts") recOpt)
   let _numRelIds = fst relIdsTup
   let relIdOpts = snd relIdsTup
-  let relIdsMay = join $ (map sequence) $ ((map Opt.getAll) <$> relIdOpts)
+  let relIdsMay = join $ (map sequence)
+        $ ((map Opt.getAll) <$> ((\pr -> pr.relids) <$> relIdOpts))
 
   prodsTup <- supProdSigArray descsOn $ Tuple
     (Opt.getWithDefault 0 (SProxy :: _ "_numSupProds") recOpt)
@@ -738,7 +743,6 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
 supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray descsOn prodsMayOld =
   D.div_ [MC.products] do
-    -- display $ D.div_ [MC.productsHeader] empty
     let activePrior = maybe true (\pp -> pp.active) (snd prodsMayOld)
     isActive <- collapsibleS [MCN.productsHeader] activePrior
     let psProps = if isActive then [] else [P.style {display: "none"}]
@@ -891,9 +895,14 @@ accumulateRelatedIdent oldIdMay = D.div_ [MC.relatedId] do
 relIdSigArray :: CtrlSignal HTML (Tuple Int (Maybe PartialRelIds))
 relIdSigArray relIdsMay =
   D.div_ [MC.relatedIds] do
-    display $ D.div_ [MC.relatedIdsHeader] empty
-    D.div_ [MC.relatedIdList] $
-      nonEmptyArrayView accumulateRelatedIdent relIdsMay
+    let activePrior = maybe true (\pr -> pr.active) (snd relIdsMay)
+    isActive <- collapsibleS [MCN.relatedIdsHeader] activePrior
+    let rsProps = if isActive then [] else [P.style {display: "none"}]
+    relIdsNewMay <- D.div_ (MC.relatedIdList : rsProps)
+        $ nonEmptyArrayView accumulateRelatedIdent
+          $ Tuple (fst relIdsMay) ((\pr -> pr.relids) <$> (snd relIdsMay))
+    pure $ Tuple (fst relIdsNewMay)
+      ((snd relIdsNewMay) <#> \ris -> {active: isActive, relids: ris})
 
 accumulateBasicMetadata :: CtrlSignal HTML (Opt.Option BasicMetadataRowOpts)
 accumulateBasicMetadata oldBMD = D.div_ [MC.basicMetadata] do
