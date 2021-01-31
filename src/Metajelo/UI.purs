@@ -515,6 +515,7 @@ type InstitutionPolicyExtraRows r = (
   policy_str :: NonEmptyString
 , polPolType :: PolPolType
 , policy_ei :: Either String M.Policy
+, active :: Boolean
 , descs_on :: Boolean
 | r
 )
@@ -712,7 +713,7 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
     locOptMay <- accumulateLocation
       $ updateDescOn (SProxy :: _ "locationOpts_opt") prodOpt descsOn
     let locMay = join $ Opt.getSubset <$> locOptMay
-    newProd <- pure $ execState (do
+    pure $ Just $ execState (do
       get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
         (Just basicMdOpt)
       get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata") basicMdMay
@@ -732,10 +733,6 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
       get >>= Opt.maySetOptState (SProxy :: _ "active") (Just isActive)
       get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
     ) prodOpt
-    -- TODO: move to sidebar when full preview unavailable
-    -- let newProdMay = Opt.getSubset newProd
-    -- display $ prodWidg newProdMay
-    pure $ Just newProd
   where
     prodOpt0 = fromMaybe Opt.empty prodOptMay
     prodWidg :: forall a. Maybe M.SupplementaryProduct ->  Widget HTML a
@@ -1018,35 +1015,40 @@ accumulateContact oldIC = D.div_ [MC.institutionContact] do
 
 accumulatePolicy :: CtrlSignal HTML (MayOpt InstitutionPolicyRowOpts)
 accumulatePolicy oldPolMay = D.div_ [MC.institutionPolicy] do
-  display $ D.div_ [MC.institutionPolicyHeader] empty
-  let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") oldPol
-  polPolTypeMay <- D.div_ [MC.policy] do
-    display $ D.div_ [MC.policyHeader] empty
-    menuSignal [] $ Just $
-      Opt.getWithDefault FreeTextPolicy (SProxy :: _ "polPolType") oldPol
-  let polPolType = fromMaybe FreeTextPolicy polPolTypeMay
-  txtInMay <- D.div_ [MC.policy] $ textInput $
-    Opt.get (SProxy :: _ "policy_str") oldPol
-  let policy_ei = checkPolicy polPolType $ maybe "" toString txtInMay
-  display $ case policy_ei of
-    Right _ -> mempty
-    Left err -> errorDisplay $ Just err
-  let policyMay = hush policy_ei
-  polTypeMay <- D.div_ [MC.policyType] do
-    display $ D.div_ [MC.policyTypeHeader] empty
-    menuSignal [] $ Opt.get (SProxy :: _ "policyType") oldPol
-  appliesToProd <- D.div_ [MC.applies] $ do
-    display $ D.div_ [MC.appliesHeader] empty
-    display $ mkDesc "appliesToProductAttr" descsOn
-    menuSignal [] $ Opt.get (SProxy :: _ "appliesToProduct") oldPol
-  pure $ Just $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "polPolType") (Just polPolType)
-    get >>= Opt.maySetOptState (SProxy :: _ "policy_str") txtInMay
-    get >>= Opt.maySetOptState (SProxy :: _ "policy_ei") (Just policy_ei)
-    get >>= Opt.maySetOptState (SProxy :: _ "policy") policyMay
-    get >>= Opt.maySetOptState (SProxy :: _ "policyType") polTypeMay
-    get >>= Opt.maySetOptState (SProxy :: _ "appliesToProduct") appliesToProd
-  ) oldPol
+  let activePrior = fromMaybe true $
+        (Opt.getWithDefault true (SProxy :: _ "active")) <$> oldPolMay
+  isActive <- collapsibleS [MCN.institutionPolicyHeader] activePrior
+  let pProps = if isActive then [] else [P.style {display: "none"}]
+  D.div_ pProps do
+    let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") oldPol
+    polPolTypeMay <- D.div_ [MC.policy] do
+      display $ D.div_ [MC.policyHeader] empty
+      menuSignal [] $ Just $
+        Opt.getWithDefault FreeTextPolicy (SProxy :: _ "polPolType") oldPol
+    let polPolType = fromMaybe FreeTextPolicy polPolTypeMay
+    txtInMay <- D.div_ [MC.policy] $ textInput $
+      Opt.get (SProxy :: _ "policy_str") oldPol
+    let policy_ei = checkPolicy polPolType $ maybe "" toString txtInMay
+    display $ case policy_ei of
+      Right _ -> mempty
+      Left err -> errorDisplay $ Just err
+    let policyMay = hush policy_ei
+    polTypeMay <- D.div_ [MC.policyType] do
+      display $ D.div_ [MC.policyTypeHeader] empty
+      menuSignal [] $ Opt.get (SProxy :: _ "policyType") oldPol
+    appliesToProd <- D.div_ [MC.applies] $ do
+      display $ D.div_ [MC.appliesHeader] empty
+      display $ mkDesc "appliesToProductAttr" descsOn
+      menuSignal [] $ Opt.get (SProxy :: _ "appliesToProduct") oldPol
+    pure $ Just $ execState (do
+      get >>= Opt.maySetOptState (SProxy :: _ "polPolType") (Just polPolType)
+      get >>= Opt.maySetOptState (SProxy :: _ "policy_str") txtInMay
+      get >>= Opt.maySetOptState (SProxy :: _ "policy_ei") (Just policy_ei)
+      get >>= Opt.maySetOptState (SProxy :: _ "policy") policyMay
+      get >>= Opt.maySetOptState (SProxy :: _ "policyType") polTypeMay
+      get >>= Opt.maySetOptState (SProxy :: _ "appliesToProduct") appliesToProd
+      get >>= Opt.maySetOptState (SProxy :: _ "active") (Just isActive)
+    ) oldPol
   where
     oldPol = fromMaybe Opt.empty oldPolMay
 
