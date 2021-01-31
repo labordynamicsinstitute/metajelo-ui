@@ -674,63 +674,68 @@ accumulateMetajeloRecUI recOpt = do
 
 accumulateSuppProd :: CtrlSignal HTML (MayOpt SupplementaryProductRowOpts)
 accumulateSuppProd prodOptMay = D.div_ [MC.product] do
-  display $ D.div_ [MC.productHeader] empty
-  Tuple dCiteDOI dataCiteJsonWMay <- dataCiteButtonSig
-  let dcTupMay = (runWriter <<< unwrap) <$> dataCiteJsonWMay
-  prodOpt <- pure $ case dcTupMay of
-    Nothing -> prodOpt0
-    Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
-      Right dCite -> fillWithDataCite prodOpt0 dCite
-      Left _ -> prodOpt0
-  let dcTupStateDef= {doi: dCiteDOI, dCiteTupMay: dcTupMay}
-  let dcTupState = if isJust dcTupMay then dcTupStateDef
-        else Opt.getWithDefault dcTupStateDef (SProxy :: _ "dataCiteState") prodOpt
-  let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
-  display $ mkDesc "supplementaryProductEle" descsOn
-  basicMdOpt <- accumulateBasicMetadata $
-    getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
-  let basicMdMay = Opt.getSubset basicMdOpt
-  redIdOpt <- D.div_ [MC.resourceId] do
-    display $ D.div_ [MC.resourceIdHeader] empty
-    accumulateIdent descsOn $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
-  let resIdMay = Opt.getAll redIdOpt
-  resTypeOpt <- accumulateResType descsOn $
-    getOpt (SProxy :: _ "resourceType_opt") prodOpt
-  let resTypeMay = Opt.getSubset resTypeOpt
-  formatsTup <- formatSigArray descsOn $ Tuple
-    (Opt.getWithDefault 0 (SProxy :: _ "_numFormats") prodOpt)
-    (Opt.getWithDefault [] (SProxy :: _ "format") prodOpt)
-  let _numFormats = fst formatsTup
-  let formats = snd formatsTup
-  resMdOpt <- accumulateResMdSource $ fromMaybe Opt.empty
-    $ updateDescOn (SProxy :: _ "resMdsOpts_opt") prodOpt descsOn
-  let resMdMay = Opt.getSubset resMdOpt
-  locOptMay <- accumulateLocation
-    $ updateDescOn (SProxy :: _ "locationOpts_opt") prodOpt descsOn
-  let locMay = join $ Opt.getSubset <$> locOptMay
-  newProd <- pure $ execState (do
-    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
-      (Just basicMdOpt)
-    get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata") basicMdMay
-    get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") (Just redIdOpt)
-    get >>= Opt.maySetOptState (SProxy :: _ "resourceID") (Just resIdMay)
-    get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt")
-      (Just resTypeOpt)
-    get >>= Opt.maySetOptState (SProxy :: _ "resourceType") resTypeMay
-    get >>= Opt.maySetOptState (SProxy :: _ "_numFormats") (Just _numFormats)
-    get >>= Opt.maySetOptState (SProxy :: _ "format") (Just formats)
-    get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") (Just resMdOpt)
-    get >>= Opt.maySetOptState (SProxy :: _ "resourceMetadataSource")
-      (Just resMdMay)
-    get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") locOptMay
-    get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
-    get >>= Opt.maySetOptState (SProxy :: _ "dataCiteState") (Just dcTupState)
-    get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
-  ) prodOpt
-  -- TODO: move to sidebar when full preview unavailable
-  -- let newProdMay = Opt.getSubset newProd
-  -- display $ prodWidg newProdMay
-  pure $ Just newProd
+  let activePrior = fromMaybe true $
+        (Opt.getWithDefault true (SProxy :: _ "active")) <$> prodOptMay
+  isActive <- collapsibleS [MCN.productHeader] activePrior
+  let pProps = if isActive then [] else [P.style {display: "none"}]
+  D.div_ pProps do
+    Tuple dCiteDOI dataCiteJsonWMay <- dataCiteButtonSig
+    let dcTupMay = (runWriter <<< unwrap) <$> dataCiteJsonWMay
+    prodOpt <- pure $ case dcTupMay of
+      Nothing -> prodOpt0
+      Just dataCiteJsonTup@(Tuple dCiteEi _) -> case dCiteEi of
+        Right dCite -> fillWithDataCite prodOpt0 dCite
+        Left _ -> prodOpt0
+    let dcTupStateDef= {doi: dCiteDOI, dCiteTupMay: dcTupMay}
+    let dcTupState = if isJust dcTupMay then dcTupStateDef
+          else Opt.getWithDefault dcTupStateDef (SProxy :: _ "dataCiteState") prodOpt
+    let descsOn = Opt.getWithDefault true (SProxy :: _ "descs_on") prodOpt
+    display $ mkDesc "supplementaryProductEle" descsOn
+    basicMdOpt <- accumulateBasicMetadata $
+      getOpt (SProxy :: _ "basicMetadata_opt") prodOpt
+    let basicMdMay = Opt.getSubset basicMdOpt
+    redIdOpt <- D.div_ [MC.resourceId] do
+      display $ D.div_ [MC.resourceIdHeader] empty
+      accumulateIdent descsOn $ getOpt (SProxy :: _ "resourceID_opt") prodOpt
+    let resIdMay = Opt.getAll redIdOpt
+    resTypeOpt <- accumulateResType descsOn $
+      getOpt (SProxy :: _ "resourceType_opt") prodOpt
+    let resTypeMay = Opt.getSubset resTypeOpt
+    formatsTup <- formatSigArray descsOn $ Tuple
+      (Opt.getWithDefault 0 (SProxy :: _ "_numFormats") prodOpt)
+      (Opt.getWithDefault [] (SProxy :: _ "format") prodOpt)
+    let _numFormats = fst formatsTup
+    let formats = snd formatsTup
+    resMdOpt <- accumulateResMdSource $ fromMaybe Opt.empty
+      $ updateDescOn (SProxy :: _ "resMdsOpts_opt") prodOpt descsOn
+    let resMdMay = Opt.getSubset resMdOpt
+    locOptMay <- accumulateLocation
+      $ updateDescOn (SProxy :: _ "locationOpts_opt") prodOpt descsOn
+    let locMay = join $ Opt.getSubset <$> locOptMay
+    newProd <- pure $ execState (do
+      get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata_opt")
+        (Just basicMdOpt)
+      get >>= Opt.maySetOptState (SProxy :: _ "basicMetadata") basicMdMay
+      get >>= Opt.maySetOptState (SProxy :: _ "resourceID_opt") (Just redIdOpt)
+      get >>= Opt.maySetOptState (SProxy :: _ "resourceID") (Just resIdMay)
+      get >>= Opt.maySetOptState (SProxy :: _ "resourceType_opt")
+        (Just resTypeOpt)
+      get >>= Opt.maySetOptState (SProxy :: _ "resourceType") resTypeMay
+      get >>= Opt.maySetOptState (SProxy :: _ "_numFormats") (Just _numFormats)
+      get >>= Opt.maySetOptState (SProxy :: _ "format") (Just formats)
+      get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") (Just resMdOpt)
+      get >>= Opt.maySetOptState (SProxy :: _ "resourceMetadataSource")
+        (Just resMdMay)
+      get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt") locOptMay
+      get >>= Opt.maySetOptState (SProxy :: _ "location") locMay
+      get >>= Opt.maySetOptState (SProxy :: _ "dataCiteState") (Just dcTupState)
+      get >>= Opt.maySetOptState (SProxy :: _ "active") (Just isActive)
+      get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
+    ) prodOpt
+    -- TODO: move to sidebar when full preview unavailable
+    -- let newProdMay = Opt.getSubset newProd
+    -- display $ prodWidg newProdMay
+    pure $ Just newProd
   where
     prodOpt0 = fromMaybe Opt.empty prodOptMay
     prodWidg :: forall a. Maybe M.SupplementaryProduct ->  Widget HTML a
