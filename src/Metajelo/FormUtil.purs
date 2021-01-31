@@ -52,7 +52,9 @@ import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
 import Foreign.Object as FO
 import Global (readInt)
+import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
+import Metajelo.CSS.UI.Util as MC
 import Metajelo.SchemaInfo as MI
 import Metajelo.Types as M
 import Metajelo.XPaths.Read as MR
@@ -244,6 +246,16 @@ emailInput iVal = do
     prevTxt = case iVal of
       Left _ -> ""
       Right ea -> EA.toString ea
+
+collapsibleS :: Array String -> CtrlSignal HTML Boolean
+collapsibleS baseClasses b = loopW b $ collapsibleW baseClasses
+
+collapsibleW :: Array String -> Boolean -> Widget HTML Boolean
+collapsibleW baseClasses b = not b <$ D.div_ hProps empty
+  where
+    hProps = classProps : hPropsBase
+    classProps = MC.cList $ if b then MCN.active : baseClasses else baseClasses
+    hPropsBase = [P.onClick]
 
 checkBoxS :: CtrlSignal HTML Boolean
 checkBoxS b = step b do

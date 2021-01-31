@@ -19,6 +19,7 @@ import Control.Monad.State
 import Control.Monad.Writer (runWriter)
 import Control.Plus (empty)
 import Data.Array as A
+import Data.Array ((:))
 import Data.Array.NonEmpty as NA
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Bifunctor (lmap)
@@ -49,13 +50,14 @@ import Effect.Now (nowDateTime)
 import Effect.Unsafe (unsafePerformEffect)
 import Foreign (ForeignError, MultipleErrors, renderForeignError)
 import Global (encodeURIComponent)
+import Metajelo.CSS.UI.ClassNames as MCN
 import Metajelo.CSS.UI.ClassProps as MC
 import Metajelo.CSS.Web.ClassNames as MWCN
 import Metajelo.CSS.Web.ClassProps as MWC
 import Metajelo.CSS.Web.Util (prependWebPfx)
 import Metajelo.CSS.UI.Util as MCU
 import Metajelo.FormUtil (CtrlSignal, Email, PolPolType(..), arrayView, checkBoxS
-                         , checkPolicy, dateInput, emailInput
+                         , checkPolicy, collapsibleS, dateInput, emailInput
                          , errorDisplay, evTargetElem
                          , getFirstElemByClass, getInputTextLE, menuSignal
                          , mkDesc, natInput
@@ -224,9 +226,7 @@ dataCiteButtonSig = loopW (Tuple "" Nothing) $ \_ -> D.div_ [] dataCiteButton
           --      https://github.com/purescript-contrib/purescript-affjax/issues/34#issuecomment-742140874
           case statusIsOk response.status of
             true -> pure $ Tuple doi (Just $ readRecordJSON response.body)
-            false -> do
-              pure $ unsafePerformEffect $ log $ "made it to response.body is not ok" -- FIXME: DEBUG
-              errorBox $ EX.error $ "Body undefined, status is: " <> response.statusText
+            false -> errorBox $ EX.error $ "Body undefined, status is: " <> response.statusText
     errorBox :: EX.Error -> Widget HTML (Tuple String DataCiteRetrieval)
     errorBox err = D.div [] [
         dataCiteButton
@@ -363,7 +363,8 @@ fillMetajeloRecordExtra mjRec = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "_numRelIds") (Just _numRelIds)
     get >>= Opt.maySetOptState (SProxy :: _ "relId_opts") (Just relId_opts)
     get >>= Opt.maySetOptState (SProxy :: _ "_numSupProds") (Just _numSupProds)
-    get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts") (Just supProd_opts)
+    get >>= Opt.maySetOptState (SProxy :: _ "supProd_opts")
+      (Just {active: true, sprods: supProd_opts})
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just true)
   ) mjOptsInit
   where
@@ -372,7 +373,6 @@ fillMetajeloRecordExtra mjRec = execState (do
     _numRelIds = NA.length mjRec.relatedIdentifiers
     relId_opts = Opt.fromRecord <$> mjRec.relatedIdentifiers
     _numSupProds =  NA.length mjRec.supplementaryProducts
-    --TODO: as supProd_opts involves "Extra" view data, it needs a fill function:
     supProd_opts = fillSProdExtra <$> mjRec.supplementaryProducts
 
 -- | ViewModel for SupplementaryProduct
@@ -384,6 +384,7 @@ type SupplementaryProductExtra r = (
 , resMdsOpts_opt :: Opt.Option ResourceMetadataSourceRowOpts
 , locationOpts_opt :: Opt.Option LocationRowOpts
 , dataCiteState :: DataCiteState
+, active :: Boolean
 , descs_on :: Boolean
 | r
 )
@@ -403,6 +404,7 @@ fillSProdExtra sProd = execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "resMdsOpts_opt") resMdsOpts_opt
     get >>= Opt.maySetOptState (SProxy :: _ "locationOpts_opt")
       (Just locationOpts_opt)
+    get >>= Opt.maySetOptState (SProxy :: _ "active") (Just true)
     get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just true)
   ) sProdOptInit
   where
@@ -558,7 +560,10 @@ fillResourceMDSExtra resMDS = execState (do
 
 type MayOpt a = Maybe (Opt.Option a)
 type PartialRelIds = NonEmptyArray (Opt.Option M.RelatedIdentifierRows)
-type PartialProds = NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
+type PartialProds = {
+    active:: Boolean
+  , sprods:: NonEmptyArray (Opt.Option SupplementaryProductRowOpts)
+}
 type PartialPols = NonEmptyArray (Opt.Option InstitutionPolicyRowOpts)
 
 accumulateMetajeloRecord :: Signal HTML (Opt.Option MetajeloRecordRowOpts)
@@ -566,8 +571,8 @@ accumulateMetajeloRecord = loopS Opt.empty \recOpt' -> D.div_ [MC.record] do
   display $ D.div_ [MC.recordHeader] empty
   display $ D.div_ [MC.reloadDescr] empty
   D.div_ [MC.recFlexBox] do
-    let sProdArr = fromMaybe [] $ NA.toArray
-          <$> (Opt.get (SProxy :: _ "supProd_opts") recOpt')
+    let sProdArr = maybe [] (\pp -> NA.toArray pp.sprods)
+          (Opt.get (SProxy :: _ "supProd_opts") recOpt')
     let dcParseTups = A.catMaybes $
           (\p -> Opt.get (SProxy :: _ "dataCiteState") p) <$> sProdArr
     newRec <- D.div_ [MC.recEditor] do
@@ -644,7 +649,8 @@ accumulateMetajeloRecUI recOpt = do
     (Opt.get (SProxy :: _ "supProd_opts") recOpt)
   let _numSupProds = fst prodsTup
   let supProdOpts = snd prodsTup
-  let supProdsMay = join $ (map sequence) $ ((map Opt.getSubset) <$> supProdOpts)
+  let supProdsMay = join $ (map sequence) $
+        ((map Opt.getSubset) <$> ((\pp -> pp.sprods) <$> supProdOpts))
   pure $ execState (do
     get >>= Opt.maySetOptState (SProxy :: _ "identifier_opt") (Just idOpt)
     get >>= Opt.maySetOptState (SProxy :: _ "identifier") idMay
@@ -732,12 +738,17 @@ accumulateSuppProd prodOptMay = D.div_ [MC.product] do
 supProdSigArray :: Boolean -> CtrlSignal HTML (Tuple Int (Maybe PartialProds))
 supProdSigArray descsOn prodsMayOld =
   D.div_ [MC.products] do
-    display $ D.div_ [MC.productsHeader] empty
+    -- display $ D.div_ [MC.productsHeader] empty
+    let activePrior = maybe true (\pp -> pp.active) (snd prodsMayOld)
+    isActive <- collapsibleS [MCN.productsHeader] activePrior
+    let psProps = if isActive then [] else [P.style {display: "none"}]
     display $ mkDesc "supplementaryProductsEle" descsOn
-    D.div_ [MC.productList]
+    prodsMayNew <- D.div_ (MC.productList : psProps)
       $ nonEmptyArrayView accumulateSuppProd $ Tuple (fst prodsMayOld) prodsMay
+    pure $ Tuple (fst prodsMayNew)
+      ((snd prodsMayNew) <#> \pp -> {active: isActive, sprods: pp})
   where
-    prodsMay = (snd prodsMayOld) <#> (\ps -> ps <#> (\p -> execState (do
+    prodsMay = (snd prodsMayOld) <#> (\ps -> ps.sprods <#> (\p -> execState (do
       get >>= Opt.maySetOptState (SProxy :: _ "descs_on") (Just descsOn)
     ) p))
 
