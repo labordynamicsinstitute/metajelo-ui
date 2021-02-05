@@ -1,6 +1,8 @@
 # metajelo-ui
 
-[![Build Status](https://github.com/labordynamicsinstitute/metajelo-ui/workflows/Build%Status/badge.svg)](https://github.com/labordynamicsinstitute/metajelo-ui/actions)
+[![Deploy](https://github.com/labordynamicsinstitute/metajelo-ui/workflows/Build%Status/badge.svg)](https://github.com/labordynamicsinstitute/metajelo-ui/actions)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4484123.svg)](https://doi.org/10.5281/zenodo.4484123)
+
 
 Web tools to edit and display
 [metajelo](https://github.com/labordynamicsinstitute/metajelo) packages.
