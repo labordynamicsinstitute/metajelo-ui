@@ -6,5 +6,9 @@
     "purescript.addSpagoSources": true,
     "purescript.addNpmPath": true,
     "purescript.buildCommand": "spago build --purs-args --json-errors",
-    "nixEnvSelector.nixShellConfig": "${workspaceRoot}/shell.nix"
+    "nixEnvSelector.nixShellConfig": "${workspaceRoot}/shell.nix",
+    "spellchecker.ignoreWordsList": [
+      "spago",
+      "unminified"
+    ]
 }

@@ -168,7 +168,7 @@ let additions =
           { dependencies =
             [ "effect", "functors", "generics-rep", "naturals", "simple-json" ]
           , repo = "https://github.com/CornellCAC/purescript-datacite.git"
-          , version = "9cdd6e644fcc2b8fe1664d3a89de74f4c6722521"
+          , version = "v0.1.0"
           }
         , either-extra =
           { dependencies =
@@ -210,7 +210,7 @@ let additions =
             , "xpath-like"
             ]
             "https://github.com/labordynamicsinstitute/purescript-metajelo.git"
-            "37e46c618c78f25a12eed10bfcee82adb5bf7019"
+            "v4.0.0"
       , metajelo-web =
           mkPackage
             [ "prelude"
@@ -225,12 +225,12 @@ let additions =
             , "url-validator"
             ]
             "https://github.com/labordynamicsinstitute/metajelo-web.git"
-            "e919b0419210e5a43a22e33c05511f608124e1bf"
+            "v2.0.0"
       , metajelo-ui-css-classes =
           mkPackage
             [ "prelude", "concur-core", "concur-react" ]
             "https://github.com/labordynamicsinstitute/metajelo-ui-css-classes.git"
-            "v1.0.0"
+            "v1.0.1"
       , naturals =
           mkPackage
             [ "enums", "maybe", "prelude" ]

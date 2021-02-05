@@ -1,11 +1,32 @@
 # metajelo-ui
 
-[![Build Status](https://travis-ci.com/labordynamicsinstitute/metajelo-ui.svg?token=fzz41xcnJ15QPD7QhZkZ&branch=master)](https://travis-ci.com/labordynamicsinstitute/metajelo-ui)
+[![Build Status](https://github.com/labordynamicsinstitute/metajelo-ui/workflows/Build%Status/badge.svg)](https://github.com/labordynamicsinstitute/metajelo-ui/actions)
 
-Web tools to display
+Web tools to edit and display
 [metajelo](https://github.com/labordynamicsinstitute/metajelo) packages.
 
-# Retrieving and Integrating Metajelo-UI
+
+# Project dependencies
+
+The following dependencies were created specifically for metajelo, though `purescript-datacite`
+may have relevance beyond metajelo-related projects.
+
+- [purescript-datacite](https://github.com/CornellCAC/purescript-datacite) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4499120.svg)](https://doi.org/10.5281/zenodo.4499120) &mdash; Provides types and parsers for DataCite JSON; full types are not provided as yet, but types relevant to metajelo are generally supported.
+- [metajelo](https://github.com/labordynamicsinstitute/metajelo) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2577294.svg)](https://doi.org/10.5281/zenodo.2577294) &mdash; Schema definitions, presentations, and paper describing metajelo.
+- [purescript-metajelo](https://github.com/labordynamicsinstitute/purescript-metajelo) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4504661.svg)](https://doi.org/10.5281/zenodo.4504661) &mdash; This project contains type defintions, parsers, and XML generators for metajelo.
+- [metajelo-ui-css-classes](https://github.com/labordynamicsinstitute/metajelo-ui-css-classes) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4507962.svg)](https://doi.org/10.5281/zenodo.4507962)
+ &mdash; CSS classnames and an example SASS/CSS style used for both `metajelo-web` and `metajelo-ui` (this project).
+- [metajelo-web](https://github.com/labordynamicsinstitute/metajelo-web) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4507861.svg)](https://doi.org/10.5281/zenodo.4507861) &mdash; A small application and
+library for rendering a styled HTML preview of a metajelo XML document. Like this project, also includes
+a live demo on GitHub pages.
+
+The exact versions employed are sepcified in the `packages.dhall` of each project, or implicitly by
+the package set (which is also specified in `packages.dhall`),
+and in some cases may refer to a git commit rather than a sepecific version. However, we try to
+maintain the use of versioned dependencies in releases where possible. All of this applies for
+other library dependencies that aren't directly a part of this project, as well.
+
+# Retrieving and Integrating metajelo-UI
 
 ## Get the latest build
 
@@ -19,9 +40,9 @@ wget -r -np -k https://labordynamicsinstitute.github.io/metajelo-ui/
 
 ## Get a versioned build
 
-(TODO)
+See the GitHub releases.
 
-## CSS for Metajelo UI
+## CSS for metajelo UI
 
 By default, CSS files are retrieved from a [separate repository](https://github.com/labordynamicsinstitute/metajelo-ui-css-classes) using `scripts/getcss`; the file `css/style.css` contains some default styles used in our examples.
 Feel free to include it, or modify it (renaming the file is also possible):
@@ -83,6 +104,16 @@ An example is [CSS Reload](https://addons.mozilla.org/en-US/firefox/addon/css-re
 If you have the relevant build tools installed (`npm`, `spago`, `pulp`, etc.), you can
 build using `npm run build && npm run prod`. For a more convenient approach, see
 the section on Docker below, and for complete build commands used in CI, see
+`scripts/dist_build_commands.sh`. `npm run debug` will also create an unminified
+version that may be useful for debugging (additionally compilation errors may
+be far more verbose).
+
+Note that Continuous Integration (CI) is employed to build this package and deploy the
+resulting application to GitHub pages, which will host whatever the most recent successful
+build is from the `master` branch. Note that this may be an unversioned build.
+Previously, we used Travis-CI+Docker to achieve this, and now we use GitHub actions
+along with Nix packages to have pinned dependencies. The Travis Config
+and Dockerfile are still available, and all approaches still utilize
 `scripts/dist_build_commands.sh`.
 
 ## Docker
@@ -92,14 +123,14 @@ the command in the container with the CWD mounted and then exit. Alternatively
 if you want to issue multiple commands in the container quickly, you can
 run `./psc.sh bash`.
 
-## Updating Dependendencies or the Metajelo Schema
+## Updating Dependencies or the metajelo Schema
 
 Dependencies for JavaScript are minimal and are controlled by [npm](https://docs.npmjs.com/)
 and specified in `package.json`. PureScript dependencies are controlled by
 [spago](https://github.com/purescript/spago) and specified
 in `spago.dhall`, but in some cases, packages not included in the standard package
 set must also be described in `packages.dhall`. In particular, when updating
-the Metajelo schema to be used in metajelo-ui, it will be necessary to specify
+the metajelo schema to be used in metajelo-ui, it will be necessary to specify
 a new version of `purescript-metajelo` (with the `purescript-` prefix dropped
 in `packages.dhall`). This can simply be done by specifying a git commit hash
 or by specifying a version in the relevant section of `packages.dhall`.
