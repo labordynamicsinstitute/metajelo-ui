@@ -1,6 +1,6 @@
 # metajelo-ui
 
-[![Deploy](https://github.com/labordynamicsinstitute/metajelo-ui/workflows/Build%Status/badge.svg)](https://github.com/labordynamicsinstitute/metajelo-ui/actions)
+[![GitHub Actions](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Flabordynamicsinstitute%2Fmetajelo-ui%2Fbadge)](https://github.com/labordynamicsinstitute/metajelo-ui/actions)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4484123.svg)](https://doi.org/10.5281/zenodo.4484123)
 
 
