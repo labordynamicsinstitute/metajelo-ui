@@ -103,8 +103,11 @@ An example is [CSS Reload](https://addons.mozilla.org/en-US/firefox/addon/css-re
 
 # Building
 
-If you have the relevant build tools installed (`npm`, `spago`, `pulp`, etc.), you can
-build using `npm run build && npm run prod`. For a more convenient approach, see
+If you have the relevant build tools installed (`npm`, `spago`, `pulp`, etc.),
+You can run `npm install && npm run getcss` (once should suffice) to get JavaScript
+and CSS dependencies. Then you can
+build using `npm run build && npm run prod` (which also fetches PureScript dependencies
+in the build step). For a more convenient approach, see
 the section on Docker below, and for complete build commands used in CI, see
 `scripts/dist_build_commands.sh`. `npm run debug` will also create an unminified
 version that may be useful for debugging (additionally compilation errors may
