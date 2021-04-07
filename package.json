@@ -21,7 +21,7 @@
     "bower": "^1.8.12",
     "cross-env": "^7.0.3",
     "cssmin": "^0.4.3",
-    "cssnano": "^4.1.10",
+    "cssnano": "^4.1.11",
     "google-closure-compiler": "^20200927.0.0",
     "parcel-bundler": "^1.12.5",
     "postcss-font-base64": "^1.0.5",
