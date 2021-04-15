@@ -37,7 +37,7 @@
     "uuid": "^3.3.2"
   },
   "optionalDependencies": {
-    "purescript": "^0.13.8"
+    "purescript": "^0.14.0"
   },
   "browserslist": [
     "defaults"
