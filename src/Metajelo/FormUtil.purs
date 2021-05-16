@@ -2,7 +2,8 @@ module Metajelo.FormUtil where
 
 import Concur.Core (Widget)
 import Concur.Core.ElementBuilder (Element)
-import Concur.Core.FRP (Signal, debounce, display, fireOnce, justWait, loopS, loopW, oneShot, step)
+import Concur.Core.FRP (Signal, display, fireOnce, justWait, loopS, loopW, oneShot, step)
+import Concur.Core.Types (debounced)
 import Concur.React (HTML)
 import Concur.React.DOM as D
 import Concur.React.Props as P
@@ -11,16 +12,16 @@ import Control.Alternative (empty)
 import Control.Applicative (class Applicative)
 import Control.Apply (class Apply, apply)
 import Control.Extend (class Extend)
-import Data.Array as A
 import Data.Array (catMaybes, filter, length, replicate, (:), (..))
+import Data.Array as A
 import Data.Array.NonEmpty (NonEmptyArray, fromArray, toArray)
 import Data.Bifunctor (lmap)
 import Data.Bounded (bottom)
-import Data.Eq ((==))
 import Data.Date (canonicalDate)
 import Data.DateTime (DateTime(..))
 import Data.Either (Either(..), hush)
 import Data.Enum (class BoundedEnum, class Enum, class SmallBounded, upFromIncluding, toEnum)
+import Data.Eq ((==))
 import Data.Foldable (class Foldable, fold)
 import Data.Functor (class Functor)
 import Data.Generic.Rep (class Generic)
@@ -72,11 +73,11 @@ import Web.DOM (Node)
 import Web.DOM.Document (Document, getElementsByClassName, toNonElementParentNode)
 import Web.DOM.Element as Ele
 import Web.DOM.HTMLCollection as HTML
-import Web.HTML.HTMLDocument as HTML
-import Web.HTML.HTMLInputElement as HTML
 import Web.DOM.NonElementParentNode (getElementById)
 import Web.DOM.ParentNode (children)
 import Web.HTML (window)
+import Web.HTML.HTMLDocument as HTML
+import Web.HTML.HTMLInputElement as HTML
 import Web.HTML.Window (document)
 
 type Email = EA.EmailAddress
@@ -146,18 +147,18 @@ labelSig widg props sigIn = D.div_ props do
   sigIn
 
 textInputWidget :: String -> Widget HTML String
-textInputWidget txt =
+textInputWidget txt = debounced 1000 $
   D.input [P.defaultValue txt, P.unsafeTargetValue <$> P.onChange]
 
 textInput' :: CtrlSignal HTML String
-textInput' initVal = sig initVal
+textInput' initVal = sigNow initVal
   where
     -- Alternative to 'sig' that doesn't debounce, for debugging:
-    -- sigNow rs = step rs $ do
-    --   pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
-    --   rsNew <- textInputWidget rs
-    --   pure $ sigNow rsNew
-    sig txt = debounce 1000.0 txt textInputWidget
+    sigNow rs = step rs $ do
+      pure $ unsafePerformEffect $ log $ "refstr in textInput sigNow': " <> (show rs)
+      rsNew <- textInputWidget rs
+      pure $ sigNow rsNew
+    --sig txt = debounce 1000.0 txt textInputWidget
 
 -- | Reasonable defaults for filtering input text
 textFilter :: Signal HTML String -> Signal HTML (Maybe NonEmptyString)

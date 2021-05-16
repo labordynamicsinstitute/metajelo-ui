@@ -139,14 +139,16 @@ let additions =
             , "arrays"
             , "avar"
             , "console"
+            , "debug"
             , "foldable-traversable"
             , "free"
+            , "js-timers"
             , "nonempty"
             , "profunctor-lenses"
             , "tailrec"
             ]
-            "https://github.com/purescript-concur/purescript-concur-core.git"
-            "f175dd4a4f7b8904d2cc4abb51e3b5179140c294"
+            "https://github.com/ajbarber/purescript-concur-core.git"
+            "c66c3a9f8e7e325e86ab5faa1505aa2e51a46e4b"
       , concur-react =
           mkPackage
             [ "aff"
@@ -162,8 +164,8 @@ let additions =
             , "web-dom"
             , "web-html"
             ]
-            "https://github.com/purescript-concur/purescript-concur-react.git"
-            "v0.4.2"
+            "https://github.com/ajbarber/purescript-concur-react.git"
+            "ed06698d06582cc0d64bd2d7c667b0a8964b447b"
       , datacite =
           { dependencies =
             [ "effect", "functors", "generics-rep", "naturals", "simple-json" ]
