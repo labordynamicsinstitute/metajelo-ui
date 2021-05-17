@@ -27,7 +27,7 @@
     "postcss-font-base64": "^1.0.5",
     "postcss-modules": "^3.2.2",
     "pulp": "^15.0.0",
-    "purescript-psa": "^0.8.0",
+    "purescript-psa": "^0.8.2",
     "react-devtools": "^4.13.2",
     "rimraf": "^3.0.2"
   },
