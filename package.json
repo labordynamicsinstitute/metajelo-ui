@@ -28,7 +28,7 @@
     "postcss-modules": "^3.2.2",
     "pulp": "^15.0.0",
     "purescript-psa": "^0.8.0",
-    "react-devtools": "^4.13.2",
+    "react-devtools": "^4.20.2",
     "rimraf": "^3.0.2"
   },
   "dependencies": {
