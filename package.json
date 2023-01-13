@@ -29,7 +29,7 @@
     "pulp": "^15.0.0",
     "purescript-psa": "^0.8.0",
     "react-devtools": "^4.13.2",
-    "rimraf": "^3.0.2"
+    "rimraf": "^4.0.4"
   },
   "dependencies": {
     "react": "^16.14.0",
